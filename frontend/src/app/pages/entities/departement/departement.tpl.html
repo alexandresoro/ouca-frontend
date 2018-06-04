@@ -1,0 +1,39 @@
+<div class="lco-entity-page">
+    <top-buttons title="Départements"
+        createButtonLibelle="Créer un département"
+        exportButtonLibelle="Exporter les départements"
+        [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+        (onClickNewObject)="newObject()"
+        (onClickExportObjects)="exportObjects()"
+        (onClickRefresh)="getAll()"></top-buttons>
+
+    <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+
+    <entity-messages [messages]="messages"
+        [status]="status"></entity-messages>
+
+    <departement-table *ngIf="modeHelper.isViewAllMode(mode)"
+        [objects]="objects"
+        (delete)="deleteObject($event)"
+        (edit)="editObject($event)"
+        (view)="viewObject($event)">
+    </departement-table>
+
+    <departement-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+        [object]="objectToSave"
+        [mode]="mode"
+        (confirm)="saveObject()"
+        (back)="cancelEdition()">
+    </departement-form>
+
+    <departement-details *ngIf="modeHelper.isViewOneMode(mode)"
+        [objectToView]="objectToView"
+        (back)="viewAll()">
+    </departement-details>
+
+    <departement-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+        [objectToRemove]="objectToRemove"
+        (confirm)="confirmObjectRemoval($event)">
+    </departement-removal-confirmation>
+
+</div>

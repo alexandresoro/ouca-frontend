@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-xs-6 lco-entity-page-title">
+    <h1>{{title}}</h1>
+  </div>
+  <div *ngIf="areButtonsDisplayed" class="col-xs-6 text-right lco-entity-top-buttons">
+    <button class="btn btn-primary" (click)="newObject()">
+      <span class="glyphicon glyphicon-plus">&nbsp;</span>
+      <span>{{createButtonLibelle}}</span>
+    </button>
+    <button class="btn btn-default" (click)="exportObjects()">
+      <span class="glyphicon glyphicon-save">&nbsp;</span>
+      <span>{{exportButtonLibelle}}</span>
+    </button>
+    <button class="btn btn-default" (click)="refresh()">
+      <span class="glyphicon glyphicon-refresh">&nbsp;</span>
+      <span>Rafraîchir</span>
+    </button>
+  </div>
+</div>

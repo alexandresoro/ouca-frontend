@@ -1,0 +1,36 @@
+<div class="lco-entity-page">
+    <top-buttons title="Espèces"
+        createButtonLibelle="Créer une espèce"
+        exportButtonLibelle="Exporter les espèces"
+        [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+        (onClickNewObject)="newObject()"
+        (onClickExportObjects)="exportObjects()"
+        (onClickRefresh)="getAll()"></top-buttons>
+
+    <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+
+    <entity-messages [messages]="messages"
+        [status]="status"></entity-messages>
+
+    <espece-table *ngIf="modeHelper.isViewAllMode(mode)"
+        [objects]="objects"
+        (delete)="deleteObject($event)"
+        (edit)="editObject($event)"
+        (view)="viewObject($event)"></espece-table>
+
+    <espece-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+        [object]="objectToSave"
+        [mode]="mode"
+        (confirm)="saveObject()"
+        (back)="cancelEdition()"></espece-form>
+
+    <espece-details *ngIf="modeHelper.isViewOneMode(mode)"
+        [objectToView]="objectToView"
+        (back)="viewAll()"></espece-details>
+
+    <espece-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+        [objectToRemove]="objectToRemove"
+        (confirm)="confirmObjectRemoval($event)">
+    </espece-removal-confirmation>
+
+</div>

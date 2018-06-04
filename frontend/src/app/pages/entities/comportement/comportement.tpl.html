@@ -1,0 +1,39 @@
+<div class="lco-entity-page">
+  <top-buttons title="Comportements"
+    createButtonLibelle="Créer un comportement"
+    exportButtonLibelle="Exporter les comportements"
+    [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+    (onClickNewObject)="newObject()"
+    (onClickExportObjects)="exportObjects()"
+    (onClickRefresh)="getAll()"></top-buttons>
+
+  <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+
+  <entity-messages [messages]="messages"
+    [status]="status"></entity-messages>
+
+  <comportement-table *ngIf="modeHelper.isViewAllMode(mode)"
+    [objects]="objects"
+    (delete)="deleteObject($event)"
+    (edit)="editObject($event)"
+    (view)="viewObject($event)">
+  </comportement-table>
+
+  <comportement-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+    [object]="objectToSave"
+    [mode]="mode"
+    (confirm)="saveObject()"
+    (back)="cancelEdition()">
+  </comportement-form>
+
+  <comportement-details *ngIf="modeHelper.isViewOneMode(mode)"
+    [objectToView]="objectToView"
+    (back)="viewAll()">
+  </comportement-details>
+
+  <comportement-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+    [objectToRemove]="objectToRemove"
+    (confirm)="confirmObjectRemoval($event)">
+  </comportement-removal-confirmation>
+
+</div>

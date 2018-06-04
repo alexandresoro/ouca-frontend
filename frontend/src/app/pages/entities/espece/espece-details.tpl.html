@@ -1,0 +1,38 @@
+<div class="lco-entity-details">
+  <h2>{{detailsTitle}}</h2>
+
+  <dl class="dl-horizontal">
+    <dt>ID</dt>
+    <dd>
+      <span>{{object.id}}</span>
+    </dd>
+
+    <dt>Classe</dt>
+    <dd>
+      <span>{{object.classe.libelle}}</span>
+    </dd>
+
+    <dt>Code</dt>
+    <dd>
+      <span>{{object.code}}</span>
+    </dd>
+
+    <dt>Nom français</dt>
+    <dd>
+      <span>{{object.nomFrancais}}</span>
+    </dd>
+
+    <dt>Nom latin</dt>
+    <dd>
+      <span>{{object.nomLatin}}</span>
+    </dd>
+
+  </dl>
+
+  <button *ngIf="isBackButtonDisplayed"
+    type="button"
+    (click)="backToViewAll()"
+    class="btn btn-info">
+    <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Retour</span>
+  </button>
+</div>

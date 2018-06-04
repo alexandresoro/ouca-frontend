@@ -1,0 +1,37 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Classe</th>
+
+                <th>Code</th>
+
+                <th>Nom français</th>
+
+                <th>Nom latin</th>
+
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let object of objects">
+
+                <td>{{object.classe.libelle}}</td>
+
+                <td>{{object.code}}</td>
+
+                <td>{{object.nomFrancais}}</td>
+
+                <td>{{object.nomLatin}}</td>
+
+                <td class="text-right">
+                    <table-buttons [object]="object"
+                        (onClickViewObject)="viewObject($event)"
+                        (onClickEditObject)="editObject($event)"
+                        (onClickDeleteObject)="deleteObject($event)"></table-buttons>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

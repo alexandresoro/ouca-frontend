@@ -1,0 +1,122 @@
+<div class="lco-entity-form lco-entite-simple-form">
+    <form (ngSubmit)="save()"
+        #entiteSimpleForm="ngForm">
+        <div>
+            <button type="button"
+                class="close"
+                (click)="cancel()">&times;
+            </button>
+            <h2 *ngIf="modeHelper.isCreationMode(mode)">{{creationTitle}}</h2>
+            <h2 *ngIf="modeHelper.isEditionMode(mode)">{{editionTitle}}</h2>
+        </div>
+        <div>
+            <div *ngIf="modeHelper.isEditionMode(mode)"
+                class="form-group">
+                <label for="fieldId">ID</label>
+                <input type="text"
+                    class="form-control"
+                    id="fieldId"
+                    name="fieldId"
+                    [(ngModel)]="object.id"
+                    #fieldId="ngModel"
+                    readonly/>
+            </div>
+
+            <!-- Classe -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-classe">Classe</label>
+                <select class="form-control"
+                    id="input-classe"
+                    name="input-classe"
+                    [(ngModel)]="object.classe"
+                    required>
+                    <option *ngFor="let classe of classes" 
+                            [ngValue]="classe" 
+                            required>
+                        {{classe.libelle}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Code -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-code">Code</label>
+                <input type="text"
+                    class="form-control"
+                    name="input-code"
+                    id="input-code"
+                    [(ngModel)]="object.code"
+                    #inputCode="ngModel"
+                    required/>
+
+                <div [hidden]="inputCode.valid || inputCode.pristine">
+                    <p class="help-block"
+                        [hidden]="inputCode.valid.required">
+                        Le code de l'espèce ne peut pas être vide.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Nom francais -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-nom-francais">Nom français</label>
+                <input type="text"
+                    class="form-control"
+                    name="input-nom-francais"
+                    id="input-nom-francais"
+                    [(ngModel)]="object.nomFrancais"
+                    #inputNomFrancais="ngModel"
+                    required/>
+
+                <div [hidden]="inputNomFrancais.valid || inputNomFrancais.pristine">
+                    <p class="help-block"
+                        [hidden]="inputNomFrancais.valid.required">
+                        Le nom français de l'espèce ne peut pas être vide.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Nom latin -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-nom-latin">Nom latin</label>
+                <input type="text"
+                    class="form-control"
+                    name="input-nom-latin"
+                    id="input-nom-latin"
+                    [(ngModel)]="object.nomLatin"
+                    #inputNomLatin="ngModel"
+                    required/>
+
+                <div [hidden]="inputNomLatin.valid || inputNomLatin.pristine">
+                    <p class="help-block"
+                        [hidden]="inputNomLatin.valid.required">
+                        Le nom latin de l'espèce ne peut pas être vide.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 text-right ">
+                <button type="button"
+                    class="btn btn-default"
+                    (click)="cancel()">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Annuler</span>
+                </button>
+                <button type="submit"
+                    class="btn btn-primary"
+                    [disabled]="!entiteSimpleForm.form.valid">
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>

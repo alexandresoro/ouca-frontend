@@ -1,0 +1,30 @@
+<div class="col-sm-2">
+    <label style="display:none;">Code {{type}} {{num}}</label>
+    <select class="form-control input-sm"
+        [disabled]="isDisabled"
+        [id]="'input-code-' + type + '-' + num"
+        [name]="'code-' + type + '-' + num"
+        [ngModel]="selectedValue"
+        (ngModelChange)="updateValue($event)">
+        <option></option>
+        <option *ngFor="let value of values"
+                [ngValue]="value">
+            {{value.code}}
+        </option>
+    </select>
+</div>
+<div class="col-sm-4">
+    <label style="display:none;">Libellé {{type}} {{num}}</label>
+    <select class="form-control input-sm"
+        [disabled]="isDisabled"
+        [id]="'input-libelle-' + type + '-' + num"
+        [name]="'libelle-' + type + '-' + num"
+        [ngModel]="selectedValue"
+        (ngModelChange)="updateValue($event)">
+        <option></option>
+        <option *ngFor="let value of values"
+                [ngValue]="value">
+            {{value.libelle}}
+        </option>
+    </select>
+</div>

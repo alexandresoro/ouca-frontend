@@ -1,0 +1,128 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand"
+        href="#">
+        <!--<img class="logo-img" src="content/images/logo.png" style="margin-right: 10px;"/>-->
+        <span>Base Naturaliste</span>
+      </a>
+    </div>
+    <ul class="nav navbar-nav"
+      style="float: right">
+      <li class="nav-item"
+        routerLinkActive="active"
+        routerLink="creation">
+        <a class="nav-link">
+          <span class="glyphicon glyphicon-plus"></span>Création des données</a>
+      </li>
+      <li class="nav-item"
+        routerLinkActive="active"
+        routerLink="vue">
+        <a class="nav-link">
+          <span class="glyphicon glyphicon-search"></span>Vue des données</a>
+      </li>
+      <li class="dropdown">
+        <a href="#"
+          class="dropdown-toggle"
+          data-toggle="dropdown"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false">
+          <span class="glyphicon glyphicon-th-list"></span>Gestion de la base
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="observateur">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Observateur</span>
+            </a>
+          </li>
+          <li>
+            <a href="departement">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Département</span>
+            </a>
+          </li>
+          <li>
+            <a href="commune">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Commune</span>
+            </a>
+          </li>
+          <li>
+            <a href="lieudit">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Lieu-dit</span>
+            </a>
+          </li>
+          <li>
+            <a href="meteo">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Météo</span>
+            </a>
+          </li>
+          <li>
+            <a href="classe">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Classe</span>
+            </a>
+          </li>
+          <li>
+            <a href="espece">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Espèce</span>
+            </a>
+          </li>
+          <li>
+            <a href="sexe">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Sexe</span>
+            </a>
+          </li>
+          <li class="nav-item"
+            routerLinkActive="active"
+            routerLink="age">
+            <a class="nav-link">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Âge</span>
+            </a>
+          </li>
+          <li>
+            <a href="estimation-nombre">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Estimation Nombre</span>
+            </a>
+          </li>
+          <li>
+            <a href="estimation-distance">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Estimation Distance</span>
+            </a>
+          </li>
+          <li>
+            <a href="comportement">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Comportement</span>
+            </a>
+          </li>
+          <li>
+            <a href="milieu">
+              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+              <span>Milieu</span>
+            </a>
+          </li>
+
+        </ul>
+      </li>
+      <li>
+        <a href="/configuration">
+          <span class="glyphicon glyphicon-cog"></span>Configurations</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid base-naturaliste">
+  <router-outlet></router-outlet>
+</div>

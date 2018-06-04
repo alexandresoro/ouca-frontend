@@ -1,0 +1,28 @@
+<div class="lco-entity-details">
+  <h2>{{detailsTitle}}</h2>
+
+  <dl class="dl-horizontal">
+    <dt>ID</dt>
+    <dd>
+      <span>{{object.id}}</span>
+    </dd>
+
+    <dt>Libellé</dt>
+    <dd>
+      <span>{{object.libelle}}</span>
+    </dd>
+
+    <dt>Non compté</dt>
+    <dd>
+      <span *ngIf="object.nonCompte">Oui</span>
+      <span *ngIf="!object.nonCompte">Non</span>
+    </dd>
+  </dl>
+
+  <button *ngIf="isBackButtonDisplayed"
+    type="button"
+    (click)="backToViewAll()"
+    class="btn btn-info">
+    <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Retour</span>
+  </button>
+</div>

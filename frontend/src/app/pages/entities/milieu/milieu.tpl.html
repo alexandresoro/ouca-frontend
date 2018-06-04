@@ -1,0 +1,39 @@
+<div class="lco-entity-page lco-comportement-page">
+  <top-buttons title="Milieux"
+    createButtonLibelle="Créer un milieu"
+    exportButtonLibelle="Exporter les milieux"
+    [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+    (onClickNewObject)="newObject()"
+    (onClickExportObjects)="exportObjects()"
+    (onClickRefresh)="getAll()"></top-buttons>
+
+  <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+
+  <entity-messages [messages]="messages"
+    [status]="status"></entity-messages>
+
+  <milieu-table *ngIf="modeHelper.isViewAllMode(mode)"
+    [objects]="objects"
+    (delete)="deleteObject($event)"
+    (edit)="editObject($event)"
+    (view)="viewObject($event)">
+  </milieu-table>
+
+  <milieu-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+    [object]="objectToSave"
+    [mode]="mode"
+    (confirm)="saveObject()"
+    (back)="cancelEdition()">
+  </milieu-form>
+
+  <milieu-details *ngIf="modeHelper.isViewOneMode(mode)"
+    [objectToView]="objectToView"
+    (back)="viewAll()">
+  </milieu-details>
+
+  <milieu-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+    [objectToRemove]="objectToRemove"
+    (confirm)="confirmObjectRemoval($event)">
+  </milieu-removal-confirmation>
+
+</div>

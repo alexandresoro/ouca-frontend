@@ -1,0 +1,58 @@
+<div class="lco-entity-details">
+  <h2>{{detailsTitle}}</h2>
+
+  <dl class="dl-horizontal">
+    <dt>ID</dt>
+    <dd>
+      <span>{{object.id}}</span>
+    </dd>
+
+    <dt>Département</dt>
+    <dd>
+      <span>{{object.commune.departement.code}}</span>
+    </dd>
+
+    <dt>Code commune</dt>
+    <dd>
+      <span>{{object.commune.code}}</span>
+    </dd>
+
+    <dt>Nom commune</dt>
+    <dd>
+      <span>{{object.commune.nom}}</span>
+    </dd>
+
+    <dt>Nom</dt>
+    <dd>
+      <span>{{object.nom}}</span>
+    </dd>
+
+    <dt>Nom</dt>
+    <dd>
+      <span>{{object.nom}}</span>
+    </dd>
+
+    <dt>Altitude</dt>
+    <dd>
+      <span>{{object.altitude}}</span>
+    </dd>
+
+    <dt>Longitude</dt>
+    <dd>
+      <span>{{object.longitude}}</span>
+    </dd>
+
+    <dt>Latitude</dt>
+    <dd>
+      <span>{{object.latitude}}</span>
+    </dd>
+
+  </dl>
+
+  <button *ngIf="isBackButtonDisplayed"
+    type="button"
+    (click)="backToViewAll()"
+    class="btn btn-info">
+    <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Retour</span>
+  </button>
+</div>

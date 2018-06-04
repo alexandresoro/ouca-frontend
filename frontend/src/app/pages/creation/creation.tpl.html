@@ -1,0 +1,672 @@
+<div class="lco-creation-page">
+
+    <h1>Création des données</h1>
+
+    <div class="panel panel-default">
+        <div class="panel-heading row lco-creation-messages">
+
+            <div [ngSwitch]="status">
+                <div *ngSwitchCase="'ERROR'"
+                    class="col-xs-12">
+                    <ul>
+                        <li *ngFor="let message of messages">{{message?.value}}</li>
+                    </ul>
+                </div>
+                <div *ngSwitchCase="'SUCCESS'"
+                    class="col-xs-12">
+                    <ul>
+                        <li *ngFor="let message of messages">{{message?.value}}</li>
+                    </ul>
+                </div>
+                <div *ngSwitchDefault
+                    class="col-xs-12">
+                    <strong>Aucun message</strong>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body lco-creation-body">
+            <div class="row lco-creation-buttons">
+                <button *ngIf="isNewDonneeBtnDisplayed()"
+                    class="btn btn-default btn-sm"
+                    type="button"
+                    style="float: left; margin-right: 8px"
+                    (click)="onNewDonneeBtnClicked()">
+                    Nouvelle donnée
+                </button>
+
+                <button [disabled]="!isPreviousDonneeBtnDisplayed()"
+                    class="btn btn-info btn-sm"
+                    type="button"
+                    style="float: left; margin-right: 8px"
+                    (click)="onPreviousDonneeBtnClicked()">
+                    Donnée précédente
+                </button>
+
+                <button [disabled]="!isNextDonneeBtnDisplayed()"
+                    class="btn btn-info btn-sm"
+                    type="button"
+                    style="float: left; margin-right: 8px"
+                    (click)="onNextDonneeBtnClicked()">
+                    Donnée suivante
+                </button>
+
+
+                <button *ngIf="modeHelper.isInventaireMode(mode)"
+                    class="btn btn-success btn-sm"
+                    type="button"
+                    style="float: right"
+                    [disabled]="!donneeForm.form.valid"
+                    (click)="saveInventaire()">
+                    Enregistrer l'inventaire
+                </button>
+                <button *ngIf="modeHelper.isDonneeMode(mode)"
+                    class="btn btn-success btn-sm"
+                    style="float: right"
+                    type="button"
+                    [disabled]="!donneeForm.form.valid"
+                    (click)="saveDonnee()">
+                    Enregistrer la donnée
+                </button>
+                <button *ngIf="modeHelper.isUpdateMode(mode)"
+                    class="btn btn-success btn-sm"
+                    style="float: right"
+                    type="button"
+                    [disabled]="!donneeForm.form.valid"
+                    (click)="saveInventaireAndDonnee()">
+                    Mettre à jour la donnée
+                </button>
+
+                <button *ngIf="isDeleteDonneeBtnDisplayed()"
+                    class="btn btn-danger btn-sm"
+                    type="button"
+                    style="float: right; margin-right: 8px"
+                    (click)="onDeleteDonneeBtnClicked()">
+                    Supprimer la donnée
+                </button>
+            </div>
+
+            <div class="row lco-creation-form">
+                <form class="form-horizontal"
+                    #donneeForm="ngForm">
+                    <div class="col-sm-4 lco-creation-inventaire">
+                        <h2>Fiche Inventaire
+                            <button *ngIf="modeHelper.isDonneeMode(mode)"
+                                type="button"
+                                class="btn btn-primary btn-sm"
+                                style="float: right">
+                                Nouvel inventaire
+                            </button>
+                        </h2>
+                        <div class="lco-creation-subform lco-creation-observateurs">
+                            <!-- OBSERVATEUR -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-observateur">
+                                    Observateur
+                                </label>
+                                <div class="col-sm-9">
+                                    <select class="form-control input-sm"
+                                        id="input-observateur"
+                                        name="input-observateur"
+                                        [(ngModel)]="inventaireToSave.observateur"
+                                        [required]="!isInventaireDisabled"
+                                        [disabled]="isInventaireDisabled">
+                                        <option *ngFor="let observateur of pageModel.observateurs"
+                                            [ngValue]="observateur">
+                                            {{observateur.libelle}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- ASSOCIES -->
+                            <div *ngIf="pageModel.areAssociesDisplayed"
+                                class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-associes">Associés</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control input-sm"
+                                        id="input-associes"
+                                        [disabled]="isInventaireDisabled">
+                                        <option *ngFor="let observateur of pageModel.observateurs"
+                                            [ngValue]="observateur">
+                                            {{observateur.libelle}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lco-creation-subform lco-creation-date">
+                            <!-- DATE -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-date">Date</label>
+                                <div class="col-sm-9">
+                                    <input type="date"
+                                        class="form-control input-sm"
+                                        id="input-date"
+                                        name="date"
+                                        [(ngModel)]="dateInventaire"
+                                        [disabled]="isInventaireDisabled"
+                                        [required]="!isInventaireDisabled">
+                                </div>
+                            </div>
+                            <!-- HEURE -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-heure">Heure</label>
+                                <div class="col-sm-9">
+                                    <input type="time"
+                                        class="form-control input-sm"
+                                        id="input-heure"
+                                        name="heure"
+                                        [(ngModel)]="inventaireToSave.heure"
+                                        [disabled]="isInventaireDisabled">
+                                </div>
+                            </div>
+                            <!-- DUREE -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-duree">Durée</label>
+                                <div class="col-sm-9">
+                                    <input type="time"
+                                        class="form-control input-sm"
+                                        id="input-duree"
+                                        name="duree"
+                                        [(ngModel)]="inventaireToSave.duree"
+                                        [disabled]="isInventaireDisabled">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lco-creation-subform lco-creation-localisation">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-departement">Département</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control input-sm"
+                                        id="input-departement"
+                                        name="departement"
+                                        [(ngModel)]="selectedDepartement"
+                                        [required]="!isInventaireDisabled"
+                                        [disabled]="isInventaireDisabled"
+                                        (change)="updateCommunes()">
+                                        <option *ngFor="let departement of pageModel.departements"
+                                            [ngValue]="departement">
+                                            {{departement.code}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-code-commune">Commune</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control input-sm"
+                                        id="input-code-commune"
+                                        name="code-commune"
+                                        [(ngModel)]="selectedCommune"
+                                        [required]="!isInventaireDisabled"
+                                        [disabled]="isInventaireDisabled"
+                                        (change)="updateLieuxdits()">
+                                        <option *ngFor="let commune of filteredCommunes"
+                                            [ngValue]="commune">
+                                            {{commune.code}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <select class="form-control input-sm"
+                                        id="input-nom-commune"
+                                        name="nom-commune"
+                                        [(ngModel)]="selectedCommune"
+                                        [required]="!isInventaireDisabled"
+                                        [disabled]="isInventaireDisabled"
+                                        (change)="updateLieuxdits()">
+                                        <option *ngFor="let commune of filteredCommunes"
+                                            [ngValue]="commune"
+                                            [disabled]="isInventaireDisabled">
+                                            {{commune.nom}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-lieudit">Lieu-dit</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control input-sm"
+                                        id="input-lieudit"
+                                        name="lieudit"
+                                        [(ngModel)]="inventaireToSave.lieudit"
+                                        [required]="!isInventaireDisabled"
+                                        [disabled]="isInventaireDisabled"
+                                        (change)="updateCoordinates()">
+                                        <option *ngFor="let lieudit of filteredLieuxdits"
+                                            [ngValue]="lieudit">
+                                            {{lieudit.nom}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-altitude">Altitude</label>
+                                <div class="col-sm-9">
+                                    <input type="number"
+                                        class="form-control input-sm"
+                                        id="input-altitude"
+                                        name="altitude"
+                                        [(ngModel)]="inventaireToSave.altitude"
+                                        [required]="!isInventaireDisabled"
+                                        [disabled]="isInventaireDisabled">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-altitude">Longitude</label>
+
+                                <div class="col-sm-9">
+                                    <input type="number"
+                                        class="form-control input-sm"
+                                        id="input-longitude"
+                                        name="longitude"
+                                        [(ngModel)]="inventaireToSave.longitude"
+                                        [required]="!isInventaireDisabled"
+                                        [disabled]="isInventaireDisabled">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-altitude">Latitude</label>
+
+                                <div class="col-sm-9">
+                                    <input type="number"
+                                        class="form-control input-sm"
+                                        id="input-latitude"
+                                        name="latitude"
+                                        [(ngModel)]="inventaireToSave.latitude"
+                                        [required]="!isInventaireDisabled"
+                                        [disabled]="isInventaireDisabled">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="pageModel.isMeteoDisplayed"
+                            class="lco-creation-subform lco-creation-meteo">
+                            <!-- TEMPERATURE -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-latitude">Température</label>
+                                <div class="col-sm-9">
+                                    <input type="number"
+                                        class="form-control input-sm"
+                                        id="input-temperature"
+                                        name="temperature"
+                                        [(ngModel)]="inventaireToSave.temperature"
+                                        [disabled]="isInventaireDisabled">
+                                </div>
+                            </div>
+                            <!-- METEOS -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-3"
+                                    for="input-meteos">Météos</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control input-sm"
+                                        id="input-meteos"
+                                        [disabled]="isInventaireDisabled">
+                                        <option>Soleil, Vent</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END INVENTAIRE -->
+
+                    <!-- DONNEE -->
+                    <div class="lco-creation-fiche col-sm-8">
+                        <h2>Fiche espèce
+                            <span *ngIf="currentDonneeIndex">n°{{currentDonneeIndex}} (ID={{donneeToSave.id}})</span>
+                        </h2>
+
+                        <div class="lco-creation-subform lco-creation-espece">
+                            <!-- CLASSE -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-1"
+                                    for="input-classe">Classe</label>
+                                <div class="col-sm-2">
+                                    <select (change)="updateEspeces()"
+                                        class="form-control input-sm"
+                                        [disabled]="isDonneeDisabled"
+                                        id="input-classe"
+                                        name="classe"
+                                        [(ngModel)]="selectedClasse">
+                                        <option>Toutes</option>
+                                        <option *ngFor="let classe of pageModel.classes"
+                                            [ngValue]="classe">
+                                            {{classe.libelle}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <label class="control-label col-sm-2"
+                                    for="input-code-espece">Espèce</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control input-sm"
+                                        id="input-code-espece"
+                                        name="input-code-espece"
+                                        [disabled]="isDonneeDisabled"
+                                        [required]="!isDonneeDisabled"
+                                        [(ngModel)]="donneeToSave.espece">
+                                        <option *ngFor="let espece of filteredEspeces"
+                                            [ngValue]="espece">
+                                            {{espece.code}}
+                                        </option>
+                                    </select>
+                                </div>
+
+
+                                <div class="col-sm-4">
+                                    <select class="form-control input-sm"
+                                        id="input-nom-espece"
+                                        name="nom-espece"
+                                        [disabled]="isDonneeDisabled"
+                                        [required]="!isDonneeDisabled"
+                                        [(ngModel)]="donneeToSave.espece">
+                                        <option *ngFor="let espece of filteredEspeces"
+                                            [ngValue]="espece">
+                                            {{espece.nomFrancais}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DETAILS -->
+                        <div class="lco-creation-subform lco-creation-details">
+                            <div class="form-group">
+                                <label class="control-label col-sm-2"
+                                    for="input-nombre">Nbr. Individus</label>
+                                <!-- NOMBRE -->
+                                <div class="col-sm-2">
+                                    <input class="form-control input-sm"
+                                        id="input-nombre"
+                                        min="1"
+                                        name="nombre"
+                                        type="number"
+                                        [(ngModel)]="donneeToSave.nombre"
+                                        [disabled]="isDonneeDisabled || donneeToSave.estimationNombre?.nonCompte"
+                                
+                                        [required]="!isDonneeDisabled && !donneeToSave.estimationNombre?.nonCompte">
+                                </div>
+                                <!-- ESTIMATION NOMBRE -->
+                                <div class="col-sm-2">
+                                    <select class="form-control input-sm"
+                                        id="input-estimation-nombre"
+                                        name="estimation-nombre"
+                                        [(ngModel)]="donneeToSave.estimationNombre"
+                                        (ngModelChange)="onEstimationNombreChanged($event)"
+                                        [disabled]="isDonneeDisabled"
+                                        [required]="!isDonneeDisabled">
+                                        <option *ngFor="let estimNombre of pageModel.estimationsNombre"
+                                            [ngValue]="estimNombre">
+                                            {{estimNombre.libelle}}
+                                        </option>
+                                    </select>
+                                </div>
+
+
+                            </div>
+
+                            <!-- SEXE -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-2"
+                                    for="input-age">Sexe</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control input-sm"
+                                        id="input-sexe"
+                                        name="sexe"
+                                        [(ngModel)]="donneeToSave.sexe"
+                                        [disabled]="isDonneeDisabled"
+                                        [required]="!isDonneeDisabled">
+                                        <option *ngFor="let sexe of pageModel.sexes"
+                                            [ngValue]="sexe">
+                                            {{sexe.libelle}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- AGE -->
+                            <div class="form-group">
+                                <label class="control-label col-sm-2"
+                                    for="input-age">Âge</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control input-sm"
+                                        id="input-age"
+                                        name="age"
+                                        [(ngModel)]="donneeToSave.age"
+                                        [disabled]="isDonneeDisabled"
+                                        [required]="!isDonneeDisabled">
+                                        <option *ngFor="let age of pageModel.ages"
+                                            [ngValue]="age">
+                                            {{age.libelle}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- DISTANCE AND ESTIMATION DISTANCE -->
+                            <div *ngIf="pageModel.isDistanceDisplayed"
+                                class="form-group">
+                                <label class="control-label col-sm-2"
+                                    for="input-estimation-distance">Distance (m)
+                                </label>
+                                <!-- ESTIMATION DISTANCE -->
+                                <div class="col-sm-2">
+                                    <select class="form-control input-sm"
+                                        id="input-estimation-distance"
+                                        name="estimation-distance"
+                                        [(ngModel)]="donneeToSave.estimationDistance"
+                                        [disabled]="isDonneeDisabled"
+                                        [required]="!!donneeToSave.distance || donneeToSave.distance==0">
+                                        <option></option>
+                                        <option *ngFor="let estimDistance of pageModel.estimationsDistance"
+                                            [ngValue]="estimDistance">
+                                            {{estimDistance.libelle}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- DISTANCE -->
+                                <div class="col-sm-2">
+                                    <input class="form-control input-sm"
+                                        id="input-distance"
+                                        min="0"
+                                        name="distance"
+                                        type="number"
+                                        [(ngModel)]="donneeToSave.distance"
+                                        [disabled]="isDonneeDisabled"
+                                        [required]="!!donneeToSave.estimationDistance">
+                                </div>
+                            </div>
+
+                            <!-- REGROUPEMENT -->
+                            <div *ngIf="pageModel.isRegroupementDisplayed"
+                                class="form-group">
+                                <label class="control-label col-sm-2"
+                                    for="input-regroupement">Regroupement</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control input-sm"
+                                        id="input-regroupement"
+                                        name="regroupement"
+                                        type="number"
+                                        min="1"
+                                        [(ngModel)]="donneeToSave.regroupement"
+                                        [disabled]="isDonneeDisabled">
+                                </div>
+                                <div class="col-sm-1">
+                                    <button type="button"
+                                        class="btn btn-default btn-sm"
+                                        [disabled]="isDonneeDisabled"
+                                        (click)="displayNextRegroupement()">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COMPORTEMENTS -->
+                        <div class="lco-creation-subform lco-creation-comportements">
+                            <fieldset>
+                                <legend>Comportements</legend>
+
+                                <div class="row form-group">
+                                    <input-code-libelle [isDisabled]="isDonneeDisabled"
+                                        [num]="1"
+                                        [type]="'comportement'"
+                                        [values]="pageModel.comportements"
+                                        [selectedValue]="selectedComportements[0]"
+                                        (onValueChanged)="addComportement($event)">
+                                    </input-code-libelle>
+                                    <input-code-libelle [isDisabled]="isComportementDisabled(2)"
+                                        [num]="2"
+                                        [type]="'comportement'"
+                                        [values]="pageModel.comportements"
+                                        [selectedValue]="selectedComportements[1]"
+                                        (onValueChanged)="addComportement($event)">
+                                    </input-code-libelle>
+                                </div>
+                                <div class="row form-group">
+                                    <input-code-libelle [isDisabled]="isComportementDisabled(3)"
+                                        [num]="3"
+                                        [type]="'comportement'"
+                                        [values]="pageModel.comportements"
+                                        [selectedValue]="selectedComportements[2]"
+                                        (onValueChanged)="addComportement($event)">
+                                    </input-code-libelle>
+                                    <input-code-libelle [isDisabled]="isComportementDisabled(4)"
+                                        [num]="4"
+                                        [type]="'comportement'"
+                                        [values]="pageModel.comportements"
+                                        [selectedValue]="selectedComportements[3]"
+                                        (onValueChanged)="addComportement($event)">
+                                    </input-code-libelle>
+                                </div>
+                                <div class="row form-group">
+                                    <input-code-libelle [isDisabled]="isComportementDisabled(5)"
+                                        [num]="5"
+                                        [type]="'comportement'"
+                                        [isDisabled]="false"
+                                        [values]="pageModel.comportements"
+                                        [selectedValue]="selectedComportements[4]"
+                                        (onValueChanged)="addComportement($event)">
+                                    </input-code-libelle>
+                                    <input-code-libelle [isDisabled]="isComportementDisabled(6)"
+                                        [num]="6"
+                                        [type]="'comportement'"
+                                        [values]="pageModel.comportements"
+                                        [selectedValue]="selectedComportements[5]"
+                                        (onValueChanged)="addComportement($event)">
+                                    </input-code-libelle>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- END Comportements -->
+
+                        <!-- Milieux -->
+                        <div class="lco-creation-subform">
+                            <fieldset>
+                                <legend>Milieux</legend>
+                                <div class="row form-group">
+                                    <input-code-libelle [isDisabled]="isDonneeDisabled"
+                                        [num]="1"
+                                        [type]="'milieu'"
+                                        [values]="pageModel.milieux"
+                                        [selectedValue]="selectedMilieux[0]"
+                                        (onValueChanged)="addMilieu($event)">
+                                    </input-code-libelle>
+                                    <input-code-libelle [isDisabled]="isMilieuDisabled(2)"
+                                        [num]="2"
+                                        [type]="'milieu'"
+                                        [values]="pageModel.milieux"
+                                        [selectedValue]="selectedMilieux[1]"
+                                        (onValueChanged)="addMilieu($event)">
+                                    </input-code-libelle>
+                                </div>
+                                <div class="row form-group">
+                                    <input-code-libelle [isDisabled]="isMilieuDisabled(3)"
+                                        [num]="3"
+                                        [type]="'milieu'"
+                                        [values]="pageModel.milieux"
+                                        [selectedValue]="selectedMilieux[2]"
+                                        (onValueChanged)="addMilieu($event)">
+                                    </input-code-libelle>
+                                    <input-code-libelle [isDisabled]="isMilieuDisabled(4)"
+                                        [num]="4"
+                                        [type]="'milieu'"
+                                        [values]="pageModel.milieux"
+                                        [selectedValue]="selectedMilieux[3]"
+                                        (onValueChanged)="addMilieu($event)">
+                                    </input-code-libelle>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- End milieux -->
+
+                        <!-- Commentaire -->
+                        <div class="lco-creation-subform lco-creation-commentaires">
+                            <fieldset>
+                                <legend>Commentaires</legend>
+                                <div class="form-group">
+                                    <label for="input-commentaire"
+                                        style="display: none;">Commentaires</label>
+                                    <textarea class="form-control input-sm"
+                                        id="input-commentaire"
+                                        name="commentaire"
+                                        rows="2"
+                                        [disabled]="isDonneeDisabled"
+                                        [(ngModel)]="donneeToSave.commentaire"
+                                        (keypress)="commentaireKeyPress($event)"></textarea>
+                                </div>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel-footer row">
+            <button *ngIf="modeHelper.isInventaireMode(mode)"
+                class="btn btn-success btn-sm"
+                type="button"
+                style="float: right"
+                [disabled]="!donneeForm.form.valid"
+                (click)="saveInventaire()">
+                Enregistrer l'inventaire
+            </button>
+            <button *ngIf="modeHelper.isDonneeMode(mode)"
+                class="btn btn-success btn-sm"
+                style="float: right"
+                type="button"
+                [disabled]="!donneeForm.form.valid"
+                (click)="saveDonnee()">
+                Enregistrer la donnée
+            </button>
+            <button *ngIf="modeHelper.isUpdateMode(mode)"
+                class="btn btn-success btn-sm"
+                style="float: right"
+                type="button"
+                [disabled]="!donneeForm.form.valid"
+                (click)="saveInventaireAndDonnee()">
+                Mettre à jour la donnée
+            </button>
+        </div>
+    </div>
+</div>

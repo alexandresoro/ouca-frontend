@@ -1,0 +1,39 @@
+<div class="lco-entity-page lco-commune-page">
+    <top-buttons title="Communes"
+        createButtonLibelle="Créer une commune"
+        exportButtonLibelle="Exporter les communes"
+        [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+        (onClickNewObject)="newObject()"
+        (onClickExportObjects)="exportObjects()"
+        (onClickRefresh)="getAll()"></top-buttons>
+
+    <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+
+    <entity-messages [messages]="messages"
+        [status]="status"></entity-messages>
+
+    <commune-table *ngIf="modeHelper.isViewAllMode(mode)"
+        [objects]="objects"
+        (delete)="deleteObject($event)"
+        (edit)="editObject($event)"
+        (view)="viewObject($event)">
+    </commune-table>
+
+    <commune-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+        [object]="objectToSave"
+        [mode]="mode"
+        (confirm)="saveObject()"
+        (back)="cancelEdition()">
+    </commune-form>
+
+    <commune-details *ngIf="modeHelper.isViewOneMode(mode)"
+        [objectToView]="objectToView"
+        (back)="viewAll()">
+    </commune-details>
+
+    <commune-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+        [objectToRemove]="objectToRemove"
+        (confirm)="confirmObjectRemoval($event)">
+    </commune-removal-confirmation>
+
+</div>

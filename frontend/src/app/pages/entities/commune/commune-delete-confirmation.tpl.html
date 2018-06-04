@@ -1,0 +1,32 @@
+<div class="lco-entity-delete-confirmation">
+  <h2>Confirmation de suppression</h2>
+
+  <div>
+    Êtes-vous certain de vouloir supprimer la commune ?
+    <br> Tous les lieux-dits et toutes les données avec cette commune seront supprimés.
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 text-right ">
+      <button type="button"
+        class="btn btn-default"
+        (click)="cancelRemoval()">
+        <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Non, annuler la suppression</span>
+      </button>
+      <button type="button"
+        class="btn btn-primary"
+        (click)="confirmRemoval()">
+        <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Oui, supprimer la commune</span>
+      </button>
+    </div>
+  </div>
+
+  <entity-messages [messages]="messages"
+    [status]="status"></entity-messages>
+  <hr>
+
+  <commune-details [objectToView]="object"
+    [isBackButtonDisplayed]="false">
+  </commune-details>
+
+</div>

@@ -1,0 +1,171 @@
+<div class="lco-entity-form lco-entite-simple-form">
+    <form (ngSubmit)="save()"
+        #entiteSimpleForm="ngForm">
+        <div>
+            <button type="button"
+                class="close"
+                (click)="cancel()">&times;
+            </button>
+            <h2 *ngIf="modeHelper.isCreationMode(mode)">{{creationTitle}}</h2>
+            <h2 *ngIf="modeHelper.isEditionMode(mode)">{{editionTitle}}</h2>
+        </div>
+        <div>
+            <div *ngIf="modeHelper.isEditionMode(mode)"
+                class="form-group">
+                <label for="fieldId">ID</label>
+                <input type="text"
+                    class="form-control"
+                    id="fieldId"
+                    name="fieldId"
+                    [(ngModel)]="object.id"
+                    #fieldId="ngModel"
+                    readonly/>
+            </div>
+
+            <!-- Departement -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-departement">Département</label>
+                <select class="form-control"
+                    id="input-departement"
+                    name="input-departement"
+                    [(ngModel)]="object.departement"
+                    required>
+                    <option *ngFor="let dept of departements" 
+                        [ngValue]="dept">
+                        {{dept.code}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Code commune -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-code-commune">Code commune</label>
+                <select class="form-control"
+                    id="input-code-commune"
+                    name="input-code-commune"
+                    [(ngModel)]="object.commune"
+                    required>
+                    <option *ngFor="let commune of communes" 
+                            [ngValue]="commune">
+                        {{commune.code}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Nom commune -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-nom-commune">Nom commune</label>
+                <select class="form-control"
+                    id="input-nom-commune"
+                    name="input-nom-commune"
+                    [(ngModel)]="object.commune"
+                    required>
+                    <option *ngFor="let commune of communes" 
+                            [ngValue]="commune">
+                        {{commune.nom}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Nom -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-nom">Nom</label>
+                <input type="text"
+                    class="form-control"
+                    name="input-nom"
+                    id="input-nom"
+                    [(ngModel)]="object.nom"
+                    #inputNom="ngModel"
+                    required/>
+
+                <div [hidden]="inputNom.valid || inputNom.pristine">
+                    <p class="help-block"
+                        [hidden]="inputNom.valid.required">
+                        Le nom du lieu-dit ne peut pas être vide.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Altitude -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-altitude">Altitude</label>
+                <input type="number"
+                    class="form-control"
+                    name="input-altitude"
+                    id="input-altitude"
+                    [(ngModel)]="object.altitude"
+                    #inputAltitude="ngModel"
+                    required/>
+
+                <div [hidden]="inputAltitude.valid || inputAltitude.pristine">
+                    <p class="help-block"
+                        [hidden]="inputAltitude.valid.required">
+                        L'altitude du lieu-dit ne peut pas être vide.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Longitude -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-longitude">Longitude</label>
+                <input type="number"
+                    class="form-control"
+                    name="input-longitude"
+                    id="input-longitude"
+                    [(ngModel)]="object.longitude"
+                    #inputLongitude="ngModel"
+                    required/>
+
+                <div [hidden]="inputLongitude.valid || inputLongitude.pristine">
+                    <p class="help-block"
+                        [hidden]="inputLongitude.valid.required">
+                        La longitude du lieu-dit ne peut pas être vide.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Latitude -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-latitude">Latitude</label>
+                <input type="number"
+                    class="form-control"
+                    name="input-latitude"
+                    id="input-latitude"
+                    [(ngModel)]="object.latitude"
+                    #inputLatitude="ngModel"
+                    required/>
+
+                <div [hidden]="inputLatitude.valid || inputLatitude.pristine">
+                    <p class="help-block"
+                        [hidden]="inputLatitude.valid.required">
+                        La latitude du lieu-dit ne peut pas être vide.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 text-right ">
+                <button type="button"
+                    class="btn btn-default"
+                    (click)="cancel()">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Annuler</span>
+                </button>
+                <button type="submit"
+                    class="btn btn-primary"
+                    [disabled]="!entiteSimpleForm.form.valid">
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>

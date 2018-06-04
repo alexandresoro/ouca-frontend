@@ -1,0 +1,32 @@
+<div class="lco-entity-delete-confirmation">
+  <h2>Confirmation de suppression</h2>
+
+  <div>
+    Êtes-vous certain de vouloir supprimer l'estimation nombre ?
+    <br> Toutes les données avec cette estimation seront supprimées.
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 text-right ">
+      <button type="button"
+        class="btn btn-default"
+        (click)="cancelRemoval()">
+        <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Non, annuler la suppression</span>
+      </button>
+      <button type="button"
+        class="btn btn-primary"
+        (click)="confirmRemoval()">
+        <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Oui, supprimer l'estimation</span>
+      </button>
+    </div>
+  </div>
+
+  <entity-messages [messages]="messages"
+    [status]="status"></entity-messages>
+  <hr>
+
+  <estimation-nombre-details [objectToView]="object"
+    [isBackButtonDisplayed]="false">
+  </estimation-nombre-details>
+
+</div>

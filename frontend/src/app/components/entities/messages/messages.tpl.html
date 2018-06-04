@@ -1,0 +1,11 @@
+<div *ngIf="messages && messages.length > 0" class="lco-messages">
+  <div class="alert"
+       [class.alert-success]="status === 'SUCCESS'"
+       [class.alert-danger]="status === 'ERROR'"
+       [class.alert-info]="status === 'INFO'">
+    <strong>Messages:</strong>
+    <br>
+    <span *ngFor="let message of messages">{{message?.value}}</span>
+    <br>
+  </div>
+</div>
