@@ -53,19 +53,12 @@ public class InventaireService extends EntiteSimpleService<Inventaire> {
 		Inventaire createdInventaire = null;
 
 		if (inventaireToCreate != null) {
-			// Check if lieudit has been modified
-			Lieudit lieudit = inventaireToCreate.getLieudit();
-			if (lieudit != null && lieudit.getId() == null) {
-				// lieudit.setModeCreation(ModeCreation.TEMPORAIRE); // TODO
-				inventaireToCreate.setLieudit(lieuditService.create(lieudit));
-			}
+			updateCoordinates(inventaireToCreate, inventaireToCreate.getLieudit());
 
 			inventaireToCreate.setDateCreation(new Timestamp(System.currentTimeMillis()));
 			inventaireToCreate.setDate(new Date(System.currentTimeMillis()));// TODO
-			// fix
-			// this
-			createdInventaire = super.create(inventaireToCreate);
 
+			createdInventaire = super.create(inventaireToCreate);
 		}
 
 		return createdInventaire;
@@ -76,43 +69,20 @@ public class InventaireService extends EntiteSimpleService<Inventaire> {
 		Inventaire updatedInventaire = null;
 
 		if (inventaireToUpdate != null) {
-
-			Lieudit lieudit = inventaireToUpdate.getLieudit();
-			if (lieudit != null && lieudit.getId() == null) {
-				// lieudit.setModeCreation(ModeCreation.TEMPORAIRE); //TODO
-				inventaireToUpdate.setLieudit(lieuditService.create(lieudit));
-
-			} else if (lieudit != null && lieudit.getId() != null) {
-				// && ModeCreation.TEMPORAIRE.equals(lieudit.getModeCreation()))
-				// {
-				inventaireToUpdate.setLieudit(lieuditService.update(lieudit));
-			}
-
+			updateCoordinates(inventaireToUpdate, inventaireToUpdate.getLieudit());
 			updatedInventaire = super.update(inventaireToUpdate);
 		}
 
 		return updatedInventaire;
 	}
 
-	// TODO verifier que les données sont supprimées
-	@Override
-	public boolean delete(Long id) {
-		Inventaire inventaire = inventaireRepository.findOne(id);
-
-		boolean isLieuditDeleted = super.delete(id);
-
-		if (isLieuditDeleted) {
-			// If it is a temporary lieu-dit we can remove it
-			if (inventaire != null) {
-				// &&
-				// ModeCreation.TEMPORAIRE.equals(inventaire.getLieudit().getModeCreation()))
-				// {
-			}
-			lieuditService.delete(inventaire.getLieudit().getId());
+	private void updateCoordinates(Inventaire inventaire, Lieudit lieudit) {
+		if (inventaire.getAltitude() == lieudit.getAltitude() && inventaire.getLongitude() == lieudit.getLongitude()
+				&& inventaire.getLatitude() == lieudit.getLatitude()) {
+			inventaire.setAltitude(null);
+			inventaire.setLongitude(null);
+			inventaire.setLatitude(null);
 		}
-
-		return isLieuditDeleted;
-
 	}
 
 	@Override

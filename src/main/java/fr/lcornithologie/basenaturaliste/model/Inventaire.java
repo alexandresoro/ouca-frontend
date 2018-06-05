@@ -53,13 +53,13 @@ public class Inventaire extends EntiteSimple {
     private Lieudit lieudit;
 
     @Column(name = "altitude")
-    private long altitude;
+    private Long altitude;
 
     @Column(name = "longitude")
-    private long longitude;
+    private Long longitude;
 
     @Column(name = "latitude")
-    private long latitude;
+    private Long latitude;
 
     @ManyToMany
     @JoinTable(name = "inventaire_meteos", joinColumns = @JoinColumn(name = "inventaires_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "meteos_id", referencedColumnName = "ID"))
@@ -146,27 +146,27 @@ public class Inventaire extends EntiteSimple {
         this.observateur = observateur;
     }
 
-    public long getAltitude() {
+    public Long getAltitude() {
         return altitude;
     }
 
-    public void setAltitude(long altitude) {
+    public void setAltitude(Long altitude) {
         this.altitude = altitude;
     }
 
-    public long getLongitude() {
+    public Long getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(Long longitude) {
         this.longitude = longitude;
     }
 
-    public long getLatitude() {
+    public Long getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(Long latitude) {
         this.latitude = latitude;
     }
 

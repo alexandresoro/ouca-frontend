@@ -275,8 +275,13 @@ export class CreationComponent implements OnInit {
     }
 
     private onSaveInventaireSuccess() {
+        if (this.inventaireToSave.altitude == null) {
+            this.updateCoordinates();
+        }
+
         this.donneeToSave = new Donnee();
         this.donneeToSave.inventaire = this.inventaireToSave;
+
         this.switchToNewDonneeMode();
     }
     private onSaveInventaireError(error: any) {
