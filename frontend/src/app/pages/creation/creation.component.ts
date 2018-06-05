@@ -19,6 +19,7 @@ import { CreationService } from "./creation.service";
 import { DonneeService } from "./donnee.service";
 import { InputCodeLibelleEventObject } from "./input-code-libelle/input-code-libelle-event.object";
 import { InventaireService } from "./inventaire.service";
+import { NavigationService } from "./navigation.service";
 
 @Component({
     templateUrl: "./creation.tpl.html",
@@ -40,10 +41,6 @@ export class CreationComponent implements OnInit {
     public inventaireToSave: Inventaire = new Inventaire();
     public donneeToSave: Donnee = new Donnee();
 
-    private savedDonnee: Donnee;
-    private savedInventaire: Inventaire;
-    private savedMode: CreationMode;
-
     public dateInventaire: string;
     public selectedDepartement: Departement;
     public selectedCommune: Commune;
@@ -62,16 +59,12 @@ export class CreationComponent implements OnInit {
     private messages: any[];
     private status: string;
 
-    private previousDonnee: Donnee;
-    private nextDonnee: Donnee;
-    private numberOfDonnees: number;
-    private currentDonneeIndex: number;
-
     constructor(public modeHelper: CreationModeHelper,
                 private creationService: CreationService,
                 private donneeService: DonneeService,
                 private inventaireService: InventaireService,
-                private http: Http) {
+                private http: Http,
+                public navigationService: NavigationService) {
     }
 
     public ngOnInit(): void {
@@ -88,7 +81,7 @@ export class CreationComponent implements OnInit {
                 (creationPage: CreationPage) => {
                     this.onInitCreationPageSucces(creationPage);
                 },
-                (error) => {
+                (error: any) => {
                     this.onInitCreationPageError(error);
                 });
     }
@@ -100,21 +93,29 @@ export class CreationComponent implements OnInit {
     private onInitCreationPageSucces(creationPage: CreationPage): void {
         this.pageModel = creationPage;
         this.nextRegroupement = this.pageModel.nextRegroupement;
-        console.log("Le modèle initial de la page de création est", this.pageModel);
+
         this.switchToNewInventaireMode();
+
+        console.log("Le modèle initial de la page de création est", this.pageModel);
     }
+
     private onInitCreationPageError(error: any): void {
-        this.status = this.STATUS_ERROR;
-        this.messages = [{ value: "toto" + error }];
-        console.error("Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: "
+        this.setErrorMessage("Impossible de charger la page de création.\nErreur: " + error);        
+        console.error("Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: " 
             + error + ")");
     }
-    private initDefaultValues(): void {
+
+    /**
+     * When creating a new inventaire, initialize the form
+     * Set observateur to the default observateur...
+     */
+    private initInventaireDefaultValues(): void {
         if (!!this.pageModel.defaultObservateur && !!this.pageModel.defaultObservateur.id) {
             this.inventaireToSave.observateur = this.pageModel.observateurs.find(
                 (observateur) => observateur.id === this.pageModel.defaultObservateur.id,
             );
         }
+
         this.inventaireToSave.associes = new Array<Observateur>();
 
         this.dateInventaire = new Date().toISOString().substring(0, 10);
@@ -132,6 +133,9 @@ export class CreationComponent implements OnInit {
         this.initCoordinates();
     }
 
+    /** 
+     * When creating a new donne, initialize the form
+     */
     private initDonneeDefaultValues(): void {
         // Especes
         this.filteredEspeces = this.pageModel.especes;
@@ -162,11 +166,13 @@ export class CreationComponent implements OnInit {
             );
         }
 
-        // TODO milieux ?
         this.selectedComportements = [];
         this.selectedMilieux = [];
     }
 
+    /** 
+     * When selecting a departement, filter the list of communes, set back the lieu-dit to empty lieu-dit
+     */
     private updateCommunes(): void {
         if (!!this.selectedDepartement && !!this.selectedDepartement.id) {
             this.filteredCommunes = this.pageModel.communes.filter(
@@ -177,54 +183,72 @@ export class CreationComponent implements OnInit {
         }
     }
 
+    /**
+     * When selecting a commune, filter the list of lieux-dits
+     */
     private updateLieuxdits(): void {
-        //  if (!!this.selectedCommune && !!this.selectedCommune.id) {
-        this.filteredLieuxdits = this.pageModel.lieudits.filter(
-            (lieudit) => lieudit.commune.id === this.selectedCommune.id,
-        );
-        this.initCoordinates();
-        // }
-    }
-
-    private updateCoordinates(): void {
-        this.inventaireToSave.altitude = this.inventaireToSave.lieudit.altitude;
-        this.inventaireToSave.longitude = this.inventaireToSave.lieudit.longitude;
-        this.inventaireToSave.latitude = this.inventaireToSave.lieudit.latitude;
-    }
-
-    private initCoordinates(): void {
-        this.inventaireToSave.altitude = null;
-        this.inventaireToSave.longitude = null;
-        this.inventaireToSave.latitude = null;
-    }
-
-    private updateNextRegroupement(): void {
-        this.creationService.getNextRegroupement()
-            .subscribe(
-                (regroupement: number) => {
-                    this.nextRegroupement = regroupement;
-                },
-                (error) => {
-                    console.error("Impossible de trouver le prochain regroupement (" + error + ")");
-                });
+        if (!!this.selectedCommune && !!this.selectedCommune.id) {
+            this.filteredLieuxdits = this.pageModel.lieudits.filter(
+                (lieudit) => lieudit.commune.id === this.selectedCommune.id,
+            );
+            this.initCoordinates();
+        }
     }
 
     /**
-     * To be called when clicking on Regroupement button
+     * When selecting a classe, filter the list of especes
      */
-    public displayNextRegroupement(): void {
-        this.donneeToSave.regroupement = this.nextRegroupement;
-    }
-
     public updateEspeces(): void {
         if (!!this.selectedClasse && !!this.selectedClasse.id) {
             this.filteredEspeces = this.pageModel.especes.filter(
                 (espece) => espece.classe.id === this.selectedClasse.id,
             );
         } else {
+            // If "Toutes" we display all the especes
             this.filteredEspeces = this.pageModel.especes;
         }
     }
+
+    /**
+     * Called when selecting a lieu-dit in the dropdown
+     */
+    private updateCoordinates(): void {
+        this.inventaireToSave.altitude = this.inventaireToSave.lieudit.altitude;
+        this.inventaireToSave.longitude = this.inventaireToSave.lieudit.longitude;
+        this.inventaireToSave.latitude = this.inventaireToSave.lieudit.latitude;
+    }
+
+    /**
+     * Re-initialize the coordinates to empty
+     */
+    private initCoordinates(): void {
+        this.inventaireToSave.altitude = null;
+        this.inventaireToSave.longitude = null;
+        this.inventaireToSave.latitude = null;
+    }
+
+    /**
+     * Called when a donnee is saved
+     */
+    private updateNextRegroupement(): void {
+        this.creationService.getNextRegroupement()
+            .subscribe(
+                (regroupement: number) => {
+                    this.nextRegroupement = regroupement;
+                },
+                (error: any) => {
+                    console.error("Impossible de trouver le prochain regroupement (" + error + ")");
+                });
+    }
+
+    /**
+     * Called when clicking on Regroupement button
+     */
+    public displayNextRegroupement(): void {
+        this.donneeToSave.regroupement = this.nextRegroupement;
+    }
+
+
 
     /**
      * Called when clicking on Save Inventaire button
@@ -246,23 +270,20 @@ export class CreationComponent implements OnInit {
                         this.onSaveInventaireSuccess();
                     }
                 },
-                (error) => {
+                (error: any) => {
                     this.onSaveInventaireError(error);
                 });
     }
 
-    private isSuccess(): boolean {
-        return this.status === "SUCCESS";
-    }
+    
     private onSaveInventaireSuccess() {
         this.donneeToSave = new Donnee();
         this.donneeToSave.inventaire = this.inventaireToSave;
         this.switchToNewDonneeMode();
     }
     private onSaveInventaireError(error: any) {
-        this.status = "ERROR";
-        this.messages = ["L'inventaire n'a pas pu êtr créé/modifié."];
-        console.error("Impossible de créer l'inventaire (" + error + ")");
+        this.setErrorMessage("L'inventaire n'a pas pu êtr créé/modifié.");        
+        console.error("Impossible de créer l'inventaire.\nDétails de l'erreur:" + error);
     }
 
     /**
@@ -295,7 +316,7 @@ export class CreationComponent implements OnInit {
                         this.onSaveDonneeSuccess();
                     }
                 },
-                (error) => {
+                (error: any) => {
                     this.onSaveDonneeError(error);
                 });
     }
@@ -308,12 +329,12 @@ export class CreationComponent implements OnInit {
     }
 
     private onSaveDonneeError(error: any) {
-        this.status = "ERROR";
-        console.error("Impossible de créer la donnée (" + error + ")");
+        this.setErrorMessage("La donnée n'a pas pu être créée ou modifiée.");
+        console.error("Impossible de créer la donnée.\nDétails de l'erreur:" + error);
     }
 
     private initializeDonneePanel(): void {
-        this.selectedClasse = null;
+        this.selectedClasse = null; // TODO toutes or null?
         this.updateEspeces();
         this.initDonneeDefaultValues();
     }
@@ -325,83 +346,46 @@ export class CreationComponent implements OnInit {
         // TODO
     }
 
-    private displayPreviousDonnee(): void {
-        // If we were in creation mode we switch to update mode
+    /**
+     * Called when clicking on "Donnee precedente" button
+     */
+    public onPreviousDonneeBtnClicked(): void {
+        // Save the current donnee or inventaire and mode
         if (!this.modeHelper.isUpdateMode(this.mode)) {
+            this.navigationService.saveCurrentContext(this.mode, this.inventaireToSave, this.donneeToSave);
             this.switchToUpdateMode();
         }
 
-        // Next donnee TODO wont work if creation
-        this.nextDonnee = this.donneeToSave;
+        // Set next donnee with current donnee
+        this.navigationService.setNextDonnee(this.donneeToSave);
 
-        // Donnee to display
-        this.inventaireToSave = this.previousDonnee.inventaire;
-        this.donneeToSave = this.previousDonnee;
-        if (!this.currentDonneeIndex) {
-            this.currentDonneeIndex = this.numberOfDonnees;
-        } else {
-            this.currentDonneeIndex--;
-        }
+        // Set current donnee with previous donnee
+        this.inventaireToSave = this.navigationService.previousDonnee.inventaire;
+        this.donneeToSave = this.navigationService.previousDonnee;
+        this.navigationService.updateCurrentDonneeIndexWithPreviousDonnee();
 
-        // Previous donnee
-        const hasPreviousDonnee: boolean = this.currentDonneeIndex > 1;
-        if (!hasPreviousDonnee) {
-            this.previousDonnee = null;
-        } else {
-            this.populatePreviousDonnee(this.donneeToSave.id);
-        }
+        // Set new previous donnee
+        this.navigationService.updatePreviousDonnee(this.donneeToSave);
     }
 
-    private displayNextDonnee(): void {
-        // Previous donnee
-        this.previousDonnee = this.donneeToSave;
+    public onNextDonneeBtnClicked(): void {
+        // Set previous donnee with current donnee
+        this.navigationService.previousDonnee = this.donneeToSave;
 
-        // Donnee to display
-        let isLastDonnee: boolean = this.numberOfDonnees === this.currentDonneeIndex;
-        if (isLastDonnee) {
-            // Last donnee
-            this.currentDonneeIndex = null;
-            this.donneeToSave = this.savedDonnee;
-            this.inventaireToSave = this.savedInventaire;
-            if (!!this.donneeToSave && !!this.donneeToSave.inventaire && !!this.donneeToSave.inventaire.id) {
-                this.switchToNewDonneeMode();
-            } else {
-                this.switchToNewInventaireMode();
-            }
-        } else {
-            this.currentDonneeIndex++;
-            this.donneeToSave = this.nextDonnee;
+        // Set current donnee with the next donnee
+        this.mode =  this.navigationService.getNextMode();
+        if (this.modeHelper.isInventaireMode(this.mode)) {
+            this.switchToNewInventaireMode();
         }
-
-        // Next donnee
-        isLastDonnee = isLastDonnee || (this.numberOfDonnees === this.currentDonneeIndex);
-        if (isLastDonnee) {
-            this.nextDonnee = null;
-        } else {
-            this.populateNextDonnee(this.donneeToSave.id);
+        else if (this.modeHelper.isDonneeMode(this.mode)) {
+            this.switchToNewDonneeMode();
         }
-    }
+        this.inventaireToSave = this.navigationService.getNextInventaire();
+        this.donneeToSave = this.navigationService.getNextDonnee();
+        this.navigationService.updateCurrentDonneeIndexWithNextDonnee();
 
-    private populateNextDonnee(id: number): void {
-        this.creationService.getNextDonnee(id)
-            .subscribe(
-                (nextDonnee: Donnee) => {
-                    this.nextDonnee = nextDonnee;
-                },
-                (error) => {
-                    console.error("Impossible de trouver la donnée suivante (" + error + ")");
-                });
-    }
-
-    private populatePreviousDonnee(id: number): void {
-        this.creationService.getPreviousDonnee(id)
-            .subscribe(
-                (previousDonnee: Donnee) => {
-                    this.previousDonnee = previousDonnee;
-                },
-                (error) => {
-                    console.error("Impossible de trouver la donnée précédente (" + error + ")");
-                });
+        // Set new next donnee
+        this.navigationService.updateNextDonnee(this.donneeToSave);    
     }
 
     public createNewDonnee(): void {
@@ -415,11 +399,11 @@ export class CreationComponent implements OnInit {
                     this.status = result.status;
                     if (this.status === "SUCCESS") {
                         // Display next donnee
-                        if (this.currentDonneeIndex === this.numberOfDonnees) {
-                            this.inventaireToSave = this.savedInventaire;
-                            this.donneeToSave = this.savedDonnee;
-                            this.currentDonneeIndex = null;
-                            this.nextDonnee = null;
+                        if (this.navigationService.currentDonneeIndex === this.navigationService.numberOfDonnees) {
+                            this.inventaireToSave = this.navigationService.savedInventaire;
+                            this.donneeToSave = this.navigationService.savedDonnee;
+                            this.navigationService.currentDonneeIndex = null;
+                            this.navigationService.nextDonnee = null;
 
                             if (!!this.donneeToSave
                                 && !!this.donneeToSave.inventaire
@@ -429,14 +413,14 @@ export class CreationComponent implements OnInit {
                                 this.switchToNewInventaireMode();
                             }
                         } else {
-                            this.donneeToSave = this.nextDonnee;
-                            if (this.currentDonneeIndex === (this.numberOfDonnees - 1)) {
-                                this.nextDonnee = null;
+                            this.donneeToSave = this.navigationService.nextDonnee;
+                            if (this.navigationService.currentDonneeIndex === (this.navigationService.numberOfDonnees - 1)) {
+                                this.navigationService.nextDonnee = null;
                             } else {
-                                this.populateNextDonnee(this.donneeToSave.id);
+                                this.navigationService.populateNextDonnee(this.donneeToSave.id);
                             }
                         }
-                        this.numberOfDonnees--;
+                        this.navigationService.numberOfDonnees--;
 
                         // let index = this._objects.indexOf(object);
                         // if (index > -1) {
@@ -446,7 +430,7 @@ export class CreationComponent implements OnInit {
                     }
                     // this._messages = result["messages"];
                 },
-                (error) => {
+                (error: any) => {
                     console.error("Echec lors de la suppression de la donnée (" + error + ")");
                 });
     }
@@ -489,7 +473,7 @@ export class CreationComponent implements OnInit {
     }
 
     public isPreviousDonneeBtnDisplayed(): boolean {
-        return !this.currentDonneeIndex || this.currentDonneeIndex > 1;
+        return !this.navigationService.currentDonneeIndex || this.navigationService.currentDonneeIndex > 1;
     }
 
     public isNextDonneeBtnDisplayed(): boolean {
@@ -516,44 +500,18 @@ export class CreationComponent implements OnInit {
         // TODO
     }
 
-    public onPreviousDonneeBtnClicked(): void {
-        // Save the current donnee or inventaire
-        this.saveCurrentInventaireAndDonnee();
 
-        // Display previous donnee
-        this.displayPreviousDonnee();
-    }
 
-    public onNextDonneeBtnClicked(): void {
-        // Display previous donnee
-        this.displayNextDonnee();
-    }
-
-    private saveCurrentInventaireAndDonnee(): void {
-        if (!this.modeHelper.isUpdateMode(this.mode)) {
-            this.savedDonnee = null;
-            this.savedInventaire = null;
-            this.savedMode = this.mode;
-
-            if (this.modeHelper.isInventaireMode(this.savedMode)) {
-                this.savedInventaire = this.inventaireToSave;
-            }
-
-            if (this.modeHelper.isDonneeMode(this.savedMode)) {
-                this.savedDonnee = this.donneeToSave;
-                this.savedInventaire = this.donneeToSave.inventaire;
-            }
-        }
-    }
+    
 
     private redisplayCurrentInventaireAndDonnee(): void {
-        if (this.modeHelper.isInventaireMode(this.savedMode)) {
-            this.inventaireToSave = this.savedInventaire;
+        if (this.modeHelper.isInventaireMode(this.navigationService.savedMode)) {
+            this.inventaireToSave = this.navigationService.savedInventaire;
             this.donneeToSave = new Donnee();
             this.switchToNewInventaireMode();
-        } else if (this.modeHelper.isDonneeMode(this.savedMode)) {
-            this.inventaireToSave = this.savedInventaire;
-            this.donneeToSave = this.savedDonnee;
+        } else if (this.modeHelper.isDonneeMode(this.navigationService.savedMode)) {
+            this.inventaireToSave = this.navigationService.savedInventaire;
+            this.donneeToSave = this.navigationService.savedDonnee;
             this.switchToNewDonneeMode();
         }
     }
@@ -564,11 +522,11 @@ export class CreationComponent implements OnInit {
         this.isInventaireDisabled = false;
         this.inventaireToSave = new Inventaire();
         this.donneeToSave = new Donnee();
-        this.initDefaultValues();
-        this.previousDonnee = this.pageModel.lastDonnee;
-        this.nextDonnee = null;
-        this.numberOfDonnees = this.pageModel.numberOfDonnees;
-        this.currentDonneeIndex = null;
+        this.initInventaireDefaultValues();
+        this.navigationService.previousDonnee = this.pageModel.lastDonnee;
+        this.navigationService.nextDonnee = null;
+        this.navigationService.numberOfDonnees = this.pageModel.numberOfDonnees;
+        this.navigationService.currentDonneeIndex = null;
         document.getElementById("input-observateur").focus();
     }
 
@@ -594,5 +552,14 @@ export class CreationComponent implements OnInit {
             // invalid character, prevent input
             event.preventDefault();
         }
+    }
+
+    private isSuccess(): boolean {
+        return this.status === "SUCCESS";
+    }
+
+    private setErrorMessage(message: string): void {
+        this.status = this.STATUS_ERROR;
+        this.messages = [{value: message}];
     }
 }

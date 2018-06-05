@@ -4,7 +4,7 @@ export class EntiteResult<T extends EntiteSimple> {
 
     public object: T;
 
-    public messages: any;
+    public messages: any[];
 
     public status: string;
 
