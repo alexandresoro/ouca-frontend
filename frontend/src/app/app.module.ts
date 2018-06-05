@@ -89,6 +89,7 @@ import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
+import { NavigationService } from "./pages/creation/navigation.service";
 import { EspeceRemovalConfirmationComponent } from "./pages/entities/espece/espece-delete-confirmation.component";
 import { EspeceDetailsComponent } from "./pages/entities/espece/espece-details.component";
 import { EspeceFormComponent } from "./pages/entities/espece/espece-form.component";
@@ -264,10 +265,11 @@ const baseNaturalisteRoutes: Routes = [
         BaseNaturalisteService,
         CreationModeHelper,
         CreationService,
+        DonneeService,
         EntiteSimpleService,
         GestionModeHelper,
-        DonneeService,
-        InventaireService
+        InventaireService,
+        NavigationService,
     ]
 })
 export class AppModule {

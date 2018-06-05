@@ -24,6 +24,15 @@ export class NavigationService {
     constructor(public creationService: CreationService, public modeHelper: CreationModeHelper) {
     }
 
+    public init(lastDonnee: Donnee, numberOfDonnees: number): void {
+        this.previousDonnee = lastDonnee;
+        this.nextDonnee = null;
+        this.currentDonneeIndex = null;
+        this.numberOfDonnees = this.numberOfDonnees;
+        this.savedDonnee = null;
+        this.savedInventaire = null;
+        this.savedMode = null;
+    }
     public saveCurrentContext(modeToSave: CreationMode, inventaireToSave: Inventaire, donneeToSave: Donnee): void {
         this.savedDonnee = null;
         this.savedInventaire = null;
@@ -72,15 +81,14 @@ export class NavigationService {
                 });
     }
 
-    public updateCurrentDonneeIndexWithNextDonnee(): void {
+    public updateCurrentDonneeIndexWithNextDonnee(afterDelete: boolean = false): void {
         // Donnee to display
         if (this.isLastDonneeCurrentlyDisplayed()) {
             // Last donnee
             this.currentDonneeIndex = null;
-        } else {
+        } else if (!afterDelete) {
             this.currentDonneeIndex++;
         }
-
     }
 
     public updateNextDonnee(currentDonnee: Donnee): void {
@@ -144,5 +152,9 @@ export class NavigationService {
 
     private isLastDonneeCurrentlyDisplayed() {
         return this.numberOfDonnees === this.currentDonneeIndex;
+    }
+
+    public hasPreviousDonnee(): boolean {
+        return !!this.currentDonneeIndex && this.currentDonneeIndex > 1;
     }
 }

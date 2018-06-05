@@ -93,6 +93,7 @@ export class CreationComponent implements OnInit {
     private onInitCreationPageSucces(creationPage: CreationPage): void {
         this.pageModel = creationPage;
         this.nextRegroupement = this.pageModel.nextRegroupement;
+        this.navigationService.init(this.pageModel.lastDonnee, this.pageModel.numberOfDonnees);
 
         this.switchToNewInventaireMode();
 
@@ -366,10 +367,16 @@ export class CreationComponent implements OnInit {
     }
 
     public onNextDonneeBtnClicked(): void {
-        // Set previous donnee with current donnee
-        this.navigationService.previousDonnee = this.donneeToSave;
+        this.setPreviousDonneeToTheCurrentDonnee();
+        this.setCurrentDonneeToTheNextDonnee();
+        this.setNewNextDonnee();
+    }
 
-        // Set current donnee with the next donnee
+    private setPreviousDonneeToTheCurrentDonnee(): void {
+        this.navigationService.previousDonnee = this.donneeToSave;
+    }
+
+    private setCurrentDonneeToTheNextDonnee(afterDelete: boolean = false): void {
         this.mode = this.navigationService.getNextMode();
         if (this.modeHelper.isInventaireMode(this.mode)) {
             this.switchToNewInventaireMode();
@@ -378,60 +385,44 @@ export class CreationComponent implements OnInit {
         }
         this.inventaireToSave = this.navigationService.getNextInventaire();
         this.donneeToSave = this.navigationService.getNextDonnee();
-        this.navigationService.updateCurrentDonneeIndexWithNextDonnee();
+        this.navigationService.updateCurrentDonneeIndexWithNextDonnee(afterDelete);
+    }
 
-        // Set new next donnee
+    private setNewNextDonnee() {
         this.navigationService.updateNextDonnee(this.donneeToSave);
     }
-
-    public createNewDonnee(): void {
-        this.redisplayCurrentInventaireAndDonnee();
-    }
-
     public deleteDonnee(donnee: Donnee): void {
         this.creationService.deleteDonnee(donnee.id)
             .subscribe(
                 (result: EntiteResult<Donnee>) => {
-                    this.status = result.status;
-                    if (this.status === "SUCCESS") {
-                        // Display next donnee
-                        if (this.navigationService.currentDonneeIndex === this.navigationService.numberOfDonnees) {
-                            this.inventaireToSave = this.navigationService.savedInventaire;
-                            this.donneeToSave = this.navigationService.savedDonnee;
-                            this.navigationService.currentDonneeIndex = null;
-                            this.navigationService.nextDonnee = null;
-
-                            if (!!this.donneeToSave
-                                && !!this.donneeToSave.inventaire
-                                && !!this.donneeToSave.inventaire.id) {
-                                this.switchToNewDonneeMode();
-                            } else {
-                                this.switchToNewInventaireMode();
-                            }
-                        } else {
-                            this.donneeToSave = this.navigationService.nextDonnee;
-                            if (this.navigationService.currentDonneeIndex ===
-                                (this.navigationService.numberOfDonnees - 1)) {
-                                this.navigationService.nextDonnee = null;
-                            } else {
-                                this.navigationService.populateNextDonnee(this.donneeToSave.id);
-                            }
-                        }
-                        this.navigationService.numberOfDonnees--;
-
-                        // let index = this._objects.indexOf(object);
-                        // if (index > -1) {
-                        //     this._objects.splice(index, 1);
-                        // }
-                        // this.switchToViewAllMode();
-                    }
-                    // this._messages = result["messages"];
+                    this.onDeleteSuccess(result);
                 },
                 (error: any) => {
-                    console.error("Echec lors de la suppression de la donnée (" + error + ")");
+                    this.onDeleteError(error);
                 });
     }
 
+    private onDeleteSuccess(result: EntiteResult<Donnee>): void {
+        this.status = result.status;
+        this.messages = result.messages;
+
+        if (this.isSuccess()) {
+            this.setCurrentDonneeToTheNextDonnee(true);
+            this.navigationService.numberOfDonnees--;
+            this.setNewNextDonnee();
+
+            // TODO remove the donnee from the list of donnee
+            // let index = this._objects.indexOf(object);
+            // if (index > -1) {
+            //     this._objects.splice(index, 1);
+            // }
+            // this.switchToViewAllMode();
+        }
+    }
+
+    private onDeleteError(error: any): void {
+        console.error("Echec lors de la suppression de la donnée (" + error + ")");
+    }
     public onEstimationNombreChanged(estimation: EstimationNombre) {
         if (estimation.nonCompte) {
             this.donneeToSave.nombre = null;
@@ -470,13 +461,17 @@ export class CreationComponent implements OnInit {
     }
 
     public isPreviousDonneeBtnDisplayed(): boolean {
-        return !this.navigationService.currentDonneeIndex || this.navigationService.currentDonneeIndex > 1;
+        return this.navigationService.hasPreviousDonnee();
     }
 
     public isNextDonneeBtnDisplayed(): boolean {
         return this.modeHelper.isUpdateMode(this.mode);
     }
 
+    public onBackToCreationDonneeBtnClicked(): void {
+        // TODO
+        this.redisplayCurrentInventaireAndDonnee();
+    }
     public onNewDonneeBtnClicked(): void {
         // TODO
         this.switchToNewInventaireMode();
@@ -498,14 +493,15 @@ export class CreationComponent implements OnInit {
     }
 
     private redisplayCurrentInventaireAndDonnee(): void {
-        if (this.modeHelper.isInventaireMode(this.navigationService.savedMode)) {
+        this.mode = this.navigationService.savedMode;
+        if (this.modeHelper.isInventaireMode(this.mode)) {
+            this.switchToNewInventaireMode();
             this.inventaireToSave = this.navigationService.savedInventaire;
             this.donneeToSave = new Donnee();
-            this.switchToNewInventaireMode();
-        } else if (this.modeHelper.isDonneeMode(this.navigationService.savedMode)) {
+        } else if (this.modeHelper.isDonneeMode(this.mode)) {
+            this.switchToNewDonneeMode();
             this.inventaireToSave = this.navigationService.savedInventaire;
             this.donneeToSave = this.navigationService.savedDonnee;
-            this.switchToNewDonneeMode();
         }
     }
 
@@ -516,10 +512,7 @@ export class CreationComponent implements OnInit {
         this.inventaireToSave = new Inventaire();
         this.donneeToSave = new Donnee();
         this.initInventaireDefaultValues();
-        this.navigationService.previousDonnee = this.pageModel.lastDonnee;
-        this.navigationService.nextDonnee = null;
-        this.navigationService.numberOfDonnees = this.pageModel.numberOfDonnees;
-        this.navigationService.currentDonneeIndex = null;
+
         document.getElementById("input-observateur").focus();
     }
 
