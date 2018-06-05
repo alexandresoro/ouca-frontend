@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
-import { BaseNaturalisteService } from "./../../services/base-naturaliste.service";
-import { GestionMode } from "../entities/gestion-mode.enum";
-import { CreationModeHelper, CreationMode } from "./creation-mode.enum";
-import { Navigation } from "../../model/navigation.object";
-import { Inventaire } from "../../model/inventaire.object";
 import { Donnee } from "../../model/donnee.object";
+import { Inventaire } from "../../model/inventaire.object";
+import { GestionMode } from "../entities/gestion-mode.enum";
+import { BaseNaturalisteService } from "./../../services/base-naturaliste.service";
+import { CreationMode, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
 
 @Injectable()
@@ -25,7 +24,7 @@ export class NavigationService {
     constructor(public creationService: CreationService, public modeHelper: CreationModeHelper) {
     }
 
-    public saveCurrentContext(modeToSave: CreationMode, inventaireToSave: Inventaire, donneeToSave: Donnee): void {        
+    public saveCurrentContext(modeToSave: CreationMode, inventaireToSave: Inventaire, donneeToSave: Donnee): void {
         this.savedDonnee = null;
         this.savedInventaire = null;
 
@@ -38,7 +37,7 @@ export class NavigationService {
         if (this.modeHelper.isDonneeMode(this.savedMode)) {
             this.savedDonnee = donneeToSave;
             this.savedInventaire = donneeToSave.inventaire;
-        }        
+        }
     }
 
     public updateCurrentDonneeIndexWithPreviousDonnee(): void {
@@ -73,25 +72,24 @@ export class NavigationService {
                 });
     }
 
-
     public updateCurrentDonneeIndexWithNextDonnee(): void {
-         // Donnee to display         
-         if (this.isLastDonneeCurrentlyDisplayed()) {
-             // Last donnee
-             this.currentDonneeIndex = null;             
-         } else {
-             this.currentDonneeIndex++;
-         }
- 
+        // Donnee to display
+        if (this.isLastDonneeCurrentlyDisplayed()) {
+            // Last donnee
+            this.currentDonneeIndex = null;
+        } else {
+            this.currentDonneeIndex++;
+        }
+
     }
 
     public updateNextDonnee(currentDonnee: Donnee): void {
-         // Next donnee
-         if (this.currentDonneeIndex == null) {
-             this.nextDonnee = null;
-         } else {
-             this.populateNextDonnee(currentDonnee.id);
-         }
+        // Next donnee
+        if (this.currentDonneeIndex == null) {
+            this.nextDonnee = null;
+        } else {
+            this.populateNextDonnee(currentDonnee.id);
+        }
     }
 
     public populateNextDonnee(id: number): void {
@@ -110,7 +108,7 @@ export class NavigationService {
 
         if (this.isLastDonneeCurrentlyDisplayed()) {
             // Last donnee
-            nextInventaire = this.savedInventaire;            
+            nextInventaire = this.savedInventaire;
         } else {
             nextInventaire = this.nextDonnee.inventaire;
         }
@@ -127,7 +125,7 @@ export class NavigationService {
         } else {
             nextMode = CreationMode.UPDATE;
         }
-        
+
         return nextMode;
     }
 
@@ -140,7 +138,7 @@ export class NavigationService {
         } else {
             nextDonnee = this.nextDonnee;
         }
-        
+
         return nextDonnee;
     }
 

@@ -100,8 +100,8 @@ export class CreationComponent implements OnInit {
     }
 
     private onInitCreationPageError(error: any): void {
-        this.setErrorMessage("Impossible de charger la page de création.\nErreur: " + error);        
-        console.error("Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: " 
+        this.setErrorMessage("Impossible de charger la page de création.\nErreur: " + error);
+        console.error("Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: "
             + error + ")");
     }
 
@@ -133,7 +133,7 @@ export class CreationComponent implements OnInit {
         this.initCoordinates();
     }
 
-    /** 
+    /**
      * When creating a new donne, initialize the form
      */
     private initDonneeDefaultValues(): void {
@@ -170,7 +170,7 @@ export class CreationComponent implements OnInit {
         this.selectedMilieux = [];
     }
 
-    /** 
+    /**
      * When selecting a departement, filter the list of communes, set back the lieu-dit to empty lieu-dit
      */
     private updateCommunes(): void {
@@ -248,8 +248,6 @@ export class CreationComponent implements OnInit {
         this.donneeToSave.regroupement = this.nextRegroupement;
     }
 
-
-
     /**
      * Called when clicking on Save Inventaire button
      */
@@ -275,14 +273,13 @@ export class CreationComponent implements OnInit {
                 });
     }
 
-    
     private onSaveInventaireSuccess() {
         this.donneeToSave = new Donnee();
         this.donneeToSave.inventaire = this.inventaireToSave;
         this.switchToNewDonneeMode();
     }
     private onSaveInventaireError(error: any) {
-        this.setErrorMessage("L'inventaire n'a pas pu êtr créé/modifié.");        
+        this.setErrorMessage("L'inventaire n'a pas pu êtr créé/modifié.");
         console.error("Impossible de créer l'inventaire.\nDétails de l'erreur:" + error);
     }
 
@@ -373,11 +370,10 @@ export class CreationComponent implements OnInit {
         this.navigationService.previousDonnee = this.donneeToSave;
 
         // Set current donnee with the next donnee
-        this.mode =  this.navigationService.getNextMode();
+        this.mode = this.navigationService.getNextMode();
         if (this.modeHelper.isInventaireMode(this.mode)) {
             this.switchToNewInventaireMode();
-        }
-        else if (this.modeHelper.isDonneeMode(this.mode)) {
+        } else if (this.modeHelper.isDonneeMode(this.mode)) {
             this.switchToNewDonneeMode();
         }
         this.inventaireToSave = this.navigationService.getNextInventaire();
@@ -385,7 +381,7 @@ export class CreationComponent implements OnInit {
         this.navigationService.updateCurrentDonneeIndexWithNextDonnee();
 
         // Set new next donnee
-        this.navigationService.updateNextDonnee(this.donneeToSave);    
+        this.navigationService.updateNextDonnee(this.donneeToSave);
     }
 
     public createNewDonnee(): void {
@@ -414,7 +410,8 @@ export class CreationComponent implements OnInit {
                             }
                         } else {
                             this.donneeToSave = this.navigationService.nextDonnee;
-                            if (this.navigationService.currentDonneeIndex === (this.navigationService.numberOfDonnees - 1)) {
+                            if (this.navigationService.currentDonneeIndex ===
+                                (this.navigationService.numberOfDonnees - 1)) {
                                 this.navigationService.nextDonnee = null;
                             } else {
                                 this.navigationService.populateNextDonnee(this.donneeToSave.id);
@@ -500,10 +497,6 @@ export class CreationComponent implements OnInit {
         // TODO
     }
 
-
-
-    
-
     private redisplayCurrentInventaireAndDonnee(): void {
         if (this.modeHelper.isInventaireMode(this.navigationService.savedMode)) {
             this.inventaireToSave = this.navigationService.savedInventaire;
@@ -560,6 +553,6 @@ export class CreationComponent implements OnInit {
 
     private setErrorMessage(message: string): void {
         this.status = this.STATUS_ERROR;
-        this.messages = [{value: message}];
+        this.messages = [{ value: message }];
     }
 }
