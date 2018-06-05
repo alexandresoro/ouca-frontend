@@ -453,7 +453,7 @@ export class CreationComponent implements OnInit {
     }
 
     public isNewDonneeBtnDisplayed(): boolean {
-        return true; // TODO
+        return false; // TODO
     }
 
     public isDeleteDonneeBtnDisplayed(): boolean {

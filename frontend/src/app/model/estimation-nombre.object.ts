@@ -6,5 +6,6 @@ export class EstimationNombre extends EntiteAvecLibelle {
 
     constructor() {
         super();
+        this.nonCompte = false;
     }
 }
