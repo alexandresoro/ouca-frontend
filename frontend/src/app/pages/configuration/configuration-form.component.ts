@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { EntiteSimpleFormComponent } from "../entite-simple/entite-simple-form.component";
 import { Departement } from "../../model/departement.object";
 import { Observateur } from "../../model/observateur.object";
 import { EstimationNombre } from "../../model/estimation-nombre.object";
