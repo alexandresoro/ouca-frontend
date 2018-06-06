@@ -1,66 +1,66 @@
 import { Component } from "@angular/core";
+import { Http, Response } from "@angular/http";
 import { ConfigurationPage } from "./../../model/configuration-page.object";
+import { GestionModeHelper, GestionMode } from "../entities/gestion-mode.enum";
 
 @Component({
     templateUrl: "./configuration.tpl.html"
 })
 export class ConfigurationComponent {
 
-    public pageModel: ConfigurationPage = new ConfigurationPage(); // TODO
+    public pageModel: ConfigurationPage;
 
-    public editApplicationName(): void {
+    public configurationToSave: any; // TODO create object model
+
+    public mode: GestionMode;
+
+    public messages: any[];
+
+    public status: string;
+
+    constructor(private _http: Http,
+                public modeHelper: GestionModeHelper) {
+    }
+
+    public ngOnInit(): void {
+        this.switchToViewAllMode();        
+        this.getCurrentConfigurations();
+    }
+
+    ////// CALLED FROM UI //////
+    public refresh(): void {
+        this.getCurrentConfigurations();
+    }
+
+    public editConfigurations(): void {
+        this.switchToEditionMode();
+    }
+
+    public saveConfigurations(configuration: any): void {
         // TODO
     }
 
-    public editObservateur(): void {
-        // TODO
+    public cancelEdition(): void {
+        this.clearMessages();
+        this.switchToViewAllMode();
+    }
+    ////// END FROM UI //////
+
+
+    private getCurrentConfigurations(): void {
+        // TODO call back end
+    }    
+
+    private switchToEditionMode(): void {
+        this.clearMessages();
+        this.mode = GestionMode.EDITION;
     }
 
-    public editDepartement(): void {
-        // TODO
+    private switchToViewAllMode(): void {
+        this.mode = GestionMode.VIEW_ALL;
     }
 
-    public editEstimationNombre(): void {
-        // TODO
-    }
-
-    public editNombre(): void {
-        // TODO
-    }
-
-    public editSexe(): void {
-        // TODO
-    }
-
-    public editAge(): void {
-        // TODO
-    }
-
-    public editAssociesDisplayed(): void {
-        // TODO
-    }
-
-    public editMeteoDisplayed(): void {
-        // TODO
-    }
-
-    public editDistanceDisplayed(): void {
-        // TODO
-    }
-
-    public editRegroupementDisplayed(): void {
-        // TODO
-    }
-
-    public editColumnsToDisplay(): void {
-        // TODO
-    }
-
-    public editMySqlPath(): void {
-        // TODO
-    }
-
-    public editMySqlDumpPath(): void {
-        // TODO
+    private clearMessages(): void {
+        this.messages = [];
     }
 }

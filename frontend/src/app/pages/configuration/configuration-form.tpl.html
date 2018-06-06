@@ -1,0 +1,196 @@
+<div class="lco-entity-form lco-entite-simple-form">
+    <form (ngSubmit)="save()"
+        #entiteSimpleForm="ngForm">
+        <div>
+            <button type="button"
+                class="close"
+                (click)="cancel()">&times;
+            </button>
+            <h2>Modification des configurations</h2>
+        </div>
+        <div>
+
+            <!-- Nom du logiciel -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-nom">Nom de l'application</label>
+                <input type="text"
+                    class="form-control"
+                    name="input-nom"
+                    id="input-nom"
+                    [(ngModel)]="model.applicationName"/>
+            </div>
+
+            <!-- Observateur par défaut -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-observateur">Observateur par défaut</label>
+                <select class="form-control"
+                    id="input-observateur"
+                    name="input-observateur"
+                    [(ngModel)]="model.defaultObservateur"
+                    required>
+                    <option *ngFor="let obs of observateurs" 
+                        [ngValue]="obs">
+                        {{obs.libelle}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Département par défaut -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-departement">Département par défaut</label>
+                <select class="form-control"
+                    id="input-departement"
+                    name="input-departement"
+                    [(ngModel)]="model.defaultDepartement"
+                    required>
+                    <option *ngFor="let dept of departements" 
+                        [ngValue]="dept">
+                        {{dept.code}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Estimation nombre par défaut -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-estimation-nombre">Estimation du nombre par défaut</label>
+                <select class="form-control"
+                    id="input-estimation-nombre"
+                    name="input-estimation-nombre"
+                    [(ngModel)]="model.defaultEstimationNombre"
+                    required>
+                    <option *ngFor="let estim of estimationsNombre" 
+                        [ngValue]="estim">
+                        {{estim.libelle}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Nombre par défaut -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-nombre">Nombre par défaut</label>
+                <input type="number"
+                    min="1"
+                    class="form-control"
+                    name="input-nombre"
+                    id="input-nombre"
+                    [(ngModel)]="model.defaultNombre"/>
+            </div>
+
+            <!-- Sexe par défaut -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-sexe">Sexe par défaut</label>
+                <select class="form-control"
+                    id="input-sexe"
+                    name="input-sexe"
+                    [(ngModel)]="model.defaultSexe"
+                    required>
+                    <option *ngFor="let sexe of sexes" 
+                        [ngValue]="sexe">
+                        {{sexe.libelle}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Age par défaut -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-age">Âge par défaut</label>
+                <select class="form-control"
+                    id="input-age"
+                    name="input-age"
+                    [(ngModel)]="model.defaultAge"
+                    required>
+                    <option *ngFor="let age of ages" 
+                        [ngValue]="age">
+                        {{age.libelle}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Afficher les observateurs associés -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-associes">Afficher les observateurs associés</label>
+                <input type="checkbox"
+                    name="input-associes"
+                    id="input-associes"
+                    [(ngModel)]="model.areAssociesDisplayed" />
+            </div>
+
+            <!-- Afficher la meteo -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-meteo">Afficher la météo</label>
+                <input type="checkbox"
+                    name="input-meteo"
+                    id="input-meteo"
+                    [(ngModel)]="model.isMeteoDisplayed"/>
+            </div>
+
+            <!-- Afficher la distance -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-distance">Afficher la distance</label>
+                <input type="checkbox"
+                    name="input-distance"
+                    id="input-distance"
+                    [(ngModel)]="model.isDistanceDisplayed" />
+            </div>
+
+            <!-- Afficher le regroupement -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-regroupement">Afficher le numéro de regroupement</label>
+                <input type="checkbox"
+                    name="input-regroupement"
+                    id="input-regroupement"
+                    [(ngModel)]="model.isRegroupementDisplayed" />
+            </div>
+
+            <!-- Path to mysql -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-mysql">Chemin vers MySQL</label>
+                <input type="text"
+                    class="form-control"
+                    name="input-mysql"
+                    id="input-mysql"
+                    [(ngModel)]="model.mySqlPath"/>
+            </div>
+
+            <!-- Path to mysqldump -->
+            <div class="form-group">
+                <label class="control-label"
+                    for="input-mysqldump">Chemin vers MySQL dump</label>
+                <input type="text"
+                    class="form-control"
+                    name="input-mysqldump"
+                    id="input-mysqldump"
+                    [(ngModel)]="model.mySqlDumpPath"/>
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 text-right ">
+                <button type="button"
+                    class="btn btn-default"
+                    (click)="cancel()">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Annuler</span>
+                </button>
+                <button type="submit"
+                    class="btn btn-primary"
+                    [disabled]="!entiteSimpleForm.form.valid">
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
