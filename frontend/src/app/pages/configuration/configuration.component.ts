@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Http, Response } from "@angular/http";
+import { GestionMode, GestionModeHelper } from "../entities/gestion-mode.enum";
 import { ConfigurationPage } from "./../../model/configuration-page.object";
-import { GestionModeHelper, GestionMode } from "../entities/gestion-mode.enum";
 
 @Component({
     templateUrl: "./configuration.tpl.html"
@@ -18,12 +18,12 @@ export class ConfigurationComponent {
 
     public status: string;
 
-    constructor(private _http: Http,
+    constructor(private http: Http,
                 public modeHelper: GestionModeHelper) {
     }
 
     public ngOnInit(): void {
-        this.switchToViewAllMode();        
+        this.switchToViewAllMode();
         this.getCurrentConfigurations();
     }
 
@@ -46,10 +46,9 @@ export class ConfigurationComponent {
     }
     ////// END FROM UI //////
 
-
     private getCurrentConfigurations(): void {
         // TODO call back end
-    }    
+    }
 
     private switchToEditionMode(): void {
         this.clearMessages();

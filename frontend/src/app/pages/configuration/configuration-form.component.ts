@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { Departement } from "../../model/departement.object";
-import { Observateur } from "../../model/observateur.object";
-import { EstimationNombre } from "../../model/estimation-nombre.object";
 import { Age } from "../../model/age.object";
+import { Departement } from "../../model/departement.object";
+import { EstimationNombre } from "../../model/estimation-nombre.object";
+import { Observateur } from "../../model/observateur.object";
 import { Sexe } from "../../model/sexe.object";
 
 @Component({
@@ -21,14 +21,11 @@ export class ConfigurationFormComponent {
 
     @Input() public ages: Age[];
 
-    @Input() public model: any; // TODO    
+    @Input() public model: any; // TODO
 
     @Output() public confirm: EventEmitter<any> = new EventEmitter(); // TODO
 
     @Output() public back: EventEmitter<any> = new EventEmitter(); // TODO
-
-    constructor() {
-    }
 
     public save(): void {
         this.confirm.emit(this.model);

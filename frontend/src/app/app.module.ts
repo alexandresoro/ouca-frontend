@@ -86,6 +86,7 @@ import { SexeComponent } from "./pages/entities/sexe/sexe.component";
 import { ViewComponent } from "./pages/vue/view.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
+import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
@@ -191,6 +192,7 @@ const baseNaturalisteRoutes: Routes = [
         ClasseFormComponent,
         ClasseRemovalConfirmationComponent,
         ConfigurationComponent,
+        ConfigurationFormComponent,
         CommuneComponent,
         CommuneTableComponent,
         CommuneDetailsComponent,

@@ -12,7 +12,7 @@
 
             <button class="btn btn-default"
                 (click)="editConfigurations()">
-                <span class="glyphicon glyphicon-refresh">&nbsp;</span>
+                <span class="glyphicon glyphicon-pencil">&nbsp;</span>
                 <span>Modifier les configurations</span>
             </button>
         </div>
@@ -31,7 +31,7 @@
         (back)="cancelEdition()"></configuration-form>
 
     <div *ngIf="modeHelper.isViewAllMode(mode)"
-         class="table-responsive">
+        class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -43,67 +43,67 @@
             <tbody>
                 <tr>
                     <td>Nom de l'application</td>
-                    <td>{{pageModel.applicationName}}</td>
+                    <td>{{pageModel?.applicationName}}</td>
                 </tr>
                 <tr>
                     <td>Observateur par défaut</td>
-                    <td>{{pageModel.defaultObservateur?.libelle}}</td>
+                    <td>{{pageModel?.defaultObservateur?.libelle}}</td>
                 </tr>
                 <tr>
                     <td>Département par défaut</td>
-                    <td>{{pageModel.defaultDepartement?.code}}</td>
+                    <td>{{pageModel?.defaultDepartement?.code}}</td>
                 </tr>
                 <tr>
                     <td>Estimation du nombre par défaut</td>
-                    <td>{{pageModel.defaultEstimationNombre?.libelle}}</td>
+                    <td>{{pageModel?.defaultEstimationNombre?.libelle}}</td>
                 </tr>
                 <tr>
                     <td>Nombre par défaut</td>
-                    <td>{{pageModel.defaultNombre}}</td>
+                    <td>{{pageModel?.defaultNombre}}</td>
                 </tr>
                 <tr>
                     <td>Sexe par défaut</td>
-                    <td>{{pageModel.defaultSexe?.libelle}}</td>
+                    <td>{{pageModel?.defaultSexe?.libelle}}</td>
                 </tr>
                 <tr>
                     <td>Âge par défaut</td>
-                    <td>{{pageModel.defaultAge?.libelle}}</td>
+                    <td>{{pageModel?.defaultAge?.libelle}}</td>
                 </tr>
                 <tr>
                     <td>Afficher les observateurs associés</td>
                     <td>
-                        <span *ngIf="pageModel.areAssociesDisplayed">Oui</span>
-                        <span *ngIf="!pageModel.areAssociesDisplayed">Non</span>
+                        <span *ngIf="pageModel?.areAssociesDisplayed">Oui</span>
+                        <span *ngIf="!pageModel?.areAssociesDisplayed">Non</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Afficher la météo</td>
                     <td>
-                        <span *ngIf="pageModel.isMeteoDisplayed">Oui</span>
-                        <span *ngIf="!pageModel.isMeteoDisplayed">Non</span>
+                        <span *ngIf="pageModel?.isMeteoDisplayed">Oui</span>
+                        <span *ngIf="!pageModel?.isMeteoDisplayed">Non</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Afficher la distance</td>
                     <td>
-                        <span *ngIf="pageModel.isDistanceDisplayed">Oui</span>
-                        <span *ngIf="!pageModel.isDistanceDisplayed">Non</span>
+                        <span *ngIf="pageModel?.isDistanceDisplayed">Oui</span>
+                        <span *ngIf="!pageModel?.isDistanceDisplayed">Non</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Afficher le numéro de regroupement</td>
                     <td>
-                        <span *ngIf="pageModel.isRegroupementDisplayed">Oui</span>
-                        <span *ngIf="!pageModel.isRegroupementDisplayed">Non</span>
+                        <span *ngIf="pageModel?.isRegroupementDisplayed">Oui</span>
+                        <span *ngIf="!pageModel?.isRegroupementDisplayed">Non</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Chemin vers MySQL</td>
-                    <td>{{pageModel.mySqlPath}}</td>
+                    <td>{{pageModel?.mySqlPath}}</td>
                 </tr>
                 <tr>
                     <td>Chemin vers MySQL dump</td>
-                    <td>{{pageModel.mySqlDumpPath}}</td>
+                    <td>{{pageModel?.mySqlDumpPath}}</td>
                 </tr>
 
             </tbody>
