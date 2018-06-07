@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 import { Http, Response } from "@angular/http";
+import { Observable } from "rxjs/Observable";
+import { BaseNaturalisteService } from "../../services/base-naturaliste.service";
 import { GestionMode, GestionModeHelper } from "../entities/gestion-mode.enum";
 import { ConfigurationPage } from "./../../model/configuration-page.object";
 
@@ -18,8 +20,9 @@ export class ConfigurationComponent {
 
     public status: string;
 
-    constructor(private http: Http,
+    constructor(public http: Http,
                 public modeHelper: GestionModeHelper) {
+        super(http);
     }
 
     public ngOnInit(): void {
@@ -47,7 +50,16 @@ export class ConfigurationComponent {
     ////// END FROM UI //////
 
     private getCurrentConfigurations(): void {
-        // TODO call back end
+        this.callBackend("/configuration/init");
+
+        this.creationService.getInitialPageModel()
+            .subscribe(
+                (creationPage: CreationPage) => {
+                    this.onInitCreationPageSucces(creationPage);
+                },
+                (error: any) => {
+                    this.onInitCreationPageError(error);
+                });
     }
 
     private switchToEditionMode(): void {
