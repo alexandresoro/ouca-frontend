@@ -27,7 +27,7 @@
         [estimationsNombre]="pageModel.estimationsNombre"
         [observateurs]="pageModel.observateurs"
         [sexes]="pageModel.sexes"
-        (confirm)="saveConfigurations()"
+        (confirm)="saveAppConfiguration()"
         (back)="cancelEdition()"></configuration-form>
 
     <div *ngIf="modeHelper.isViewAllMode(mode)"
@@ -43,67 +43,67 @@
             <tbody>
                 <tr>
                     <td>Nom de l'application</td>
-                    <td>{{pageModel?.applicationName}}</td>
+                    <td>{{configurationToSave?.applicationName}}</td>
                 </tr>
                 <tr>
                     <td>Observateur par défaut</td>
-                    <td>{{pageModel?.defaultObservateur?.libelle}}</td>
+                    <td>{{configurationToSave?.defaultObservateur?.libelle}}</td>
                 </tr>
                 <tr>
                     <td>Département par défaut</td>
-                    <td>{{pageModel?.defaultDepartement?.code}}</td>
+                    <td>{{configurationToSave?.defaultDepartement?.code}}</td>
                 </tr>
                 <tr>
                     <td>Estimation du nombre par défaut</td>
-                    <td>{{pageModel?.defaultEstimationNombre?.libelle}}</td>
+                    <td>{{configurationToSave?.defaultEstimationNombre?.libelle}}</td>
                 </tr>
                 <tr>
                     <td>Nombre par défaut</td>
-                    <td>{{pageModel?.defaultNombre}}</td>
+                    <td>{{configurationToSave?.defaultNombre}}</td>
                 </tr>
                 <tr>
                     <td>Sexe par défaut</td>
-                    <td>{{pageModel?.defaultSexe?.libelle}}</td>
+                    <td>{{configurationToSave?.defaultSexe?.libelle}}</td>
                 </tr>
                 <tr>
                     <td>Âge par défaut</td>
-                    <td>{{pageModel?.defaultAge?.libelle}}</td>
+                    <td>{{configurationToSave?.defaultAge?.libelle}}</td>
                 </tr>
                 <tr>
                     <td>Afficher les observateurs associés</td>
                     <td>
-                        <span *ngIf="pageModel?.areAssociesDisplayed">Oui</span>
-                        <span *ngIf="!pageModel?.areAssociesDisplayed">Non</span>
+                        <span *ngIf="configurationToSave?.areAssociesDisplayed">Oui</span>
+                        <span *ngIf="!configurationToSave?.areAssociesDisplayed">Non</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Afficher la météo</td>
                     <td>
-                        <span *ngIf="pageModel?.isMeteoDisplayed">Oui</span>
-                        <span *ngIf="!pageModel?.isMeteoDisplayed">Non</span>
+                        <span *ngIf="configurationToSave?.isMeteoDisplayed">Oui</span>
+                        <span *ngIf="!configurationToSave?.isMeteoDisplayed">Non</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Afficher la distance</td>
                     <td>
-                        <span *ngIf="pageModel?.isDistanceDisplayed">Oui</span>
-                        <span *ngIf="!pageModel?.isDistanceDisplayed">Non</span>
+                        <span *ngIf="configurationToSave?.isDistanceDisplayed">Oui</span>
+                        <span *ngIf="!configurationToSave?.isDistanceDisplayed">Non</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Afficher le numéro de regroupement</td>
                     <td>
-                        <span *ngIf="pageModel?.isRegroupementDisplayed">Oui</span>
-                        <span *ngIf="!pageModel?.isRegroupementDisplayed">Non</span>
+                        <span *ngIf="configurationToSave?.isRegroupementDisplayed">Oui</span>
+                        <span *ngIf="!configurationToSave?.isRegroupementDisplayed">Non</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Chemin vers MySQL</td>
-                    <td>{{pageModel?.mySqlPath}}</td>
+                    <td>{{configurationToSave?.mySqlPath}}</td>
                 </tr>
                 <tr>
                     <td>Chemin vers MySQL dump</td>
-                    <td>{{pageModel?.mySqlDumpPath}}</td>
+                    <td>{{configurationToSave?.mySqlDumpPath}}</td>
                 </tr>
 
             </tbody>

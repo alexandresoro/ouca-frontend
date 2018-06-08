@@ -1,10 +1,6 @@
 import { Injectable } from "@angular/core";
-import "rxjs/add/operator/catch";
-import "rxjs/add/operator/map";
 import { Donnee } from "../../model/donnee.object";
 import { Inventaire } from "../../model/inventaire.object";
-import { GestionMode } from "../entities/gestion-mode.enum";
-import { BaseNaturalisteService } from "./../../services/base-naturaliste.service";
 import { CreationMode, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
 

@@ -1,11 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http, Response } from "@angular/http";
-import "rxjs/add/operator/catch";
-import "rxjs/add/operator/map";
 import { Observable } from "rxjs/Observable";
 import { ErrorObservable } from "rxjs/observable/ErrorObservable";
-import { CreationPage } from "../model/creation-page.object";
-import { Donnee } from "../model/donnee.object";
 
 @Injectable()
 export class BaseNaturalisteService {
@@ -27,7 +23,7 @@ export class BaseNaturalisteService {
 
   }
 
-  protected handleError(error: any): ErrorObservable {
+  public handleError(error: any): ErrorObservable {
     // In a real world app, you might use a remote logging infrastructure
     const errMsg: string = "";
     /*

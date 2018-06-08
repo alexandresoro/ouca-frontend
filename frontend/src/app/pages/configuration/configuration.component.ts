@@ -1,28 +1,25 @@
-import { Component } from "@angular/core";
-import { Http, Response } from "@angular/http";
-import { Observable } from "rxjs/Observable";
-import { BaseNaturalisteService } from "../../services/base-naturaliste.service";
+import { Component, OnInit } from "@angular/core";
+import { AppConfiguration } from "../../model/app-configuration.object";
+import { EntiteResult } from "../../model/entite-result.object";
 import { GestionMode, GestionModeHelper } from "../entities/gestion-mode.enum";
+import { PageComponent } from "../page.component";
 import { ConfigurationPage } from "./../../model/configuration-page.object";
+import { ConfigurationService } from "./configuration.service";
 
 @Component({
     templateUrl: "./configuration.tpl.html"
 })
-export class ConfigurationComponent {
+export class ConfigurationComponent extends PageComponent implements OnInit {
 
     public pageModel: ConfigurationPage;
 
-    public configurationToSave: any; // TODO create object model
+    public configurationToSave: AppConfiguration;
 
     public mode: GestionMode;
 
-    public messages: any[];
-
-    public status: string;
-
-    constructor(public http: Http,
+    constructor(private configurationService: ConfigurationService,
                 public modeHelper: GestionModeHelper) {
-        super(http);
+        super();
     }
 
     public ngOnInit(): void {
@@ -32,15 +29,25 @@ export class ConfigurationComponent {
 
     ////// CALLED FROM UI //////
     public refresh(): void {
-        this.getCurrentConfigurations();
+        this.ngOnInit();
     }
 
     public editConfigurations(): void {
         this.switchToEditionMode();
     }
 
-    public saveConfigurations(configuration: any): void {
-        // TODO
+    public saveAppConfiguration(): void {
+        this.configurationService.saveAppConfiguration(this.configurationToSave)
+            .subscribe(
+                (result: EntiteResult<AppConfiguration>) => {
+                    this.updatePageStatus(result.status, result.messages);
+                    if (this.isSuccess()) {
+                        this.onSaveAppConfigurationSuccess(result.object);
+                    }
+                },
+                (error: any) => {
+                    this.onSaveAppConfigurationError(error);
+                });
     }
 
     public cancelEdition(): void {
@@ -50,16 +57,32 @@ export class ConfigurationComponent {
     ////// END FROM UI //////
 
     private getCurrentConfigurations(): void {
-        this.callBackend("/configuration/init");
-
-        this.creationService.getInitialPageModel()
+        this.configurationService.getInitialPageModel()
             .subscribe(
-                (creationPage: CreationPage) => {
-                    this.onInitCreationPageSucces(creationPage);
+                (configurationPage: ConfigurationPage) => {
+                    this.onInitConfigurationPageSuccess(configurationPage);
                 },
                 (error: any) => {
-                    this.onInitCreationPageError(error);
+                    this.onInitConfigurationPageError(error);
                 });
+    }
+
+    private onInitConfigurationPageSuccess(configurationPage: ConfigurationPage): void {
+        this.pageModel = configurationPage;
+        this.configurationToSave = configurationPage.appConfiguration;
+    }
+
+    private onInitConfigurationPageError(error: any): void {
+        // TODO
+    }
+
+    private onSaveAppConfigurationSuccess(appConfiguration: AppConfiguration): void {
+        this.configurationToSave = appConfiguration;
+        this.switchToViewAllMode();
+    }
+
+    private onSaveAppConfigurationError(error: any): void {
+        // TODO
     }
 
     private switchToEditionMode(): void {
@@ -69,9 +92,5 @@ export class ConfigurationComponent {
 
     private switchToViewAllMode(): void {
         this.mode = GestionMode.VIEW_ALL;
-    }
-
-    private clearMessages(): void {
-        this.messages = [];
     }
 }
