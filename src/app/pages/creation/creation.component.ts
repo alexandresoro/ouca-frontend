@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Http } from "@angular/http";
+import "rxjs/add/operator/catch"; // TODO
+import "rxjs/add/operator/map"; // TODO
 import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
@@ -51,9 +53,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     public filteredCommunes: Commune[];
     public filteredLieuxdits: Lieudit[];
     public filteredEspeces: Espece[];
-
-    private messages: any[];
-    private status: string;
 
     constructor(public modeHelper: CreationModeHelper,
                 private creationService: CreationService,
@@ -564,9 +563,4 @@ export class CreationComponent extends PageComponent implements OnInit {
             event.preventDefault();
         }
     }
-
-    private isSuccess(): boolean {
-        return this.status === "SUCCESS";
-    }
-
 }
