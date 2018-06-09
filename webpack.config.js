@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const { CheckerPlugin } = require('awesome-typescript-loader')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const path = require('path');
 const helpers = require('./config/helpers');
 
@@ -55,6 +56,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(['dist']),
     // Workaround for angular/angular#11580
     new webpack.ContextReplacementPlugin(
       // The (\\|\/) piece accounts for path separators in *nix and Windows

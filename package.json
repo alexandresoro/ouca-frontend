@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "yarn run clean:dist && webpack",
-    "clean:dist": "rimraf dist",
+    "build": "webpack",
     "start": "webpack-dev-server --mode development --open"
   },
   "keywords": [],
@@ -33,6 +32,7 @@
     "@types/node": "8",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^5.0.0",
+    "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
