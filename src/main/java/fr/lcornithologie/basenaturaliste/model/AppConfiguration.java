@@ -10,6 +10,8 @@ public class AppConfiguration {
 
     private EstimationNombre defaultEstimationNombre;
 
+    private Integer defaultNombre;
+
     private Sexe defaultSexe;
 
     private Age defaultAge;
@@ -56,6 +58,15 @@ public class AppConfiguration {
 
     public void setDefaultEstimationNombre(EstimationNombre defaultEstimationNombre) {
         this.defaultEstimationNombre = defaultEstimationNombre;
+    }
+
+
+    public Integer getDefaultNombre() {
+        return defaultNombre;
+    }
+
+    public void setDefaultNombre(Integer defaultNombre) {
+        this.defaultNombre = defaultNombre;
     }
 
     public Sexe getDefaultSexe() {

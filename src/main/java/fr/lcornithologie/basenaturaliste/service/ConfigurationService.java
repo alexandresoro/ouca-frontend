@@ -75,6 +75,7 @@ public class ConfigurationService extends EntiteSimpleService<Configuration> {
     config.setDefaultObservateur(getDefaultObservateur());
     config.setDefaultDepartement(getDefaultDepartement());
     config.setDefaultEstimationNombre(getDefaultEstimationNombre());
+    config.setDefaultNombre(getDefaultNombre());
     config.setDefaultSexe(getDefaultSexe());
     config.setDefaultAge(getDefaultAge());
 

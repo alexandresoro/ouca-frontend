@@ -3,7 +3,8 @@
         <div class="col-xs-6 lco-entity-page-title">
             <h1>Configuration</h1>
         </div>
-        <div class="col-xs-6 text-right lco-entity-top-buttons">
+        <div *ngIf="modeHelper.isViewAllMode(mode)"
+            class="col-xs-6 text-right lco-entity-top-buttons">
             <button class="btn btn-default"
                 (click)="refresh()">
                 <span class="glyphicon glyphicon-refresh">&nbsp;</span>

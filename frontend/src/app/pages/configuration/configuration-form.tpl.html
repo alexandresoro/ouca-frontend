@@ -18,7 +18,7 @@
                     class="form-control"
                     name="input-nom"
                     id="input-nom"
-                    [(ngModel)]="model.applicationName"/>
+                    [(ngModel)]="model.applicationName" />
             </div>
 
             <!-- Observateur par défaut -->
@@ -28,9 +28,8 @@
                 <select class="form-control"
                     id="input-observateur"
                     name="input-observateur"
-                    [(ngModel)]="model.defaultObservateur"
-                    required>
-                    <option *ngFor="let obs of observateurs" 
+                    [(ngModel)]="model.defaultObservateur">
+                    <option *ngFor="let obs of observateurs"
                         [ngValue]="obs">
                         {{obs.libelle}}
                     </option>
@@ -44,9 +43,8 @@
                 <select class="form-control"
                     id="input-departement"
                     name="input-departement"
-                    [(ngModel)]="model.defaultDepartement"
-                    required>
-                    <option *ngFor="let dept of departements" 
+                    [(ngModel)]="model.defaultDepartement">
+                    <option *ngFor="let dept of departements"
                         [ngValue]="dept">
                         {{dept.code}}
                     </option>
@@ -60,9 +58,8 @@
                 <select class="form-control"
                     id="input-estimation-nombre"
                     name="input-estimation-nombre"
-                    [(ngModel)]="model.defaultEstimationNombre"
-                    required>
-                    <option *ngFor="let estim of estimationsNombre" 
+                    [(ngModel)]="model.defaultEstimationNombre">
+                    <option *ngFor="let estim of estimationsNombre"
                         [ngValue]="estim">
                         {{estim.libelle}}
                     </option>
@@ -78,7 +75,7 @@
                     class="form-control"
                     name="input-nombre"
                     id="input-nombre"
-                    [(ngModel)]="model.defaultNombre"/>
+                    [(ngModel)]="model.defaultNombre" />
             </div>
 
             <!-- Sexe par défaut -->
@@ -88,9 +85,8 @@
                 <select class="form-control"
                     id="input-sexe"
                     name="input-sexe"
-                    [(ngModel)]="model.defaultSexe"
-                    required>
-                    <option *ngFor="let sexe of sexes" 
+                    [(ngModel)]="model.defaultSexe">
+                    <option *ngFor="let sexe of sexes"
                         [ngValue]="sexe">
                         {{sexe.libelle}}
                     </option>
@@ -104,9 +100,8 @@
                 <select class="form-control"
                     id="input-age"
                     name="input-age"
-                    [(ngModel)]="model.defaultAge"
-                    required>
-                    <option *ngFor="let age of ages" 
+                    [(ngModel)]="model.defaultAge">
+                    <option *ngFor="let age of ages"
                         [ngValue]="age">
                         {{age.libelle}}
                     </option>
@@ -130,7 +125,7 @@
                 <input type="checkbox"
                     name="input-meteo"
                     id="input-meteo"
-                    [(ngModel)]="model.isMeteoDisplayed"/>
+                    [(ngModel)]="model.isMeteoDisplayed" />
             </div>
 
             <!-- Afficher la distance -->
@@ -161,7 +156,7 @@
                     class="form-control"
                     name="input-mysql"
                     id="input-mysql"
-                    [(ngModel)]="model.mySqlPath"/>
+                    [(ngModel)]="model.mySqlPath" />
             </div>
 
             <!-- Path to mysqldump -->
@@ -172,9 +167,9 @@
                     class="form-control"
                     name="input-mysqldump"
                     id="input-mysqldump"
-                    [(ngModel)]="model.mySqlDumpPath"/>
+                    [(ngModel)]="model.mySqlDumpPath" />
             </div>
-            
+
         </div>
 
         <div class="row">
@@ -182,12 +177,14 @@
                 <button type="button"
                     class="btn btn-default"
                     (click)="cancel()">
-                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Annuler</span>
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;
+                    <span>Annuler</span>
                 </button>
                 <button type="submit"
                     class="btn btn-primary"
                     [disabled]="!entiteSimpleForm.form.valid">
-                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Enregistrer</span>
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;
+                    <span>Enregistrer</span>
                 </button>
             </div>
         </div>
