@@ -3,7 +3,6 @@ package fr.lcornithologie.basenaturaliste.model;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -59,11 +58,16 @@ public class Donnee extends EntiteSimple {
     private EstimationDistance estimationDistance;
 
     @ManyToMany
-    @JoinTable(name = "donnee_comportements", joinColumns = @JoinColumn(name = "donnees_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "comportements_id", referencedColumnName = "ID"))
+    @JoinTable(name = "donnee_comportement",
+            joinColumns = @JoinColumn(name = "donnees_id", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "comportements_id",
+                    referencedColumnName = "ID"))
     private Set<Comportement> comportements = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "donnee_milieux", joinColumns = @JoinColumn(name = "donnees_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "milieux_id", referencedColumnName = "ID"))
+    @JoinTable(name = "donnee_milieu",
+            joinColumns = @JoinColumn(name = "donnees_id", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "milieux_id", referencedColumnName = "ID"))
     private Set<Milieu> milieux = new HashSet<>();
 
     public Age getAge() {
@@ -172,7 +176,8 @@ public class Donnee extends EntiteSimple {
 
     @Override
     public String toString() {
-        return "Donnee{" + "id=" + getId() + ", nombre='" + nombre + "'" + ", distance='" + distance + "'"
-                + ", commentaire='" + commentaire + "'" + ", dateCreation='" + dateCreation + "'}";
+        return "Donnee{" + "id=" + getId() + ", nombre='" + nombre + "'" + ", distance='" + distance
+                + "'" + ", commentaire='" + commentaire + "'" + ", dateCreation='" + dateCreation
+                + "'}";
     }
 }

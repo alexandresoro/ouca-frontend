@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -62,7 +60,9 @@ public class Inventaire extends EntiteSimple {
     private Long latitude;
 
     @ManyToMany
-    @JoinTable(name = "inventaire_meteos", joinColumns = @JoinColumn(name = "inventaires_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "meteos_id", referencedColumnName = "ID"))
+    @JoinTable(name = "inventaire_meteo",
+            joinColumns = @JoinColumn(name = "inventaires_id", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "meteos_id", referencedColumnName = "ID"))
     private Set<Meteo> meteos = new HashSet<>();
 
     @OneToMany(mappedBy = "inventaire", cascade = CascadeType.REMOVE)
@@ -70,7 +70,9 @@ public class Inventaire extends EntiteSimple {
     private Set<Donnee> donnees = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "inventaire_associes", joinColumns = @JoinColumn(name = "inventaires_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "associes_id", referencedColumnName = "ID"))
+    @JoinTable(name = "inventaire_associe",
+            joinColumns = @JoinColumn(name = "inventaires_id", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "associes_id", referencedColumnName = "ID"))
     private Set<Observateur> associes = new HashSet<>();
 
     public Set<Observateur> getAssocies() {
@@ -177,8 +179,8 @@ public class Inventaire extends EntiteSimple {
     // TODO ajouter associés et météos
     @Override
     public String toString() {
-        return "{" + "id:" + getId() + ", date:" + date + "" + ", heure:'" + heure + "'" + ", duree:'" + duree + "'"
-                + ", lieudit:" + lieudit + ", temperature:" + temperature + ", dateCreation:'" + dateCreation + "'"
-                + "'}";
+        return "{" + "id:" + getId() + ", date:" + date + "" + ", heure:'" + heure + "'"
+                + ", duree:'" + duree + "'" + ", lieudit:" + lieudit + ", temperature:"
+                + temperature + ", dateCreation:'" + dateCreation + "'" + "'}";
     }
 }
