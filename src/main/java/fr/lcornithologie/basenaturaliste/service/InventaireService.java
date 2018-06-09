@@ -30,9 +30,6 @@ public class InventaireService extends EntiteSimpleService<Inventaire> {
 	@Autowired
 	private InventaireRepository inventaireRepository;
 
-	@Autowired
-	private LieuditService lieuditService;
-
 	@Override
 	protected InventaireRepository getRepository() {
 		return inventaireRepository;

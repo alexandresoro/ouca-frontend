@@ -5,15 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import fr.lcornithologie.basenaturaliste.model.Comportement;
 import fr.lcornithologie.basenaturaliste.repository.ComportementRepository;
 
 @Service
 @Transactional
 public class ComportementService extends EntiteAvecLibelleEtCodeService<Comportement> {
-
-    private final Logger log = LoggerFactory.getLogger(ComportementService.class);
 
     @Autowired
     private ComportementRepository comportementRepository;

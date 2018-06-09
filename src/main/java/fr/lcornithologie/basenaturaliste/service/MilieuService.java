@@ -1,19 +1,14 @@
 package fr.lcornithologie.basenaturaliste.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import fr.lcornithologie.basenaturaliste.model.Milieu;
 import fr.lcornithologie.basenaturaliste.repository.MilieuRepository;
 
 @Service
 @Transactional
 public class MilieuService extends EntiteAvecLibelleEtCodeService<Milieu> {
-
-    private final Logger log = LoggerFactory.getLogger(MilieuService.class);
 
     @Autowired
     private MilieuRepository milieuRepository;
