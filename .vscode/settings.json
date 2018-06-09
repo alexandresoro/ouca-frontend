@@ -1,11 +1,6 @@
 {
-  "editor.formatOnSave": true,
-  "editor.tabSize": 2,
   "html.format.wrapAttributes": "force",
   "html.format.wrapLineLength": 100,
-  "java.format.settings.profile": "GoogleStyle",
-  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
-  "java.saveActions.organizeImports": true,
   "npm.packageManager": "yarn",
   "tslint.autoFixOnSave": true,
   "tslint.packageManager": "yarn"
