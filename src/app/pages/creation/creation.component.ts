@@ -316,7 +316,7 @@ export class CreationComponent implements OnInit {
                     this.messages = result.messages;
                     this.donneeToSave = result.object;
                     if (this.isSuccess()) {
-                        this.onSaveDonneeSuccess();
+                        this.onSaveDonneeSuccess(result.object);
                     }
                 },
                 (error: any) => {
@@ -324,9 +324,11 @@ export class CreationComponent implements OnInit {
                 });
     }
 
-    private onSaveDonneeSuccess() {
+    private onSaveDonneeSuccess(savedDonnee: Donnee) {
         this.donneeToSave = new Donnee();
         this.donneeToSave.inventaire = this.inventaireToSave;
+        this.navigationService.numberOfDonnees++;
+        this.navigationService.previousDonnee = savedDonnee;
         this.initializeDonneePanel();
         this.updateNextRegroupement();
     }
@@ -366,9 +368,12 @@ export class CreationComponent implements OnInit {
         this.inventaireToSave = this.navigationService.previousDonnee.inventaire;
         this.donneeToSave = this.navigationService.previousDonnee;
         this.navigationService.updateCurrentDonneeIndexWithPreviousDonnee();
+        console.log("La donnée courante est", this.inventaireToSave, this.donneeToSave);
+        console.log("Index de la donnée courante", this.navigationService.currentDonneeIndex);
 
         // Set new previous donnee
         this.navigationService.updatePreviousDonnee(this.donneeToSave);
+        console.log("La donnée courante est 1", this.inventaireToSave, this.donneeToSave);
     }
 
     public onNextDonneeBtnClicked(): void {
@@ -388,9 +393,15 @@ export class CreationComponent implements OnInit {
         } else if (this.modeHelper.isDonneeMode(this.mode)) {
             this.switchToNewDonneeMode();
         }
+
         this.inventaireToSave = this.navigationService.getNextInventaire();
         this.donneeToSave = this.navigationService.getNextDonnee();
+
         this.navigationService.updateCurrentDonneeIndexWithNextDonnee(afterDelete);
+
+        console.log("Mode et inventaire et donnée courants:", this.mode.toString(),
+            this.inventaireToSave, this.donneeToSave);
+        console.log("Index de la donnée courante", this.navigationService.currentDonneeIndex);
     }
 
     private setNewNextDonnee() {

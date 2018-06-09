@@ -24,14 +24,14 @@ export class NavigationService {
         this.previousDonnee = lastDonnee;
         this.nextDonnee = null;
         this.currentDonneeIndex = null;
-        this.numberOfDonnees = this.numberOfDonnees;
-        this.savedDonnee = null;
-        this.savedInventaire = null;
+        this.numberOfDonnees = numberOfDonnees;
+        this.savedDonnee = new Donnee();
+        this.savedInventaire = new Inventaire();
         this.savedMode = null;
     }
     public saveCurrentContext(modeToSave: CreationMode, inventaireToSave: Inventaire, donneeToSave: Donnee): void {
-        this.savedDonnee = null;
-        this.savedInventaire = null;
+        this.savedDonnee = new Donnee();
+        this.savedInventaire = new Inventaire();
 
         this.savedMode = modeToSave;
 
@@ -43,10 +43,14 @@ export class NavigationService {
             this.savedDonnee = donneeToSave;
             this.savedInventaire = donneeToSave.inventaire;
         }
+
+        console.log("Sauvegarde de l'inventaire courant:", this.savedInventaire);
+        console.log("Sauvegarde de la donnée courante", this.savedDonnee);
     }
 
     public updateCurrentDonneeIndexWithPreviousDonnee(): void {
-        if (!this.currentDonneeIndex) {
+        console.log("index", this.currentDonneeIndex, this.numberOfDonnees);
+        if (!!!this.currentDonneeIndex) {
             this.currentDonneeIndex = this.numberOfDonnees;
         } else {
             this.currentDonneeIndex--;
@@ -55,6 +59,7 @@ export class NavigationService {
 
     public setNextDonnee(donnee: Donnee) {
         this.nextDonnee = donnee;
+        console.log("La donnée suivante est:", donnee);
     }
 
     public updatePreviousDonnee(currentDonnee: Donnee): void {
@@ -64,6 +69,7 @@ export class NavigationService {
         } else {
             this.populatePreviousDonnee(currentDonnee.id);
         }
+        console.log("La donnée précédente est:", this.previousDonnee);
     }
 
     private populatePreviousDonnee(id: number): void {
@@ -97,14 +103,16 @@ export class NavigationService {
     }
 
     public populateNextDonnee(id: number): void {
-        this.creationService.getNextDonnee(id)
-            .subscribe(
-                (nextDonnee: Donnee) => {
-                    this.nextDonnee = nextDonnee;
-                },
-                (error: any) => {
-                    console.error("Impossible de trouver la donnée suivante (" + error + ")");
-                });
+        if (!this.isLastDonneeCurrentlyDisplayed()) {
+            this.creationService.getNextDonnee(id)
+                .subscribe(
+                    (nextDonnee: Donnee) => {
+                        this.nextDonnee = nextDonnee;
+                    },
+                    (error: any) => {
+                        console.error("Impossible de trouver la donnée suivante (" + error + ")");
+                    });
+        }
     }
 
     public getNextInventaire(): Inventaire {
@@ -151,6 +159,6 @@ export class NavigationService {
     }
 
     public hasPreviousDonnee(): boolean {
-        return !!this.currentDonneeIndex && this.currentDonneeIndex > 1;
+        return !!this.previousDonnee;
     }
 }

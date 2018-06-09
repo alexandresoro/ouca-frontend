@@ -331,7 +331,7 @@
                     <!-- DONNEE -->
                     <div class="lco-creation-fiche col-sm-8">
                         <h2>Fiche espèce
-                            <span *ngIf="currentDonneeIndex">n°{{currentDonneeIndex}} (ID={{donneeToSave.id}})</span>
+                            <span *ngIf="navigationService.currentDonneeIndex">n°{{navigationService.currentDonneeIndex}} (ID={{donneeToSave.id}})</span>
                         </h2>
 
                         <div class="lco-creation-subform lco-creation-espece">
