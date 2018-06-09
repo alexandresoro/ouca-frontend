@@ -128,7 +128,7 @@ export class CreationComponent implements OnInit {
                 (departement) => departement.id === this.pageModel.defaultDepartement.id,
             );
         }
-
+        this.selectedCommune = null;
         this.updateCommunes();
         this.filteredLieuxdits = new Array<Lieudit>();
         this.initCoordinates();
@@ -382,6 +382,14 @@ export class CreationComponent implements OnInit {
         this.setNewNextDonnee();
     }
 
+    public onNewInventaireBtnClicked(): void {
+        this.switchToNewInventaireMode();
+    }
+
+    public onEditInventaireBtnClicked(): void {
+        this.switchToInventaireMode();
+    }
+
     private setPreviousDonneeToTheCurrentDonnee(): void {
         this.navigationService.previousDonnee = this.donneeToSave;
     }
@@ -389,7 +397,7 @@ export class CreationComponent implements OnInit {
     private setCurrentDonneeToTheNextDonnee(afterDelete: boolean = false): void {
         this.mode = this.navigationService.getNextMode();
         if (this.modeHelper.isInventaireMode(this.mode)) {
-            this.switchToNewInventaireMode();
+            this.switchToInventaireMode();
         } else if (this.modeHelper.isDonneeMode(this.mode)) {
             this.switchToNewDonneeMode();
         }
@@ -511,7 +519,7 @@ export class CreationComponent implements OnInit {
     private redisplayCurrentInventaireAndDonnee(): void {
         this.mode = this.navigationService.savedMode;
         if (this.modeHelper.isInventaireMode(this.mode)) {
-            this.switchToNewInventaireMode();
+            this.switchToInventaireMode();
             this.inventaireToSave = this.navigationService.savedInventaire;
             this.donneeToSave = new Donnee();
         } else if (this.modeHelper.isDonneeMode(this.mode)) {
@@ -522,13 +530,17 @@ export class CreationComponent implements OnInit {
     }
 
     private switchToNewInventaireMode(): void {
-        this.mode = CreationMode.NEW_INVENTAIRE;
-        this.isDonneeDisabled = true;
-        this.isInventaireDisabled = false;
         this.inventaireToSave = new Inventaire();
         this.donneeToSave = new Donnee();
         this.initInventaireDefaultValues();
 
+        this.switchToInventaireMode();
+    }
+
+    private switchToInventaireMode(): void {
+        this.mode = CreationMode.NEW_INVENTAIRE;
+        this.isDonneeDisabled = true;
+        this.isInventaireDisabled = false;
         document.getElementById("input-observateur").focus();
     }
 

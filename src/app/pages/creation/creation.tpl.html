@@ -93,8 +93,17 @@
                             <button *ngIf="modeHelper.isDonneeMode(mode)"
                                 type="button"
                                 class="btn btn-primary btn-sm"
+                                (click)="onNewInventaireBtnClicked()"
                                 style="float: right">
                                 Nouvel inventaire
+                            </button>
+
+                            <button *ngIf="modeHelper.isDonneeMode(mode)"
+                                type="button"
+                                class="btn btn-primary btn-sm"
+                                (click)="onEditInventaireBtnClicked()"
+                                style="float: right; margin-right: 3px;">
+                                Modifier l'inventaire
                             </button>
                         </h2>
                         <div class="lco-creation-subform lco-creation-observateurs">
@@ -491,7 +500,8 @@
                                         name="distance"
                                         type="number"
                                         [(ngModel)]="donneeToSave.distance"
-                                        [disabled]="isDonneeDisabled"
+                                        [disabled]="isDonneeDisabled || !!!donneeToSave.estimationDistance"
+                                
                                         [required]="!!donneeToSave.estimationDistance">
                                 </div>
                             </div>

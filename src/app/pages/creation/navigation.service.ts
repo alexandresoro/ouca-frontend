@@ -49,7 +49,6 @@ export class NavigationService {
     }
 
     public updateCurrentDonneeIndexWithPreviousDonnee(): void {
-        console.log("index", this.currentDonneeIndex, this.numberOfDonnees);
         if (!!!this.currentDonneeIndex) {
             this.currentDonneeIndex = this.numberOfDonnees;
         } else {
@@ -59,7 +58,7 @@ export class NavigationService {
 
     public setNextDonnee(donnee: Donnee) {
         this.nextDonnee = donnee;
-        console.log("La donnée suivante est:", donnee);
+        console.log("La donnée suivante est", donnee);
     }
 
     public updatePreviousDonnee(currentDonnee: Donnee): void {
@@ -69,7 +68,7 @@ export class NavigationService {
         } else {
             this.populatePreviousDonnee(currentDonnee.id);
         }
-        console.log("La donnée précédente est:", this.previousDonnee);
+        console.log("La donnée précédente est", this.previousDonnee);
     }
 
     private populatePreviousDonnee(id: number): void {
