@@ -19,8 +19,8 @@ export class BaseNaturalisteService {
   }
 
   public extractModel(res: Response): any {
+    console.log("Modèle retourné par le serveur:", res.json());
     return res.json();
-
   }
 
   public handleError(error: any): ErrorObservable {

@@ -88,6 +88,7 @@ import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
 import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
+import { ConfigurationService } from "./pages/configuration/configuration.service";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
 import { NavigationService } from "./pages/creation/navigation.service";
@@ -265,6 +266,7 @@ const baseNaturalisteRoutes: Routes = [
     ],
     providers: [
         BaseNaturalisteService,
+        ConfigurationService,
         CreationModeHelper,
         CreationService,
         DonneeService,
