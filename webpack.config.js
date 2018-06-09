@@ -24,6 +24,11 @@ module.exports = {
   // Source maps support ('inline-source-map' also works)
   devtool: 'source-map',
 
+  devServer: {
+    port: 3000,
+    historyApiFallback: true
+  },
+
   // Add the loader for .ts files.
   module: {
     rules: [
