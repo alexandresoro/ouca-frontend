@@ -1,7 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { Http } from "@angular/http";
-import "rxjs/add/operator/catch";
-import "rxjs/add/operator/map";
 import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
@@ -10,6 +8,7 @@ import { Departement } from "../../model/departement.object";
 import { Donnee } from "../../model/donnee.object";
 import { Lieudit } from "../../model/lieudit.object";
 import { Observateur } from "../../model/observateur.object";
+import { PageComponent } from "../page.component";
 import { EntiteResult } from "./../../model/entite-result.object";
 import { Espece } from "./../../model/espece.object";
 import { EstimationNombre } from "./../../model/estimation-nombre.object";
@@ -24,10 +23,7 @@ import { NavigationService } from "./navigation.service";
 @Component({
     templateUrl: "./creation.tpl.html",
 })
-export class CreationComponent implements OnInit {
-
-    private STATUS_ERROR: string = "ERROR";
-    private STATUS_SUCCESS: string = "SUCCESS";
+export class CreationComponent extends PageComponent implements OnInit {
 
     // Page model returned from back-end
     public pageModel: CreationPage = {} as CreationPage;
@@ -65,6 +61,7 @@ export class CreationComponent implements OnInit {
                 private inventaireService: InventaireService,
                 private http: Http,
                 public navigationService: NavigationService) {
+        super();
     }
 
     public ngOnInit(): void {
@@ -572,8 +569,4 @@ export class CreationComponent implements OnInit {
         return this.status === "SUCCESS";
     }
 
-    private setErrorMessage(message: string): void {
-        this.status = this.STATUS_ERROR;
-        this.messages = [{ value: message }];
-    }
 }
