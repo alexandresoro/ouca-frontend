@@ -1,15 +1,10 @@
 package fr.lcornithologie.basenaturaliste.model;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
-/**
- * Un ObjetSimpleLibelle.
- */
-@Entity
-@Inheritance
+@MappedSuperclass
 public abstract class EntiteAvecLibelleEtCode extends EntiteAvecLibelle {
 
     private static final long serialVersionUID = 1L;
@@ -19,41 +14,41 @@ public abstract class EntiteAvecLibelleEtCode extends EntiteAvecLibelle {
     private String code;
 
     public String getCode() {
-	return code;
+        return code;
     }
 
     public void setCode(String code) {
-	this.code = code;
+        this.code = code;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = super.hashCode();
-	result = prime * result + ((code == null) ? 0 : code.hashCode());
-	return result;
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((code == null) ? 0 : code.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (!super.equals(obj))
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	EntiteAvecLibelleEtCode other = (EntiteAvecLibelleEtCode) obj;
-	if (code == null) {
-	    if (other.code != null)
-		return false;
-	} else if (!code.equals(other.code))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        EntiteAvecLibelleEtCode other = (EntiteAvecLibelleEtCode) obj;
+        if (code == null) {
+            if (other.code != null)
+                return false;
+        } else if (!code.equals(other.code))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-	return "ObjetSimpleLibelleEtCode [code=" + code + ", getId()=" + getId() + ", getLibelle()=" + getLibelle()
-		+ "'}";
+        return "ObjetSimpleLibelleEtCode [code=" + code + ", getId()=" + getId() + ", getLibelle()="
+                + getLibelle() + "'}";
     }
 }
