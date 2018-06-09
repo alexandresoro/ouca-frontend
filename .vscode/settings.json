@@ -8,6 +8,5 @@
   "java.saveActions.organizeImports": true,
   "npm.packageManager": "yarn",
   "tslint.autoFixOnSave": true,
-  "tslint.packageManager": "yarn",
-  "typescript.tsdk": "./frontend/node_modules/typescript/lib",
+  "tslint.packageManager": "yarn"
 }
