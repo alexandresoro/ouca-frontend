@@ -62,6 +62,11 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      jQuery: 'jquery',
+      $: 'jquery',
+      jquery: 'jquery'
+    }),
     new CleanWebpackPlugin(['dist']),
     new FaviconsWebpackPlugin('./src/favicon.png'),
     // Workaround for angular/angular#11580
