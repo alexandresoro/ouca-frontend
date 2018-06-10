@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Http, Response } from "@angular/http";
+import "rxjs/add/operator/catch";
+import "rxjs/add/operator/map";
 import { Observable } from "rxjs/Observable";
-import { ErrorObservable } from "rxjs/observable/ErrorObservable";
 
 @Injectable()
 export class BaseNaturalisteService {

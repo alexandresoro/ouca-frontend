@@ -1,7 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { Http } from "@angular/http";
-import "rxjs/add/operator/catch"; // TODO
-import "rxjs/add/operator/map"; // TODO
 import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
@@ -529,6 +527,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.inventaireToSave = new Inventaire();
         this.donneeToSave = new Donnee();
         this.initInventaireDefaultValues();
+        this.initializeDonneePanel();
 
         this.switchToInventaireMode();
     }
@@ -544,7 +543,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.mode = CreationMode.NEW_DONNEE;
         this.isDonneeDisabled = false;
         this.isInventaireDisabled = true;
-        this.initializeDonneePanel();
+        // this.initializeDonneePanel();
         document.getElementById("input-code-espece").focus();
     }
 
