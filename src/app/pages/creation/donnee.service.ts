@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { Donnee } from "./../../model/donnee.object";
 import { EntiteResult } from "./../../model/entite-result.object";
 import { BaseNaturalisteService } from "./../../services/base-naturaliste.service";
@@ -16,8 +17,9 @@ export class DonneeService extends BaseNaturalisteService {
 
     public saveObject(objectToSave: Donnee): Observable<EntiteResult<Donnee>> {
         const action: string = this.ENTITY_NAME + "/create";
-        return this.http.post(this.BASE_NATURALISTE_URL + action, objectToSave)
-            .map(this.extractModel)
-            .catch(this.handleError);
+        return this.http.post(this.BASE_NATURALISTE_URL + action, objectToSave).pipe(
+            map(this.extractModel),
+            catchError(this.handleError)
+        );
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { CreationPage } from "../../model/creation-page.object";
 import { Donnee } from "../../model/donnee.object";
 import { Comportement } from "./../../model/comportement.object";

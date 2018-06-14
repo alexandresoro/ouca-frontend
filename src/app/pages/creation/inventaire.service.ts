@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { EntiteResult } from "./../../model/entite-result.object";
 import { Inventaire } from "./../../model/inventaire.object";
 import { BaseNaturalisteService } from "./../../services/base-naturaliste.service";
@@ -17,8 +18,9 @@ export class InventaireService extends BaseNaturalisteService {
     public saveObject(objectToSave: Inventaire): Observable<EntiteResult<Inventaire>> {
         objectToSave.date = new Date();
         const action: string = this.ENTITY_NAME + "/create";
-        return this.http.post(this.BASE_NATURALISTE_URL + action, objectToSave)
-            .map(this.extractModel)
-            .catch(this.handleError);
+        return this.http.post(this.BASE_NATURALISTE_URL + action, objectToSave).pipe(
+            map(this.extractModel),
+            catchError(this.handleError)
+        );
     }
 }

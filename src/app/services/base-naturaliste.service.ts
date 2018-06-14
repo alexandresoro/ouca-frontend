@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http, Response } from "@angular/http";
-import "rxjs/add/operator/catch";
-import "rxjs/add/operator/map";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 
 @Injectable()
 export class BaseNaturalisteService {
@@ -14,9 +13,10 @@ export class BaseNaturalisteService {
   }
 
   public callBackend<T>(path: string): Observable<T> {
-    return this.http.get(this.BASE_NATURALISTE_URL + path)
-      .map(this.extractModel)
-      .catch(this.handleError);
+    return this.http.get(this.BASE_NATURALISTE_URL + path).pipe(
+      map(this.extractModel),
+      catchError(this.handleError)
+    );
   }
 
   public extractModel(res: Response): any {

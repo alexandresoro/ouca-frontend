@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { AppConfiguration } from "../../model/app-configuration.object";
 import { ConfigurationPage } from "../../model/configuration-page.object";
 import { EntiteResult } from "./../../model/entite-result.object";
