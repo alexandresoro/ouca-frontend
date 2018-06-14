@@ -1,160 +1,28 @@
-.nav-link.active {
-    background-color: #e7e7e7;
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+@import "~material-design-icons/iconfont/material-icons.css";
+
+body {
+    margin : 0;
 }
 
-.navbar {
-    margin-bottom: 0px;
-    min-height: 36px;
+.wrapper{
+    display: flex;
+    flex-direction: column;            
+    height: 100vh;
+    overflow: hidden;
+  }
+
+.baseNaturalisteHeader {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px, rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+    flex: 0 0 auto;  
 }
 
-.navbar, .navbar-header, .navbar-inverse, .navbar-fixed-top, .navbar-nav {
-    height: 36px;
-}
+.baseNaturalisteContent{
+    flex: 1 1 auto;     
+    overflow-y: auto;     
+  }
 
-.navbar-nav li a, .navbar-brand {
-    height: 36px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-}
-
-.navbar-nav .glyphicon {
-    margin-right: 5px;
-}
-
-/** END OF NAVBAR **/
-
-/** ALL **/
-.container-fluid {
-    max-width: 1350px;
-}
-
-.base-naturaliste {
-    margin-top: 55px;
-}
-
-.base-naturaliste .row {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-/** END ALL **/
-
-/** CREATION PAGE **/
-
-.lco-creation-page h1 {
-    display: none;
-}
-
-.lco-creation-page h2 {
-    line-height: 30px;
-    font-size: 15px;
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
-
-.lco-creation-page .lco-creation-messages {
-     height: 40px;
-     padding-left: 0;
-     padding-right: 0;
-}
-
-.lco-creation-page .lco-creation-buttons {
-    height: 50px;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 15px;
-}
-
-.lco-creation-page .panel-body {
-    padding: 0;
-}
-
-.lco-creation-page .form-control {
-    height: 28px;
-}
-
-.lco-creation-page .form-horizontal .control-label {
-    padding-top: 4px;
-    font-weight: bold;
-    text-align: right;
-}
-
-.lco-creation-page .form-horizontal .form-group {
-    margin-bottom: 7px; /* space below form group*/
-    margin-right: 0px;
-    margin-left: 0px;
-}
-
-.lco-creation-page .lco-creation-fiche {
-    border-left: 1px solid #bbb;
-}
-
-.lco-creation-page .lco-creation-inventaire, .lco-creation-page .lco-creation-fiche {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-/*.lco-creation-page .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9 {
-    padding-left: 5px;
-    padding-right: 5px;
-}
-*/
-.lco-creation-page .lco-creation-subform {
-    padding: 15px 10px;
-    padding-bottom: 8px;
-    background-color: #eee;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-
-
-/** END CREATION PAGE **/
-
-/* ENTITY PAGES */
-.lco-entity-page {
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-.lco-entity-page .lco-entity-page-title {
-    padding-left: 0;
-}
-
-.lco-entity-page .lco-entity-top-buttons {
-    line-height: 40px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    padding-right: 0;
-}
-
-.lco-entity-page hr {
-    border-top: 2px solid #ccc;
-}
-
-.lco-entity-details dd,
-.lco-entity-details dt {
-    margin-bottom: 5px;
-}
-
-.lco-entity-page .lco-messages {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.lco-entity-page .lco-messages .lco-success {
-    color: #42A948;
-    font-weight: bold;
-}
-
-/** END ENTITY PAGE **/
-
-/* Forms */
-.ng-valid[required], .ng-valid.required {
-    border-left: 5px solid #42A948; /* green */
-}
-
-.ng-invalid:not(form) {
-    border-left: 5px solid red; /* red */
+.header-spacer {
+    flex: 1 1 auto;
 }
