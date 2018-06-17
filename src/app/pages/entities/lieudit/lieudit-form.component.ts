@@ -24,7 +24,7 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
 
     ngOnInit(): void {
         // Get all departements
-        this.entiteSimpleService.getAll("departement")
+        this.entiteSimpleService.getAllObjects("departement")
             .subscribe((response: Response) => {
                 console.log("Tous les Départements:", response.json());
                 this.departements = response.json();
@@ -33,7 +33,7 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
             });
 
         // Get all communes
-        this.entiteSimpleService.getAll("commune")
+        this.entiteSimpleService.getAllObjects("commune")
             .subscribe((response: Response) => {
                 console.log("Toutes les Communes:", response.json());
                 this.communes = response.json();

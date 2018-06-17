@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { Http } from "@angular/http";
 import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
@@ -56,7 +55,6 @@ export class CreationComponent extends PageComponent implements OnInit {
                 private creationService: CreationService,
                 private donneeService: DonneeService,
                 private inventaireService: InventaireService,
-                private http: Http,
                 public navigationService: NavigationService) {
         super();
     }
@@ -252,7 +250,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
         console.log("L'inventaire à sauvegarder est", this.inventaireToSave);
 
-        this.inventaireService.saveObject(this.inventaireToSave)
+        this.inventaireService.saveInventaire(this.inventaireToSave)
             .subscribe(
                 (result: EntiteResult<Inventaire>) => {
                     this.updatePageStatus(result.status, result.messages);
@@ -302,7 +300,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
         console.log("Donnée to save is", this.donneeToSave);
 
-        this.donneeService.saveObject(this.donneeToSave)
+        this.donneeService.saveDonnee(this.donneeToSave)
             .subscribe(
                 (result: EntiteResult<Donnee>) => {
                     this.updatePageStatus(result.status, result.messages);

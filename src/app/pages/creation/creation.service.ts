@@ -17,23 +17,23 @@ export class CreationService extends BaseNaturalisteService {
   }
 
   public getInitialPageModel(): Observable<CreationPage> {
-    return this.callBackend(this.ENTITY_NAME + "/init");
+    return this.httpGet(this.ENTITY_NAME + "/init");
   }
 
   public getNextDonnee(id: number): Observable<Donnee> {
-    return this.callBackend(this.ENTITY_NAME + "/next_donnee/" + id);
+    return this.httpGet(this.ENTITY_NAME + "/next_donnee/" + id);
   }
 
   public getPreviousDonnee(id: number): Observable<Donnee> {
-    return this.callBackend(this.ENTITY_NAME + "/previous_donnee/" + id);
+    return this.httpGet(this.ENTITY_NAME + "/previous_donnee/" + id);
   }
 
   public deleteDonnee(id: number): Observable<EntiteResult<Donnee>> {
-    return this.callBackend(this.ENTITY_NAME + "/donnee/delete/" + id);
+    return this.httpGet(this.ENTITY_NAME + "/donnee/delete/" + id);
   }
 
   public getNextRegroupement(): Observable<number> {
-    return this.callBackend(this.ENTITY_NAME + "/next_regroupement");
+    return this.httpGet(this.ENTITY_NAME + "/next_regroupement");
   }
 
   /**

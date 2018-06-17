@@ -5,12 +5,13 @@ import { EntiteSimple } from "../../../model/entite-simple.object";
 import { BaseNaturalisteService } from "./../../../services/base-naturaliste.service";
 
 @Injectable()
-export class EntiteSimpleService<T extends EntiteSimple> {
+export class EntiteSimpleService<T extends EntiteSimple> extends BaseNaturalisteService {
 
-    constructor(private baseNaturalisteService: BaseNaturalisteService, private http: Http) {
+    constructor(public http: Http) {
+        super(http);
     }
 
-    public getAll(entityName: string): Observable<Response> {
-        return this.http.get(this.baseNaturalisteService.BASE_NATURALISTE_URL + entityName + "/all");
+    public getAllObjects(entityName: string): Observable<Response> {
+        return this.httpGet(entityName + "/all");
     }
 }

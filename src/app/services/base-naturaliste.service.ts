@@ -12,8 +12,15 @@ export class BaseNaturalisteService {
 
   }
 
-  public callBackend<T>(path: string): Observable<T> {
+  public httpGet<T>(path: string): Observable<T> {
     return this.http.get(this.BASE_NATURALISTE_URL + path).pipe(
+      map(this.extractModel),
+      catchError(this.handleError)
+    );
+  }
+
+  public httpPost<T>(relativePath: string, objectToPost: any): Observable<T> {
+    return this.http.post(this.BASE_NATURALISTE_URL + relativePath, objectToPost).pipe(
       map(this.extractModel),
       catchError(this.handleError)
     );

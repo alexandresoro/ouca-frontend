@@ -3,6 +3,8 @@ import { EntiteAvecLibelle } from "./entite-avec-libelle.object";
 
 export class Lieudit extends EntiteAvecLibelle {
 
+    readonly ENTITY_NAME = "lieudit";
+
     public commune: Commune;
 
     public nom: string;

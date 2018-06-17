@@ -17,7 +17,7 @@ export class ConfigurationService extends BaseNaturalisteService {
   }
 
   public getInitialPageModel(): Observable<ConfigurationPage> {
-    return this.callBackend(this.PAGE_PATH + this.INIT_PATH);
+    return this.httpGet(this.PAGE_PATH + this.INIT_PATH);
   }
 
   public saveAppConfiguration(appConfigurationToSave: AppConfiguration): Observable<EntiteResult<AppConfiguration>> {

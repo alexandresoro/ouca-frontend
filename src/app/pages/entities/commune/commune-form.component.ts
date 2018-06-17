@@ -21,7 +21,7 @@ export class CommuneFormComponent extends EntiteSimpleFormComponent<Commune> {
 
     ngOnInit() {
         // Get all departements
-        this.entiteSimpleService.getAll("departement")
+        this.entiteSimpleService.getAllObjects("departement")
             .subscribe((response: Response) => {
                 console.log("All Départements:", response.json());
                 this.departements = response.json();

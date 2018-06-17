@@ -21,7 +21,7 @@ export class EspeceFormComponent extends EntiteSimpleFormComponent<Espece> {
 
     ngOnInit(): void {
         // Get all communes
-        this.entiteSimpleService.getAll("classe")
+        this.entiteSimpleService.getAllObjects("classe")
             .subscribe((response: Response) => {
                 console.log("Toutes les Classes:", response.json());
                 this.classes = response.json();

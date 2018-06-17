@@ -15,11 +15,7 @@ export class DonneeService extends BaseNaturalisteService {
         super(http);
     }
 
-    public saveObject(objectToSave: Donnee): Observable<EntiteResult<Donnee>> {
-        const action: string = this.ENTITY_NAME + "/create";
-        return this.http.post(this.BASE_NATURALISTE_URL + action, objectToSave).pipe(
-            map(this.extractModel),
-            catchError(this.handleError)
-        );
+    public saveDonnee(donneeToSave: Donnee): Observable<EntiteResult<Donnee>> {
+        return this.httpPost(this.ENTITY_NAME + "/create", donneeToSave);
     }
 }
