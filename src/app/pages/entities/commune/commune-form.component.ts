@@ -22,12 +22,12 @@ export class CommuneFormComponent extends EntiteSimpleFormComponent<Commune> {
     ngOnInit() {
         // Get all departements
         this.entiteSimpleService.getAllObjects("departement")
-            .subscribe((response: Response) => {
-                console.log("All Départements:", response.json());
-                this.departements = response.json();
-            }, (error: Response) => {
-                console.error("Impossible de trouver les départements (" + error + ")");
-            });
+            .subscribe(
+                (result: Departement[]) => {
+                    this.departements = result;
+                }, (error: Response) => {
+                    console.error("Impossible de trouver les départements (" + error + ")");
+                });
     }
 
     getNewObject(): Commune {

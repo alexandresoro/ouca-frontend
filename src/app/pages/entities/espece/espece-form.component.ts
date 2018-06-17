@@ -22,12 +22,12 @@ export class EspeceFormComponent extends EntiteSimpleFormComponent<Espece> {
     ngOnInit(): void {
         // Get all communes
         this.entiteSimpleService.getAllObjects("classe")
-            .subscribe((response: Response) => {
-                console.log("Toutes les Classes:", response.json());
-                this.classes = response.json();
-            }, (error: Response) => {
-                console.error("Impossible de trouver les classes (" + error + ")");
-            });
+            .subscribe(
+                (result: Classe[]) => {
+                    this.classes = result;
+                }, (error: Response) => {
+                    console.error("Impossible de trouver les classes (" + error + ")");
+                });
     }
 
     getNewObject(): Espece {
