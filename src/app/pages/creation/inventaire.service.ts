@@ -15,12 +15,8 @@ export class InventaireService extends BaseNaturalisteService {
         super(http);
     }
 
-    public saveObject(objectToSave: Inventaire): Observable<EntiteResult<Inventaire>> {
-        objectToSave.date = new Date();
-        const action: string = this.ENTITY_NAME + "/create";
-        return this.http.post(this.BASE_NATURALISTE_URL + action, objectToSave).pipe(
-            map(this.extractModel),
-            catchError(this.handleError)
-        );
+    public saveInventaire(inventaireToSave: Inventaire): Observable<EntiteResult<Inventaire>> {
+        inventaireToSave.date = new Date();
+        return this.httpPost(this.ENTITY_NAME + "/create", inventaireToSave);
     }
 }

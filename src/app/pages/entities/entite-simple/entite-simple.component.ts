@@ -5,9 +5,7 @@ import { Http, Response } from "@angular/http";
 import { EntiteSimple } from "../../../model/entite-simple.object";
 import { GestionMode } from "../gestion-mode.enum";
 import { GestionModeHelper } from "./../gestion-mode.enum";
-
-// TODO
-const BASE_NATURALISTE_URL: string = "http://localhost:4000/api/";
+import { EntiteSimpleService } from "./entite-simple.service";
 
 @Component({
     template: "",
@@ -28,7 +26,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
     private _mode: GestionMode;
 
-    constructor(private _http: Http,
+    constructor(private entiteSimpleService: EntiteSimpleService<T>,
                 public modeHelper: GestionModeHelper) {
     }
 
@@ -41,11 +39,11 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
     public getAll(): void {
         this.clearMessages();
-        this._http.get(BASE_NATURALISTE_URL + this.getEntityName() + "/all")
+        this.entiteSimpleService.getAllObjects(this.getEntityName())
             .subscribe((response: Response) => {
-                console.log("TOUS LES OBJETS:", response.json());
                 this._objects = response.json();
             }, (error: Response) => {
+                // TODO duplicated code
                 this.status = "ERROR";
                 this._messages = ["Impossible de trouver les objets (Erreur " + error.status + ")"];
             });
@@ -74,7 +72,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
     public confirmObjectRemoval(object: T): void {
         if (!!object) {
-            this._http.delete(BASE_NATURALISTE_URL + this.getEntityName() + "/delete/" + object.id)
+            this.entiteSimpleService.httpGet(this.getEntityName() + "/delete/" + object.id)
                 .subscribe(
                     (response: Response) => {
                         const result = response.json();
@@ -118,7 +116,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
         console.log("Start saving " + this.getEntityName(), this._objectToSave);
 
-        this._http.post(BASE_NATURALISTE_URL + action, this._objectToSave)
+        this.entiteSimpleService.httpPost(action, this._objectToSave)
             .subscribe(
                 (response: Response) => {
                     const result = response.json();
