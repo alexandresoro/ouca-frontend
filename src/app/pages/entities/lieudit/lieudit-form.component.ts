@@ -25,21 +25,20 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
     ngOnInit(): void {
         // Get all departements
         this.entiteSimpleService.getAllObjects("departement")
-            .subscribe((response: Response) => {
-                console.log("Tous les Départements:", response.json());
-                this.departements = response.json();
-            }, (error: Response) => {
-                console.error("Impossible de trouver les départements (" + error + ")");
-            });
-
+            .subscribe(
+                (result: Departement[]) => {
+                    this.departements = result;
+                }, (error: Response) => {
+                    console.error("Impossible de trouver les départements (" + error + ")");
+                });
         // Get all communes
         this.entiteSimpleService.getAllObjects("commune")
-            .subscribe((response: Response) => {
-                console.log("Toutes les Communes:", response.json());
-                this.communes = response.json();
-            }, (error: Response) => {
-                console.error("Impossible de trouver les communes (" + error + ")");
-            });
+            .subscribe(
+                (result: Commune[]) => {
+                    this.communes = result;
+                }, (error: Response) => {
+                    console.error("Impossible de trouver les communes (" + error + ")");
+                });
     }
 
     getNewObject(): Lieudit {
