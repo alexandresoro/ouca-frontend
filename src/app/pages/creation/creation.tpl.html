@@ -148,11 +148,15 @@
               <div *ngIf="pageModel.areAssociesDisplayed"
                 class="form-group">
                 <div class="col-sm-9">
+
                   <mat-form-field>
                     <mat-select class="form-control input-sm"
                       placeholder="Associés"
                       id="input-associes"
-                      [disabled]="isInventaireDisabled">
+                      name="input-associes"
+                      [disabled]="isInventaireDisabled"
+                      [(ngModel)]="inventaireToSave.associes"
+                      multiple>
                       <mat-option *ngFor="let observateur of pageModel.observateurs"
                         [value]="observateur">
                         {{observateur.libelle}}
@@ -218,7 +222,7 @@
                       [(ngModel)]="selectedDepartement"
                       [required]="!isInventaireDisabled"
                       [disabled]="isInventaireDisabled"
-                      (change)="updateCommunes()">
+                      (selectionChange)="updateCommunes()">
                       <mat-option *ngFor="let departement of pageModel.departements"
                         [value]="departement">
                         {{departement.code}}
@@ -237,7 +241,7 @@
                       [(ngModel)]="selectedCommune"
                       [required]="!isInventaireDisabled"
                       [disabled]="isInventaireDisabled"
-                      (change)="updateLieuxdits()">
+                      (selectionChange)="updateLieuxdits()">
                       <mat-option *ngFor="let commune of filteredCommunes"
                         [value]="commune">
                         {{commune.code}}
@@ -248,7 +252,6 @@
 
               </div>
               <div class="form-group">
-
                 <div class="col-sm-offset-3 col-sm-9">
                   <mat-form-field>
                     <mat-select class="form-control input-sm"
@@ -257,7 +260,7 @@
                       [(ngModel)]="selectedCommune"
                       [required]="!isInventaireDisabled"
                       [disabled]="isInventaireDisabled"
-                      (change)="updateLieuxdits()">
+                      (selectionChange)="updateLieuxdits()">
                       <mat-option *ngFor="let commune of filteredCommunes"
                         [value]="commune"
                         [disabled]="isInventaireDisabled">
@@ -277,7 +280,7 @@
                       [(ngModel)]="inventaireToSave.lieudit"
                       [required]="!isInventaireDisabled"
                       [disabled]="isInventaireDisabled"
-                      (change)="updateCoordinates()">
+                      (selectionChange)="updateCoordinates()">
                       <mat-option *ngFor="let lieudit of filteredLieuxdits"
                         [value]="lieudit">
                         {{lieudit.nom}}
@@ -359,8 +362,14 @@
                     <mat-select class="form-control input-sm"
                       placeholder="Météos"
                       id="input-meteos"
-                      [disabled]="isInventaireDisabled">
-                      <mat-option>Soleil, Vent</mat-option>
+                      name="meteos"
+                      [(ngModel)]="inventaireToSave.meteos"
+                      [disabled]="isInventaireDisabled"
+                      multiple>
+                      <mat-option *ngFor="let meteo of pageModel.meteos"
+                        [value]="meteo">
+                        {{meteo.libelle}}
+                      </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -380,7 +389,7 @@
               <div class="form-group">
                 <div class="col-sm-2">
                   <mat-form-field>
-                    <mat-select (change)="updateEspeces()"
+                    <mat-select (selectionChange)="updateEspeces()"
                       placeholder="Classe"
                       class="form-control input-sm"
                       [disabled]="isDonneeDisabled"
