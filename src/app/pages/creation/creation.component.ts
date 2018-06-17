@@ -250,13 +250,12 @@ export class CreationComponent extends PageComponent implements OnInit {
         // Prepare inventaire
         this.inventaireToSave.date = new Date(this.dateInventaire);
 
-        console.log("Inventaire to save is", this.inventaireToSave);
+        console.log("L'inventaire à sauvegarder est", this.inventaireToSave);
 
         this.inventaireService.saveObject(this.inventaireToSave)
             .subscribe(
                 (result: EntiteResult<Inventaire>) => {
-                    this.status = result.status;
-                    this.messages = result.messages;
+                    this.updatePageStatus(result.status, result.messages);
                     this.inventaireToSave = result.object;
 
                     if (this.isSuccess()) {
@@ -273,10 +272,10 @@ export class CreationComponent extends PageComponent implements OnInit {
             this.updateCoordinates();
         }
 
-        this.donneeToSave = new Donnee();
+        // this.donneeToSave = new Donnee();
         this.donneeToSave.inventaire = this.inventaireToSave;
 
-        this.switchToNewDonneeMode();
+        this.switchToEditionDonneeMode();
     }
     private onSaveInventaireError(error: any) {
         this.setErrorMessage("L'inventaire n'a pas pu êtr créé/modifié.");
@@ -306,8 +305,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.donneeService.saveObject(this.donneeToSave)
             .subscribe(
                 (result: EntiteResult<Donnee>) => {
-                    this.status = result.status;
-                    this.messages = result.messages;
+                    this.updatePageStatus(result.status, result.messages);
                     this.donneeToSave = result.object;
                     if (this.isSuccess()) {
                         this.onSaveDonneeSuccess(result.object);
@@ -393,7 +391,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         if (this.modeHelper.isInventaireMode(this.mode)) {
             this.switchToInventaireMode();
         } else if (this.modeHelper.isDonneeMode(this.mode)) {
-            this.switchToNewDonneeMode();
+            this.switchToEditionDonneeMode();
         }
 
         this.inventaireToSave = this.navigationService.getNextInventaire();
@@ -421,8 +419,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
 
     private onDeleteSuccess(result: EntiteResult<Donnee>): void {
-        this.status = result.status;
-        this.messages = result.messages;
+        this.updatePageStatus(result.status, result.messages);
 
         if (this.isSuccess()) {
             this.setCurrentDonneeToTheNextDonnee(true);
@@ -517,7 +514,7 @@ export class CreationComponent extends PageComponent implements OnInit {
             this.inventaireToSave = this.navigationService.savedInventaire;
             this.donneeToSave = new Donnee();
         } else if (this.modeHelper.isDonneeMode(this.mode)) {
-            this.switchToNewDonneeMode();
+            this.switchToEditionDonneeMode();
             this.inventaireToSave = this.navigationService.savedInventaire;
             this.donneeToSave = this.navigationService.savedDonnee;
         }
@@ -539,11 +536,10 @@ export class CreationComponent extends PageComponent implements OnInit {
         document.getElementById("input-observateur").focus();
     }
 
-    private switchToNewDonneeMode(): void {
+    private switchToEditionDonneeMode(): void {
         this.mode = CreationMode.NEW_DONNEE;
         this.isDonneeDisabled = false;
         this.isInventaireDisabled = true;
-        // this.initializeDonneePanel();
         document.getElementById("input-code-espece").focus();
     }
 
