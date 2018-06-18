@@ -1,4 +1,3 @@
-
 export class PageComponent {
 
     private STATUS_ERROR: string = "ERROR";

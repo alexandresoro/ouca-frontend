@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
-import { EntiteResult } from "./../../model/entite-result.object";
-import { Inventaire } from "./../../model/inventaire.object";
-import { BaseNaturalisteService } from "./../../services/base-naturaliste.service";
+import { EntiteResult } from "../../model/entite-result.object";
+import { Inventaire } from "../../model/inventaire.object";
+import { BaseNaturalisteService } from "../../services/base-naturaliste.service";
 
 @Injectable()
 export class InventaireService extends BaseNaturalisteService {

@@ -2,36 +2,36 @@
   <top-buttons title="Observateurs"
     createButtonLibelle="Créer un observateur"
     exportButtonLibelle="Exporter les observateurs"
-    [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+    [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"></top-buttons>
 
-  <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+  <hr *ngIf="isCreationMode() || isEditionMode() || isViewOneMode() || isRemoveMode()">
 
   <entity-messages [messages]="messages"
     [status]="status"></entity-messages>
 
-  <observateur-table *ngIf="modeHelper.isViewAllMode(mode)"
+  <observateur-table *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)">
   </observateur-table>
 
-  <observateur-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+  <observateur-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     (confirm)="saveObject()"
     (back)="cancelEdition()">
   </observateur-form>
 
-  <observateur-details *ngIf="modeHelper.isViewOneMode(mode)"
+  <observateur-details *ngIf="isViewOneMode()"
     [objectToView]="objectToView"
     (back)="viewAll()">
   </observateur-details>
 
-  <observateur-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+  <observateur-removal-confirmation *ngIf="isRemoveMode()"
     [objectToRemove]="objectToRemove"
     (confirm)="confirmObjectRemoval($event)">
   </observateur-removal-confirmation>

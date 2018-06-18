@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { Observable } from "rxjs";
+import { Comportement } from "../../model/comportement.object";
 import { CreationPage } from "../../model/creation-page.object";
 import { Donnee } from "../../model/donnee.object";
-import { Comportement } from "./../../model/comportement.object";
-import { EntiteResult } from "./../../model/entite-result.object";
-import { BaseNaturalisteService } from "./../../services/base-naturaliste.service";
+import { EntiteResult } from "../../model/entite-result.object";
+import { BaseNaturalisteService } from "../../services/base-naturaliste.service";
 
 @Injectable()
 export class CreationService extends BaseNaturalisteService {

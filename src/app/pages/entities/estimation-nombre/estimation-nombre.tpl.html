@@ -2,36 +2,36 @@
   <top-buttons title="Estimations du nombre"
     createButtonLibelle="Créer une estimation"
     exportButtonLibelle="Exporter les estimations"
-    [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+    [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"></top-buttons>
 
-  <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+  <hr *ngIf="isCreationMode() || isEditionMode() || isViewOneMode() || isRemoveMode()">
 
   <entity-messages [messages]="messages"
     [status]="status"></entity-messages>
 
-  <estimation-nombre-table *ngIf="modeHelper.isViewAllMode(mode)"
+  <estimation-nombre-table *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)">
   </estimation-nombre-table>
 
-  <estimation-nombre-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+  <estimation-nombre-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     (confirm)="saveObject()"
     (back)="cancelEdition()">
   </estimation-nombre-form>
 
-  <estimation-nombre-details *ngIf="modeHelper.isViewOneMode(mode)"
+  <estimation-nombre-details *ngIf="isViewOneMode()"
     [objectToView]="objectToView"
     (back)="viewAll()">
   </estimation-nombre-details>
 
-  <estimation-nombre-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+  <estimation-nombre-removal-confirmation *ngIf="isRemoveMode()"
     [objectToRemove]="objectToRemove"
     (confirm)="confirmObjectRemoval($event)">
   </estimation-nombre-removal-confirmation>

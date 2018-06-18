@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { EntiteAvecLibelleEtCode } from "./../../../model/entite-avec-libelle-et-code.object";
+import { EntiteAvecLibelleEtCode } from "../../../model/entite-avec-libelle-et-code.object";
 import { InputCodeLibelleEventObject } from "./input-code-libelle-event.object";
 
 @Component({

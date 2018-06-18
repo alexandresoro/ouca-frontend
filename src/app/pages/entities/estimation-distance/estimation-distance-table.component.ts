@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
+import { EstimationDistance } from "../../../model/estimation-distance.object";
 import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table.component";
-import { EstimationDistance } from "./../../../model/estimation-distance.object";
 
 @Component({
     selector: "estimation-distance-table",
