@@ -12,6 +12,8 @@ export class ConfigurationService extends BaseNaturalisteService {
   private PAGE_PATH: string = "configuration";
   private INIT_PATH: string = "/init";
 
+  private UPDATE_PATH: string = "/update";
+
   constructor(public http: Http) {
     super(http);
   }
@@ -21,8 +23,7 @@ export class ConfigurationService extends BaseNaturalisteService {
   }
 
   public saveAppConfiguration(appConfigurationToSave: AppConfiguration): Observable<EntiteResult<AppConfiguration>> {
-    return null;
-    // TODO
+    return this.httpPost(this.PAGE_PATH + this.UPDATE_PATH, appConfigurationToSave);
   }
 
 }

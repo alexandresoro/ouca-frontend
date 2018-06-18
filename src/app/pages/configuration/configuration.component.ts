@@ -37,6 +37,8 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     }
 
     public saveAppConfiguration(): void {
+        console.log("App Configuration à sauvegarder", this.configurationToSave);
+
         this.configurationService.saveAppConfiguration(this.configurationToSave)
             .subscribe(
                 (result: EntiteResult<AppConfiguration>) => {
@@ -73,7 +75,8 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     }
 
     private onInitConfigurationPageError(error: any): void {
-        // TODO
+        console.log("Impossible de charger la page de configuration.", error);
+        this.setErrorMessage("Impossible de charger la page de configuration.");
     }
 
     private onSaveAppConfigurationSuccess(appConfiguration: AppConfiguration): void {
@@ -82,7 +85,8 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     }
 
     private onSaveAppConfigurationError(error: any): void {
-        // TODO
+        console.log("Impossible de sauvegarder la configuration de l'application.", error);
+        this.setErrorMessage("Impossible de sauvegarder la configuration de l'application.");
     }
 
     private switchToEditionMode(): void {
