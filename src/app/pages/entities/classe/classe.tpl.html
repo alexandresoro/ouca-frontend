@@ -2,33 +2,33 @@
   <top-buttons title="Classes"
     createButtonLibelle="Créer une classe"
     exportButtonLibelle="Exporter les classes"
-    [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+    [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"></top-buttons>
 
-  <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+  <hr *ngIf="isCreationMode() || isEditionMode() || isViewOneMode() || isRemoveMode()">
 
   <entity-messages [messages]="messages"
     [status]="status"></entity-messages>
 
-  <classe-table *ngIf="modeHelper.isViewAllMode(mode)"
+  <classe-table *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)"></classe-table>
 
-  <classe-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+  <classe-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     (confirm)="saveObject()"
     (back)="cancelEdition()"></classe-form>
 
-  <classe-details *ngIf="modeHelper.isViewOneMode(mode)"
+  <classe-details *ngIf="isViewOneMode()"
     [objectToView]="objectToView"
     (back)="viewAll()"></classe-details>
 
-  <classe-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+  <classe-removal-confirmation *ngIf="isRemoveMode()"
     [objectToRemove]="objectToRemove"
     (confirm)="confirmObjectRemoval($event)">
   </classe-removal-confirmation>

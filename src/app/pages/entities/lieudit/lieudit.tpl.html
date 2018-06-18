@@ -2,36 +2,36 @@
     <top-buttons title="Lieux-dits"
         createButtonLibelle="Créer un lieu-dit"
         exportButtonLibelle="Exporter les lieux-dits"
-        [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+        [areButtonsDisplayed]="isViewAllMode()"
         (onClickNewObject)="newObject()"
         (onClickExportObjects)="exportObjects()"
         (onClickRefresh)="getAll()"></top-buttons>
 
-    <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+    <hr *ngIf="isCreationMode() || isEditionMode() || isViewOneMode() || isRemoveMode()">
 
     <entity-messages [messages]="messages"
         [status]="status"></entity-messages>
 
-    <lieudit-table *ngIf="modeHelper.isViewAllMode(mode)"
+    <lieudit-table *ngIf="isViewAllMode()"
         [objects]="objects"
         (delete)="deleteObject($event)"
         (edit)="editObject($event)"
         (view)="viewObject($event)">
     </lieudit-table>
 
-    <lieudit-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+    <lieudit-form *ngIf="isCreationMode() || isEditionMode()"
         [object]="objectToSave"
         [mode]="mode"
         (confirm)="saveObject()"
         (back)="cancelEdition()">
     </lieudit-form>
 
-    <lieudit-details *ngIf="modeHelper.isViewOneMode(mode)"
+    <lieudit-details *ngIf="isViewOneMode()"
         [objectToView]="objectToView"
         (back)="viewAll()">
     </lieudit-details>
 
-    <lieudit-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+    <lieudit-removal-confirmation *ngIf="isRemoveMode()"
         [objectToRemove]="objectToRemove"
         (confirm)="confirmObjectRemoval($event)">
     </lieudit-removal-confirmation>

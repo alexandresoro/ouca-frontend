@@ -2,33 +2,33 @@
   <top-buttons title="Estimations de la distance"
     createButtonLibelle="Créer une estimation"
     exportButtonLibelle="Exporter les estimations"
-    [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+    [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"></top-buttons>
 
-  <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+  <hr *ngIf="isCreationMode() || isEditionMode() || isViewOneMode() || isRemoveMode()">
 
   <entity-messages [messages]="messages"
     [status]="status"></entity-messages>
 
-  <estimation-distance-table *ngIf="modeHelper.isViewAllMode(mode)"
+  <estimation-distance-table *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)"></estimation-distance-table>
 
-  <estimation-distance-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+  <estimation-distance-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     (confirm)="saveObject()"
     (back)="cancelEdition()"></estimation-distance-form>
 
-  <estimation-distance-details *ngIf="modeHelper.isViewOneMode(mode)"
+  <estimation-distance-details *ngIf="isViewOneMode()"
     [objectToView]="objectToView"
     (back)="viewAll()"></estimation-distance-details>
 
-  <estimation-distance-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+  <estimation-distance-removal-confirmation *ngIf="isRemoveMode()"
     [objectToRemove]="objectToRemove"
     (confirm)="confirmObjectRemoval($event)">
   </estimation-distance-removal-confirmation>

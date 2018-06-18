@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { EntiteSimple } from "../../../model/entite-simple.object";
+import { EntiteComponent } from "../../entite.component";
 import { GestionMode, GestionModeHelper } from "../gestion-mode.enum";
 
 @Component({
     template: "",
 })
-export class EntiteSimpleFormComponent<T extends EntiteSimple> {
+export class EntiteSimpleFormComponent<T extends EntiteSimple> extends EntiteComponent {
 
     @Input() public creationTitle: string;
 
@@ -19,7 +20,8 @@ export class EntiteSimpleFormComponent<T extends EntiteSimple> {
 
     @Output() public back: EventEmitter<T> = new EventEmitter();
 
-    constructor(public modeHelper: GestionModeHelper) {
+    constructor(modeHelper: GestionModeHelper) {
+        super(modeHelper);
     }
 
     public save(): void {

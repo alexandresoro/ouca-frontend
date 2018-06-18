@@ -2,23 +2,23 @@
     <top-buttons title="Âges"
         createButtonLibelle="Créer un âge"
         exportButtonLibelle="Exporter les âges"
-        [areButtonsDisplayed]="modeHelper.isViewAllMode(mode)"
+        [areButtonsDisplayed]="isViewAllMode()"
         (onClickNewObject)="newObject()"
         (onClickExportObjects)="exportObjects()"
         (onClickRefresh)="getAll()"></top-buttons>
 
-    <hr *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode) || modeHelper.isViewOneMode(mode) || modeHelper.isRemoveMode(mode)">
+    <hr *ngIf="isCreationMode() || isEditionMode() || isViewOneMode() || isRemoveMode()">
 
     <entity-messages [messages]="messages"
         [status]="status"></entity-messages>
 
-    <age-table *ngIf="modeHelper.isViewAllMode(mode)"
+    <age-table *ngIf="isViewAllMode()"
         [objects]="objects"
         (delete)="deleteObject($event)"
         (edit)="editObject($event)"
         (view)="viewObject($event)"></age-table>
 
-    <age-form *ngIf="modeHelper.isCreationMode(mode) || modeHelper.isEditionMode(mode)"
+    <age-form *ngIf="isCreationMode() || isEditionMode()"
         [object]="objectToSave"
         [mode]="mode"
         creationTitle="Création d'un âge"
@@ -26,12 +26,12 @@
         (confirm)="saveObject()"
         (back)="cancelEdition()"></age-form>
 
-    <age-details *ngIf="modeHelper.isViewOneMode(mode)"
+    <age-details *ngIf="isViewOneMode()"
         [objectToView]="objectToView"
         detailsTitle="Détails de l'âge"
         (back)="viewAll()"></age-details>
 
-    <age-removal-confirmation *ngIf="modeHelper.isRemoveMode(mode)"
+    <age-removal-confirmation *ngIf="isRemoveMode()"
         [objectToRemove]="objectToRemove"
         (confirm)="confirmObjectRemoval($event)"></age-removal-confirmation>
 

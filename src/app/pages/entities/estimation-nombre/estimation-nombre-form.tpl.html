@@ -6,11 +6,11 @@
                 class="close"
                 (click)="cancel()">&times;
             </button>
-            <h2 *ngIf="modeHelper.isCreationMode(mode)">{{creationTitle}}</h2>
-            <h2 *ngIf="modeHelper.isEditionMode(mode)">{{editionTitle}}</h2>
+            <h2 *ngIf="isCreationMode()">{{creationTitle}}</h2>
+            <h2 *ngIf="isEditionMode()">{{editionTitle}}</h2>
         </div>
         <div>
-            <div *ngIf="modeHelper.isEditionMode(mode)"
+            <div *ngIf="isEditionMode()"
                 class="form-group">
                 <label for="fieldId">ID</label>
                 <input type="text"
@@ -59,12 +59,14 @@
                 <button type="button"
                     class="btn btn-default"
                     (click)="cancel()">
-                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Annuler</span>
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;
+                    <span>Annuler</span>
                 </button>
                 <button type="submit"
                     class="btn btn-primary"
                     [disabled]="!entiteSimpleForm.form.valid">
-                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Enregistrer</span>
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;
+                    <span>Enregistrer</span>
                 </button>
             </div>
         </div>
