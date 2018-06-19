@@ -556,4 +556,8 @@ export class CreationComponent extends PageComponent implements OnInit {
             event.preventDefault();
         }
     }
+
+    public onSearchByIdBtnClicked(): void {
+        alert("It should open a popup asking for ID");
+    }
 }

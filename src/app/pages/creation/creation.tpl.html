@@ -50,6 +50,13 @@
                     Donnée suivante
                 </button>
 
+                <button class="btn btn-primary btn-sm"
+                    type="button"
+                    style="float: left; margin-right: 8px"
+                    (click)="onSearchByIdBtnClicked()">
+                    Recherche par ID
+                </button>
+
 
                 <button *ngIf="modeHelper.isInventaireMode(mode)"
                     class="btn btn-success btn-sm"
