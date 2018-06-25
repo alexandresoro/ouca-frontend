@@ -1,31 +1,32 @@
-<div class="lco-creation-page">
+<div class="lco-creation-page mat-typography">
 
-  <h1 class="mat-display-1">Création des données</h1>
+  <h1 class="mat-display-1"
+    style="display: none">Création des données</h1>
 
   <div class="panel panel-default">
-    <div class="panel-heading row lco-creation-messages">
+    <div class="panel-body lco-creation-body">
+      <div class="panel-heading lco-creation-messages">
 
-      <div [ngSwitch]="status">
-        <div *ngSwitchCase="'ERROR'"
-          class="col-xs-12">
-          <ul>
-            <li *ngFor="let message of messages">{{message?.value}}</li>
-          </ul>
-        </div>
-        <div *ngSwitchCase="'SUCCESS'"
-          class="col-xs-12">
-          <ul>
-            <li *ngFor="let message of messages">{{message?.value}}</li>
-          </ul>
-        </div>
-        <div *ngSwitchDefault
-          class="col-xs-12">
-          <strong>Aucun message</strong>
+        <div [ngSwitch]="status">
+          <div *ngSwitchCase="'ERROR'"
+            class="col-xs-12">
+            <ul>
+              <li *ngFor="let message of messages">{{message?.value}}</li>
+            </ul>
+          </div>
+          <div *ngSwitchCase="'SUCCESS'"
+            class="col-xs-12">
+            <ul>
+              <li *ngFor="let message of messages">{{message?.value}}</li>
+            </ul>
+          </div>
+          <div *ngSwitchDefault
+            class="col-xs-12">
+            <strong>Aucun message</strong>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="panel-body lco-creation-body">
-      <div class="row lco-creation-buttons">
+      <div class="lco-creation-buttons">
         <button mat-raised-button
           color="primary"
           *ngIf="isNewDonneeBtnDisplayed()"
@@ -99,10 +100,10 @@
         </button>
       </div>
 
-      <div class="row lco-creation-form">
-        <form class="form-horizontal"
-          #donneeForm="ngForm">
-          <div class="col-sm-4 lco-creation-inventaire">
+      <form class="form-horizontal"
+        #donneeForm="ngForm">
+        <div class="lco-creation-form">
+          <div class="lco-creation-inventaire">
             <h2>Fiche Inventaire
               <button mat-raised-button
                 color="primary"
@@ -379,15 +380,15 @@
           <!-- END INVENTAIRE -->
 
           <!-- DONNEE -->
-          <div class="lco-creation-fiche col-sm-8">
+          <div class="lco-creation-fiche">
             <h2>Fiche espèce
               <span *ngIf="navigationService.currentDonneeIndex">n°{{navigationService.currentDonneeIndex}} (ID={{donneeToSave.id}})</span>
             </h2>
 
-            <div class="lco-creation-subform lco-creation-espece">
-              <!-- CLASSE -->
-              <div class="form-group">
-                <div class="col-sm-2">
+            <!-- CLASSE -->
+            <mat-card>
+              <div class="lco-creation-quoi">
+                <div class="lco-creation-classe">
                   <mat-form-field>
                     <mat-select (selectionChange)="updateEspeces()"
                       placeholder="Classe"
@@ -405,10 +406,10 @@
                   </mat-form-field>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="lco-creation-espece">
                   <mat-form-field>
                     <mat-select class="form-control input-sm"
-                      placeholder="Espèce"
+                      placeholder="Code espèce"
                       id="input-code-espece"
                       name="input-code-espece"
                       [disabled]="isDonneeDisabled"
@@ -420,13 +421,10 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                </div>
-
-
-                <div class="col-sm-4">
                   <mat-form-field>
                     <mat-select class="form-control input-sm"
                       id="input-nom-espece"
+                      placeholder="Nom français"
                       name="nom-espece"
                       [disabled]="isDonneeDisabled"
                       [required]="!isDonneeDisabled"
@@ -439,13 +437,13 @@
                   </mat-form-field>
                 </div>
               </div>
-            </div>
+            </mat-card>
 
             <!-- DETAILS -->
-            <div class="lco-creation-subform lco-creation-details">
-              <div class="form-group">
-                <!-- NOMBRE -->
-                <div class="col-sm-2">
+            <mat-card>
+              <div class="lco-creation-details">
+                <div class="first-row">
+                  <!-- NOMBRE -->
                   <mat-form-field>
                     <input matInput
                       class="form-control input-sm"
@@ -458,9 +456,8 @@
                       [disabled]="isDonneeDisabled || donneeToSave.estimationNombre?.nonCompte"
                       [required]="!isDonneeDisabled && !donneeToSave.estimationNombre?.nonCompte">
                   </mat-form-field>
-                </div>
-                <!-- ESTIMATION NOMBRE -->
-                <div class="col-sm-2">
+
+                  <!-- ESTIMATION NOMBRE -->
                   <mat-form-field>
                     <mat-select class="form-control input-sm"
                       id="input-estimation-nombre"
@@ -475,14 +472,8 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                </div>
 
-
-              </div>
-
-              <!-- SEXE -->
-              <div class="form-group">
-                <div class="col-sm-4">
+                  <!-- SEXE -->
                   <mat-form-field>
                     <mat-select class="form-control input-sm"
                       placeholder="Sexe"
@@ -497,12 +488,8 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                </div>
-              </div>
 
-              <!-- AGE -->
-              <div class="form-group">
-                <div class="col-sm-4">
+                  <!-- AGE -->
                   <mat-form-field>
                     <mat-select class="form-control input-sm"
                       placeholder="Age"
@@ -517,72 +504,69 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                </div>
-              </div>
 
-              <!-- DISTANCE AND ESTIMATION DISTANCE -->
-              <div *ngIf="pageModel.isDistanceDisplayed"
-                class="form-group">
-                <!-- ESTIMATION DISTANCE -->
-                <div class="col-sm-2">
-                  <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Distance (m)"
-                      id="input-estimation-distance"
-                      name="estimation-distance"
-                      [(ngModel)]="donneeToSave.estimationDistance"
+                </div>
+
+                <div class="second-row">
+                  <!-- DISTANCE AND ESTIMATION DISTANCE -->
+                  <ng-container *ngIf="pageModel.isDistanceDisplayed">
+                    <!-- ESTIMATION DISTANCE -->
+                    <mat-form-field>
+                      <mat-select class="form-control input-sm"
+                        placeholder="Distance (m)"
+                        id="input-estimation-distance"
+                        name="estimation-distance"
+                        [(ngModel)]="donneeToSave.estimationDistance"
+                        [disabled]="isDonneeDisabled"
+                        [required]="!!donneeToSave.distance || donneeToSave.distance==0">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let estimDistance of pageModel.estimationsDistance"
+                          [value]="estimDistance">
+                          {{estimDistance.libelle}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <!-- DISTANCE -->
+                    <mat-form-field>
+                      <input matInput
+                        class="form-control input-sm"
+                        id="input-distance"
+                        min="0"
+                        name="distance"
+                        type="number"
+                        [(ngModel)]="donneeToSave.distance"
+                        [disabled]="isDonneeDisabled || !!!donneeToSave.estimationDistance"
+                        [required]="!!donneeToSave.estimationDistance">
+                    </mat-form-field>
+                  </ng-container>
+
+                  <!-- REGROUPEMENT -->
+                  <ng-container *ngIf="pageModel.isRegroupementDisplayed">
+                    <mat-form-field>
+                      <input matInput
+                        class="form-control input-sm"
+                        placeholder="Regroupement"
+                        id="input-regroupement"
+                        name="regroupement"
+                        type="number"
+                        min="1"
+                        [(ngModel)]="donneeToSave.regroupement"
+                        [disabled]="isDonneeDisabled">
+                    </mat-form-field>
+                    <button mat-raised-button
+                      color="primary"
+                      type="button"
+                      class="btn btn-default btn-sm"
                       [disabled]="isDonneeDisabled"
-                      [required]="!!donneeToSave.distance || donneeToSave.distance==0">
-                      <mat-option></mat-option>
-                      <mat-option *ngFor="let estimDistance of pageModel.estimationsDistance"
-                        [value]="estimDistance">
-                        {{estimDistance.libelle}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
+                      (click)="displayNextRegroupement()">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </ng-container>
 
-                <!-- DISTANCE -->
-                <div class="col-sm-2">
-                  <input class="form-control input-sm"
-                    id="input-distance"
-                    min="0"
-                    name="distance"
-                    type="number"
-                    [(ngModel)]="donneeToSave.distance"
-                    [disabled]="isDonneeDisabled || !!!donneeToSave.estimationDistance"
-                    [required]="!!donneeToSave.estimationDistance">
                 </div>
               </div>
-
-              <!-- REGROUPEMENT -->
-              <div *ngIf="pageModel.isRegroupementDisplayed"
-                class="form-group">
-                <div class="col-sm-3">
-                  <mat-form-field>
-                    <input matInput
-                      class="form-control input-sm"
-                      placeholder="Regroupement"
-                      id="input-regroupement"
-                      name="regroupement"
-                      type="number"
-                      min="1"
-                      [(ngModel)]="donneeToSave.regroupement"
-                      [disabled]="isDonneeDisabled">
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-1">
-                  <button mat-raised-button
-                    color="primary"
-                    type="button"
-                    class="btn btn-default btn-sm"
-                    [disabled]="isDonneeDisabled"
-                    (click)="displayNextRegroupement()">
-                    <span class="glyphicon glyphicon-plus"></span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            </mat-card>
 
             <!-- COMPORTEMENTS -->
             <div class="lco-creation-subform lco-creation-comportements">
@@ -701,8 +685,8 @@
 
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
 
     <div class="panel-footer row">
