@@ -186,29 +186,29 @@
               </div>
               <!-- HEURE -->
               <div class="form-group">
-                <label class="control-label col-sm-3"
-                  for="input-heure">Heure</label>
-                <div class="col-sm-9">
-                  <input type="time"
+                <mat-form-field>
+                  <input matInput
+                    placeholder="Heure"
+                    type="time"
                     class="form-control input-sm"
                     id="input-heure"
                     name="heure"
                     [(ngModel)]="inventaireToSave.heure"
                     [disabled]="isInventaireDisabled">
-                </div>
+                </mat-form-field>
               </div>
               <!-- DUREE -->
               <div class="form-group">
-                <label class="control-label col-sm-3"
-                  for="input-duree">Durée</label>
-                <div class="col-sm-9">
-                  <input type="time"
+                <mat-form-field>
+                  <input matInput
+                    placeholder="Durée"
+                    type="time"
                     class="form-control input-sm"
                     id="input-duree"
                     name="duree"
                     [(ngModel)]="inventaireToSave.duree"
                     [disabled]="isInventaireDisabled">
-                </div>
+                </mat-form-field>
               </div>
             </div>
 

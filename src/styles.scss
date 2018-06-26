@@ -1,0 +1,83 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+@import "~material-design-icons/iconfont/material-icons.css";
+
+body {
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.baseNaturalisteHeader {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+  flex: 0 0 auto;
+}
+
+.baseNaturalisteContent {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+.lco-creation-body {
+  display: grid;
+
+  .lco-creation-messages {
+    grid-row: 1;
+  }
+
+  .lco-creation-buttons {
+    grid-row: 2;
+  }
+
+  .lco-creation-form {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 20px;
+    grid-row: 3;
+
+    .lco-creation-inventaire {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .lco-creation-fiche {
+      grid-column: 2;
+      grid-row: 1;
+
+      .lco-creation-quoi {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+
+        .lco-creation-classe {
+          grid-column: 1;
+        }
+
+        .lco-creation-espece {
+          grid-column: 2;
+        }
+      }
+
+      .lco-creation-details {
+        display: grid;
+      }
+    }
+  }
+}
+
+.first-row {
+  grid-row: 1;
+}
+
+.second-row {
+  grid-row: 2;
+}
