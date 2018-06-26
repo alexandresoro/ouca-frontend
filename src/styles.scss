@@ -2,8 +2,53 @@
 
 @import "~material-design-icons/iconfont/material-icons.css";
 
+@import "~@angular/material/theming";
+
+// Create a config with the default typography levels.
+$defaultConfig: mat-typography-config();
+
+$custom-typography: mat-typography-config(
+  $headline:
+    mat-typography-level(
+      mat-font-size($defaultConfig, headline)-2px,
+      mat-line-height($defaultConfig, headline)-2px,
+      mat-font-weight($defaultConfig, headline)
+    ),
+  $title:
+    mat-typography-level(
+      mat-font-size($defaultConfig, title)-2px,
+      mat-line-height($defaultConfig, title)-2px,
+      mat-font-weight($defaultConfig, title)
+    ),
+  $body-1:
+    mat-typography-level(
+      mat-font-size($defaultConfig, body-1)-2px,
+      mat-line-height($defaultConfig, body-1)-2px,
+      mat-font-weight($defaultConfig, body-1)
+    ),
+  $button:
+    mat-typography-level(
+      mat-font-size($defaultConfig, button)-2px,
+      mat-line-height($defaultConfig, button)-2px,
+      mat-font-weight($defaultConfig, button)
+    ),
+  $input:
+    mat-typography-level(
+      mat-font-size($defaultConfig, input)-0.125,
+      mat-line-height($defaultConfig, input)-0.125,
+      mat-font-weight($defaultConfig, input)
+    )
+);
+
+@include mat-core($custom-typography);
+@include angular-material-typography($custom-typography);
+
 body {
   margin: 0;
+}
+
+mat-card.mat-card-override {
+  padding: 12px;
 }
 
 .wrapper {
@@ -44,15 +89,19 @@ body {
     grid-template-columns: 1fr 2fr;
     grid-gap: 20px;
     grid-row: 3;
+    margin-left: 4px;
+    margin-right: 4px;
 
     .lco-creation-inventaire {
       grid-column: 1;
       grid-row: 1;
+      grid-gap: 8px;
     }
 
     .lco-creation-fiche {
       grid-column: 2;
       grid-row: 1;
+      grid-gap: 8px;
 
       .lco-creation-quoi {
         display: grid;
@@ -74,10 +123,37 @@ body {
   }
 }
 
+.comportements-container,
+.milieux-container {
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.code-libelle-container {
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 10px;
+}
+
+.grid-container {
+  display: grid;
+}
+
+.first-column {
+  grid-column: 1;
+}
+
+.second-colum {
+  grid-column: 2;
+}
+
 .first-row {
   grid-row: 1;
 }
 
 .second-row {
   grid-row: 2;
+}
+
+.full-width-container > * {
+  width: 100%;
 }
