@@ -5,7 +5,7 @@ import { catchError, map } from "rxjs/operators";
 
 @Injectable()
 export class BaseNaturalisteService {
-  public BASE_NATURALISTE_URL: string = "http://10.0.0.128:4000/api/";
+  public BASE_NATURALISTE_URL: string = "http://localhost:4000/api/";
 
   constructor(public http: Http) {}
 
