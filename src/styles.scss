@@ -49,6 +49,7 @@ body {
 
 mat-card.mat-card-override {
   padding: 12px;
+  padding-bottom: 0;
 }
 
 .wrapper {
@@ -58,10 +59,19 @@ mat-card.mat-card-override {
   overflow: hidden;
 }
 
-.baseNaturalisteHeader {
+mat-toolbar.base-naturaliste-header {
   box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
     rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
   flex: 0 0 auto;
+  height: auto;
+}
+
+.baseNaturalisteContent {
+  max-width: 1600px;
+  margin-left: 30px;
+  margin-right: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .baseNaturalisteContent {
@@ -85,35 +95,42 @@ mat-card.mat-card-override {
   }
 
   .lco-creation-form {
-    display: grid;
     grid-template-columns: 1fr 2fr;
-    grid-gap: 20px;
+    column-gap: 50px;
+    row-gap: 0;
     grid-row: 3;
-    margin-left: 4px;
-    margin-right: 4px;
 
-    .lco-creation-inventaire {
-      grid-column: 1;
-      grid-row: 1;
+    .inventaire-form,
+    .espece-form {
       grid-gap: 8px;
     }
 
-    .lco-creation-fiche {
-      grid-column: 2;
-      grid-row: 1;
-      grid-gap: 8px;
+    .lco-creation-date {
+      grid-template-columns: auto 60px 60px;
+      column-gap: 20px;
+    }
 
-      .lco-creation-quoi {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
+    .commune-grid,
+    .lco-creation-meteo {
+      grid-template-columns: 80px auto;
+      column-gap: 20px;
+    }
 
-        .lco-creation-classe {
-          grid-column: 1;
-        }
+    .coordonnees-form {
+      column-gap: 20px;
+      grid-template-columns: repeat(3, 100px);
+    }
 
-        .lco-creation-espece {
-          grid-column: 2;
-        }
+    .lco-creation-quoi {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+
+      .lco-creation-classe {
+        grid-column: 1;
+      }
+
+      .lco-creation-espece {
+        grid-column: 2;
       }
 
       .lco-creation-details {
@@ -126,7 +143,8 @@ mat-card.mat-card-override {
 .comportements-container,
 .milieux-container {
   grid-template-columns: 1fr 1fr;
-  grid-gap: 20px;
+  column-gap: 20px;
+  row-gap: 0;
 }
 
 .code-libelle-container {
@@ -142,7 +160,7 @@ mat-card.mat-card-override {
   grid-column: 1;
 }
 
-.second-colum {
+.second-column {
   grid-column: 2;
 }
 
