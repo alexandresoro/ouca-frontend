@@ -91,10 +91,28 @@
       </a>
     </mat-menu>
 
-    <a mat-button
-      href="/configuration">
-      <mat-icon>settings</mat-icon>
-      Configurations</a>
+    <button mat-button
+      [matMenuTriggerFor]="autresActions">
+      <mat-icon>apps</mat-icon>
+      Autres actions</button>
+    <mat-menu #autresActions="matMenu"
+      [overlapTrigger]="false">
+      <a mat-menu-item
+        href="/configuration">
+        <mat-icon>settings</mat-icon>
+        Configurations
+      </a>
+      <a mat-menu-item
+        href="/sauvegarde">
+        <mat-icon>save</mat-icon>
+        Sauvegarde de la base
+      </a>
+      <a mat-menu-item
+        href="/import">
+        <mat-icon>import_export</mat-icon>
+        Import de la base
+      </a>
+    </mat-menu>
   </mat-toolbar>
 
 
