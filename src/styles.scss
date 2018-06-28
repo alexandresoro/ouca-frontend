@@ -40,8 +40,8 @@ $custom-typography: mat-typography-config(
     )
 );
 
-@include mat-core($custom-typography);
-@include angular-material-typography($custom-typography);
+//@include mat-core($custom-typography);
+//@include angular-material-typography($custom-typography);
 
 body {
   margin: 0;
@@ -64,14 +64,13 @@ mat-toolbar.base-naturaliste-header {
     rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
   flex: 0 0 auto;
   height: auto;
+  margin-bottom: 20px;
 }
 
 .baseNaturalisteContent {
   max-width: 1600px;
-  margin-left: 30px;
-  margin-right: 30px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 .baseNaturalisteContent {
