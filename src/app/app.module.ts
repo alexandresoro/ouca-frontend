@@ -90,6 +90,7 @@ import {
     MatButtonModule,
     MatCardModule,
     MatDatepickerModule,
+    MatExpansionModule,
     MatIconModule,
     MatInputModule,
     MatMenuModule,
@@ -115,6 +116,7 @@ import { LieuditDetailsComponent } from "./pages/entities/lieudit/lieudit-detail
 import { LieuditFormComponent } from "./pages/entities/lieudit/lieudit-form.component";
 import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.component";
 import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
+import { ImportComponent } from "./pages/import/import.component";
 
 const baseNaturalisteRoutes: Routes = [
     {
@@ -183,6 +185,9 @@ const baseNaturalisteRoutes: Routes = [
     }, {
         path: "configuration",
         component: ConfigurationComponent
+    }, {
+        path: "import",
+        component: ImportComponent
     }
 ];
 
@@ -201,7 +206,8 @@ const baseNaturalisteRoutes: Routes = [
         MatSelectModule,
         MatInputModule,
         MatMomentDateModule,
-        MatDatepickerModule
+        MatDatepickerModule,
+        MatExpansionModule
     ],
     exports: [
         BrowserAnimationsModule,
@@ -213,7 +219,8 @@ const baseNaturalisteRoutes: Routes = [
         MatSelectModule,
         MatInputModule,
         MatMomentDateModule,
-        MatDatepickerModule
+        MatDatepickerModule,
+        MatExpansionModule
     ],
     declarations: [
         AppComponent,
@@ -264,6 +271,7 @@ const baseNaturalisteRoutes: Routes = [
         EstimationDistanceDetailsComponent,
         EstimationDistanceFormComponent,
         EstimationDistanceRemovalConfirmationComponent,
+        ImportComponent,
         InputCodeLibelleComponent,
         LieuditComponent,
         LieuditTableComponent,
