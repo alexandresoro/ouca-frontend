@@ -5,7 +5,7 @@
 
   <div>
     <div class="lco-creation-body">
-      
+
       <!-- Bar containing the messages -->
       <div class="lco-creation-messages">
         <div [ngSwitch]="status">
@@ -31,7 +31,6 @@
         <button mat-raised-button
           color="primary"
           *ngIf="isNewDonneeBtnDisplayed()"
-          type="button"
           style="float: left; margin-right: 8px"
           (click)="onNewDonneeBtnClicked()">
           Nouvelle donnée
@@ -40,7 +39,6 @@
         <button mat-raised-button
           color="primary"
           [disabled]="!isPreviousDonneeBtnDisplayed()"
-          type="button"
           style="float: left; margin-right: 8px"
           (click)="onPreviousDonneeBtnClicked()">
           Donnée précédente
@@ -49,17 +47,22 @@
         <button mat-raised-button
           color="primary"
           [disabled]="!isNextDonneeBtnDisplayed()"
-          type="button"
           style="float: left; margin-right: 8px"
           (click)="onNextDonneeBtnClicked()">
           Donnée suivante
+        </button>
+
+        <button mat-raised-button
+          color="primary"
+          style="float: left; margin-right: 8px"
+          (click)="onSearchByIdBtnClicked()">
+          Recherche par ID
         </button>
 
         <!-- Top right buttons -->
         <button mat-raised-button
           color="primary"
           *ngIf="modeHelper.isInventaireMode(mode)"
-          type="button"
           style="float: right"
           [disabled]="!donneeForm.form.valid"
           (click)="saveInventaire()">
@@ -69,7 +72,6 @@
           color="primary"
           *ngIf="modeHelper.isDonneeMode(mode)"
           style="float: right"
-          type="button"
           [disabled]="!donneeForm.form.valid"
           (click)="saveDonnee()">
           Enregistrer la donnée
@@ -78,7 +80,6 @@
           color="primary"
           *ngIf="modeHelper.isUpdateMode(mode)"
           style="float: right"
-          type="button"
           [disabled]="!donneeForm.form.valid"
           (click)="saveInventaireAndDonnee()">
           Mettre à jour la donnée
@@ -86,7 +87,6 @@
         <button mat-raised-button
           color="primary"
           *ngIf="isDeleteDonneeBtnDisplayed()"
-          type="button"
           style="float: right; margin-right: 8px"
           (click)="onDeleteDonneeBtnClicked()">
           Supprimer la donnée
@@ -100,7 +100,6 @@
             <button mat-raised-button
               color="primary"
               *ngIf="modeHelper.isDonneeMode(mode)"
-              type="button"
               (click)="onNewInventaireBtnClicked()"
               style="float: right">
               Nouvel inventaire
@@ -109,7 +108,6 @@
             <button mat-raised-button
               color="primary"
               *ngIf="modeHelper.isDonneeMode(mode)"
-              type="button"
               (click)="onEditInventaireBtnClicked()"
               style="float: right; margin-right: 3px;">
               Modifier l'inventaire
@@ -315,7 +313,8 @@
             <!-- END CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
 
             <!-- CARD TEMPERATURE + METEO -->
-            <mat-card class="mat-card-override" *ngIf="pageModel.isMeteoDisplayed">
+            <mat-card class="mat-card-override"
+              *ngIf="pageModel.isMeteoDisplayed">
               <div class="lco-creation-meteo grid-container">
                 <!-- TEMPERATURE -->
                 <mat-form-field>
@@ -356,7 +355,7 @@
           </h2>
 
           <div class="espece-form second-row second-column grid-container">
-            
+
             <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
             <mat-card class="mat-card-override">
               <div class="lco-creation-quoi">
@@ -419,7 +418,7 @@
                 <div class="first-row">
                   <!-- NOMBRE -->
                   <mat-form-field>
-                    <input matInput 
+                    <input matInput
                       placeholder="Nombre d'individus"
                       id="input-nombre"
                       min="1"
@@ -478,7 +477,8 @@
                 </div>
 
                 <!-- DISTANCE AND ESTIMATION DISTANCE -->
-                <div *ngIf="pageModel.isDistanceDisplayed || pageModel.isRegroupementDisplayed" class="second-row">                  
+                <div *ngIf="pageModel.isDistanceDisplayed || pageModel.isRegroupementDisplayed"
+                  class="second-row">
                   <ng-container *ngIf="pageModel.isDistanceDisplayed">
                     <!-- ESTIMATION DISTANCE -->
                     <mat-form-field>
@@ -524,7 +524,6 @@
                     </mat-form-field>
                     <button mat-raised-button
                       color="primary"
-                      type="button"
                       [disabled]="isDonneeDisabled"
                       (click)="displayNextRegroupement()">
                       Générer
@@ -535,7 +534,7 @@
               </div>
             </mat-card>
             <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
-            
+
             <!-- CARD COMPORTEMENT x6 -->
             <mat-card class="mat-card-override">
               <mat-card-content>
@@ -655,7 +654,6 @@
       <button mat-raised-button
         color="primary"
         *ngIf="modeHelper.isInventaireMode(mode)"
-        type="button"
         style="float: right"
         [disabled]="!donneeForm.form.valid"
         (click)="saveInventaire()">
@@ -665,7 +663,6 @@
         color="primary"
         *ngIf="modeHelper.isDonneeMode(mode)"
         style="float: right"
-        type="button"
         [disabled]="!donneeForm.form.valid"
         (click)="saveDonnee()">
         Enregistrer la donnée
@@ -674,7 +671,6 @@
         color="primary"
         *ngIf="modeHelper.isUpdateMode(mode)"
         style="float: right"
-        type="button"
         [disabled]="!donneeForm.form.valid"
         (click)="saveInventaireAndDonnee()">
         Mettre à jour la donnée
