@@ -1,0 +1,48 @@
+<h1>Import de données</h1>
+
+<h2>Tutoriel d'import</h2>
+<h3>Préparation du fichier d'entrée</h3>
+Copiez les données à importer dans un tableur excel en respectant le format indiqué pour chaque type
+de données.
+
+<br>Cliquez sur "Enregistrez-sous", choisir le type de fichier "CSV (séparateur point-virgule)". Entr
+
+<br>Ouvrez le fichier avec un éditeur de texte (Notepad) et vérifiez que vous avez respectez les points suivants:
+<ul>
+  <li>Le fichier d'entrée doit contenir une entête avec le nom de chaque colonne.</li>
+  <li>L'ordre des colonnes est important.</li>
+  <li>Il y a une seule ligne vide à la fin du fichier.</li>
+</ul>
+
+<h3>Import</h3>
+Plus bas dans la page, choisissez le type de données que vous souhaitez importer.
+<br>Cliquer sur le bouton d'import.
+<br>Choisissez le fichier d'entrée que vous venez de préparer.
+<br>L'import se lance.
+
+<h3>Résultats de l'import</h3>
+L'application va lire chaque ligne du fichier d'entrée et tenter d'importer cette ligne dans la base
+de données.
+<br>Toutes les lignes qui n'ont pas pu être importées sont enregistrées dans un fichier de sortie situé dans
+le même dossier que le fichier d'entrée.
+
+
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Observateurs</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    Format du fichier d'entrée à respecter
+    <br>Première ligne du fichier:
+    <br>observateur
+    <br>
+    <ul>
+      <li>Colonne 1: nom des observateurs</li>
+    </ul>
+
+    <button>Importer des observateurs</button>
+  </mat-expansion-panel>
+</mat-accordion>
