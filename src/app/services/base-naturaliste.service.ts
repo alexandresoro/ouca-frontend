@@ -5,12 +5,9 @@ import { catchError, map } from "rxjs/operators";
 
 @Injectable()
 export class BaseNaturalisteService {
-
   public BASE_NATURALISTE_URL: string = "http://localhost:4000/api/";
 
-  constructor(public http: Http) {
-
-  }
+  constructor(public http: Http) {}
 
   public httpGet<T>(path: string): Observable<T> {
     return this.http.get(this.BASE_NATURALISTE_URL + path).pipe(
@@ -20,10 +17,12 @@ export class BaseNaturalisteService {
   }
 
   public httpPost<T>(relativePath: string, objectToPost: any): Observable<T> {
-    return this.http.post(this.BASE_NATURALISTE_URL + relativePath, objectToPost).pipe(
-      map(this.extractModel),
-      catchError(this.handleError)
-    );
+    return this.http
+      .post(this.BASE_NATURALISTE_URL + relativePath, objectToPost)
+      .pipe(
+        map(this.extractModel),
+        catchError(this.handleError)
+      );
   }
 
   public extractModel(res: Response): any {
@@ -34,5 +33,4 @@ export class BaseNaturalisteService {
   public handleError(error: any): any {
     return error.json();
   }
-
 }
