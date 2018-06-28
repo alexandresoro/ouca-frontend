@@ -1,36 +1,36 @@
-<div class="lco-creation-page mat-typography">
+<div class="mat-typography">
 
   <h1 class="mat-display-1"
     style="display: none">Création des données</h1>
 
-  <div class="panel panel-default">
-    <div class="panel-body lco-creation-body">
-      <div class="panel-heading lco-creation-messages">
-
+  <div>
+    <div class="lco-creation-body">
+      
+      <!-- Bar containing the messages -->
+      <div class="lco-creation-messages">
         <div [ngSwitch]="status">
-          <div *ngSwitchCase="'ERROR'"
-            class="col-xs-12">
+          <div *ngSwitchCase="'ERROR'">
             <ul>
               <li *ngFor="let message of messages">{{message?.value}}</li>
             </ul>
           </div>
-          <div *ngSwitchCase="'SUCCESS'"
-            class="col-xs-12">
+          <div *ngSwitchCase="'SUCCESS'">
             <ul>
               <li *ngFor="let message of messages">{{message?.value}}</li>
             </ul>
           </div>
-          <div *ngSwitchDefault
-            class="col-xs-12">
+          <div *ngSwitchDefault>
             <strong>Aucun message</strong>
           </div>
         </div>
       </div>
+
+      <!-- Bar containing the top buttons -->
       <div class="lco-creation-buttons">
+        <!-- Top left buttons -->
         <button mat-raised-button
           color="primary"
           *ngIf="isNewDonneeBtnDisplayed()"
-          class="btn btn-default btn-sm"
           type="button"
           style="float: left; margin-right: 8px"
           (click)="onNewDonneeBtnClicked()">
@@ -40,7 +40,6 @@
         <button mat-raised-button
           color="primary"
           [disabled]="!isPreviousDonneeBtnDisplayed()"
-          class="btn btn-info btn-sm"
           type="button"
           style="float: left; margin-right: 8px"
           (click)="onPreviousDonneeBtnClicked()">
@@ -50,18 +49,16 @@
         <button mat-raised-button
           color="primary"
           [disabled]="!isNextDonneeBtnDisplayed()"
-          class="btn btn-info btn-sm"
           type="button"
           style="float: left; margin-right: 8px"
           (click)="onNextDonneeBtnClicked()">
           Donnée suivante
         </button>
 
-
+        <!-- Top right buttons -->
         <button mat-raised-button
           color="primary"
           *ngIf="modeHelper.isInventaireMode(mode)"
-          class="btn btn-success btn-sm"
           type="button"
           style="float: right"
           [disabled]="!donneeForm.form.valid"
@@ -71,7 +68,6 @@
         <button mat-raised-button
           color="primary"
           *ngIf="modeHelper.isDonneeMode(mode)"
-          class="btn btn-success btn-sm"
           style="float: right"
           type="button"
           [disabled]="!donneeForm.form.valid"
@@ -81,18 +77,15 @@
         <button mat-raised-button
           color="primary"
           *ngIf="modeHelper.isUpdateMode(mode)"
-          class="btn btn-success btn-sm"
           style="float: right"
           type="button"
           [disabled]="!donneeForm.form.valid"
           (click)="saveInventaireAndDonnee()">
           Mettre à jour la donnée
         </button>
-
         <button mat-raised-button
           color="primary"
           *ngIf="isDeleteDonneeBtnDisplayed()"
-          class="btn btn-danger btn-sm"
           type="button"
           style="float: right; margin-right: 8px"
           (click)="onDeleteDonneeBtnClicked()">
@@ -100,15 +93,14 @@
         </button>
       </div>
 
-      <form class="form-horizontal"
-        #donneeForm="ngForm">
+      <!-- FORM TO CREATE DONNEES -->
+      <form #donneeForm="ngForm">
         <div class="lco-creation-form grid-container">
           <h2 class="first-row first-column">Fiche Inventaire
             <button mat-raised-button
               color="primary"
               *ngIf="modeHelper.isDonneeMode(mode)"
               type="button"
-              class="btn btn-primary btn-sm"
               (click)="onNewInventaireBtnClicked()"
               style="float: right">
               Nouvel inventaire
@@ -118,7 +110,6 @@
               color="primary"
               *ngIf="modeHelper.isDonneeMode(mode)"
               type="button"
-              class="btn btn-primary btn-sm"
               (click)="onEditInventaireBtnClicked()"
               style="float: right; margin-right: 3px;">
               Modifier l'inventaire
@@ -127,12 +118,12 @@
 
           <div class="inventaire-form second-row first-column grid-container">
 
+            <!-- CARD OBSERVATEUR + ASSOCIES -->
             <mat-card class="mat-card-override">
-              <div class="lco-creation-subform lco-creation-observateurs full-width-container">
+              <div class="full-width-container">
                 <!-- OBSERVATEUR -->
                 <mat-form-field>
-                  <mat-select class="form-control input-sm"
-                    placeholder="Observateur"
+                  <mat-select placeholder="Observateur"
                     id="input-observateur"
                     name="input-observateur"
                     [(ngModel)]="inventaireToSave.observateur"
@@ -144,12 +135,11 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+
                 <!-- ASSOCIES -->
-                <ng-container *ngIf="pageModel.areAssociesDisplayed"
-                  class="form-group">
+                <ng-container *ngIf="pageModel.areAssociesDisplayed">
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Associés"
+                    <mat-select placeholder="Associés"
                       id="input-associes"
                       name="input-associes"
                       [disabled]="isInventaireDisabled"
@@ -164,9 +154,11 @@
                 </ng-container>
               </div>
             </mat-card>
+            <!-- END CARD OBSERVATEUR + ASSOCIES -->
 
+            <!-- CARD DATE + HEURE + DUREE -->
             <mat-card class="mat-card-override">
-              <div class="lco-creation-subform lco-creation-date grid-container">
+              <div class="lco-creation-date grid-container">
                 <!-- DATE -->
                 <mat-form-field>
                   <input matInput
@@ -181,23 +173,23 @@
                     [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
+
                 <!-- HEURE -->
                 <mat-form-field class="time-input">
                   <input matInput
                     placeholder="Heure"
                     type="time"
-                    class="form-control input-sm"
                     id="input-heure"
                     name="heure"
                     [(ngModel)]="inventaireToSave.heure"
                     [disabled]="isInventaireDisabled">
                 </mat-form-field>
+
                 <!-- DUREE -->
                 <mat-form-field class="time-input">
                   <input matInput
                     placeholder="Durée"
                     type="time"
-                    class="form-control input-sm"
                     id="input-duree"
                     name="duree"
                     [(ngModel)]="inventaireToSave.duree"
@@ -205,13 +197,15 @@
                 </mat-form-field>
               </div>
             </mat-card>
+            <!-- END CARD DATE + HEURE + DUREE -->
 
+            <!-- CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
             <mat-card class="mat-card-override">
-              <div class="lco-creation-subform lco-creation-localisation">
+              <div>
                 <div class="full-width-container">
+                  <!-- DEPARTEMENT -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Département"
+                    <mat-select placeholder="Département"
                       id="input-departement"
                       name="departement"
                       [(ngModel)]="selectedDepartement"
@@ -225,10 +219,11 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
                 <div class="commune-grid grid-container">
+                  <!-- CODE COMMUNE -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Code"
+                    <mat-select placeholder="Code"
                       id="input-code-commune"
                       name="code-commune"
                       [(ngModel)]="selectedCommune"
@@ -241,9 +236,10 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
+
+                  <!-- NOM COMMUNE -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Nom commune"
+                    <mat-select placeholder="Nom commune"
                       id="input-nom-commune"
                       name="nom-commune"
                       [(ngModel)]="selectedCommune"
@@ -258,10 +254,11 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
                 <div class="full-width-container">
+                  <!-- LIEUDIT -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Lieu-dit"
+                    <mat-select placeholder="Lieu-dit"
                       id="input-lieudit"
                       name="lieudit"
                       [(ngModel)]="inventaireToSave.lieudit"
@@ -288,6 +285,7 @@
                       [required]="!isInventaireDisabled"
                       [disabled]="isInventaireDisabled">
                   </mat-form-field>
+
                   <!-- LONGITUDE -->
                   <mat-form-field>
                     <input matInput
@@ -299,6 +297,7 @@
                       [required]="!isInventaireDisabled"
                       [disabled]="isInventaireDisabled">
                   </mat-form-field>
+
                   <!-- LATITUDE -->
                   <mat-form-field>
                     <input matInput
@@ -313,16 +312,16 @@
                 </div>
               </div>
             </mat-card>
+            <!-- END CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
 
-            <mat-card class="mat-card-override">
-              <div *ngIf="pageModel.isMeteoDisplayed"
-                class="lco-creation-meteo grid-container">
+            <!-- CARD TEMPERATURE + METEO -->
+            <mat-card class="mat-card-override" *ngIf="pageModel.isMeteoDisplayed">
+              <div class="lco-creation-meteo grid-container">
                 <!-- TEMPERATURE -->
                 <mat-form-field>
                   <input matInput
                     type="number"
                     placeholder="Température"
-                    class="form-control input-sm"
                     id="input-temperature"
                     name="temperature"
                     [(ngModel)]="inventaireToSave.temperature"
@@ -330,8 +329,7 @@
                 </mat-form-field>
                 <!-- METEOS -->
                 <mat-form-field>
-                  <mat-select class="form-control input-sm"
-                    placeholder="Météos"
+                  <mat-select placeholder="Météos"
                     id="input-meteos"
                     name="meteos"
                     [(ngModel)]="inventaireToSave.meteos"
@@ -345,25 +343,28 @@
                 </mat-form-field>
               </div>
             </mat-card>
+            <!-- END CARD TEMPERATURE + METEO -->
           </div>
+          <!-- END FICHE INVENTAIRE -->
 
 
-          <!-- END INVENTAIRE -->
 
-          <!-- DONNEE -->
+
+          <!-- FICHE ESPECE  -->
           <h2 class="first-row second-column">Fiche espèce
             <span *ngIf="navigationService.currentDonneeIndex">n°{{navigationService.currentDonneeIndex}} (ID={{donneeToSave.id}})</span>
           </h2>
 
           <div class="espece-form second-row second-column grid-container">
-            <!-- CLASSE -->
+            
+            <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
             <mat-card class="mat-card-override">
               <div class="lco-creation-quoi">
                 <div class="lco-creation-classe">
+                  <!-- CLASSE -->
                   <mat-form-field>
                     <mat-select (selectionChange)="updateEspeces()"
                       placeholder="Classe"
-                      class="form-control input-sm"
                       [disabled]="isDonneeDisabled"
                       id="input-classe"
                       name="classe"
@@ -378,9 +379,9 @@
                 </div>
 
                 <div class="lco-creation-espece">
+                  <!-- CODE ESPECE -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Code espèce"
+                    <mat-select placeholder="Code espèce"
                       id="input-code-espece"
                       name="input-code-espece"
                       [disabled]="isDonneeDisabled"
@@ -392,9 +393,10 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
+
+                  <!-- NOM FRANCAIS ESPECE -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      id="input-nom-espece"
+                    <mat-select id="input-nom-espece"
                       placeholder="Nom français"
                       name="nom-espece"
                       [disabled]="isDonneeDisabled"
@@ -409,16 +411,16 @@
                 </div>
               </div>
             </mat-card>
+            <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
 
-            <!-- DETAILS -->
+            <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
             <mat-card class="mat-card-override">
               <div class="lco-creation-details">
                 <div class="first-row">
                   <!-- NOMBRE -->
                   <mat-form-field>
-                    <input matInput
-                      class="form-control input-sm"
-                      placeholder="Nbr. Individus"
+                    <input matInput 
+                      placeholder="Nombre d'individus"
                       id="input-nombre"
                       min="1"
                       name="nombre"
@@ -430,8 +432,8 @@
 
                   <!-- ESTIMATION NOMBRE -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      id="input-estimation-nombre"
+                    <mat-select id="input-estimation-nombre"
+                      placeholder="Estimation du nombre"
                       name="estimation-nombre"
                       [(ngModel)]="donneeToSave.estimationNombre"
                       (ngModelChange)="onEstimationNombreChanged($event)"
@@ -446,8 +448,7 @@
 
                   <!-- SEXE -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Sexe"
+                    <mat-select placeholder="Sexe"
                       id="input-sexe"
                       name="sexe"
                       [(ngModel)]="donneeToSave.sexe"
@@ -462,8 +463,7 @@
 
                   <!-- AGE -->
                   <mat-form-field>
-                    <mat-select class="form-control input-sm"
-                      placeholder="Age"
+                    <mat-select placeholder="Age"
                       id="input-age"
                       name="age"
                       [(ngModel)]="donneeToSave.age"
@@ -475,16 +475,14 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-
                 </div>
 
-                <div class="second-row">
-                  <!-- DISTANCE AND ESTIMATION DISTANCE -->
+                <!-- DISTANCE AND ESTIMATION DISTANCE -->
+                <div *ngIf="pageModel.isDistanceDisplayed || pageModel.isRegroupementDisplayed" class="second-row">                  
                   <ng-container *ngIf="pageModel.isDistanceDisplayed">
                     <!-- ESTIMATION DISTANCE -->
                     <mat-form-field>
-                      <mat-select class="form-control input-sm"
-                        placeholder="Distance (m)"
+                      <mat-select placeholder="Estimation de la distance"
                         id="input-estimation-distance"
                         name="estimation-distance"
                         [(ngModel)]="donneeToSave.estimationDistance"
@@ -501,7 +499,7 @@
                     <!-- DISTANCE -->
                     <mat-form-field>
                       <input matInput
-                        class="form-control input-sm"
+                        placeholder="Distance (m)"
                         id="input-distance"
                         min="0"
                         name="distance"
@@ -516,7 +514,6 @@
                   <ng-container *ngIf="pageModel.isRegroupementDisplayed">
                     <mat-form-field>
                       <input matInput
-                        class="form-control input-sm"
                         placeholder="Regroupement"
                         id="input-regroupement"
                         name="regroupement"
@@ -528,7 +525,6 @@
                     <button mat-raised-button
                       color="primary"
                       type="button"
-                      class="btn btn-default btn-sm"
                       [disabled]="isDonneeDisabled"
                       (click)="displayNextRegroupement()">
                       Générer
@@ -538,8 +534,9 @@
                 </div>
               </div>
             </mat-card>
-
-            <!-- COMPORTEMENTS -->
+            <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+            
+            <!-- CARD COMPORTEMENT x6 -->
             <mat-card class="mat-card-override">
               <mat-card-content>
                 <div class="grid-container comportements-container">
@@ -589,9 +586,9 @@
                 </div>
               </mat-card-content>
             </mat-card>
-            <!-- END Comportements -->
+            <!-- END CARD COMPORTEMENT x6 -->
 
-            <!-- Milieux -->
+            <!-- CARD MILIEU x4 -->
             <mat-card class="mat-card-override">
               <mat-card-content>
                 <div class="grid-container milieux-container">
@@ -626,12 +623,13 @@
                 </div>
               </mat-card-content>
             </mat-card>
-            <!-- End milieux -->
+            <!-- END CARD MILIEU x4 -->
 
-            <!-- Commentaire -->
+            <!-- CARD COMMENTAIRE -->
             <mat-card class="mat-card-override">
               <mat-card-content>
                 <div class="full-width-container">
+                  <!-- COMMENTAIRE -->
                   <mat-form-field>
                     <textarea matInput
                       id="input-commentaire"
@@ -645,17 +643,18 @@
                 </div>
               </mat-card-content>
             </mat-card>
+            <!-- END CARD COMMENTAIRE -->
 
           </div>
         </div>
       </form>
     </div>
 
+    <!-- BAR BOTTOM BUTTOM -->
     <div class="panel-footer row">
       <button mat-raised-button
         color="primary"
         *ngIf="modeHelper.isInventaireMode(mode)"
-        class="btn btn-success btn-sm"
         type="button"
         style="float: right"
         [disabled]="!donneeForm.form.valid"
@@ -665,7 +664,6 @@
       <button mat-raised-button
         color="primary"
         *ngIf="modeHelper.isDonneeMode(mode)"
-        class="btn btn-success btn-sm"
         style="float: right"
         type="button"
         [disabled]="!donneeForm.form.valid"
@@ -675,7 +673,6 @@
       <button mat-raised-button
         color="primary"
         *ngIf="modeHelper.isUpdateMode(mode)"
-        class="btn btn-success btn-sm"
         style="float: right"
         type="button"
         [disabled]="!donneeForm.form.valid"
