@@ -1,154 +1,123 @@
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand"
-        href="#">
-        <!--<img class="logo-img" src="content/images/logo.png" style="margin-right: 10px;"/>-->
-        <span>Base Naturaliste</span>
+<div class="wrapper mat-typography">
+
+  <mat-toolbar class="base-naturaliste-header"
+    color="primary">
+    <a mat-button
+      href="#">
+      <mat-icon>home</mat-icon>
+      Base Naturaliste
+    </a>
+    <span class="header-spacer"></span>
+    <a mat-button
+      routerLinkActive="active"
+      routerLink="creation">
+      <mat-icon>add</mat-icon>
+      Création des données</a>
+    <a mat-button
+      routerLinkActive="active"
+      routerLink="vue">
+      <mat-icon>search</mat-icon>
+      Vue des données</a>
+    <button mat-button
+      [matMenuTriggerFor]="gestionBase">
+      <mat-icon>list</mat-icon>
+      Gestion de la base</button>
+    <mat-menu #gestionBase="matMenu"
+      [overlapTrigger]="false">
+      <a mat-menu-item
+        href="observateur">
+        <mat-icon>star</mat-icon>
+        Observateur
       </a>
-    </div>
-    <ul class="nav navbar-nav"
-      style="float: right">
-      <li class="nav-item"
-        routerLinkActive="active"
-        routerLink="creation">
-        <a class="nav-link">
-          <span class="glyphicon glyphicon-plus"></span>Création des données</a>
-      </li>
-      <li class="nav-item"
-        routerLinkActive="active"
-        routerLink="vue">
-        <a class="nav-link">
-          <span class="glyphicon glyphicon-search"></span>Vue des données</a>
-      </li>
-      <li class="dropdown">
-        <a href="#"
-          class="dropdown-toggle"
-          data-toggle="dropdown"
-          role="button"
-          aria-haspopup="true"
-          aria-expanded="false">
-          <span class="glyphicon glyphicon-th-list"></span>Gestion de la base
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a href="observateur">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Observateur</span>
-            </a>
-          </li>
-          <li>
-            <a href="departement">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Département</span>
-            </a>
-          </li>
-          <li>
-            <a href="commune">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Commune</span>
-            </a>
-          </li>
-          <li>
-            <a href="lieudit">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Lieu-dit</span>
-            </a>
-          </li>
-          <li>
-            <a href="meteo">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Météo</span>
-            </a>
-          </li>
-          <li>
-            <a href="classe">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Classe</span>
-            </a>
-          </li>
-          <li>
-            <a href="espece">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Espèce</span>
-            </a>
-          </li>
-          <li>
-            <a href="sexe">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Sexe</span>
-            </a>
-          </li>
-          <li class="nav-item"
-            routerLinkActive="active"
-            routerLink="age">
-            <a class="nav-link">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Âge</span>
-            </a>
-          </li>
-          <li>
-            <a href="estimation-nombre">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Estimation Nombre</span>
-            </a>
-          </li>
-          <li>
-            <a href="estimation-distance">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Estimation Distance</span>
-            </a>
-          </li>
-          <li>
-            <a href="comportement">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Comportement</span>
-            </a>
-          </li>
-          <li>
-            <a href="milieu">
-              <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-              <span>Milieu</span>
-            </a>
-          </li>
+      <a mat-menu-item
+        href="departement">
+        <mat-icon>star</mat-icon>
+        Département
+      </a>
+      <a mat-menu-item
+        href="commune">
+        <mat-icon>star</mat-icon>
+        Commune
+      </a>
+      <a mat-menu-item
+        href="lieudit">
+        <mat-icon>star</mat-icon>
+        Lieu-dit
+      </a>
+      <a mat-menu-item
+        href="meteo">
+        <mat-icon>star</mat-icon>
+        Météo
+      </a>
+      <a mat-menu-item
+        href="classe">
+        <mat-icon>star</mat-icon>
+        Classe
+      </a>
+      <a mat-menu-item
+        href="espece">
+        <mat-icon>star</mat-icon>
+        Espèce
+      </a>
+      <a mat-menu-item
+        href="sexe">
+        <mat-icon>star</mat-icon>
+        Sexe
+      </a>
+      <a mat-menu-item
+        href="age">
+        <mat-icon>star</mat-icon>
+        Âge
+      </a>
+      <a mat-menu-item
+        href="estimation-nombre">
+        <mat-icon>star</mat-icon>
+        Estimation Nombre
+      </a>
+      <a mat-menu-item
+        href="estimation-distance">
+        <mat-icon>star</mat-icon>
+        Estimation Distance
+      </a>
+      <a mat-menu-item
+        href="comportement">
+        <mat-icon>star</mat-icon>
+        Comportement
+      </a>
+      <a mat-menu-item
+        href="milieu">
+        <mat-icon>star</mat-icon>
+        Milieu
+      </a>
+    </mat-menu>
 
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a href="#"
-          class="dropdown-toggle"
-          data-toggle="dropdown"
-          role="button"
-          aria-haspopup="true"
-          aria-expanded="false">
-          <span class="glyphicon glyphicon-th-large"></span>Autres
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a href="/configuration">
-              <span class="glyphicon glyphicon-cog"></span>&nbsp;
-              <span>Configurations</span>
-            </a>
-          </li>
-          <li>
-            <a href="/sauvegarde">
-              <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;
-              <span>Sauvegarde de la base</span>
-            </a>
-          </li>
-          <li>
-            <a href="/import">
-              <span class="glyphicon glyphicon-import"></span>&nbsp;
-              <span>Import de la base</span>
-            </a>
-          </li>
-        </ul>
-    </ul>
+    <button mat-button
+      [matMenuTriggerFor]="autresActions">
+      <mat-icon>apps</mat-icon>
+      Autres actions</button>
+    <mat-menu #autresActions="matMenu"
+      [overlapTrigger]="false">
+      <a mat-menu-item
+        href="/configuration">
+        <mat-icon>settings</mat-icon>
+        Configurations
+      </a>
+      <a mat-menu-item
+        href="/sauvegarde">
+        <mat-icon>save</mat-icon>
+        Sauvegarde de la base
+      </a>
+      <a mat-menu-item
+        href="/import">
+        <mat-icon>import_export</mat-icon>
+        Import de la base
+      </a>
+    </mat-menu>
+  </mat-toolbar>
+
+
+  <div class="baseNaturalisteContent base-naturaliste">
+    <router-outlet></router-outlet>
   </div>
-</nav>
 
-<div class="container-fluid base-naturaliste">
-  <router-outlet></router-outlet>
 </div>

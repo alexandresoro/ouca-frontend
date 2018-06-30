@@ -1,30 +1,32 @@
-<div class="col-sm-2">
-    <label style="display:none;">Code {{type}} {{num}}</label>
-    <select class="form-control input-sm"
-        [disabled]="isDisabled"
-        [id]="'input-code-' + type + '-' + num"
-        [name]="'code-' + type + '-' + num"
-        [ngModel]="selectedValue"
-        (ngModelChange)="updateValue($event)">
-        <option></option>
-        <option *ngFor="let value of values"
-                [ngValue]="value">
-            {{value.code}}
-        </option>
-    </select>
-</div>
-<div class="col-sm-4">
-    <label style="display:none;">Libellé {{type}} {{num}}</label>
-    <select class="form-control input-sm"
-        [disabled]="isDisabled"
-        [id]="'input-libelle-' + type + '-' + num"
-        [name]="'libelle-' + type + '-' + num"
-        [ngModel]="selectedValue"
-        (ngModelChange)="updateValue($event)">
-        <option></option>
-        <option *ngFor="let value of values"
-                [ngValue]="value">
-            {{value.libelle}}
-        </option>
-    </select>
-</div>
+<span class="grid-container code-libelle-container">
+  <mat-form-field class="first-column">
+    <mat-select class="form-control"
+      [placeholder]="'Code '+type+' '+num"
+      [disabled]="isDisabled"
+      [id]="'input-code-' + type + '-' + num"
+      [name]="'code-' + type + '-' + num"
+      [ngModel]="selectedValue"
+      (ngModelChange)="updateValue($event)">
+      <mat-option></mat-option>
+      <mat-option *ngFor="let value of values"
+        [value]="value">
+        {{value.code}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="second-column">
+    <mat-select class="form-control"
+      [placeholder]="'Libellé '+type+' '+num"
+      [disabled]="isDisabled"
+      [id]="'input-libelle-' + type + '-' + num"
+      [name]="'libelle-' + type + '-' + num"
+      [ngModel]="selectedValue"
+      (ngModelChange)="updateValue($event)">
+      <mat-option></mat-option>
+      <mat-option *ngFor="let value of values"
+        [value]="value">
+        {{value.libelle}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</span>

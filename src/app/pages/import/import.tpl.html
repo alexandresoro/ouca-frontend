@@ -1,0 +1,424 @@
+<h1>Import de données</h1>
+
+<h2>Tutoriel d'import</h2>
+<h3>Préparation du fichier d'entrée</h3>
+<p>Copiez les données à importer dans un tableur excel en respectant le format indiqué pour chaque type
+  de données.</p>
+<p>Cliquez sur "Enregistrez-sous", choisir le type de fichier "CSV (séparateur point-virgule)". Enregistrez.</p>
+<p>Ouvrez le fichier avec un éditeur de texte (Notepad) et vérifiez que vous avez respectez les points suivants:</p>
+<ul>
+  <li>Le fichier d'entrée ne doit pas contenir d'en-tête.</li>
+  <li>Les colonnes sont séparées par des points-virgule (;).</li>
+  <li>L'ordre des colonnes est important.</li>
+  <li>Il y a une seule ligne vide à la fin du fichier.</li>
+</ul>
+
+
+<h3>Import</h3>
+<p>Plus bas dans la page, choisissez le type de données que vous souhaitez importer.</p>
+<p>Cliquer sur le bouton d'import.</p>
+<p>Choisissez le fichier d'entrée que vous venez de préparer.</p>
+<p>L'import se lance.</p>
+
+<h3>Résultats de l'import</h3>
+<p>L'application va lire chaque ligne du fichier d'entrée et tenter d'importer cette ligne dans la base
+  de données.</p>
+<p>Toutes les lignes qui n'ont pas pu être importées sont enregistrées dans un fichier de sortie situé dans
+  le même dossier que le fichier d'entrée.</p>
+
+
+
+<mat-accordion>
+  <!-- OBSERVATEURS -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Observateurs</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: nom des observateurs</li>
+    </ul>
+
+    <input type=file
+      id="input-observateur"
+      name="observateur">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportObservateursClicked()">
+      Lancer l'import des observateurs
+    </button>
+  </mat-expansion-panel>
+
+
+  <!-- DEPARTEMENTS -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Départements</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Département</li>
+    </ul>
+
+    <input type=file
+      id="input-departement"
+      name="departement">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportDepartementsClicked()">
+      Lancer l'import des départements
+    </button>
+  </mat-expansion-panel>
+
+
+  <!-- COMMUNE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Communes</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Département</li>
+      <li>Colonne B: Code de la communne</li>
+      <li>Colonne C: Nom de la commune</li>
+    </ul>
+
+    <input type=file
+      id="input-commune"
+      name="commune">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportCommunesClicked()">
+      Lancer l'import des communes
+    </button>
+  </mat-expansion-panel>
+
+
+  <!-- LIEUDIT -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Lieux-dits</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Les départements et communes manquants seront automatiquement créés.</p>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Département</li>
+      <li>Colonne B: Code de la communne</li>
+      <li>Colonne C: Nom de la commune</li>
+      <li>Colonne D: Lieu-dit</li>
+      <li>Colonne E: Altitude (nombre entier)</li>
+      <li>Colonne F: Longitude (nombre entier)</li>
+      <li>Colonne G: Latitude (nombre entier)</li>
+    </ul>
+
+    <input type=file
+      id="input-lieudit"
+      name="lieudit">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportLieuxditsClicked()">
+      Lancer l'import des lieux-dits
+    </button>
+  </mat-expansion-panel>
+
+  <!-- METEO -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Météos</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Libellé de la météo</li>
+    </ul>
+
+    <input type=file
+      id="input-meteo"
+      name="meteo">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportMeteosClicked()">
+      Lancer l'import des météos
+    </button>
+  </mat-expansion-panel>
+
+  <!-- CLASSE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Classes espèces</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Libellé de la classe espèce</li>
+    </ul>
+
+    <input type=file
+      id="input-classe"
+      name="classe">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportClassesClicked()">
+      Lancer l'import des classes espèces
+    </button>
+  </mat-expansion-panel>
+
+  <!-- ESPECE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Espèces</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Libellé de la classe espèce</li>
+      <li>Colonne B: Code de l'espèce</li>
+      <li>Colonne C: Nom français de l'espèce</li>
+      <li>Colonne D: Nom latin de l'espèce</li>
+    </ul>
+
+    <input type=file
+      id="input-espece"
+      name="espece">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportEspecesClicked()">
+      Lancer l'import des espèces
+    </button>
+  </mat-expansion-panel>
+
+  <!-- SEXE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Sexes</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Libellé du sexe</li>
+    </ul>
+
+    <input type=file
+      id="input-sexe"
+      name="sexe">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportSexesClicked()">
+      Lancer l'import des sexes
+    </button>
+  </mat-expansion-panel>
+
+
+  <!-- AGE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Âges</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Libellé de l'âge</li>
+    </ul>
+
+    <input type=file
+      id="input-age"
+      name="age">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportAgesClicked()">
+      Lancer l'import des âges
+    </button>
+  </mat-expansion-panel>
+
+
+  <!-- ESTIMATION NOMBRE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Estimations du nombre</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Après l'import rendez vous sur la page de modification des estimations du nombre pour régler l'option
+      "Non compté"</p>
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Libellé de l'estimation du nombre</li>
+    </ul>
+
+    <input type=file
+      id="input-estimation-nombre"
+      name="estimation-nombre">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportEstimationsNombreClicked()">
+      Lancer l'import des estimations du nombre
+    </button>
+  </mat-expansion-panel>
+
+
+  <!-- ESTIMATION DISTANCE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Estimations de la distance</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Libellé de l'estimation de la distance</li>
+    </ul>
+
+    <input type=file
+      id="input-estimation-distance"
+      name="estimation-distance">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportEstimationsDistanceClicked()">
+      Lancer l'import des estimations de la distance
+    </button>
+  </mat-expansion-panel>
+
+  <!-- COMPORTEMENT -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Comportements</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Code du comportement</li>
+      <li>Colonne B: Libellé du comportement</li>
+    </ul>
+
+    <input type=file
+      id="input-comportement"
+      name="comportement">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportComportementsClicked()">
+      Lancer l'import des comportements
+    </button>
+  </mat-expansion-panel>
+
+
+  <!-- MILIEUX -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Milieux</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Code du milieu</li>
+      <li>Colonne B: Libellé du milieu</li>
+    </ul>
+
+    <input type=file
+      id="input-milieu"
+      name="milieu">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportMilieuxClicked()">
+      Lancer l'import des milieux
+    </button>
+  </mat-expansion-panel>
+
+
+  <!-- DONNEE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Importer des Données</h2>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p>Liste des colonnes:</p>
+    <ul>
+      <li>Colonne A: Classe espèce</li>
+      <li>Colonne B: Code de l'espèce</li>
+      <li>Colonne C: Estimation du nombre</li>
+      <li>Colonne D: Nombre (nombre entier ou vide)</li>
+      <li>Colonne E: Sexe</li>
+      <li>Colonne F: Âge</li>
+      <li>Colonne G: Code comportement 1</li>
+      <li>Colonne H: Code comportement 2</li>
+      <li>Colonne I: Code comportement 3</li>
+      <li>Colonne J: Code comportement 4</li>
+      <li>Colonne K: Code comportement 5</li>
+      <li>Colonne L: Code comportement 6</li>
+      <li>Colonne M: Code milieu 1</li>
+      <li>Colonne N: Code milieu 2</li>
+      <li>Colonne O: Code milieu 3</li>
+      <li>Colonne P: Code milieu 4</li>
+      <li>Colonne Q: Date (JJ/MM/AAAA)</li>
+      <li>Colonne R: Heure (HH:MM ou HHhMM or HHHMM)</li>
+      <li>Colonne S: Durée (HH:MM ou HHhMM or HHHMM)</li>
+      <li>Colonne T: Observateur</li>
+      <li>Colonne U: Commentaire</li>
+      <li>Colonne V: Département</li>
+      <li>Colonne W: Code commune</li>
+      <li>Colonne X: Lieu-dit</li>
+      <li>Colonne Y: Altitude (nombre entier)</li>
+      <li>Colonne Z: Longitude (nombre entier)</li>
+      <li>Colonne AA: Latitude (nombre entier)</li>
+      <li>Colonne AB: Estimation distance</li>
+      <li>Colonne AC: Distance (nombre entier)</li>
+      <li>Colonne AD: Température</li>
+      <li>Colonne AE: Météos (liste séparée par des virgules)</li>
+      <li>Colonne AF: Observateurs associés (liste séparée par des virgules)</li>
+      <li>Colonne AG: Numéro de regroupement</li>
+    </ul>
+
+    <input type=file
+      id="input-donnee"
+      name="donnee">
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onImportEstimationsDonneesClicked()">
+      Lancer l'import des données
+    </button>
+  </mat-expansion-panel>
+</mat-accordion>

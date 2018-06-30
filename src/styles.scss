@@ -1,0 +1,205 @@
+@import "~material-design-icons/iconfont/material-icons.css";
+
+@import "~@angular/material/theming";
+
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$candy-app-primary: mat-palette($mat-cyan, 800, 700);
+$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
+
+// Create a config with the default typography levels.
+$defaultConfig: mat-typography-config();
+
+$custom-typography: mat-typography-config(
+  $headline:
+    mat-typography-level(
+      mat-font-size($defaultConfig, headline)-2px,
+      mat-line-height($defaultConfig, headline)-2px,
+      mat-font-weight($defaultConfig, headline)
+    ),
+  $title:
+    mat-typography-level(
+      mat-font-size($defaultConfig, title)-2px,
+      mat-line-height($defaultConfig, title)-2px,
+      mat-font-weight($defaultConfig, title)
+    ),
+  $body-1:
+    mat-typography-level(
+      mat-font-size($defaultConfig, body-1)-2px,
+      mat-line-height($defaultConfig, body-1)-2px,
+      mat-font-weight($defaultConfig, body-1)
+    ),
+  $button:
+    mat-typography-level(
+      mat-font-size($defaultConfig, button)-2px,
+      mat-line-height($defaultConfig, button)-2px,
+      mat-font-weight($defaultConfig, button)
+    ),
+  $input:
+    mat-typography-level(
+      mat-font-size($defaultConfig, input)-0.125,
+      mat-line-height($defaultConfig, input)-0.125,
+      mat-font-weight($defaultConfig, input)
+    )
+);
+
+@include angular-material-theme($candy-app-theme);
+
+//@include mat-core($custom-typography);
+//@include angular-material-typography($custom-typography);
+
+body {
+  margin: 0;
+}
+
+mat-card.mat-card-override {
+  padding: 12px;
+  padding-bottom: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+mat-toolbar.base-naturaliste-header {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+  flex: 0 0 auto;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.baseNaturalisteContent {
+  max-width: 1600px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.baseNaturalisteContent {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+.lco-creation-body {
+  display: grid;
+
+  .lco-creation-messages {
+    grid-row: 1;
+  }
+
+  .lco-creation-buttons {
+    grid-row: 2;
+  }
+
+  .lco-creation-form {
+    grid-template-columns: 1fr 2fr;
+    column-gap: 50px;
+    row-gap: 0;
+    grid-row: 3;
+
+    .inventaire-form,
+    .espece-form {
+      grid-gap: 8px;
+    }
+
+    .lco-creation-date {
+      grid-template-columns: auto 60px 60px;
+      column-gap: 20px;
+    }
+
+    .commune-grid,
+    .lco-creation-meteo {
+      grid-template-columns: 80px auto;
+      column-gap: 20px;
+    }
+
+    .coordonnees-form {
+      column-gap: 20px;
+      grid-template-columns: repeat(3, 100px);
+    }
+
+    .lco-creation-quoi {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+
+      .lco-creation-classe {
+        grid-column: 1;
+      }
+
+      .lco-creation-espece {
+        grid-column: 2;
+      }
+
+      .lco-creation-details {
+        display: grid;
+      }
+    }
+  }
+}
+
+.comportements-container,
+.milieux-container {
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 0;
+}
+
+.code-libelle-container {
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 10px;
+}
+
+.grid-container {
+  display: grid;
+}
+
+.first-column {
+  grid-column: 1;
+}
+
+.second-column {
+  grid-column: 2;
+}
+
+.first-row {
+  grid-row: 1;
+}
+
+.second-row {
+  grid-row: 2;
+}
+
+.full-width-container > * {
+  width: 100%;
+}
+
+
+.lco-base-naturaliste {
+  .mat-icon {
+    height: 28px;
+  }
+
+  .mat-menu-item {
+    line-height: 30px;
+    height: 30px;
+  }
+
+  .mat-raised-button {
+    line-height: 30px;
+    height: 30px;
+  }
+
+}

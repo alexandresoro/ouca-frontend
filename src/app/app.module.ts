@@ -86,6 +86,20 @@ import { SexeComponent } from "./pages/entities/sexe/sexe.component";
 import { ViewComponent } from "./pages/vue/view.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
+import {
+    MatButtonModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatToolbarModule
+} from "@angular/material";
+import { MAT_MOMENT_DATE_FORMATS, MatMomentDateModule, MomentDateAdapter } from "@angular/material-moment-adapter";
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
 import { ConfigurationService } from "./pages/configuration/configuration.service";
@@ -102,6 +116,7 @@ import { LieuditDetailsComponent } from "./pages/entities/lieudit/lieudit-detail
 import { LieuditFormComponent } from "./pages/entities/lieudit/lieudit-form.component";
 import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.component";
 import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
+import { ImportComponent } from "./pages/import/import.component";
 
 const baseNaturalisteRoutes: Routes = [
     {
@@ -170,6 +185,9 @@ const baseNaturalisteRoutes: Routes = [
     }, {
         path: "configuration",
         component: ConfigurationComponent
+    }, {
+        path: "import",
+        component: ImportComponent
     }
 ];
 
@@ -178,7 +196,31 @@ const baseNaturalisteRoutes: Routes = [
         BrowserModule,
         RouterModule.forRoot(baseNaturalisteRoutes),
         HttpModule,
-        FormsModule
+        FormsModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatCardModule,
+        MatSelectModule,
+        MatInputModule,
+        MatMomentDateModule,
+        MatDatepickerModule,
+        MatExpansionModule
+    ],
+    exports: [
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatCardModule,
+        MatSelectModule,
+        MatInputModule,
+        MatMomentDateModule,
+        MatDatepickerModule,
+        MatExpansionModule
     ],
     declarations: [
         AppComponent,
@@ -229,6 +271,7 @@ const baseNaturalisteRoutes: Routes = [
         EstimationDistanceDetailsComponent,
         EstimationDistanceFormComponent,
         EstimationDistanceRemovalConfirmationComponent,
+        ImportComponent,
         InputCodeLibelleComponent,
         LieuditComponent,
         LieuditTableComponent,
@@ -274,6 +317,9 @@ const baseNaturalisteRoutes: Routes = [
         GestionModeHelper,
         InventaireService,
         NavigationService,
+        { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
+        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+        { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
     ]
 })
 export class AppModule {
