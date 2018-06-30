@@ -356,176 +356,182 @@
 
           <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
           <mat-card class="mat-card-override">
-            <div class="lco-creation-quoi">
-              <div class="lco-creation-classe">
-                <!-- CLASSE -->
-                <mat-form-field>
-                  <mat-select (selectionChange)="updateEspeces()"
-                    placeholder="Classe"
-                    [disabled]="isDonneeDisabled"
-                    id="input-classe"
-                    name="classe"
-                    [(ngModel)]="selectedClasse">
-                    <mat-option>Toutes</mat-option>
-                    <mat-option *ngFor="let classe of pageModel.classes"
-                      [value]="classe">
-                      {{classe.libelle}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
+            <div class="lco-creation-quoi grid-container">
+              <!-- CLASSE -->
+              <mat-form-field>
+                <mat-select (selectionChange)="updateEspeces()"
+                  placeholder="Classe"
+                  [disabled]="isDonneeDisabled"
+                  id="input-classe"
+                  name="classe"
+                  [(ngModel)]="selectedClasse">
+                  <mat-option>Toutes</mat-option>
+                  <mat-option *ngFor="let classe of pageModel.classes"
+                    [value]="classe">
+                    {{classe.libelle}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
-              <div class="lco-creation-espece">
-                <!-- CODE ESPECE -->
-                <mat-form-field>
-                  <mat-select placeholder="Code espèce"
-                    id="input-code-espece"
-                    name="input-code-espece"
-                    [disabled]="isDonneeDisabled"
-                    [required]="!isDonneeDisabled"
-                    [(ngModel)]="donneeToSave.espece">
-                    <mat-option *ngFor="let espece of filteredEspeces"
-                      [value]="espece">
-                      {{espece.code}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+              <!-- CODE ESPECE -->
+              <mat-form-field>
+                <mat-select placeholder="Code espèce"
+                  id="input-code-espece"
+                  name="input-code-espece"
+                  [disabled]="isDonneeDisabled"
+                  [required]="!isDonneeDisabled"
+                  [(ngModel)]="donneeToSave.espece">
+                  <mat-option *ngFor="let espece of filteredEspeces"
+                    [value]="espece">
+                    {{espece.code}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
-                <!-- NOM FRANCAIS ESPECE -->
-                <mat-form-field>
-                  <mat-select id="input-nom-espece"
-                    placeholder="Nom français"
-                    name="nom-espece"
-                    [disabled]="isDonneeDisabled"
-                    [required]="!isDonneeDisabled"
-                    [(ngModel)]="donneeToSave.espece">
-                    <mat-option *ngFor="let espece of filteredEspeces"
-                      [value]="espece">
-                      {{espece.nomFrancais}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
+              <!-- NOM FRANCAIS ESPECE -->
+              <mat-form-field>
+                <mat-select id="input-nom-espece"
+                  placeholder="Nom français"
+                  name="nom-espece"
+                  [disabled]="isDonneeDisabled"
+                  [required]="!isDonneeDisabled"
+                  [(ngModel)]="donneeToSave.espece">
+                  <mat-option *ngFor="let espece of filteredEspeces"
+                    [value]="espece">
+                    {{espece.nomFrancais}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           </mat-card>
           <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
 
           <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
           <mat-card class="mat-card-override">
-            <div class="lco-creation-details">
-              <div class="first-row">
-                <!-- NOMBRE -->
-                <mat-form-field>
-                  <input matInput
-                    placeholder="Nombre d'individus"
-                    id="input-nombre"
-                    min="1"
-                    name="nombre"
-                    type="number"
-                    [(ngModel)]="donneeToSave.nombre"
-                    [disabled]="isDonneeDisabled || donneeToSave.estimationNombre?.nonCompte"
-                    [required]="!isDonneeDisabled && !donneeToSave.estimationNombre?.nonCompte">
-                </mat-form-field>
-
-                <!-- ESTIMATION NOMBRE -->
-                <mat-form-field>
-                  <mat-select id="input-estimation-nombre"
-                    placeholder="Estimation du nombre"
-                    name="estimation-nombre"
-                    [(ngModel)]="donneeToSave.estimationNombre"
-                    (ngModelChange)="onEstimationNombreChanged($event)"
-                    [disabled]="isDonneeDisabled"
-                    [required]="!isDonneeDisabled">
-                    <mat-option *ngFor="let estimNombre of pageModel.estimationsNombre"
-                      [value]="estimNombre">
-                      {{estimNombre.libelle}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <!-- SEXE -->
-                <mat-form-field>
-                  <mat-select placeholder="Sexe"
-                    id="input-sexe"
-                    name="sexe"
-                    [(ngModel)]="donneeToSave.sexe"
-                    [disabled]="isDonneeDisabled"
-                    [required]="!isDonneeDisabled">
-                    <mat-option *ngFor="let sexe of pageModel.sexes"
-                      [value]="sexe">
-                      {{sexe.libelle}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <!-- AGE -->
-                <mat-form-field>
-                  <mat-select placeholder="Age"
-                    id="input-age"
-                    name="age"
-                    [(ngModel)]="donneeToSave.age"
-                    [disabled]="isDonneeDisabled"
-                    [required]="!isDonneeDisabled">
-                    <mat-option *ngFor="let age of pageModel.ages"
-                      [value]="age">
-                      {{age.libelle}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-
-              <!-- DISTANCE AND ESTIMATION DISTANCE -->
-              <div *ngIf="pageModel.isDistanceDisplayed || pageModel.isRegroupementDisplayed"
-                class="second-row">
-                <ng-container *ngIf="pageModel.isDistanceDisplayed">
-                  <!-- ESTIMATION DISTANCE -->
+            <div class="grid-container">
+              <div class="combien-de-container first-row grid-container">
+                <div class="nombre-container first-column grid-container">
+                  <!-- NOMBRE -->
                   <mat-form-field>
-                    <mat-select placeholder="Estimation de la distance"
-                      id="input-estimation-distance"
-                      name="estimation-distance"
-                      [(ngModel)]="donneeToSave.estimationDistance"
+                    <input matInput
+                      placeholder="Nombre ind."
+                      id="input-nombre"
+                      min="1"
+                      name="nombre"
+                      type="number"
+                      [(ngModel)]="donneeToSave.nombre"
+                      [disabled]="isDonneeDisabled || donneeToSave.estimationNombre?.nonCompte"
+                      [required]="!isDonneeDisabled && !donneeToSave.estimationNombre?.nonCompte">
+                  </mat-form-field>
+
+                  <!-- ESTIMATION NOMBRE -->
+                  <mat-form-field>
+                    <mat-select id="input-estimation-nombre"
+                      placeholder="Estimation du nombre"
+                      name="estimation-nombre"
+                      [(ngModel)]="donneeToSave.estimationNombre"
+                      (ngModelChange)="onEstimationNombreChanged($event)"
                       [disabled]="isDonneeDisabled"
-                      [required]="!!donneeToSave.distance || donneeToSave.distance==0">
-                      <mat-option></mat-option>
-                      <mat-option *ngFor="let estimDistance of pageModel.estimationsDistance"
-                        [value]="estimDistance">
-                        {{estimDistance.libelle}}
+                      [required]="!isDonneeDisabled">
+                      <mat-option *ngFor="let estimNombre of pageModel.estimationsNombre"
+                        [value]="estimNombre">
+                        {{estimNombre.libelle}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="sexe-age-container second-column grid-container">
+                  <!-- SEXE -->
+                  <mat-form-field>
+                    <mat-select placeholder="Sexe"
+                      id="input-sexe"
+                      name="sexe"
+                      [(ngModel)]="donneeToSave.sexe"
+                      [disabled]="isDonneeDisabled"
+                      [required]="!isDonneeDisabled">
+                      <mat-option *ngFor="let sexe of pageModel.sexes"
+                        [value]="sexe">
+                        {{sexe.libelle}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
 
-                  <!-- DISTANCE -->
+                  <!-- AGE -->
                   <mat-form-field>
-                    <input matInput
-                      placeholder="Distance (m)"
-                      id="input-distance"
-                      min="0"
-                      name="distance"
-                      type="number"
-                      [(ngModel)]="donneeToSave.distance"
-                      [disabled]="isDonneeDisabled || !!!donneeToSave.estimationDistance"
-                      [required]="!!donneeToSave.estimationDistance">
+                    <mat-select placeholder="Age"
+                      id="input-age"
+                      name="age"
+                      [(ngModel)]="donneeToSave.age"
+                      [disabled]="isDonneeDisabled"
+                      [required]="!isDonneeDisabled">
+                      <mat-option *ngFor="let age of pageModel.ages"
+                        [value]="age">
+                        {{age.libelle}}
+                      </mat-option>
+                    </mat-select>
                   </mat-form-field>
+                </div>
+              </div>
+
+              <!-- DISTANCE AND ESTIMATION DISTANCE -->
+              <div *ngIf="pageModel.isDistanceDisplayed || pageModel.isRegroupementDisplayed"
+                class="distance-regroupement-container second-row grid-container">
+                <ng-container *ngIf="pageModel.isDistanceDisplayed">
+                  <div class="distance-container first-column grid-container">
+
+                    <!-- ESTIMATION DISTANCE -->
+                    <mat-form-field>
+                      <mat-select placeholder="Estimation de la distance"
+                        id="input-estimation-distance"
+                        name="estimation-distance"
+                        [(ngModel)]="donneeToSave.estimationDistance"
+                        [disabled]="isDonneeDisabled"
+                        [required]="!!donneeToSave.distance || donneeToSave.distance==0">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let estimDistance of pageModel.estimationsDistance"
+                          [value]="estimDistance">
+                          {{estimDistance.libelle}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <!-- DISTANCE -->
+                    <mat-form-field>
+                      <input matInput
+                        placeholder="Distance (m)"
+                        id="input-distance"
+                        min="0"
+                        name="distance"
+                        type="number"
+                        [(ngModel)]="donneeToSave.distance"
+                        [disabled]="isDonneeDisabled || !!!donneeToSave.estimationDistance"
+                        [required]="!!donneeToSave.estimationDistance">
+                    </mat-form-field>
+
+                  </div>
                 </ng-container>
 
                 <!-- REGROUPEMENT -->
                 <ng-container *ngIf="pageModel.isRegroupementDisplayed">
-                  <mat-form-field>
-                    <input matInput
-                      placeholder="Regroupement"
-                      id="input-regroupement"
-                      name="regroupement"
-                      type="number"
-                      min="1"
-                      [(ngModel)]="donneeToSave.regroupement"
-                      [disabled]="isDonneeDisabled">
-                  </mat-form-field>
-                  <button mat-raised-button
-                    color="primary"
-                    [disabled]="isDonneeDisabled"
-                    (click)="displayNextRegroupement()">
-                    Générer
-                  </button>
+                  <div class="second-column grid-container">
+                    <mat-form-field class="regroupement-container">
+                      <input matInput
+                        placeholder="Regroupement"
+                        id="input-regroupement"
+                        name="regroupement"
+                        type="number"
+                        min="1"
+                        [(ngModel)]="donneeToSave.regroupement"
+                        [disabled]="isDonneeDisabled">
+                      <button matSuffix
+                        mat-icon-button
+                        [disabled]="isDonneeDisabled"
+                        (click)="displayNextRegroupement()">
+                        <mat-icon>add_box</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </div>
                 </ng-container>
 
               </div>
