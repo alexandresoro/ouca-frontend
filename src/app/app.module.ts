@@ -27,37 +27,28 @@ import { CommuneDetailsComponent } from "./pages/entities/commune/commune-detail
 import { CommuneFormComponent } from "./pages/entities/commune/commune-form.component";
 import { CommuneTableComponent } from "./pages/entities/commune/commune-table.component";
 import { CommuneComponent } from "./pages/entities/commune/commune.component";
-import { ComportementRemovalConfirmationComponent }
-    from "./pages/entities/comportement/comportement-delete-confirmation.component";
+import { ComportementRemovalConfirmationComponent } from "./pages/entities/comportement/comportement-delete-confirmation.component";
 import { ComportementDetailsComponent } from "./pages/entities/comportement/comportement-details.component";
 import { ComportementFormComponent } from "./pages/entities/comportement/comportement-form.component";
 import { ComportementTableComponent } from "./pages/entities/comportement/comportement-table.component";
 import { ComportementComponent } from "./pages/entities/comportement/comportement.component";
-import { DepartementRemovalConfirmationComponent }
-    from "./pages/entities/departement/departement-delete-confirmation.component";
+import { DepartementRemovalConfirmationComponent } from "./pages/entities/departement/departement-delete-confirmation.component";
 import { DepartementDetailsComponent } from "./pages/entities/departement/departement-details.component";
 import { DepartementFormComponent } from "./pages/entities/departement/departement-form.component";
 import { DepartementTableComponent } from "./pages/entities/departement/departement-table.component";
 import { DepartementComponent } from "./pages/entities/departement/departement.component";
-import { EntiteSimpleRemovalConfirmationComponent }
-    from "./pages/entities/entite-simple/entite-simple-delete-confirmation.component";
+import { EntiteSimpleRemovalConfirmationComponent } from "./pages/entities/entite-simple/entite-simple-delete-confirmation.component";
 import { EntiteSimpleDetailsComponent } from "./pages/entities/entite-simple/entite-simple-details.component";
 import { EntiteSimpleFormComponent } from "./pages/entities/entite-simple/entite-simple-form.component";
 import { EntiteSimpleComponent } from "./pages/entities/entite-simple/entite-simple.component";
 import { EntiteSimpleService } from "./pages/entities/entite-simple/entite-simple.service";
-import { EstimationDistanceRemovalConfirmationComponent }
-    from "./pages/entities/estimation-distance/estimation-distance-delete-confirmation.component";
-import { EstimationDistanceDetailsComponent }
-    from "./pages/entities/estimation-distance/estimation-distance-details.component";
-import { EstimationDistanceFormComponent }
-    from "./pages/entities/estimation-distance/estimation-distance-form.component";
-import { EstimationDistanceTableComponent }
-    from "./pages/entities/estimation-distance/estimation-distance-table.component";
+import { EstimationDistanceRemovalConfirmationComponent } from "./pages/entities/estimation-distance/estimation-distance-delete-confirmation.component";
+import { EstimationDistanceDetailsComponent } from "./pages/entities/estimation-distance/estimation-distance-details.component";
+import { EstimationDistanceFormComponent } from "./pages/entities/estimation-distance/estimation-distance-form.component";
+import { EstimationDistanceTableComponent } from "./pages/entities/estimation-distance/estimation-distance-table.component";
 import { EstimationDistanceComponent } from "./pages/entities/estimation-distance/estimation-distance.component";
-import { EstimationNombreRemovalConfirmationComponent }
-    from "./pages/entities/estimation-nombre/estimation-nombre-delete-confirmation.component";
-import { EstimationNombreDetailsComponent }
-    from "./pages/entities/estimation-nombre/estimation-nombre-details.component";
+import { EstimationNombreRemovalConfirmationComponent } from "./pages/entities/estimation-nombre/estimation-nombre-delete-confirmation.component";
+import { EstimationNombreDetailsComponent } from "./pages/entities/estimation-nombre/estimation-nombre-details.component";
 import { EstimationNombreFormComponent } from "./pages/entities/estimation-nombre/estimation-nombre-form.component";
 import { EstimationNombreTableComponent } from "./pages/entities/estimation-nombre/estimation-nombre-table.component";
 import { EstimationNombreComponent } from "./pages/entities/estimation-nombre/estimation-nombre.component";
@@ -72,8 +63,7 @@ import { MilieuDetailsComponent } from "./pages/entities/milieu/milieu-details.c
 import { MilieuFormComponent } from "./pages/entities/milieu/milieu-form.component";
 import { MilieuTableComponent } from "./pages/entities/milieu/milieu-table.component";
 import { MilieuComponent } from "./pages/entities/milieu/milieu.component";
-import { ObservateurRemovalConfirmationComponent }
-    from "./pages/entities/observateur/observateur-delete-confirmation.component";
+import { ObservateurRemovalConfirmationComponent } from "./pages/entities/observateur/observateur-delete-confirmation.component";
 import { ObservateurDetailsComponent } from "./pages/entities/observateur/observateur-details.component";
 import { ObservateurFormComponent } from "./pages/entities/observateur/observateur-form.component";
 import { ObservateurTableComponent } from "./pages/entities/observateur/observateur-table.component";
@@ -87,18 +77,26 @@ import { ViewComponent } from "./pages/vue/view.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
 import {
-    MatButtonModule,
-    MatCardModule,
-    MatDatepickerModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatInputModule,
-    MatMenuModule,
-    MatSelectModule,
-    MatToolbarModule
+  MatButtonModule,
+  MatCardModule,
+  MatDatepickerModule,
+  MatExpansionModule,
+  MatIconModule,
+  MatInputModule,
+  MatMenuModule,
+  MatSelectModule,
+  MatToolbarModule
 } from "@angular/material";
-import { MAT_MOMENT_DATE_FORMATS, MatMomentDateModule, MomentDateAdapter } from "@angular/material-moment-adapter";
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
+import {
+  MAT_MOMENT_DATE_FORMATS,
+  MatMomentDateModule,
+  MomentDateAdapter
+} from "@angular/material-moment-adapter";
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE
+} from "@angular/material/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
@@ -117,210 +115,215 @@ import { LieuditFormComponent } from "./pages/entities/lieudit/lieudit-form.comp
 import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.component";
 import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
 import { ImportComponent } from "./pages/import/import.component";
+import { ImportService } from "./pages/import/import.service";
 
 const baseNaturalisteRoutes: Routes = [
-    {
-        path: "",
-        component: CreationComponent
-    },
-    {
-        path: "creation",
-        component: CreationComponent
-    },
-    {
-        path: "vue",
-        component: ViewComponent
-    },
-    {
-        path: "age",
-        component: AgeComponent
-    },
-    {
-        path: "classe",
-        component: ClasseComponent
-    },
-    {
-        path: "commune",
-        component: CommuneComponent
-    },
-    {
-        path: "comportement",
-        component: ComportementComponent
-    },
-    {
-        path: "departement",
-        component: DepartementComponent
-    },
-    {
-        path: "espece",
-        component: EspeceComponent
-    },
-    {
-        path: "estimation-nombre",
-        component: EstimationNombreComponent
-    },
-    {
-        path: "estimation-distance",
-        component: EstimationDistanceComponent
-    },
-    {
-        path: "lieudit",
-        component: LieuditComponent
-    },
-    {
-        path: "meteo",
-        component: MeteoComponent
-    },
-    {
-        path: "milieu",
-        component: MilieuComponent
-    },
-    {
-        path: "observateur",
-        component: ObservateurComponent
-    },
-    {
-        path: "sexe",
-        component: SexeComponent
-    }, {
-        path: "configuration",
-        component: ConfigurationComponent
-    }, {
-        path: "import",
-        component: ImportComponent
-    }
+  {
+    path: "",
+    component: CreationComponent
+  },
+  {
+    path: "creation",
+    component: CreationComponent
+  },
+  {
+    path: "vue",
+    component: ViewComponent
+  },
+  {
+    path: "age",
+    component: AgeComponent
+  },
+  {
+    path: "classe",
+    component: ClasseComponent
+  },
+  {
+    path: "commune",
+    component: CommuneComponent
+  },
+  {
+    path: "comportement",
+    component: ComportementComponent
+  },
+  {
+    path: "departement",
+    component: DepartementComponent
+  },
+  {
+    path: "espece",
+    component: EspeceComponent
+  },
+  {
+    path: "estimation-nombre",
+    component: EstimationNombreComponent
+  },
+  {
+    path: "estimation-distance",
+    component: EstimationDistanceComponent
+  },
+  {
+    path: "lieudit",
+    component: LieuditComponent
+  },
+  {
+    path: "meteo",
+    component: MeteoComponent
+  },
+  {
+    path: "milieu",
+    component: MilieuComponent
+  },
+  {
+    path: "observateur",
+    component: ObservateurComponent
+  },
+  {
+    path: "sexe",
+    component: SexeComponent
+  },
+  {
+    path: "configuration",
+    component: ConfigurationComponent
+  },
+  {
+    path: "import",
+    component: ImportComponent
+  }
 ];
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        RouterModule.forRoot(baseNaturalisteRoutes),
-        HttpModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatMenuModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatCardModule,
-        MatSelectModule,
-        MatInputModule,
-        MatMomentDateModule,
-        MatDatepickerModule,
-        MatExpansionModule
-    ],
-    exports: [
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatMenuModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatCardModule,
-        MatSelectModule,
-        MatInputModule,
-        MatMomentDateModule,
-        MatDatepickerModule,
-        MatExpansionModule
-    ],
-    declarations: [
-        AppComponent,
-        AgeComponent,
-        AgeTableComponent,
-        AgeDetailsComponent,
-        AgeFormComponent,
-        AgeRemovalConfirmationComponent,
-        ClasseComponent,
-        ClasseTableComponent,
-        ClasseDetailsComponent,
-        ClasseFormComponent,
-        ClasseRemovalConfirmationComponent,
-        ConfigurationComponent,
-        ConfigurationFormComponent,
-        CommuneComponent,
-        CommuneTableComponent,
-        CommuneDetailsComponent,
-        CommuneFormComponent,
-        CommuneRemovalConfirmationComponent,
-        ComportementComponent,
-        ComportementTableComponent,
-        ComportementDetailsComponent,
-        ComportementFormComponent,
-        ComportementRemovalConfirmationComponent,
-        CreationComponent,
-        DepartementComponent,
-        DepartementTableComponent,
-        DepartementDetailsComponent,
-        DepartementFormComponent,
-        DepartementRemovalConfirmationComponent,
-        EntiteSimpleComponent,
-        EntiteSimpleRemovalConfirmationComponent,
-        EntiteSimpleDetailsComponent,
-        EntiteSimpleFormComponent,
-        EspeceComponent,
-        EspeceTableComponent,
-        EspeceDetailsComponent,
-        EspeceFormComponent,
-        EspeceRemovalConfirmationComponent,
-        EstimationNombreComponent,
-        EstimationNombreTableComponent,
-        EstimationNombreDetailsComponent,
-        EstimationNombreFormComponent,
-        EstimationNombreRemovalConfirmationComponent,
-        EstimationDistanceComponent,
-        EstimationDistanceTableComponent,
-        EstimationDistanceDetailsComponent,
-        EstimationDistanceFormComponent,
-        EstimationDistanceRemovalConfirmationComponent,
-        ImportComponent,
-        InputCodeLibelleComponent,
-        LieuditComponent,
-        LieuditTableComponent,
-        LieuditDetailsComponent,
-        LieuditFormComponent,
-        LieuditRemovalConfirmationComponent,
-        MeteoComponent,
-        MeteoTableComponent,
-        MeteoDetailsComponent,
-        MeteoFormComponent,
-        MeteoRemovalConfirmationComponent,
-        MilieuComponent,
-        MilieuTableComponent,
-        MilieuDetailsComponent,
-        MilieuFormComponent,
-        MilieuRemovalConfirmationComponent,
-        ObservateurComponent,
-        ObservateurTableComponent,
-        ObservateurDetailsComponent,
-        ObservateurFormComponent,
-        ObservateurRemovalConfirmationComponent,
-        SexeComponent,
-        SexeTableComponent,
-        SexeDetailsComponent,
-        SexeFormComponent,
-        SexeRemovalConfirmationComponent,
-        TopButtonsComponent,
-        TableButtonsComponent,
-        LcoInputTextComponent,
-        EntityMessagesComponent,
-        ViewComponent
-    ],
-    bootstrap: [
-        AppComponent
-    ],
-    providers: [
-        BaseNaturalisteService,
-        ConfigurationService,
-        CreationModeHelper,
-        CreationService,
-        DonneeService,
-        EntiteSimpleService,
-        GestionModeHelper,
-        InventaireService,
-        NavigationService,
-        { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
-        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-        { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    ]
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(baseNaturalisteRoutes),
+    HttpModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatCardModule,
+    MatSelectModule,
+    MatInputModule,
+    MatMomentDateModule,
+    MatDatepickerModule,
+    MatExpansionModule
+  ],
+  exports: [
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatCardModule,
+    MatSelectModule,
+    MatInputModule,
+    MatMomentDateModule,
+    MatDatepickerModule,
+    MatExpansionModule
+  ],
+  declarations: [
+    AppComponent,
+    AgeComponent,
+    AgeTableComponent,
+    AgeDetailsComponent,
+    AgeFormComponent,
+    AgeRemovalConfirmationComponent,
+    ClasseComponent,
+    ClasseTableComponent,
+    ClasseDetailsComponent,
+    ClasseFormComponent,
+    ClasseRemovalConfirmationComponent,
+    ConfigurationComponent,
+    ConfigurationFormComponent,
+    CommuneComponent,
+    CommuneTableComponent,
+    CommuneDetailsComponent,
+    CommuneFormComponent,
+    CommuneRemovalConfirmationComponent,
+    ComportementComponent,
+    ComportementTableComponent,
+    ComportementDetailsComponent,
+    ComportementFormComponent,
+    ComportementRemovalConfirmationComponent,
+    CreationComponent,
+    DepartementComponent,
+    DepartementTableComponent,
+    DepartementDetailsComponent,
+    DepartementFormComponent,
+    DepartementRemovalConfirmationComponent,
+    EntiteSimpleComponent,
+    EntiteSimpleRemovalConfirmationComponent,
+    EntiteSimpleDetailsComponent,
+    EntiteSimpleFormComponent,
+    EspeceComponent,
+    EspeceTableComponent,
+    EspeceDetailsComponent,
+    EspeceFormComponent,
+    EspeceRemovalConfirmationComponent,
+    EstimationNombreComponent,
+    EstimationNombreTableComponent,
+    EstimationNombreDetailsComponent,
+    EstimationNombreFormComponent,
+    EstimationNombreRemovalConfirmationComponent,
+    EstimationDistanceComponent,
+    EstimationDistanceTableComponent,
+    EstimationDistanceDetailsComponent,
+    EstimationDistanceFormComponent,
+    EstimationDistanceRemovalConfirmationComponent,
+    ImportComponent,
+    InputCodeLibelleComponent,
+    LieuditComponent,
+    LieuditTableComponent,
+    LieuditDetailsComponent,
+    LieuditFormComponent,
+    LieuditRemovalConfirmationComponent,
+    MeteoComponent,
+    MeteoTableComponent,
+    MeteoDetailsComponent,
+    MeteoFormComponent,
+    MeteoRemovalConfirmationComponent,
+    MilieuComponent,
+    MilieuTableComponent,
+    MilieuDetailsComponent,
+    MilieuFormComponent,
+    MilieuRemovalConfirmationComponent,
+    ObservateurComponent,
+    ObservateurTableComponent,
+    ObservateurDetailsComponent,
+    ObservateurFormComponent,
+    ObservateurRemovalConfirmationComponent,
+    SexeComponent,
+    SexeTableComponent,
+    SexeDetailsComponent,
+    SexeFormComponent,
+    SexeRemovalConfirmationComponent,
+    TopButtonsComponent,
+    TableButtonsComponent,
+    LcoInputTextComponent,
+    EntityMessagesComponent,
+    ViewComponent
+  ],
+  bootstrap: [AppComponent],
+  providers: [
+    BaseNaturalisteService,
+    ConfigurationService,
+    CreationModeHelper,
+    CreationService,
+    DonneeService,
+    EntiteSimpleService,
+    GestionModeHelper,
+    InventaireService,
+    ImportService,
+    NavigationService,
+    { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE]
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
+  ]
 })
-export class AppModule {
-}
+export class AppModule {}

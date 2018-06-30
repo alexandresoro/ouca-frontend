@@ -44,11 +44,12 @@
 
     <input type=file
       id="input-observateur"
-      name="observateur">
+      name="observateur"
+      (change)="setFile($event)">
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportObservateursClicked()">
+      (click)="onImportClicked('observateur')">
       Lancer l'import des observateurs
     </button>
   </mat-expansion-panel>
@@ -73,7 +74,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportDepartementsClicked()">
+      (click)="onImportClicked('departement')">
       Lancer l'import des départements
     </button>
   </mat-expansion-panel>
@@ -100,7 +101,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportCommunesClicked()">
+      (click)="onImportClicked('commune')">
       Lancer l'import des communes
     </button>
   </mat-expansion-panel>
@@ -133,7 +134,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportLieuxditsClicked()">
+      (click)="onImportClicked('lieudit')">
       Lancer l'import des lieux-dits
     </button>
   </mat-expansion-panel>
@@ -157,7 +158,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportMeteosClicked()">
+      (click)="onImportClicked('meteo')">
       Lancer l'import des météos
     </button>
   </mat-expansion-panel>
@@ -181,7 +182,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportClassesClicked()">
+      (click)="onImportClicked('classe')">
       Lancer l'import des classes espèces
     </button>
   </mat-expansion-panel>
@@ -208,7 +209,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportEspecesClicked()">
+      (click)="onImportClicked('espece')">
       Lancer l'import des espèces
     </button>
   </mat-expansion-panel>
@@ -232,7 +233,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportSexesClicked()">
+      (click)="onImportClicked('sexe')">
       Lancer l'import des sexes
     </button>
   </mat-expansion-panel>
@@ -257,7 +258,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportAgesClicked()">
+      (click)="onImportClicked('age')">
       Lancer l'import des âges
     </button>
   </mat-expansion-panel>
@@ -284,7 +285,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportEstimationsNombreClicked()">
+      (click)="onImportClicked('estimation-nombre')">
       Lancer l'import des estimations du nombre
     </button>
   </mat-expansion-panel>
@@ -309,7 +310,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportEstimationsDistanceClicked()">
+      (click)="onImportClicked('estimation-distance')">
       Lancer l'import des estimations de la distance
     </button>
   </mat-expansion-panel>
@@ -334,7 +335,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportComportementsClicked()">
+      (click)="onImportClicked('comportement')">
       Lancer l'import des comportements
     </button>
   </mat-expansion-panel>
@@ -360,7 +361,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportMilieuxClicked()">
+      (click)="onImportClicked('milieu')">
       Lancer l'import des milieux
     </button>
   </mat-expansion-panel>
@@ -417,7 +418,7 @@
 
     <button mat-raised-button
       color="primary"
-      (click)="onImportEstimationsDonneesClicked()">
+      (click)="onImportClicked('donnee')">
       Lancer l'import des données
     </button>
   </mat-expansion-panel>
