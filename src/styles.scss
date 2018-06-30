@@ -8,7 +8,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $candy-app-primary: mat-palette($mat-cyan, 800, 700);
-$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
@@ -53,6 +53,8 @@ $custom-typography: mat-typography-config(
 
 //@include mat-core($custom-typography);
 //@include angular-material-typography($custom-typography);
+
+$standardColumnGap: 20px;
 
 body {
   margin: 0;
@@ -117,34 +119,50 @@ mat-toolbar.base-naturaliste-header {
 
     .lco-creation-date {
       grid-template-columns: auto 60px 60px;
-      column-gap: 20px;
+      column-gap: $standardColumnGap;
     }
 
     .commune-grid,
     .lco-creation-meteo {
-      grid-template-columns: 80px auto;
-      column-gap: 20px;
+      grid-template-columns: 100px auto;
+      column-gap: $standardColumnGap;
     }
 
     .coordonnees-form {
-      column-gap: 20px;
-      grid-template-columns: repeat(3, 100px);
+      column-gap: $standardColumnGap;
+      grid-template-columns: repeat(3, 120px);
     }
 
     .lco-creation-quoi {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: 1fr 120px 2fr;
+      column-gap: $standardColumnGap;
+    }
 
-      .lco-creation-classe {
-        grid-column: 1;
+    .combien-de-container {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 4 * $standardColumnGap;
+
+      .nombre-container {
+        grid-template-columns: 120px auto;
+        column-gap: $standardColumnGap;
       }
 
-      .lco-creation-espece {
-        grid-column: 2;
+      .sexe-age-container {
+        grid-template-columns: repeat(2, 120px);
+        column-gap: 4 * $standardColumnGap;
+      }
+    }
+    .distance-regroupement-container {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 4 * $standardColumnGap;
+
+      .distance-container {
+        grid-template-columns: auto 120px;
+        column-gap: $standardColumnGap;
       }
 
-      .lco-creation-details {
-        display: grid;
+      mat-form-field.regroupement-container {
+        width: 141px;
       }
     }
   }
@@ -153,7 +171,7 @@ mat-toolbar.base-naturaliste-header {
 .comportements-container,
 .milieux-container {
   grid-template-columns: 1fr 1fr;
-  column-gap: 20px;
+  column-gap: 3 * $standardColumnGap;
   row-gap: 0;
 }
 
@@ -174,6 +192,10 @@ mat-toolbar.base-naturaliste-header {
   grid-column: 2;
 }
 
+.third-column {
+  grid-column: 3;
+}
+
 .first-row {
   grid-row: 1;
 }
@@ -185,7 +207,6 @@ mat-toolbar.base-naturaliste-header {
 .full-width-container > * {
   width: 100%;
 }
-
 
 .lco-base-naturaliste {
   .mat-icon {
@@ -201,5 +222,4 @@ mat-toolbar.base-naturaliste-header {
     line-height: 30px;
     height: 30px;
   }
-
 }
