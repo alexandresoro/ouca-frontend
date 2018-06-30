@@ -185,3 +185,21 @@ mat-toolbar.base-naturaliste-header {
 .full-width-container > * {
   width: 100%;
 }
+
+
+.lco-base-naturaliste {
+  .mat-icon {
+    height: 28px;
+  }
+
+  .mat-menu-item {
+    line-height: 30px;
+    height: 30px;
+  }
+
+  .mat-raised-button {
+    line-height: 30px;
+    height: 30px;
+  }
+
+}
