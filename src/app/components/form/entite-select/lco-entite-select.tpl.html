@@ -1,0 +1,11 @@
+<mat-form-field>
+  <mat-select [id]="id"
+    [placeholder]="placeholder"
+    [(value)]="model"
+    [compareWith]="compareEntities">
+    <mat-option *ngFor="let o of options"
+      [value]="o">
+      {{getDisplayedValue(o)}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

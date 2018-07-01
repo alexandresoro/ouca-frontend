@@ -84,6 +84,7 @@ mat-toolbar.base-naturaliste-header {
   max-width: 1600px;
   padding-left: 50px;
   padding-right: 50px;
+  margin-bottom: 10px;
 }
 
 .baseNaturalisteContent {
@@ -239,6 +240,16 @@ mat-toolbar.base-naturaliste-header {
 
     .edit-button {
       min-width: 220px;
+    }
+  }
+  .configuration-form-container {
+    .footer-buttons {
+      display: flex;
+      flex: 0 0 auto;
+    }
+
+    mat-list-item.mat-list-item {
+      min-height: 64px;
     }
   }
 }

@@ -79,10 +79,12 @@ import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 import {
   MatButtonModule,
   MatCardModule,
+  MatCheckboxModule,
   MatDatepickerModule,
   MatExpansionModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatMenuModule,
   MatSelectModule,
   MatTableModule,
@@ -99,6 +101,7 @@ import {
   MAT_DATE_LOCALE
 } from "@angular/material/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { LcoEntiteSelectComponent } from "./components/form/entite-select/lco-entite-select.component";
 import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
 import { ConfigurationService } from "./pages/configuration/configuration.service";
@@ -210,7 +213,9 @@ const baseNaturalisteRoutes: Routes = [
     MatMomentDateModule,
     MatDatepickerModule,
     MatExpansionModule,
-    MatTableModule
+    MatTableModule,
+    MatCheckboxModule,
+    MatListModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -224,7 +229,9 @@ const baseNaturalisteRoutes: Routes = [
     MatMomentDateModule,
     MatDatepickerModule,
     MatExpansionModule,
-    MatTableModule
+    MatTableModule,
+    MatCheckboxModule,
+    MatListModule
   ],
   declarations: [
     AppComponent,
@@ -277,6 +284,7 @@ const baseNaturalisteRoutes: Routes = [
     EstimationDistanceRemovalConfirmationComponent,
     ImportComponent,
     InputCodeLibelleComponent,
+    LcoEntiteSelectComponent,
     LieuditComponent,
     LieuditTableComponent,
     LieuditDetailsComponent,
