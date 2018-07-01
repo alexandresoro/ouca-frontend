@@ -7,7 +7,7 @@ import { ImportService } from "./import.service";
 export class ImportComponent {
   private fileName: string;
 
-  private isWaitPanelDisplayed: boolean = false;
+  public isWaitPanelDisplayed: boolean = false;
 
   constructor(private importService: ImportService) {}
 
