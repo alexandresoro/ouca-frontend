@@ -85,6 +85,7 @@ import {
   MatInputModule,
   MatMenuModule,
   MatSelectModule,
+  MatTableModule,
   MatToolbarModule
 } from "@angular/material";
 import {
@@ -208,7 +209,8 @@ const baseNaturalisteRoutes: Routes = [
     MatInputModule,
     MatMomentDateModule,
     MatDatepickerModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTableModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -221,7 +223,8 @@ const baseNaturalisteRoutes: Routes = [
     MatInputModule,
     MatMomentDateModule,
     MatDatepickerModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTableModule
   ],
   declarations: [
     AppComponent,

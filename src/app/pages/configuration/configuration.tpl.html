@@ -1,114 +1,60 @@
-<div class="lco-entity-page lco-age-page">
-    <div class="row">
-        <div class="col-xs-6 lco-entity-page-title">
-            <h1>Configuration</h1>
-        </div>
-        <div *ngIf="modeHelper.isViewAllMode(mode)"
-            class="col-xs-6 text-right lco-entity-top-buttons">
-            <button class="btn btn-default"
-                (click)="refresh()">
-                <span class="glyphicon glyphicon-refresh">&nbsp;</span>
-                <span>Rafraîchir</span>
-            </button>
-
-            <button class="btn btn-default"
-                (click)="editConfigurations()">
-                <span class="glyphicon glyphicon-pencil">&nbsp;</span>
-                <span>Modifier les configurations</span>
-            </button>
-        </div>
+<div class="lco-entity-page lco-age-page configuration-container">
+  <div class="configuration-container-header">
+    <div class="col-xs-6 lco-entity-page-title">
+      <h1>Configuration</h1>
     </div>
+    <span class="flex-spacer"></span>
+    <ng-container *ngIf="modeHelper.isViewAllMode(mode)">
+      <button mat-raised-button
+        class="refresh-button"
+        color="primary"
+        (click)="refresh()">
+        <mat-icon>refresh</mat-icon>
+        <span>Rafraîchir</span>
+      </button>
+      <span class="button-spacer"></span>
+      <button mat-raised-button
+        class="edit-button"
+        color="primary"
+        (click)="editConfigurations()">
+        <mat-icon>create</mat-icon>
+        <span>Modifier les configurations</span>
+      </button>
+    </ng-container>
+  </div>
 
-    <hr>
+  <hr>
 
-    <configuration-form *ngIf="modeHelper.isEditionMode(mode)"
-        [model]="configurationToSave"
-        [ages]="pageModel.ages"
-        [departements]="pageModel.departements"
-        [estimationsNombre]="pageModel.estimationsNombre"
-        [observateurs]="pageModel.observateurs"
-        [sexes]="pageModel.sexes"
-        (confirm)="saveAppConfiguration()"
-        (back)="cancelEdition()"></configuration-form>
+  <configuration-form *ngIf="modeHelper.isEditionMode(mode)"
+    [model]="configurationToSave"
+    [ages]="pageModel.ages"
+    [departements]="pageModel.departements"
+    [estimationsNombre]="pageModel.estimationsNombre"
+    [observateurs]="pageModel.observateurs"
+    [sexes]="pageModel.sexes"
+    (confirm)="saveAppConfiguration()"
+    (back)="cancelEdition()"></configuration-form>
 
-    <div *ngIf="modeHelper.isViewAllMode(mode)"
-        class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Propriété</th>
-                    <th>Valeur</th>
-                </tr>
-            </thead>
+  <div *ngIf="modeHelper.isViewAllMode(mode)"
+    class="table-responsive">
+    <mat-table [dataSource]="dataSource">
 
-            <tbody>
-                <tr>
-                    <td>Nom de l'application</td>
-                    <td>{{configurationToSave?.applicationName}}</td>
-                </tr>
-                <tr>
-                    <td>Observateur par défaut</td>
-                    <td>{{configurationToSave?.defaultObservateur?.libelle}}</td>
-                </tr>
-                <tr>
-                    <td>Département par défaut</td>
-                    <td>{{configurationToSave?.defaultDepartement?.code}}</td>
-                </tr>
-                <tr>
-                    <td>Estimation du nombre par défaut</td>
-                    <td>{{configurationToSave?.defaultEstimationNombre?.libelle}}</td>
-                </tr>
-                <tr>
-                    <td>Nombre par défaut</td>
-                    <td>{{configurationToSave?.defaultNombre}}</td>
-                </tr>
-                <tr>
-                    <td>Sexe par défaut</td>
-                    <td>{{configurationToSave?.defaultSexe?.libelle}}</td>
-                </tr>
-                <tr>
-                    <td>Âge par défaut</td>
-                    <td>{{configurationToSave?.defaultAge?.libelle}}</td>
-                </tr>
-                <tr>
-                    <td>Afficher les observateurs associés</td>
-                    <td>
-                        <span *ngIf="configurationToSave?.areAssociesDisplayed">Oui</span>
-                        <span *ngIf="!configurationToSave?.areAssociesDisplayed">Non</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Afficher la météo</td>
-                    <td>
-                        <span *ngIf="configurationToSave?.isMeteoDisplayed">Oui</span>
-                        <span *ngIf="!configurationToSave?.isMeteoDisplayed">Non</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Afficher la distance</td>
-                    <td>
-                        <span *ngIf="configurationToSave?.isDistanceDisplayed">Oui</span>
-                        <span *ngIf="!configurationToSave?.isDistanceDisplayed">Non</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Afficher le numéro de regroupement</td>
-                    <td>
-                        <span *ngIf="configurationToSave?.isRegroupementDisplayed">Oui</span>
-                        <span *ngIf="!configurationToSave?.isRegroupementDisplayed">Non</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Chemin vers MySQL</td>
-                    <td>{{configurationToSave?.mySqlPath}}</td>
-                </tr>
-                <tr>
-                    <td>Chemin vers MySQL dump</td>
-                    <td>{{configurationToSave?.mySqlDumpPath}}</td>
-                </tr>
+      <ng-container matColumnDef="propriete">
+        <mat-header-cell *matHeaderCellDef> Propriété </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.propriete}} </mat-cell>
+      </ng-container>
 
-            </tbody>
-        </table>
-    </div>
+      <ng-container matColumnDef="valeur">
+        <mat-header-cell mat-header-cell
+          *matHeaderCellDef> Valeur </mat-header-cell>
+        <mat-cell mat-cell
+          *matCellDef="let element"> {{element.valeur}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </div>
 
 </div>

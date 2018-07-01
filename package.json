@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "*",
     "@angular/router": "*",
     "core-js": "^2.4.1",
+    "lodash": "*",
     "material-design-icons": "*",
     "moment": "*",
     "rxjs": "*",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "2.5.36",
+    "@types/lodash": "*",
     "@types/node": "8",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^5.0.0",
