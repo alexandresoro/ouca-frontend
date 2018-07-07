@@ -11,6 +11,7 @@ const path = require("path");
 const helpers = require("./config/helpers");
 const history = require("connect-history-api-fallback");
 const convert = require("koa-connect");
+const webpackServeWaitpage = require("webpack-serve-waitpage");
 
 module.exports = {
   mode: "development",
@@ -29,7 +30,9 @@ module.exports = {
 
   serve: {
     port: 3000,
+    open: true,
     add: (app, middleware, options) => {
+      app.use(webpackServeWaitpage(options));
       app.use(convert(history({})));
     }
   },
