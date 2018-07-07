@@ -37,6 +37,7 @@
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^5.0.0",
     "clean-webpack-plugin": "^0.1.19",
+    "connect-history-api-fallback": "*",
     "css-loader": "*",
     "favicons-webpack-plugin": "^0.0.9",
     "file-loader": "^1.1.11",
@@ -48,6 +49,7 @@
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.0.2",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "koa-connect": "*",
     "mini-css-extract-plugin": "^0.4.0",
     "node-sass": "^4.9.0",
     "rimraf": "2",
@@ -58,7 +60,7 @@
     "typescript": "2",
     "webpack": "4",
     "webpack-cli": "^3.0.3",
-    "webpack-dev-server": "^3.1.4"
+    "webpack-serve": "*"
   },
   "repository": {}
 }
