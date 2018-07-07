@@ -14,8 +14,10 @@ const convert = require("koa-connect");
 const webpackServeWaitpage = require("webpack-serve-waitpage");
 
 module.exports = (env, argv) => {
+  const isProductionMode = argv && argv.mode === "production";
+
   return {
-    mode: argv.mode === "production" ? "production" : "development",
+    mode: isProductionMode ? "production" : "development",
     entry: {
       polyfills: "./src/polyfills.ts",
       app: "./src/main.ts"
@@ -27,7 +29,7 @@ module.exports = (env, argv) => {
     },
 
     // Source maps support ('inline-source-map' also works)
-    devtool: argv.mode === "production" ? false : "source-map",
+    devtool: isProductionMode ? false : "source-map",
 
     serve: {
       port: 3000,
