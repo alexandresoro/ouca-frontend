@@ -101,7 +101,12 @@ import {
   MAT_DATE_LOCALE
 } from "@angular/material/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HttpClientModule } from "../../node_modules/@angular/common/http";
 import { LcoEntiteSelectComponent } from "./components/form/entite-select/lco-entite-select.component";
+import {
+  FakeBackendInterceptor,
+  fakeBackendProvider
+} from "./mock/fake-backend-interceptor";
 import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
 import { ConfigurationService } from "./pages/configuration/configuration.service";
@@ -201,6 +206,7 @@ const baseNaturalisteRoutes: Routes = [
     BrowserModule,
     RouterModule.forRoot(baseNaturalisteRoutes),
     HttpModule,
+    HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
     MatButtonModule,
@@ -324,6 +330,7 @@ const baseNaturalisteRoutes: Routes = [
     CreationService,
     DonneeService,
     EntiteSimpleService,
+    // fakeBackendProvider,
     GestionModeHelper,
     InventaireService,
     ImportService,

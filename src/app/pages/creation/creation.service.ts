@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { Observable } from "rxjs";
+import { HttpClient } from "../../../../node_modules/@angular/common/http";
 import { Comportement } from "../../model/comportement.object";
 import { CreationPage } from "../../model/creation-page.object";
 import { Donnee } from "../../model/donnee.object";
@@ -9,10 +10,9 @@ import { BaseNaturalisteService } from "../../services/base-naturaliste.service"
 
 @Injectable()
 export class CreationService extends BaseNaturalisteService {
-
   private ENTITY_NAME: string = "creation";
 
-  constructor(public http: Http) {
+  constructor(public http: HttpClient) {
     super(http);
   }
 
@@ -44,7 +44,10 @@ export class CreationService extends BaseNaturalisteService {
    * @param donnee
    * @param defaultNombre
    */
-  public updateNombreWhenEstimationHasChanged(donnee: Donnee, defaultNombre: number): void {
+  public updateNombreWhenEstimationHasChanged(
+    donnee: Donnee,
+    defaultNombre: number
+  ): void {
     const nonCompte: boolean = donnee.estimationNombre.nonCompte;
     if (nonCompte) {
       donnee.nombre = null;
@@ -57,7 +60,11 @@ export class CreationService extends BaseNaturalisteService {
 
   public initComportements(): Comportement[] {
     const comportements: Comportement[] = new Array<Comportement>();
-    for (let comportementIndex = 0; comportementIndex < 6; comportementIndex++) {
+    for (
+      let comportementIndex = 0;
+      comportementIndex < 6;
+      comportementIndex++
+    ) {
       comportements.push(undefined);
     }
     return comportements;
