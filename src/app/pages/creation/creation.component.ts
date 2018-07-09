@@ -1,4 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { MatDialog } from "../../../../node_modules/@angular/material";
+import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
+import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
 import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
@@ -55,6 +58,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     private creationService: CreationService,
     private donneeService: DonneeService,
     private inventaireService: InventaireService,
+    public dialog: MatDialog,
     public navigationService: NavigationService
   ) {
     super();
@@ -542,17 +546,26 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onDeleteDonneeBtnClicked(): void {
-    // TODO
-    // Ask confirmation
-    this.deleteDonnee(this.donneeToSave);
+    const deleteDialogData = new ConfirmationDialogData(
+      "Confirmation de suppression",
+      "Êtes-vous certain de vouloir supprimer cette fiche espèce ?",
+      "Oui, supprimer",
+      "Non, annuler"
+    );
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: "450px",
+      data: deleteDialogData
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!!result) {
+        this.onDeleteConfirmButtonClicked();
+      }
+    });
   }
 
   public onDeleteConfirmButtonClicked(): void {
-    // TODO delete the donnee  and redisplay ?
-  }
-
-  public onDeleteCancelButtonClicked(): void {
-    // TODO
+    this.deleteDonnee(this.donneeToSave);
   }
 
   private redisplayCurrentInventaireAndDonnee(): void {
