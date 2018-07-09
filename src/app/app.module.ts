@@ -77,10 +77,12 @@ import { ViewComponent } from "./pages/vue/view.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
 import {
+  MAT_DIALOG_DEFAULT_OPTIONS,
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
   MatDatepickerModule,
+  MatDialogModule,
   MatExpansionModule,
   MatIconModule,
   MatInputModule,
@@ -102,6 +104,7 @@ import {
 } from "@angular/material/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from "../../node_modules/@angular/common/http";
+import { ConfirmationDialogComponent } from "./components/dialog/confirmation-dialog.component";
 import { LcoEntiteSelectComponent } from "./components/form/entite-select/lco-entite-select.component";
 import {
   FakeBackendInterceptor,
@@ -221,7 +224,8 @@ const baseNaturalisteRoutes: Routes = [
     MatExpansionModule,
     MatTableModule,
     MatCheckboxModule,
-    MatListModule
+    MatListModule,
+    MatDialogModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -237,6 +241,7 @@ const baseNaturalisteRoutes: Routes = [
     MatExpansionModule,
     MatTableModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatListModule
   ],
   declarations: [
@@ -263,6 +268,7 @@ const baseNaturalisteRoutes: Routes = [
     ComportementDetailsComponent,
     ComportementFormComponent,
     ComportementRemovalConfirmationComponent,
+    ConfirmationDialogComponent,
     CreationComponent,
     DepartementComponent,
     DepartementTableComponent,
@@ -323,6 +329,7 @@ const baseNaturalisteRoutes: Routes = [
     ViewComponent
   ],
   bootstrap: [AppComponent],
+  entryComponents: [ConfirmationDialogComponent],
   providers: [
     BaseNaturalisteService,
     ConfigurationService,
@@ -341,6 +348,7 @@ const baseNaturalisteRoutes: Routes = [
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE]
     },
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
   ]
 })
