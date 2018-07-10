@@ -1,4 +1,7 @@
 {
+  "files.exclude": {
+    "**/*.orig": true
+  },
   "html.format.wrapAttributes": "force",
   "html.format.wrapLineLength": 100,
   "npm.packageManager": "yarn",
