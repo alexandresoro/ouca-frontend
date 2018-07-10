@@ -24,6 +24,12 @@ export class PageComponent {
         this.messages = [{ value: message }];
     }
 
+    // TODO
+    public setInfoMessage(message: string): void {
+        this.status = this.STATUS_SUCCESS;
+        this.messages = [{ value: message }];
+    }
+
     public clearMessages(): void {
         this.messages = [];
     }
