@@ -88,7 +88,9 @@ import {
   MatInputModule,
   MatListModule,
   MatMenuModule,
+  MatPaginatorModule,
   MatSelectModule,
+  MatSortModule,
   MatTableModule,
   MatToolbarModule
 } from "@angular/material";
@@ -225,6 +227,8 @@ const baseNaturalisteRoutes: Routes = [
     MatTableModule,
     MatCheckboxModule,
     MatListModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatDialogModule
   ],
   exports: [
@@ -242,7 +246,9 @@ const baseNaturalisteRoutes: Routes = [
     MatTableModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatListModule
+    MatListModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   declarations: [
     AppComponent,

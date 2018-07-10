@@ -398,12 +398,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     });
   }
 
-  private updateInventaireAndDonnee(createNewInventaire: boolean) {
-    if (!!createNewInventaire) {
-      // TODO
-    }
-  }
-
   /**
    * Called when clicking on "Donnee precedente" button
    */
@@ -655,6 +649,64 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onSearchByIdBtnClicked(): void {
+    // TODO
     alert("It should open a popup asking for ID");
+  }
+
+  /**
+   * Call the backend to update the fiche inventaire and fiche espece
+   * If the user wants to update the fiche inventaire only for this fiche espece then we create a new inventaire
+   * @param createNewInventaire If we should create a new inventaire for the donnee or just update it
+   */
+  private updateInventaireAndDonnee(createNewInventaire: boolean): void {
+    if (!!createNewInventaire) {
+      this.inventaireToSave.id = null;
+
+      console.log("L'inventaire à créer est", this.inventaireToSave);
+
+      this.inventaireService.saveInventaire(this.inventaireToSave).subscribe(
+        (result: EntiteResult<Inventaire>) => {
+          if (this.isSuccessStatus(result.status)) {
+            this.inventaireToSave = result.object;
+            this.donneeToSave.inventaire = this.inventaireToSave;
+            this.updateDonnee();
+          } else {
+            this.updatePageStatus(result.status, result.messages);
+          }
+        },
+        (error: any) => {
+          this.onUpdateDonneeAndInventaireError(error);
+        }
+      );
+    } else {
+      this.updateDonnee();
+    }
+  }
+
+  private updateDonnee(): void {
+    console.log("La donnée à mettre à jour est", this.donneeToSave);
+
+    this.donneeService.saveDonnee(this.donneeToSave).subscribe(
+      (result: EntiteResult<Donnee>) => {
+        this.updatePageStatus(result.status, result.messages);
+
+        if (this.isSuccess()) {
+          this.donneeToSave = result.object;
+        }
+      },
+      (error: any) => {
+        this.onUpdateDonneeAndInventaireError(error);
+      }
+    );
+  }
+
+  private onUpdateDonneeAndInventaireError(error: any): void {
+    console.log(
+      "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
+      error
+    );
+    this.setErrorMessage(
+      "Impossible de mettre à jour la fiche inventaire et la fiche espèce affichées."
+    );
   }
 }

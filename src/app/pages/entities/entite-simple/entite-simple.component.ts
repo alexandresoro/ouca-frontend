@@ -143,7 +143,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends EntiteCompone
 
     private switchToEditionMode(object: T): void {
         this.clearMessages();
-        this.objectToSave = object; // TODO make a copy
+        this.objectToSave = object;
         this.mode = GestionMode.EDITION;
     }
 
@@ -160,7 +160,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends EntiteCompone
 
     private switchToRemoveMode(object: T): void {
         this.clearMessages();
-        this.objectToRemove = object; // TODO make a copy
+        this.objectToRemove = object;
         this.mode = GestionMode.REMOVE;
     }
 }

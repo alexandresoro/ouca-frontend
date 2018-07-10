@@ -265,3 +265,28 @@ mat-toolbar.base-naturaliste-header {
 button mat-icon:first-child {
   margin-right: 10px;
 }
+
+table.lieudit-table {
+  table-layout: fixed;
+  width: 1200px;
+
+  th,
+  td {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  th.nom-commune {
+    width: 250px;
+  }
+
+  th.nom-lieu-dit {
+    width: 300px;
+  }
+
+  th.altitude,
+  th.longitude,
+  th.latitude {
+    width: 100px;
+  }
+}

@@ -1,15 +1,18 @@
 import { Component } from "@angular/core";
+import { PageComponent } from "../page.component";
 import { ImportService } from "./import.service";
 
 @Component({
   templateUrl: "./import.tpl.html"
 })
-export class ImportComponent {
+export class ImportComponent extends PageComponent {
   private fileName: string;
 
   public isWaitPanelDisplayed: boolean = false;
 
-  constructor(private importService: ImportService) {}
+  constructor(private importService: ImportService) {
+    super();
+  }
 
   /* CALLED FROM THE UI */
 
@@ -27,12 +30,13 @@ export class ImportComponent {
 
     // Call back-end
     this.importService.importData(this.fileName, dataType).subscribe(
-      (result: any) => {
-        // TODO
+      (result: string) => {
+        this.setInfoMessage(result);
         this.hideWaitPanel();
       },
       (error: any) => {
-        // TODO
+        console.error("Impossible d'importer le fichier", error);
+        this.setErrorMessage("Impossible d'importer le fichier.");
         this.hideWaitPanel();
       }
     );

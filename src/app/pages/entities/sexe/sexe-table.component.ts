@@ -7,4 +7,5 @@ import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table
     templateUrl: "./../entite-avec-libelle/entite-avec-libelle-table.tpl.html"
 })
 export class SexeTableComponent extends EntiteSimpleTableComponent<Sexe> {
+
 }
