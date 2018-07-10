@@ -17,6 +17,8 @@ export class NavigationService {
     public savedInventaire: Inventaire;
     public savedMode: CreationMode;
 
+    private inventaireToBeUpdated: Inventaire;
+
     constructor(public creationService: CreationService, public modeHelper: CreationModeHelper) {
     }
 
@@ -159,5 +161,29 @@ export class NavigationService {
 
     public hasPreviousDonnee(): boolean {
         return !!this.previousDonnee;
+    }
+
+    public saveInventaireToBeUpdated(inventaire: Inventaire) {
+        this.inventaireToBeUpdated = new Inventaire();
+        this.inventaireToBeUpdated.observateur = inventaire.observateur;
+        this.inventaireToBeUpdated.date = inventaire.date;
+        this.inventaireToBeUpdated.heure = inventaire.heure;
+        this.inventaireToBeUpdated.duree = inventaire.duree;
+        this.inventaireToBeUpdated.lieudit = inventaire.lieudit;
+        this.inventaireToBeUpdated.altitude = inventaire.altitude;
+        this.inventaireToBeUpdated.longitude = inventaire.longitude;
+        this.inventaireToBeUpdated.latitude = inventaire.latitude;
+        this.inventaireToBeUpdated.temperature = inventaire.temperature;
+        this.inventaireToBeUpdated.meteos = inventaire.meteos;
+    }
+
+    public isInventaireUpdated(inventaire: Inventaire) {
+        if (inventaire.observateur !== this.inventaireToBeUpdated.observateur) {
+            return true;
+        }
+
+        // TODO continue
+
+        return false;
     }
 }

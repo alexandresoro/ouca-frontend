@@ -10,8 +10,13 @@ export class PageComponent {
         this.status = status;
         this.messages = messages;
     }
+
     public isSuccess(): boolean {
         return this.status === this.STATUS_SUCCESS;
+    }
+
+    public isSuccessStatus(status: string): boolean {
+        return status === this.STATUS_SUCCESS;
     }
 
     public setErrorMessage(message: string): void {

@@ -16,6 +16,7 @@ export class InventaireService extends BaseNaturalisteService {
     }
 
     public saveInventaire(inventaireToSave: Inventaire): Observable<EntiteResult<Inventaire>> {
+        // TODO
         inventaireToSave.date = new Date();
         return this.httpPost(this.ENTITY_NAME + "/create", inventaireToSave);
     }
