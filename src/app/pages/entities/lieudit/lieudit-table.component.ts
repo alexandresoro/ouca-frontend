@@ -14,7 +14,8 @@ import {
 import { Lieudit } from "../../../model/lieudit.object";
 import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table.component";
 
-interface LieuDitRow {
+interface LieuditRow {
+  id: number;
   departement: string;
   codeCommune: string;
   nomCommune: string;
@@ -28,9 +29,7 @@ interface LieuDitRow {
   selector: "lieudit-table",
   templateUrl: "./lieudit-table.tpl.html"
 })
-export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
-  implements OnChanges {
-  public dataSource: MatTableDataSource<LieuDitRow>;
+export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit> implements OnChanges {
 
   public displayedColumns: string[] = [
     "departement",
@@ -42,14 +41,11 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "latitude"
   ];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.objects && !!changes.objects.currentValue) {
-      const rows: LieuDitRow[] = [];
+      const rows: LieuditRow[] = [];
       _.forEach(changes.objects.currentValue, (value: Lieudit) => {
-        rows.push(this.buildRowFromLieuDit(value));
+        rows.push(this.buildRowFromLieudit(value));
       });
       this.dataSource = new MatTableDataSource(rows);
       this.dataSource.paginator = this.paginator;
@@ -57,16 +53,9 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     }
   }
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
-  private buildRowFromLieuDit(lieudit: Lieudit): LieuDitRow {
+  private buildRowFromLieudit(lieudit: Lieudit): LieuditRow {
     return {
+      id: lieudit.id,
       departement: lieudit.commune.departement.code,
       codeCommune: lieudit.commune.code,
       nomCommune: lieudit.commune.nom,

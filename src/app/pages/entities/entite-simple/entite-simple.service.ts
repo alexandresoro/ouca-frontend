@@ -14,4 +14,8 @@ export class EntiteSimpleService<T extends EntiteSimple> extends BaseNaturaliste
     public getAllObjects(entityName: string): Observable<any[]> {
         return this.httpGet(entityName + "/all");
     }
+
+    public exportAllObjects(entityName: string): Observable<any[]> {
+        return this.httpGet(entityName + "/export");
+    }
 }
