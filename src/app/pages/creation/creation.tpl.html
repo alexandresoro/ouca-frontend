@@ -76,9 +76,7 @@
       </button>
       <button mat-raised-button
         color="primary"
-        *ngIf="modeHelper.isUpdateMode(mode)"
         style="float: right"
-        [disabled]="!donneeForm.form.valid"
         (click)="saveInventaireAndDonnee()">
         Mettre à jour la donnée
       </button>

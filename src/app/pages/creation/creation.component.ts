@@ -367,7 +367,41 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Update
    */
   public saveInventaireAndDonnee(): void {
-    // TODO
+    const isInventaireUpdated: boolean = true; // TODO
+
+    if (!!isInventaireUpdated) {
+      this.displayInventaireDialog();
+    }
+  }
+
+  private displayInventaireDialog(): void {
+    const updateInventaireDialogData = new ConfirmationDialogData(
+      "Confirmation de mise-à-jour",
+      "Voulez-vous mettre à jour la fiche inventaire pour cette fiche espèce " +
+        "seulement ou pour toutes les fiches espèces avec cette fiche inventaire ?",
+      "Pour toutes les fiches espèces de cette fiche inventaire",
+      "Pour cette fiche espèce seulement"
+    );
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: "700px",
+      data: updateInventaireDialogData
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!!result) {
+        // We just update the inventaire
+        this.updateInventaireAndDonnee(false);
+      } else {
+        // We create a new inventaire for this donnee
+        this.updateInventaireAndDonnee(true);
+      }
+    });
+  }
+
+  private updateInventaireAndDonnee(createNewInventaire: boolean) {
+    if (!!createNewInventaire) {
+      // TODO
+    }
   }
 
   /**
