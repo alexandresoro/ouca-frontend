@@ -1,3 +1,8 @@
+<table-buttons [object]="object"
+  (onClickViewObject)="viewObject($event)"
+  (onClickEditObject)="editObject($event)"
+  (onClickDeleteObject)="deleteObject($event)"></table-buttons>
+
 <mat-form-field>
   <input matInput
     (keyup)="applyFilter($event.target.value)"
@@ -91,8 +96,3 @@
 
   <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
 </div>
-
-<table-buttons [object]="object"
-  (onClickViewObject)="viewObject($event)"
-  (onClickEditObject)="editObject($event)"
-  (onClickDeleteObject)="deleteObject($event)"></table-buttons>

@@ -1,16 +1,6 @@
-import {
-  Component,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild
-} from "@angular/core";
+import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import * as _ from "lodash";
-import {
-  MatPaginator,
-  MatSort,
-  MatTableDataSource
-} from "../../../../../node_modules/@angular/material";
+import { MatTableDataSource } from "../../../../../node_modules/@angular/material";
 import { Lieudit } from "../../../model/lieudit.object";
 import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table.component";
 
@@ -29,8 +19,8 @@ interface LieuditRow {
   selector: "lieudit-table",
   templateUrl: "./lieudit-table.tpl.html"
 })
-export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit> implements OnChanges {
-
+export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
+  implements OnChanges {
   public displayedColumns: string[] = [
     "departement",
     "codeCommune",

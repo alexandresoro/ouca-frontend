@@ -3,14 +3,10 @@ import { EntiteAvecLibelleEtCode } from "../../../model/entite-avec-libelle-et-c
 import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table.component";
 
 @Component({
-    template: ""
+  template: ""
 })
-export class EntiteAvecLibelleEtCodeTableComponent<T extends EntiteAvecLibelleEtCode>
-extends EntiteSimpleTableComponent<T> {
-
-    public displayedColumns: string[] = [
-        "libelle",
-        "code"
-    ];
-
+export class EntiteAvecLibelleEtCodeTableComponent<
+  T extends EntiteAvecLibelleEtCode
+> extends EntiteSimpleTableComponent<T> {
+  public displayedColumns: string[] = ["libelle", "code"];
 }

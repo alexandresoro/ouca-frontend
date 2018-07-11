@@ -1,24 +1,35 @@
-<div class="table-responsive">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Libellé</th>
-        <th></th>
-      </tr>
-    </thead>
+<table-buttons [object]="object"
+  (onClickViewObject)="viewObject($event)"
+  (onClickEditObject)="editObject($event)"
+  (onClickDeleteObject)="deleteObject($event)"></table-buttons>
 
-    <tbody>
-      <tr *ngFor="let object of objects">
+<mat-form-field>
+  <input matInput
+    (keyup)="applyFilter($event.target.value)"
+    placeholder="Filtre">
+</mat-form-field>
 
-        <td>{{object.libelle}}</td>
+<div class="mat-elevation-z8">
+  <table class="entite-avec-libelle-table"
+    mat-table
+    [dataSource]="dataSource"
+    matSort>
 
-        <td class="text-right">
-          <table-buttons [object]="object"
-            (onClickViewObject)="viewObject($event)"
-            (onClickEditObject)="editObject($event)"
-            (onClickDeleteObject)="deleteObject($event)"></table-buttons>
-        </td>
-      </tr>
-    </tbody>
+    <!-- Libellé -->
+    <ng-container matColumnDef="libelle">
+      <th mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header>Libellé</th>
+      <td mat-cell
+        *matCellDef="let row">{{row.libelle}}</td>
+    </ng-container>
+
+    <tr mat-header-row
+      *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row
+      *matRowDef="let row; columns: displayedColumns;">
+    </tr>
   </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
 </div>
