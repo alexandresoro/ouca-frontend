@@ -9,7 +9,8 @@
             <div *ngIf="isEditionMode()"
                 class="form-group">
                 <label for="fieldId">ID</label>
-                <input type="text"
+                <input matInput
+                    type="text"
                     class="form-control"
                     id="fieldId"
                     name="fieldId"
@@ -21,7 +22,8 @@
             <div class="form-group">
                 <label class="control-label"
                     for="test">Libellé</label>
-                <input type="text"
+                <input matInput
+                    type="text"
                     class="form-control"
                     name="input-libelle"
                     id="input-libelle"
@@ -41,7 +43,8 @@
             <div class="form-group">
                 <label class="control-label"
                     for="input-non-compte">Non compté</label>
-                <input type="checkbox"
+                <input matInput
+                    type="checkbox"
                     name="input-non-compte"
                     id="input-non-compte"
                     [(ngModel)]="object.nonCompte"
