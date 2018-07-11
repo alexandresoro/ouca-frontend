@@ -21,16 +21,16 @@
             <div class="form-group">
                 <label class="control-label"
                     for="input-departement">Département</label>
-                <select class="form-control"
+                <mat-select class="form-control"
                     id="input-departement"
                     name="input-departement"
                     [(ngModel)]="object.departement"
                     required>
                     <option *ngFor="let dept of departements"
-                        [ngValue]="dept">
+                        [value]="dept">
                         {{dept.code}}
                     </option>
-                </select>
+                </mat-select>
             </div>
 
             <!-- Code -->

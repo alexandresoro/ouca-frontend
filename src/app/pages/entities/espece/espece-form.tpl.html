@@ -22,17 +22,17 @@
             <div class="form-group">
                 <label class="control-label"
                     for="input-classe">Classe</label>
-                <select class="form-control"
+                <mat-select class="form-control"
                     id="input-classe"
                     name="input-classe"
                     [(ngModel)]="object.classe"
                     required>
                     <option *ngFor="let classe of classes"
-                        [ngValue]="classe"
+                        [value]="classe"
                         required>
                         {{classe.libelle}}
                     </option>
-                </select>
+                </mat-select>
             </div>
 
             <!-- Code -->

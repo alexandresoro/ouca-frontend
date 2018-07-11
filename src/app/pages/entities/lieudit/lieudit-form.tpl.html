@@ -22,48 +22,48 @@
             <div class="form-group">
                 <label class="control-label"
                     for="input-departement">Département</label>
-                <select class="form-control"
+                <mat-select class="form-control"
                     id="input-departement"
                     name="input-departement"
                     [(ngModel)]="object.departement"
                     required>
                     <option *ngFor="let dept of departements"
-                        [ngValue]="dept">
+                        [value]="dept">
                         {{dept.code}}
                     </option>
-                </select>
+                </mat-select>
             </div>
 
             <!-- Code commune -->
             <div class="form-group">
                 <label class="control-label"
                     for="input-code-commune">Code commune</label>
-                <select class="form-control"
+                <mat-select class="form-control"
                     id="input-code-commune"
                     name="input-code-commune"
                     [(ngModel)]="object.commune"
                     required>
                     <option *ngFor="let commune of communes"
-                        [ngValue]="commune">
+                        [value]="commune">
                         {{commune.code}}
                     </option>
-                </select>
+                </mat-select>
             </div>
 
             <!-- Nom commune -->
             <div class="form-group">
                 <label class="control-label"
                     for="input-nom-commune">Nom commune</label>
-                <select class="form-control"
+                <mat-select class="form-control"
                     id="input-nom-commune"
                     name="input-nom-commune"
                     [(ngModel)]="object.commune"
                     required>
                     <option *ngFor="let commune of communes"
-                        [ngValue]="commune">
+                        [value]="commune">
                         {{commune.nom}}
                     </option>
-                </select>
+                </mat-select>
             </div>
 
             <!-- Nom -->
