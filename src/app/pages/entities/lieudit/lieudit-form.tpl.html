@@ -2,10 +2,6 @@
     <form (ngSubmit)="save()"
         #entiteSimpleForm="ngForm">
         <div>
-            <button type="button"
-                class="close"
-                (click)="cancel()">&times;
-            </button>
             <h2 *ngIf="isCreationMode()">{{creationTitle}}</h2>
             <h2 *ngIf="isEditionMode()">{{editionTitle}}</h2>
         </div>
@@ -154,14 +150,15 @@
 
         <div class="row">
             <div class="col-xs-12 text-right ">
-                <button type="button"
-                    class="btn btn-default"
+                <button mat-raised-button
+                    color="accent"
                     (click)="cancel()">
                     <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;
                     <span>Annuler</span>
                 </button>
-                <button type="submit"
-                    class="btn btn-primary"
+                <button mat-raised-button
+                    color="primary"
+                    type="submit"
                     [disabled]="!entiteSimpleForm.form.valid">
                     <span class="glyphicon glyphicon-save"></span>&nbsp;
                     <span>Enregistrer</span>

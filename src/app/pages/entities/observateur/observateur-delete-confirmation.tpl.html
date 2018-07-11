@@ -8,15 +8,17 @@
 
   <div class="row">
     <div class="col-xs-12 text-right ">
-      <button type="button"
-        class="btn btn-default"
+      <button mat-raised-button
+        color="accent"
         (click)="cancelRemoval()">
-        <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Non, annuler la suppression</span>
+        <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;
+        <span>Non, annuler la suppression</span>
       </button>
-      <button type="button"
-        class="btn btn-primary"
+      <button mat-raised-button
+        color="primary"
         (click)="confirmRemoval()">
-        <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Oui, supprimer l'observateur</span>
+        <span class="glyphicon glyphicon-save"></span>&nbsp;
+        <span>Oui, supprimer l'observateur</span>
       </button>
     </div>
   </div>

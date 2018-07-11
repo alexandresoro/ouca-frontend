@@ -2,16 +2,26 @@
   <div class="col-xs-6 lco-entity-page-title">
     <h1>{{title}}</h1>
   </div>
-  <div *ngIf="areButtonsDisplayed" class="col-xs-6 text-right lco-entity-top-buttons">
-    <button class="btn btn-primary" (click)="newObject()">
+  <div *ngIf="areButtonsDisplayed"
+    class="col-xs-6 text-right lco-entity-top-buttons">
+    <button mat-raised-button
+      color="primary"
+      class="btn btn-primary"
+      (click)="newObject()">
       <span class="glyphicon glyphicon-plus">&nbsp;</span>
       <span>{{createButtonLibelle}}</span>
     </button>
-    <button class="btn btn-default" (click)="exportObjects()">
+    <button mat-raised-button
+      color="primary"
+      class="btn btn-default"
+      (click)="exportObjects()">
       <span class="glyphicon glyphicon-save">&nbsp;</span>
       <span>{{exportButtonLibelle}}</span>
     </button>
-    <button class="btn btn-default" (click)="refresh()">
+    <button mat-raised-button
+      color="primary"
+      class="btn btn-default"
+      (click)="refresh()">
       <span class="glyphicon glyphicon-refresh">&nbsp;</span>
       <span>Rafraîchir</span>
     </button>

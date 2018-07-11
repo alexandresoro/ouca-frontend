@@ -15,9 +15,11 @@
   </dl>
 
   <button *ngIf="isBackButtonDisplayed"
-    type="button"
+    mat-raised-button
+    color="accent"
     (click)="backToViewAll()"
     class="btn btn-info">
-    <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Retour</span>
+    <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;
+    <span> Retour</span>
   </button>
 </div>
