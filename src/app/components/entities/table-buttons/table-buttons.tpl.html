@@ -1,24 +1,20 @@
-<div class="btn-group"
+<div class="table-top-buttons"
   style="float: right">
-  <button mat-raised-button
-    *ngIf="!hideViewButton"
+  <button *ngIf="!hideViewButton"
+    mat-raised-button
     type="submit"
-    class="btn btn-info btn-sm"
     (click)="viewObject(age)">
     <mat-icon>visibility</mat-icon>
   </button>
   <button mat-raised-button
     type="submit"
-    class="btn btn-primary btn-sm"
     (click)="editObject(age)">
-    <span class="glyphicon glyphicon-pencil"></span>
     <mat-icon>edit</mat-icon>
   </button>
   <button mat-raised-button
     *ngIf="!hideDeleteButton"
     type="submit"
-    (click)="deleteObject(age)"
-    class="btn btn-danger btn-sm">
+    (click)="deleteObject(age)">
     <mat-icon>delete</mat-icon>
   </button>
 </div>
