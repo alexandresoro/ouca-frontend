@@ -6,23 +6,20 @@
     class="col-xs-6 text-right lco-entity-top-buttons">
     <button mat-raised-button
       color="primary"
-      class="btn btn-primary"
       (click)="newObject()">
-      <span class="glyphicon glyphicon-plus">&nbsp;</span>
+      <mat-icon>add</mat-icon>
       <span>{{createButtonLibelle}}</span>
     </button>
     <button mat-raised-button
       color="primary"
-      class="btn btn-default"
       (click)="exportObjects()">
-      <span class="glyphicon glyphicon-save">&nbsp;</span>
+      <mat-icon>save</mat-icon>
       <span>{{exportButtonLibelle}}</span>
     </button>
     <button mat-raised-button
       color="primary"
-      class="btn btn-default"
       (click)="refresh()">
-      <span class="glyphicon glyphicon-refresh">&nbsp;</span>
+      <mat-icon>refresh</mat-icon>
       <span>Rafraîchir</span>
     </button>
   </div>

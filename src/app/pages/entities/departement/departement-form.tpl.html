@@ -44,17 +44,15 @@
             <div class="col-xs-12 text-right ">
                 <button mat-raised-button
                     color="accent"
-                    class="btn btn-default"
                     (click)="cancel()">
-                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;
+                    <mat-icon>cancel</mat-icon>
                     <span>Annuler</span>
                 </button>
                 <button mat-raised-button
                     color="primary"
                     type="submit"
-                    class="btn btn-primary"
                     [disabled]="!entiteSimpleForm.form.valid">
-                    <span class="glyphicon glyphicon-save"></span>&nbsp;
+                    <mat-icon>save</mat-icon>
                     <span>Enregistrer</span>
                 </button>
             </div>
