@@ -28,7 +28,11 @@ export class LcoEntiteSelectComponent {
   }
 
   public getDisplayedValue(value: any): string {
-    return value[this.fieldForDisplay];
+    if (!!value) {
+      return value[this.fieldForDisplay];
+    } else {
+      return "";
+    }
   }
 
   public compareEntities(e1: EntiteSimple, e2: EntiteSimple): boolean {
