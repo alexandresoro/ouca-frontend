@@ -343,7 +343,7 @@ const baseNaturalisteRoutes: Routes = [
     CreationService,
     DonneeService,
     EntiteSimpleService,
-    // fakeBackendProvider,
+    fakeBackendProvider,
     GestionModeHelper,
     InventaireService,
     ImportService,

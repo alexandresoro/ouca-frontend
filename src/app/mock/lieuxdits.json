@@ -1,0 +1,19 @@
+[
+  {
+    "ENTITY_NAME": "lieudit",
+    "id": 1,
+    "commune": {
+      "id": 1,
+      "departement": {
+        "id": 1,
+        "code": "26"
+      },
+      "code": "123",
+      "nom": "CHARMES-SUR-L'HERBASSE"
+    },
+    "nom": "La Griotte",
+    "altitude": 1000,
+    "longitude": 2000,
+    "latitude": 3000
+  }
+]

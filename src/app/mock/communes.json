@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "departement": {
+      "id": 1,
+      "code": "26"
+    },
+    "code": "123",
+    "nom": "CHARMES-SUR-L'HERBASSE"
+  },
+  {
+    "id": 2,
+    "departement": {
+      "id": 4,
+      "code": "07"
+    },
+    "code": "467",
+    "nom": "SAINT-DONAT-SUR-L'HERBASSE"
+  }
+]

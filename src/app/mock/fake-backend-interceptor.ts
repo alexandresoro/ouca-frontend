@@ -9,6 +9,10 @@ import {
 import { Observable, of, throwError } from "rxjs";
 import { delay, dematerialize, materialize, mergeMap } from "rxjs/operators";
 import { Injectable } from "../../../node_modules/@angular/core";
+import * as communesMock from "./communes.json";
+import * as departementsMock from "./departements.json";
+import * as lieuxditsMock from "./lieuxdits.json";
+import * as observateursMock from "./observateurs.json";
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -16,7 +20,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log("Intercepted request...");
+    console.log("Intercepted request: ", request.url);
 
     return of(null)
       .pipe(
@@ -33,6 +37,38 @@ export class FakeBackendInterceptor implements HttpInterceptor {
               // return 401 not authorised if token is null or invalid
               return throwError({ error: { message: "Unauthorised" } });
             }
+          }
+
+          if (
+            request.url.endsWith("/observateur/all") &&
+            request.method === "GET"
+          ) {
+            return of(
+              new HttpResponse({ status: 200, body: observateursMock })
+            );
+          }
+
+          if (
+            request.url.endsWith("/departement/all") &&
+            request.method === "GET"
+          ) {
+            return of(
+              new HttpResponse({ status: 200, body: departementsMock })
+            );
+          }
+
+          if (
+            request.url.endsWith("/commune/all") &&
+            request.method === "GET"
+          ) {
+            return of(new HttpResponse({ status: 200, body: communesMock }));
+          }
+
+          if (
+            request.url.endsWith("/lieudit/all") &&
+            request.method === "GET"
+          ) {
+            return of(new HttpResponse({ status: 200, body: lieuxditsMock }));
           }
 
           // pass through any requests not handled above
