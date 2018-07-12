@@ -1,21 +1,25 @@
-<h1>{{title}}</h1>
-<ng-container *ngIf="areButtonsDisplayed">
-  <button mat-raised-button
-    color="primary"
-    (click)="newObject()">
-    <mat-icon>add</mat-icon>
-    <span>{{createButtonLibelle}}</span>
-  </button>
-  <button mat-raised-button
-    color="primary"
-    (click)="exportObjects()">
-    <mat-icon>save</mat-icon>
-    <span>{{exportButtonLibelle}}</span>
-  </button>
-  <button mat-raised-button
-    color="primary"
-    (click)="refresh()">
-    <mat-icon>refresh</mat-icon>
-    <span>Rafraîchir</span>
-  </button>
-</ng-container>
+<div class="entity-page-header">
+  <h1>{{title}}</h1>
+  <span class="flex-spacer"></span>
+  <div *ngIf="areButtonsDisplayed"
+    class="entity-top-buttons">
+    <button mat-raised-button
+      color="primary"
+      (click)="newObject()">
+      <mat-icon>add</mat-icon>
+      <span>{{createButtonLibelle}}</span>
+    </button>
+    <button mat-raised-button
+      color="primary"
+      (click)="exportObjects()">
+      <mat-icon>save</mat-icon>
+      <span>{{exportButtonLibelle}}</span>
+    </button>
+    <button mat-raised-button
+      color="primary"
+      (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+      <span>Rafraîchir</span>
+    </button>
+  </div>
+</div>

@@ -1,13 +1,15 @@
-<table-buttons [object]="object"
-  (onClickViewObject)="viewObject($event)"
-  (onClickEditObject)="editObject($event)"
-  (onClickDeleteObject)="deleteObject($event)"></table-buttons>
-
-<mat-form-field>
-  <input matInput
-    (keyup)="applyFilter($event.target.value)"
-    placeholder="Filtre">
-</mat-form-field>
+<div class="table-topbar">
+  <mat-form-field class="table-filter-field">
+    <input matInput
+      (keyup)="applyFilter($event.target.value)"
+      placeholder="Filtre">
+  </mat-form-field>
+  <span class="flex-spacer"></span>
+  <table-buttons [object]="object"
+    (onClickViewObject)="viewObject($event)"
+    (onClickEditObject)="editObject($event)"
+    (onClickDeleteObject)="deleteObject($event)"></table-buttons>
+</div>
 
 <div class="mat-elevation-z8">
   <table class="lieudit-table"

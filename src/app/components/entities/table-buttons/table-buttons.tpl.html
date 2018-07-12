@@ -1,20 +1,22 @@
-<div class="table-top-buttons"
-  style="float: right">
+<div class="table-top-buttons">
   <button *ngIf="!hideViewButton"
     mat-raised-button
     type="submit"
     (click)="viewObject(age)">
     <mat-icon>visibility</mat-icon>
+    Visualiser
   </button>
   <button mat-raised-button
     type="submit"
     (click)="editObject(age)">
     <mat-icon>edit</mat-icon>
+    Éditer
   </button>
   <button mat-raised-button
     *ngIf="!hideDeleteButton"
     type="submit"
     (click)="deleteObject(age)">
     <mat-icon>delete</mat-icon>
+    Supprimer
   </button>
 </div>

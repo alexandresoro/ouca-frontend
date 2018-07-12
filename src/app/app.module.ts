@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule, Routes } from "@angular/router";
@@ -84,6 +84,7 @@ import {
   MatDatepickerModule,
   MatDialogModule,
   MatExpansionModule,
+  MatFormFieldModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
@@ -213,6 +214,7 @@ const baseNaturalisteRoutes: Routes = [
     HttpModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatMenuModule,
@@ -229,7 +231,8 @@ const baseNaturalisteRoutes: Routes = [
     MatListModule,
     MatPaginatorModule,
     MatSortModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -248,7 +251,8 @@ const baseNaturalisteRoutes: Routes = [
     MatDialogModule,
     MatListModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatFormFieldModule
   ],
   declarations: [
     AppComponent,

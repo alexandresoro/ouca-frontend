@@ -290,3 +290,42 @@ table.lieudit-table {
     width: 100px;
   }
 }
+
+.table-topbar {
+  display: flex;
+  flex: 0 0 auto;
+
+  .table-filter-field {
+    width: 500px;
+  }
+}
+
+.table-top-buttons {
+  button {
+    margin-left: 20px;
+  }
+}
+
+.entity-page-header {
+  display: flex;
+  flex: 0 0 auto;
+  margin-bottom: 40px;
+
+  .entity-top-buttons {
+    button {
+      margin-left: 20px;
+    }
+  }
+}
+
+.cancel-submit-buttons {
+  display: flex;
+  flex: 0 0 auto;
+}
+
+.entite-form {
+  width: 500px;
+  mat-form-field.mat-form-field {
+    width: 100%;
+  }
+}

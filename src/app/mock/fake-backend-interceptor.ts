@@ -29,14 +29,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             request.url.endsWith("/creation/init") &&
             request.method === "GET"
           ) {
-            if (
-              request.headers.get("Authorization") === "Bearer fake-jwt-token"
-            ) {
-              return of(new HttpResponse({ status: 200, body: [] }));
-            } else {
-              // return 401 not authorised if token is null or invalid
-              return throwError({ error: { message: "Unauthorised" } });
-            }
+            return of(new HttpResponse({ status: 200, body: {} }));
           }
 
           if (

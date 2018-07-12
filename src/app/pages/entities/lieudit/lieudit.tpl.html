@@ -7,7 +7,7 @@
         (onClickExportObjects)="exportObjects()"
         (onClickRefresh)="getAll()"></top-buttons>
 
-    <hr *ngIf="isCreationMode() || isEditionMode() || isViewOneMode() || isRemoveMode()">
+    <hr *ngIf="isViewOneMode() || isRemoveMode()">
 
     <entity-messages [messages]="messages"
         [status]="status"></entity-messages>
