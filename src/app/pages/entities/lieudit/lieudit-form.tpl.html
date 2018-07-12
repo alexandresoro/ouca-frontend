@@ -1,174 +1,161 @@
-<div class="lco-entity-form lco-entite-simple-form">
-    <form (ngSubmit)="save()"
-        #entiteSimpleForm="ngForm">
-        <div>
-            <h2 *ngIf="isCreationMode()">{{creationTitle}}</h2>
-            <h2 *ngIf="isEditionMode()">{{editionTitle}}</h2>
-        </div>
-        <div>
-            <div *ngIf="isEditionMode()">
-                <label for="fieldId">ID</label>
+<h2 *ngIf="isCreationMode()">{{creationTitle}}</h2>
+<h2 *ngIf="isEditionMode()">{{editionTitle}}</h2>
+
+<form (ngSubmit)="save()"
+    #entiteSimpleForm="ngForm">
+
+    <mat-list>
+        <!-- ID -->
+        <mat-list-item *ngIf="isEditionMode()">
+            <mat-form-field>
                 <input matInput
                     type="text"
-                    class="form-control"
-                    id="fieldId"
-                    name="fieldId"
+                    placeholder="ID"
+                    id="input-id"
+                    name="id"
                     [(ngModel)]="object.id"
                     #fieldId="ngModel"
                     readonly/>
-            </div>
+            </mat-form-field>
+        </mat-list-item>
 
-            <!-- Departement -->
-            <div>
-                <label class="control-label"
-                    for="input-departement">Département</label>
-                <mat-select class="form-control"
-                    id="input-departement"
-                    name="input-departement"
-                    [(ngModel)]="object.departement"
-                    required>
-                    <option *ngFor="let dept of departements"
-                        [value]="dept">
-                        {{dept.code}}
-                    </option>
-                </mat-select>
-            </div>
+        <!-- Departement -->
+        <mat-list-item>
+            <mat-form-field>
+                <lco-entite-select [id]="'input-departement'"
+                    [placeholder]="'Département'"
+                    [fieldForDisplay]="'code'"
+                    [options]="departements"
+                    [(model)]="object.departement">
+                </lco-entite-select>
+            </mat-form-field>
+        </mat-list-item>
 
-            <!-- Code commune -->
-            <div>
-                <label class="control-label"
-                    for="input-code-commune">Code commune</label>
-                <mat-select class="form-control"
-                    id="input-code-commune"
-                    name="input-code-commune"
-                    [(ngModel)]="object.commune"
-                    required>
-                    <option *ngFor="let commune of communes"
-                        [value]="commune">
-                        {{commune.code}}
-                    </option>
-                </mat-select>
-            </div>
+        <!-- Code Commune -->
+        <mat-list-item>
+            <mat-form-field>
+                <lco-entite-select [id]="'input-code-commune'"
+                    [placeholder]="'Code de la Commune'"
+                    [fieldForDisplay]="'code'"
+                    [options]="communes"
+                    [(model)]="object.commune">
+                </lco-entite-select>
+            </mat-form-field>
+        </mat-list-item>
 
-            <!-- Nom commune -->
-            <div>
-                <label class="control-label"
-                    for="input-nom-commune">Nom commune</label>
-                <mat-select class="form-control"
-                    id="input-nom-commune"
-                    name="input-nom-commune"
-                    [(ngModel)]="object.commune"
-                    required>
-                    <option *ngFor="let commune of communes"
-                        [value]="commune">
-                        {{commune.nom}}
-                    </option>
-                </mat-select>
-            </div>
+        <!-- Nom Commune -->
+        <mat-list-item>
+            <mat-form-field>
+                <lco-entite-select [id]="'input-nom-commune'"
+                    [placeholder]="'Nom de la Commune'"
+                    [fieldForDisplay]="'nom'"
+                    [options]="communes"
+                    [(model)]="object.commune">
+                </lco-entite-select>
+            </mat-form-field>
+        </mat-list-item>
 
-            <!-- Nom -->
-            <div>
-                <label class="control-label"
-                    for="input-nom">Nom</label>
+        <!-- Nom lieudit -->
+        <mat-list-item>
+            <mat-form-field>
+                >>>>>>> 3267f8c87a251c4f4abcc41a21cfa46d6b5f85aa
                 <input matInput
                     type="text"
-                    class="form-control"
-                    name="input-nom"
                     id="input-nom"
+                    name="nom"
+                    placeholder="Nom du lieu-dit"
                     [(ngModel)]="object.nom"
                     #inputNom="ngModel"
                     required/>
 
-                <div [hidden]="inputNom.valid || inputNom.pristine">
-                    <p class="help-block"
-                        [hidden]="inputNom.valid.required">
-                        Le nom du lieu-dit ne peut pas être vide.
-                    </p>
-                </div>
+                <!-- TODO ERROR DISPLAY 
+                    <div [hidden]="inputNom.valid || inputNom.pristine">
+                        <p class="help-block"
+                            [hidden]="inputNom.valid.required">
+                            Le nom du lieu-dit ne peut pas être vide.
+                        </p>
+                    </div>-->
+            </mat-form-field>
+        </mat-list-item>
 
-            </div>
-
-            <!-- Altitude -->
-            <div>
-                <label class="control-label"
-                    for="input-altitude">Altitude</label>
+        <!-- Altitude -->
+        <mat-list-item>
+            <mat-form-field>
                 <input matInput
                     type="number"
-                    class="form-control"
-                    name="input-altitude"
                     id="input-altitude"
+                    name="altitude"
+                    placeholder="Altitude"
                     [(ngModel)]="object.altitude"
                     #inputAltitude="ngModel"
                     required/>
 
-                <div [hidden]="inputAltitude.valid || inputAltitude.pristine">
-                    <p class="help-block"
-                        [hidden]="inputAltitude.valid.required">
-                        L'altitude du lieu-dit ne peut pas être vide.
-                    </p>
-                </div>
-            </div>
+                <!-- TODO ERROR DISPLAY
+                    <div [hidden]="altitude.valid || altitude.pristine">
+                        <p class="help-block"
+                            [hidden]="altitude.valid.required">
+                            L'altitude du lieu-dit ne peut pas être vide.
+                        </p>
+                    </div> -->
+            </mat-form-field>
+        </mat-list-item>
 
-            <!-- Longitude -->
-            <div>
-                <label class="control-label"
-                    for="input-longitude">Longitude</label>
+        <!-- Longitude -->
+        <mat-list-item>
+            <mat-form-field>
                 <input matInput
                     type="number"
-                    class="form-control"
-                    name="input-longitude"
                     id="input-longitude"
+                    name="longitude"
+                    placeholder="Longitude"
                     [(ngModel)]="object.longitude"
                     #inputLongitude="ngModel"
                     required/>
 
-                <div [hidden]="inputLongitude.valid || inputLongitude.pristine">
-                    <p class="help-block"
-                        [hidden]="inputLongitude.valid.required">
-                        La longitude du lieu-dit ne peut pas être vide.
-                    </p>
-                </div>
-            </div>
+                <!-- 
+                    <div [hidden]="longitude.valid || longitude.pristine">
+                        <p class="help-block"
+                            [hidden]="inputLongitude.valid.required">
+                            La longitude du lieu-dit ne peut pas être vide.
+                        </p>
+                    </div>-->
+            </mat-form-field>
+        </mat-list-item>
 
-            <!-- Latitude -->
-            <div>
-                <label class="control-label"
-                    for="input-latitude">Latitude</label>
+        <!-- Latitude -->
+        <mat-list-item>
+            <mat-form-field>
                 <input matInput
                     type="number"
-                    class="form-control"
-                    name="input-latitude"
                     id="input-latitude"
+                    name="latitude"
+                    placeholder="Latitude"
                     [(ngModel)]="object.latitude"
                     #inputLatitude="ngModel"
                     required/>
+                <!--
+                    <div [hidden]="latitude.valid || latitude.pristine">
+                        <p class="help-block"
+                            [hidden]="inputLatitude.valid.required">
+                            La latitude du lieu-dit ne peut pas être vide.
+                        </p>
+                    </div>-->
+            </mat-form-field>
+        </mat-list-item>
+    </mat-list>
 
-                <div [hidden]="inputLatitude.valid || inputLatitude.pristine">
-                    <p class="help-block"
-                        [hidden]="inputLatitude.valid.required">
-                        La latitude du lieu-dit ne peut pas être vide.
-                    </p>
-                </div>
-            </div>
-        </div>
+    <button mat-raised-button
+        color="accent"
+        (click)="cancel()">
+        <mat-icon>cancel</mat-icon>
+        Annuler
+    </button>
 
-        <div>
-            <div class="  text-right ">
-                <button mat-raised-button
-                    color="accent"
-                    (click)="cancel()">
-                    <mat-icon>cancel</mat-icon>
-                    <span>Annuler</span>
-                </button>
-                <button mat-raised-button
-                    color="primary"
-                    type="submit"
-                    [disabled]="!entiteSimpleForm.form.valid">
-                    <mat-icon>save</mat-icon>
-                    <span>Enregistrer</span>
-                </button>
-            </div>
-        </div>
-    </form>
-
-</div>
+    <button mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!entiteSimpleForm.form.valid">
+        <mat-icon>save</mat-icon>
+        Enregistrer
+    </button>
+</form>
