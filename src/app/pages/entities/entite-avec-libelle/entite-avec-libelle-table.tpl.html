@@ -1,13 +1,17 @@
-<table-buttons [object]="object"
-  (onClickViewObject)="viewObject($event)"
-  (onClickEditObject)="editObject($event)"
-  (onClickDeleteObject)="deleteObject($event)"></table-buttons>
+<div class="table-topbar">
+  <mat-form-field class="table-filter-field">
+    <input matInput
+      (keyup)="applyFilter($event.target.value)"
+      placeholder="Filtre">
+  </mat-form-field>
 
-<mat-form-field>
-  <input matInput
-    (keyup)="applyFilter($event.target.value)"
-    placeholder="Filtre">
-</mat-form-field>
+  <span class="flex-spacer"></span>
+
+  <table-buttons [object]="object"
+    (onClickViewObject)="viewObject(selectedObject)"
+    (onClickEditObject)="editObject(selectedObject)"
+    (onClickDeleteObject)="deleteObject(selectedObject)"></table-buttons>
+</div>
 
 <div class="mat-elevation-z8">
   <table class="entite-avec-libelle-table"
@@ -27,7 +31,9 @@
     <tr mat-header-row
       *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row
-      *matRowDef="let row; columns: displayedColumns;">
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="onRowClicked(row)"
+      [ngClass]="{'mat-row-selected': (!!selectedObject && (selectedObject.id == row.id))}">
     </tr>
   </table>
 

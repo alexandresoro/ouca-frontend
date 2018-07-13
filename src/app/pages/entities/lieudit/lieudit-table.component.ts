@@ -21,6 +21,7 @@ interface LieuditRow {
 })
 export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
   implements OnChanges {
+
   public displayedColumns: string[] = [
     "departement",
     "codeCommune",
@@ -54,5 +55,15 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       longitude: lieudit.longitude,
       latitude: lieudit.latitude
     };
+  }
+
+  public onRowLieuditClicked(id: number) {
+    if (!!this.selectedObject && this.selectedObject.id === id) {
+      this.selectedObject = undefined;
+    } else {
+      this.selectedObject = this.objects.filter(
+        (lieudit) => lieudit.id === id
+      )[0];
+    }
   }
 }

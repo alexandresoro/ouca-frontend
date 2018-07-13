@@ -29,6 +29,8 @@ export class EntiteSimpleTableComponent<T extends EntiteSimple>
 
   public dataSource: MatTableDataSource<any>;
 
+  public selectedObject: T;
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.objects && !!changes.objects.currentValue) {
       this.dataSource = new MatTableDataSource(changes.objects.currentValue);
@@ -54,6 +56,14 @@ export class EntiteSimpleTableComponent<T extends EntiteSimple>
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public onRowClicked(object: T) {
+    if (!!this.selectedObject && this.selectedObject.id === object.id) {
+      this.selectedObject = undefined;
+    } else {
+      this.selectedObject = object;
     }
   }
 }

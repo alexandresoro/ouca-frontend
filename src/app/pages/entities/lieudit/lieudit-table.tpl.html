@@ -6,9 +6,9 @@
   </mat-form-field>
   <span class="flex-spacer"></span>
   <table-buttons [object]="object"
-    (onClickViewObject)="viewObject($event)"
-    (onClickEditObject)="editObject($event)"
-    (onClickDeleteObject)="deleteObject($event)"></table-buttons>
+    (onClickViewObject)="viewObject(selectedObject)"
+    (onClickEditObject)="editObject(selectedObject)"
+    (onClickDeleteObject)="deleteObject(selectedObject)"></table-buttons>
 </div>
 
 <div class="mat-elevation-z8">
@@ -92,7 +92,9 @@
     <tr mat-header-row
       *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row
-      *matRowDef="let row; columns: displayedColumns;">
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="onRowLieuditClicked(row.id)"
+      [ngClass]="{'mat-row-selected': (!!selectedObject && (selectedObject.id == row.id))}">
     </tr>
   </table>
 
