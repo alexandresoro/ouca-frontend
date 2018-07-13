@@ -1,13 +1,9 @@
-<table-buttons [object]="selectedObject"
+<table-topbar [selectedObject]="selectedObject"
   (onClickViewObject)="viewObject(selectedObject)"
-  (onClickEditObject)="editObject($event)"
-  (onClickDeleteObject)="deleteObject($event)"></table-buttons>
-
-<mat-form-field>
-  <input matInput
-    (keyup)="applyFilter($event.target.value)"
-    placeholder="Filtre">
-</mat-form-field>
+  (onClickEditObject)="editObject(selectedObject)"
+  (onClickDeleteObject)="deleteObject(selectedObject)"
+  (onFilterChange)="applyFilter($event)">
+</table-topbar>
 
 <div class="mat-elevation-z8">
   <table class="entite-avec-libelle-et-code-table"

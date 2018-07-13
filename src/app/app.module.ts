@@ -108,6 +108,7 @@ import {
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from "../../node_modules/@angular/common/http";
 import { ConfirmationDialogComponent } from "./components/dialog/confirmation-dialog.component";
+import { TableTopbarComponent } from "./components/entities/table-topbar/table-topbar.component";
 import { LcoEntiteSelectComponent } from "./components/form/entite-select/lco-entite-select.component";
 import {
   FakeBackendInterceptor,
@@ -334,6 +335,7 @@ const baseNaturalisteRoutes: Routes = [
     SexeRemovalConfirmationComponent,
     TopButtonsComponent,
     TableButtonsComponent,
+    TableTopbarComponent,
     LcoInputTextComponent,
     EntityMessagesComponent,
     ViewComponent
@@ -362,4 +364,4 @@ const baseNaturalisteRoutes: Routes = [
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
   ]
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,3 +1,10 @@
+<table-topbar [selectedObject]="selectedObject"
+    (onClickViewObject)="viewObject(selectedObject)"
+    (onClickEditObject)="editObject(selectedObject)"
+    (onClickDeleteObject)="deleteObject(selectedObject)"
+    (onFilterChange)="applyFilter($event)">
+</table-topbar>
+
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
@@ -21,12 +28,7 @@
 
                 <td>{{object.nom}}</td>
 
-                <td class="text-right">
-                    <table-buttons [object]="selectedObject"
-                        (onClickViewObject)="viewObject(selectedObject)"
-                        (onClickEditObject)="editObject($event)"
-                        (onClickDeleteObject)="deleteObject($event)"></table-buttons>
-                </td>
+
             </tr>
         </tbody>
     </table>
