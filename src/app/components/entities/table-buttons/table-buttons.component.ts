@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, SimpleChanges } from "@angular/core";
 import { EntiteSimple } from "../../../model/entite-simple.object";
 
 @Component({
@@ -20,14 +20,14 @@ export class TableButtonsComponent {
     @Output() public onClickDeleteObject = new EventEmitter<EntiteSimple>();
 
     public viewObject(): void {
-        this.onClickViewObject.emit(this.object);
+        this.onClickViewObject.emit();
     }
 
     public editObject(): void {
-        this.onClickEditObject.emit(this.object);
+        this.onClickEditObject.emit();
     }
 
     public deleteObject(): void {
-        this.onClickDeleteObject.emit(this.object);
+        this.onClickDeleteObject.emit();
     }
 }

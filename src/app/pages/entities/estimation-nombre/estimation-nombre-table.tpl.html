@@ -26,8 +26,8 @@
         </td>
 
         <td class="text-right">
-          <table-buttons [object]="object"
-            (onClickViewObject)="viewObject($event)"
+          <table-buttons [object]="selectedObject"
+            (onClickViewObject)="viewObject(selectedObject)"
             (onClickEditObject)="editObject($event)"
             (onClickDeleteObject)="deleteObject($event)"></table-buttons>
         </td>

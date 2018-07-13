@@ -2,20 +2,23 @@
   <button *ngIf="!hideViewButton"
     mat-raised-button
     type="submit"
-    (click)="viewObject(age)">
+    (click)="viewObject(age)"
+    [disabled]="!object">
     <mat-icon>visibility</mat-icon>
     Visualiser
   </button>
   <button mat-raised-button
     type="submit"
-    (click)="editObject(age)">
+    (click)="editObject(age)"
+    [disabled]="!object">
     <mat-icon>edit</mat-icon>
     Éditer
   </button>
   <button mat-raised-button
     *ngIf="!hideDeleteButton"
     type="submit"
-    (click)="deleteObject(age)">
+    (click)="deleteObject(age)"
+    [disabled]="!object">
     <mat-icon>delete</mat-icon>
     Supprimer
   </button>
