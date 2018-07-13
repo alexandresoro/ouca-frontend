@@ -1,19 +1,24 @@
-<div class="lco-entity-delete-confirmation">
-  <h2>Confirmation de suppression</h2>
+<mat-card>
+  <mat-card-title>
+    <h2>Confirmation de suppression</h2>
+  </mat-card-title>
 
-  <div>
-    Êtes-vous certain de vouloir supprimer le lieu-dit ?
-    <br> Toutes les données avec ce lieu-dit seront supprimées.
-  </div>
+  <mat-card-content>
+    <p>
+      Êtes-vous certain de vouloir supprimer le lieu-dit ?
+    </p>
+    <p>
+      Toutes les données avec ce lieu-dit seront supprimées.
+    </p>
 
-  <div>
-    <div class="  text-right ">
+    <div class="cancel-submit-buttons">
       <button mat-raised-button
         color="accent"
         (click)="cancelRemoval()">
         <mat-icon>cancel</mat-icon>
         <span>Non, annuler la suppression</span>
       </button>
+      <span class="button-spacer"></span>
       <button mat-raised-button
         color="primary"
         (click)="confirmRemoval()">
@@ -21,14 +26,9 @@
         <span>Oui, supprimer le lieu-dit</span>
       </button>
     </div>
-  </div>
+  </mat-card-content>
+</mat-card>
 
-  <entity-messages [messages]="messages"
-    [status]="status"></entity-messages>
-  <hr>
-
-  <lieudit-details [objectToView]="object"
-    [isBackButtonDisplayed]="false">
-  </lieudit-details>
-
-</div>
+<lieudit-details [objectToView]="object"
+  [isBackButtonDisplayed]="false">
+</lieudit-details>

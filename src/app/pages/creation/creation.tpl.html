@@ -4,90 +4,94 @@
 <div>
   <div class="lco-creation-body">
 
-    <!-- Bar containing the messages -->
-    <div class="lco-creation-messages">
-      <div [ngSwitch]="status">
-        <div *ngSwitchCase="'ERROR'">
-          <ul>
-            <li *ngFor="let message of messages">{{message?.value}}</li>
-          </ul>
-        </div>
-        <div *ngSwitchCase="'SUCCESS'">
-          <ul>
-            <li *ngFor="let message of messages">{{message?.value}}</li>
-          </ul>
-        </div>
-        <div *ngSwitchDefault>
-          <strong>Aucun message</strong>
+    <mat-card>
+      <!-- Bar containing the messages -->
+      <div class="lco-creation-messages">
+        <div [ngSwitch]="status">
+          <div *ngSwitchCase="'ERROR'">
+            <ul>
+              <li *ngFor="let message of messages">{{message?.value}}</li>
+            </ul>
+          </div>
+          <div *ngSwitchCase="'SUCCESS'">
+            <ul>
+              <li *ngFor="let message of messages">{{message?.value}}</li>
+            </ul>
+          </div>
+          <div *ngSwitchDefault>
+            <strong>Aucun message</strong>
+          </div>
         </div>
       </div>
-    </div>
+    </mat-card>
 
-    <!-- Bar containing the top buttons -->
-    <div class="lco-creation-buttons">
-      <!-- Top left buttons -->
-      <button mat-raised-button
-        color="primary"
-        *ngIf="isNewDonneeBtnDisplayed()"
-        style="float: left; margin-right: 8px"
-        (click)="onNewDonneeBtnClicked()">
-        Nouvelle donnée
-      </button>
+    <mat-card>
+      <!-- Bar containing the top buttons -->
+      <div class="lco-creation-buttons">
+        <!-- Top left buttons -->
+        <button mat-raised-button
+          color="primary"
+          *ngIf="isNewDonneeBtnDisplayed()"
+          style="float: left; margin-right: 8px"
+          (click)="onNewDonneeBtnClicked()">
+          Nouvelle donnée
+        </button>
 
-      <button mat-raised-button
-        color="primary"
-        [disabled]="!isPreviousDonneeBtnDisplayed()"
-        style="float: left; margin-right: 8px"
-        (click)="onPreviousDonneeBtnClicked()">
-        Donnée précédente
-      </button>
+        <button mat-raised-button
+          color="primary"
+          [disabled]="!isPreviousDonneeBtnDisplayed()"
+          style="float: left; margin-right: 8px"
+          (click)="onPreviousDonneeBtnClicked()">
+          Donnée précédente
+        </button>
 
-      <button mat-raised-button
-        color="primary"
-        [disabled]="!isNextDonneeBtnDisplayed()"
-        style="float: left; margin-right: 8px"
-        (click)="onNextDonneeBtnClicked()">
-        Donnée suivante
-      </button>
+        <button mat-raised-button
+          color="primary"
+          [disabled]="!isNextDonneeBtnDisplayed()"
+          style="float: left; margin-right: 8px"
+          (click)="onNextDonneeBtnClicked()">
+          Donnée suivante
+        </button>
 
-      <button mat-raised-button
-        color="primary"
-        style="float: left; margin-right: 8px"
-        (click)="onSearchByIdBtnClicked()">
-        Recherche par ID
-      </button>
+        <button mat-raised-button
+          color="primary"
+          style="float: left; margin-right: 8px"
+          (click)="onSearchByIdBtnClicked()">
+          Recherche par ID
+        </button>
 
-      <!-- Top right buttons -->
-      <button mat-raised-button
-        color="primary"
-        *ngIf="modeHelper.isInventaireMode(mode)"
-        style="float: right"
-        [disabled]="!donneeForm.form.valid"
-        (click)="saveInventaire()">
-        Enregistrer l'inventaire
-      </button>
-      <button mat-raised-button
-        color="primary"
-        *ngIf="modeHelper.isDonneeMode(mode)"
-        style="float: right"
-        [disabled]="!donneeForm.form.valid"
-        (click)="saveDonnee()">
-        Enregistrer la donnée
-      </button>
-      <button mat-raised-button
-        color="primary"
-        style="float: right"
-        (click)="saveInventaireAndDonnee()">
-        Mettre à jour la donnée
-      </button>
-      <button mat-raised-button
-        color="primary"
-        *ngIf="isDeleteDonneeBtnDisplayed()"
-        style="float: right; margin-right: 8px"
-        (click)="onDeleteDonneeBtnClicked()">
-        Supprimer la donnée
-      </button>
-    </div>
+        <!-- Top right buttons -->
+        <button mat-raised-button
+          color="primary"
+          *ngIf="modeHelper.isInventaireMode(mode)"
+          style="float: right"
+          [disabled]="!donneeForm.form.valid"
+          (click)="saveInventaire()">
+          Enregistrer l'inventaire
+        </button>
+        <button mat-raised-button
+          color="primary"
+          *ngIf="modeHelper.isDonneeMode(mode)"
+          style="float: right"
+          [disabled]="!donneeForm.form.valid"
+          (click)="saveDonnee()">
+          Enregistrer la donnée
+        </button>
+        <button mat-raised-button
+          color="primary"
+          style="float: right"
+          (click)="saveInventaireAndDonnee()">
+          Mettre à jour la donnée
+        </button>
+        <button mat-raised-button
+          color="primary"
+          *ngIf="isDeleteDonneeBtnDisplayed()"
+          style="float: right; margin-right: 8px"
+          (click)="onDeleteDonneeBtnClicked()">
+          Supprimer la donnée
+        </button>
+      </div>
+    </mat-card>
 
     <!-- FORM TO CREATE DONNEES -->
     <form #donneeForm="ngForm">
