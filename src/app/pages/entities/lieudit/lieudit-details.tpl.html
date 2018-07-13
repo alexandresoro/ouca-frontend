@@ -4,53 +4,39 @@
   </mat-card-title>
 
   <mat-card-content>
-    <dl class="dl-horizontal">
-      <dt>ID</dt>
-      <dd>
-        <span>{{object.id}}</span>
-      </dd>
+    <mat-list>
+      <mat-list-item>
+        <strong>ID</strong>&nbsp; {{object.id}}
+      </mat-list-item>
 
-      <dt>Département</dt>
-      <dd>
-        <span>{{object.commune.departement.code}}</span>
-      </dd>
+      <mat-list-item>
+        <strong>Département</strong>&nbsp; {{object.commune.departement.code}}
+      </mat-list-item>
 
-      <dt>Code commune</dt>
-      <dd>
-        <span>{{object.commune.code}}</span>
-      </dd>
+      <mat-list-item>
+        <strong>Code de la Commune</strong>&nbsp; {{object.commune.code}}
+      </mat-list-item>
 
-      <dt>Nom commune</dt>
-      <dd>
-        <span>{{object.commune.nom}}</span>
-      </dd>
+      <mat-list-item>
+        <strong>Nom de la Commune</strong>&nbsp; {{object.commune.nom}}
+      </mat-list-item>
 
-      <dt>Nom</dt>
-      <dd>
-        <span>{{object.nom}}</span>
-      </dd>
+      <mat-list-item>
+        <strong>Nom du lieu-dit</strong>&nbsp; {{object.nom}}
+      </mat-list-item>
 
-      <dt>Nom</dt>
-      <dd>
-        <span>{{object.nom}}</span>
-      </dd>
+      <mat-list-item>
+        <strong>Altitude</strong>&nbsp; {{object.altitude}}
+      </mat-list-item>
 
-      <dt>Altitude</dt>
-      <dd>
-        <span>{{object.altitude}}</span>
-      </dd>
+      <mat-list-item>
+        <strong>Longitude</strong>&nbsp; {{object.longitude}}
+      </mat-list-item>
 
-      <dt>Longitude</dt>
-      <dd>
-        <span>{{object.longitude}}</span>
-      </dd>
-
-      <dt>Latitude</dt>
-      <dd>
-        <span>{{object.latitude}}</span>
-      </dd>
-
-    </dl>
+      <mat-list-item>
+        <strong>Latitude</strong>&nbsp; {{object.latitude}}
+      </mat-list-item>
+    </mat-list>
 
     <button *ngIf="isBackButtonDisplayed"
       mat-raised-button
