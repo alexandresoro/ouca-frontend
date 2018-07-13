@@ -15,5 +15,22 @@
     "altitude": 1000,
     "longitude": 2000,
     "latitude": 3000
+  },
+  {
+    "ENTITY_NAME": "lieudit",
+    "id": 2,
+    "commune": {
+      "id": 1,
+      "departement": {
+        "id": 1,
+        "code": "07"
+      },
+      "code": "456",
+      "nom": "SAINT-DONAT-SUR-L'HERBASSE"
+    },
+    "nom": "Chemin de la Parouquine",
+    "altitude": 10000,
+    "longitude": 20000,
+    "latitude": 30000
   }
 ]
