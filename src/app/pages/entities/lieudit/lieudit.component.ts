@@ -17,34 +17,34 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
 
   public getDetailsData(): EntiteDetailsData[] {
     const detailsData: EntiteDetailsData[] = [];
-    detailsData[0] = new EntiteDetailsData("ID", this.objectToView.id);
+    detailsData[0] = new EntiteDetailsData("ID", this.currentObject.id);
     detailsData[1] = new EntiteDetailsData(
       "Département",
-      this.objectToView.commune.departement.code
+      this.currentObject.commune.departement.code
     );
     detailsData[2] = new EntiteDetailsData(
       "Code de la Commune",
-      this.objectToView.commune.code
+      this.currentObject.commune.code
     );
     detailsData[3] = new EntiteDetailsData(
       "Nom de la Commune",
-      this.objectToView.commune.nom
+      this.currentObject.commune.nom
     );
     detailsData[4] = new EntiteDetailsData(
       "Nom du Lieu-dit",
-      this.objectToView.nom
+      this.currentObject.nom
     );
     detailsData[5] = new EntiteDetailsData(
       "Altitude",
-      this.objectToView.altitude
+      this.currentObject.altitude
     );
     detailsData[6] = new EntiteDetailsData(
       "Longitude",
-      this.objectToView.longitude
+      this.currentObject.longitude
     );
     detailsData[7] = new EntiteDetailsData(
       "Latitude",
-      this.objectToView.latitude
+      this.currentObject.latitude
     );
 
     return detailsData;
