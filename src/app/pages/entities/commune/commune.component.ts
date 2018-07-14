@@ -34,7 +34,7 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
       "Nombre de lieux-dits",
       this.currentObject.nbLieuxdits
     );
-    detailsData[3] = new EntiteDetailsData(
+    detailsData[4] = new EntiteDetailsData(
       "Nombre de données",
       this.currentObject.nbDonnees
     );

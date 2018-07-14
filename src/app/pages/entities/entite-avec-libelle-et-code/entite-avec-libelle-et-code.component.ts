@@ -17,6 +17,10 @@ export class EntiteAvecLibelleEtCodeComponent<
       "Libellé",
       this.currentObject.libelle
     );
+    detailsData[3] = new EntiteDetailsData(
+      "Nombre de données",
+      this.currentObject.nbDonnees
+    );
     return detailsData;
   }
 }

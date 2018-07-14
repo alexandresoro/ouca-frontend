@@ -8,5 +8,5 @@ import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table
 export class EntiteAvecLibelleTableComponent<
   T extends EntiteAvecLibelle
 > extends EntiteSimpleTableComponent<T> {
-  public displayedColumns: string[] = ["libelle"];
+  public displayedColumns: string[] = ["libelle", "nbDonnees"];
 }
