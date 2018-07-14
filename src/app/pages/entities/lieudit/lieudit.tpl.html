@@ -1,40 +1,39 @@
-<div class="lco-entity-page">
-    <top-buttons title="Lieux-dits"
-        createButtonLibelle="Créer un lieu-dit"
-        exportButtonLibelle="Exporter les lieux-dits"
-        [areButtonsDisplayed]="isViewAllMode()"
-        (onClickNewObject)="newObject()"
-        (onClickExportObjects)="exportObjects()"
-        (onClickRefresh)="getAll()"></top-buttons>
+<top-buttons title="Lieux-dits"
+    createButtonLibelle="Créer un lieu-dit"
+    exportButtonLibelle="Exporter les lieux-dits"
+    [areButtonsDisplayed]="isViewAllMode()"
+    (onClickNewObject)="newObject()"
+    (onClickExportObjects)="exportObjects()"
+    (onClickRefresh)="getAll()">
+</top-buttons>
 
-    <entity-messages [messages]="messages"
-        [status]="status"></entity-messages>
+<entity-messages [messages]="messages"
+    [status]="status"></entity-messages>
 
-    <lieudit-table *ngIf="isViewAllMode()"
-        [objects]="objects"
-        (delete)="deleteObject($event)"
-        (edit)="editObject($event)"
-        (view)="viewObject($event)">
-    </lieudit-table>
+<lieudit-table *ngIf="isViewAllMode()"
+    [objects]="objects"
+    (delete)="deleteObject($event)"
+    (edit)="editObject($event)"
+    (view)="viewObject($event)">
+</lieudit-table>
 
-    <lieudit-form *ngIf="isCreationMode() || isEditionMode()"
-        [object]="objectToSave"
-        [mode]="mode"
-        (confirm)="saveObject()"
-        (back)="cancelEdition()">
-    </lieudit-form>
+<lieudit-form *ngIf="isCreationMode() || isEditionMode()"
+    [object]="currentObject"
+    [mode]="mode"
+    (confirm)="saveObject()"
+    (back)="cancelEdition()">
+</lieudit-form>
 
-    <entite-delete-confirmation *ngIf="isRemoveMode()"
-        [question]="'Êtes-vous certain de vouloir supprimer le lieu-dit ?'"
-        [details]="'Toutes les données avec ce lieu-dit seront supprimées.'"
-        [cancellationLabel]="'Non, annuler la suppression'"
-        [confirmationLabel]="'Oui, supprimer le lieu-dit'"
-        (confirm)="confirmObjectRemoval($event)">
-    </entite-delete-confirmation>
+<entite-delete-confirmation *ngIf="isRemoveMode()"
+    [question]="'Êtes-vous certain de vouloir supprimer le lieu-dit ?'"
+    [details]="'Toutes les données avec ce lieu-dit seront supprimées.'"
+    [cancellationLabel]="'Non, annuler la suppression'"
+    [confirmationLabel]="'Oui, supprimer le lieu-dit'"
+    (confirm)="confirmObjectRemoval($event)">
+</entite-delete-confirmation>
 
-    <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
-        [detailsData]="getDetailsData()"
-        [isBackButtonDisplayed]="isViewOneMode()"
-        (back)="viewAll()">
-    </entite-details>
-</div>
+<entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()">
+</entite-details>

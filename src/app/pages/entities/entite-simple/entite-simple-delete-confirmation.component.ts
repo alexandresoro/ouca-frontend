@@ -5,20 +5,22 @@ import { EntiteSimple } from "../../../model/entite-simple.object";
   selector: "entite-delete-confirmation",
   templateUrl: "./entite-simple-delete-confirmation.tpl.html"
 })
-export class EntiteSimpleRemovalConfirmationComponent<T extends EntiteSimple> {
+export class EntiteSimpleRemovalConfirmationComponent {
   @Input() question: string;
   @Input() details: string;
   @Input() confirmationLabel: string;
   @Input() cancellationLabel: string;
-  @Input("objectToRemove") public object: T;
 
-  @Output() public confirm: EventEmitter<T> = new EventEmitter<T>();
+  // TODO remove
+  @Input("objectToRemove") public object: any;
+
+  @Output() public confirm: EventEmitter<boolean> = new EventEmitter();
 
   public confirmRemoval(): void {
-    this.confirm.emit(this.object);
+    this.confirm.emit(true);
   }
 
   public cancelRemoval(): void {
-    this.confirm.emit(null);
+    this.confirm.emit(false);
   }
 }
