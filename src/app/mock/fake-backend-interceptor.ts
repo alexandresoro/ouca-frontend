@@ -12,10 +12,19 @@ import { Injectable } from "../../../node_modules/@angular/core";
 import * as creationPageCreateDonneeMock from "./creation-page/creation-page-create-donnee.json";
 import * as creationPageCreateInventaireMock from "./creation-page/creation-page-create-inventaire.json";
 import * as creationPageInitMock from "./creation-page/creation-page-init.json";
+import * as agesMock from "./gestion-base-pages/ages.json";
+import * as classesMock from "./gestion-base-pages/classes.json";
 import * as communesMock from "./gestion-base-pages/communes.json";
+import * as comportementsMock from "./gestion-base-pages/comportements.json";
 import * as departementsMock from "./gestion-base-pages/departements.json";
+import * as especesMock from "./gestion-base-pages/especes.json";
+import * as estimationsDistanceMock from "./gestion-base-pages/estimations-distance.json";
+import * as estimationsNombreMock from "./gestion-base-pages/estimations-nombre.json";
 import * as lieuxditsMock from "./gestion-base-pages/lieuxdits.json";
+import * as meteosMock from "./gestion-base-pages/meteos.json";
+import * as milieuxMock from "./gestion-base-pages/milieux.json";
 import * as observateursMock from "./gestion-base-pages/observateurs.json";
+import * as sexesMock from "./gestion-base-pages/sexes.json";
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -89,20 +98,67 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return of(
               new HttpResponse({ status: 200, body: departementsMock })
             );
-          }
-
-          if (
+          } else if (
             request.url.endsWith("/commune/all") &&
             request.method === "GET"
           ) {
             return of(new HttpResponse({ status: 200, body: communesMock }));
-          }
-
-          if (
+          } else if (
             request.url.endsWith("/lieudit/all") &&
             request.method === "GET"
           ) {
             return of(new HttpResponse({ status: 200, body: lieuxditsMock }));
+          } else if (
+            request.url.endsWith("/meteo/all") &&
+            request.method === "GET"
+          ) {
+            return of(new HttpResponse({ status: 200, body: meteosMock }));
+          } else if (
+            request.url.endsWith("/classe/all") &&
+            request.method === "GET"
+          ) {
+            return of(new HttpResponse({ status: 200, body: classesMock }));
+          } else if (
+            request.url.endsWith("/espece/all") &&
+            request.method === "GET"
+          ) {
+            return of(new HttpResponse({ status: 200, body: especesMock }));
+          } else if (
+            request.url.endsWith("/sexe/all") &&
+            request.method === "GET"
+          ) {
+            return of(new HttpResponse({ status: 200, body: sexesMock }));
+          } else if (
+            request.url.endsWith("/age/all") &&
+            request.method === "GET"
+          ) {
+            return of(new HttpResponse({ status: 200, body: agesMock }));
+          } else if (
+            request.url.endsWith("/estimation-nombre/all") &&
+            request.method === "GET"
+          ) {
+            return of(
+              new HttpResponse({ status: 200, body: estimationsNombreMock })
+            );
+          } else if (
+            request.url.endsWith("/estimation-distance/all") &&
+            request.method === "GET"
+          ) {
+            return of(
+              new HttpResponse({ status: 200, body: estimationsDistanceMock })
+            );
+          } else if (
+            request.url.endsWith("/milieu/all") &&
+            request.method === "GET"
+          ) {
+            return of(new HttpResponse({ status: 200, body: milieuxMock }));
+          } else if (
+            request.url.endsWith("/comportement/all") &&
+            request.method === "GET"
+          ) {
+            return of(
+              new HttpResponse({ status: 200, body: comportementsMock })
+            );
           }
 
           // pass through any requests not handled above
