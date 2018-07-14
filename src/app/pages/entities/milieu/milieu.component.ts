@@ -1,17 +1,16 @@
 import { Component } from "@angular/core";
 import { Milieu } from "../../../model/milieu.object";
-import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
+import { EntiteAvecLibelleEtCodeComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code.component";
 
 @Component({
-    templateUrl: "./milieu.tpl.html"
+  templateUrl: "./milieu.tpl.html"
 })
-export class MilieuComponent extends EntiteSimpleComponent<Milieu> {
+export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
+  getEntityName(): string {
+    return "milieu";
+  }
 
-    getEntityName(): string {
-        return "milieu";
-    }
-
-    getNewObject(): Milieu {
-        return new Milieu();
-    }
+  getNewObject(): Milieu {
+    return new Milieu();
+  }
 }

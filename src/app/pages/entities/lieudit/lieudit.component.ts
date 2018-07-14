@@ -46,6 +46,10 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
       "Latitude",
       this.currentObject.latitude
     );
+    detailsData[8] = new EntiteDetailsData(
+      "Nombre de données",
+      this.currentObject.nbDonnees
+    );
 
     return detailsData;
   }

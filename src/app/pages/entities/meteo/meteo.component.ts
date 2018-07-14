@@ -1,17 +1,16 @@
 import { Component } from "@angular/core";
 import { Meteo } from "../../../model/meteo.object";
-import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
+import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
-    templateUrl: "./meteo.tpl.html"
+  templateUrl: "./meteo.tpl.html"
 })
-export class MeteoComponent extends EntiteSimpleComponent<Meteo> {
+export class MeteoComponent extends EntiteAvecLibelleComponent<Meteo> {
+  getEntityName(): string {
+    return "meteo";
+  }
 
-    getEntityName(): string {
-        return "meteo";
-    }
-
-    getNewObject(): Meteo {
-        return new Meteo();
-    }
+  getNewObject(): Meteo {
+    return new Meteo();
+  }
 }

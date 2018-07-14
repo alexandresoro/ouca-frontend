@@ -30,6 +30,14 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
       "Nom de la Commune",
       this.currentObject.nom
     );
+    detailsData[3] = new EntiteDetailsData(
+      "Nombre de lieux-dits",
+      this.currentObject.nbLieuxdits
+    );
+    detailsData[3] = new EntiteDetailsData(
+      "Nombre de données",
+      this.currentObject.nbDonnees
+    );
     return detailsData;
   }
 }

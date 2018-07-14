@@ -1,17 +1,16 @@
 import { Component } from "@angular/core";
 import { Sexe } from "../../../model/sexe.object";
-import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
+import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
-    templateUrl: "./sexe.tpl.html"
+  templateUrl: "./sexe.tpl.html"
 })
-export class SexeComponent extends EntiteSimpleComponent<Sexe> {
+export class SexeComponent extends EntiteAvecLibelleComponent<Sexe> {
+  getEntityName(): string {
+    return "sexe";
+  }
 
-    getEntityName(): string {
-        return "sexe";
-    }
-
-    getNewObject(): Sexe {
-        return new Sexe();
-    }
+  getNewObject(): Sexe {
+    return new Sexe();
+  }
 }
