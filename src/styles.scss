@@ -97,112 +97,173 @@ mat-toolbar.base-naturaliste-header {
 }
 
 .lco-creation-body {
-  display: grid;
+  margin-bottom: 20px;
 
-  .lco-creation-messages {
-    grid-row: 1;
+  mat-card.lco-creation-messages {
+    display: block;
+    margin-bottom: 10px;
+    padding: 4px;
   }
 
-  .lco-creation-buttons {
-    grid-row: 2;
+  mat-card.lco-creation-buttons {
+    display: flex;
+    flex: 0 0 auto;
+    margin-bottom: 10px;
+    padding: 4px;
+
+    .top-left-creation-buttons {
+      button {
+        margin-right: 10px;
+      }
+    }
+
+    .top-right-creation-buttons {
+      button {
+        margin-left: 10px;
+      }
+    }
   }
 
   .lco-creation-form {
+    display: grid;
     grid-template-columns: 1fr 2fr;
     column-gap: 50px;
-    row-gap: 0;
-    grid-row: 3;
+
+    .creation-inventaire-titre {
+      button {
+        height: 32px;
+      }
+    }
 
     .inventaire-form,
     .espece-form {
-      grid-gap: 8px;
+      mat-card:not(:last-child) {
+        margin-bottom: 8px;
+      }
     }
 
     .lco-creation-date {
-      grid-template-columns: auto 60px 60px;
-      column-gap: $standardColumnGap;
+      display: flex;
+      flex-wrap: wrap;
+
+      .date-creation-input {
+        flex: 1 0 auto;
+      }
+
+      .time-input {
+        width: 70px;
+      }
     }
 
-    .commune-grid,
+    .lco-creation-date > *:not(:last-child) {
+      margin-right: $standardColumnGap;
+    }
+
+    .commune-container,
     .lco-creation-meteo {
-      grid-template-columns: 100px auto;
-      column-gap: $standardColumnGap;
+      display: flex;
+      .code-commune,
+      .temperature-container {
+        width: 100px;
+        margin-right: $standardColumnGap;
+      }
+      .nom-commune,
+      .meteo-container {
+        flex: 1 0 auto;
+      }
     }
 
     .coordonnees-form {
-      column-gap: $standardColumnGap;
-      grid-template-columns: repeat(3, 120px);
+      display: flex;
+      flex-wrap: wrap;
+      & > mat-form-field {
+        flex: 1 0 auto;
+        width: 120px;
+      }
+      & > *:not(:last-child) {
+        margin-right: $standardColumnGap;
+      }
     }
 
     .lco-creation-quoi {
-      grid-template-columns: 1fr 120px 2fr;
-      column-gap: $standardColumnGap;
+      display: flex;
+      flex-wrap: wrap;
+
+      .quoi-classe {
+        margin-right: 3 * $standardColumnGap;
+      }
+
+      .quoi-espece {
+        width: 120px;
+        margin-right: $standardColumnGap;
+      }
+
+      .quoi-nom-classe {
+        flex: 1 0 auto;
+      }
     }
 
     .combien-de-container {
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: 4 * $standardColumnGap;
-
-      .nombre-container {
-        grid-template-columns: 120px auto;
-        column-gap: $standardColumnGap;
+      .nombre-espece {
+        width: 120px;
+        margin-right: $standardColumnGap;
       }
 
-      .sexe-age-container {
-        grid-template-columns: repeat(2, 120px);
-        column-gap: 4 * $standardColumnGap;
+      .estimation-nombre-espece {
+        margin-right: 4 * $standardColumnGap;
+      }
+
+      .sexe-espece {
+        width: 120px;
+        margin-right: 80px;
+      }
+
+      .age-espece {
+        width: 120px;
       }
     }
     .distance-regroupement-container {
-      grid-template-columns: 1fr 1fr;
-      column-gap: 4 * $standardColumnGap;
-
       .distance-container {
-        grid-template-columns: auto 120px;
-        column-gap: $standardColumnGap;
+        display: inline-block;
+
+        .estimation-distance-container {
+          margin-right: $standardColumnGap;
+        }
+
+        .distance-container {
+          width: 120px;
+        }
       }
 
       mat-form-field.regroupement-container {
+        margin-left: 4 * $standardColumnGap;
         width: 141px;
       }
     }
   }
 }
 
-.comportements-container,
-.milieux-container {
-  grid-template-columns: 1fr 1fr;
-  column-gap: 3 * $standardColumnGap;
-  row-gap: 0;
+mat-card.creation-footer {
+  display: flex;
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+  padding: 4px;
+}
+
+.comportements-container > input-code-libelle:not(:last-child),
+.milieux-container > input-code-libelle:not(:last-child) {
+  margin-right: 3 * $standardColumnGap;
 }
 
 .code-libelle-container {
-  grid-template-columns: 1fr 2fr;
-  grid-gap: 10px;
+  display: inline-block;
+  .code-input {
+    margin-right: 10px;
+  }
 }
 
-.grid-container {
-  display: grid;
-}
-
-.first-column {
-  grid-column: 1;
-}
-
-.second-column {
-  grid-column: 2;
-}
-
-.third-column {
-  grid-column: 3;
-}
-
-.first-row {
-  grid-row: 1;
-}
-
-.second-row {
-  grid-row: 2;
+.flex-container {
+  display: flex;
 }
 
 .full-width-container > * {
