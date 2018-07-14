@@ -23,7 +23,6 @@ import { ClasseFormComponent } from "./pages/entities/classe/classe-form.compone
 import { ClasseTableComponent } from "./pages/entities/classe/classe-table.component";
 import { ClasseComponent } from "./pages/entities/classe/classe.component";
 import { CommuneRemovalConfirmationComponent } from "./pages/entities/commune/commune-delete-confirmation.component";
-import { CommuneDetailsComponent } from "./pages/entities/commune/commune-details.component";
 import { CommuneFormComponent } from "./pages/entities/commune/commune-form.component";
 import { CommuneTableComponent } from "./pages/entities/commune/commune-table.component";
 import { CommuneComponent } from "./pages/entities/commune/commune.component";
@@ -126,7 +125,6 @@ import { EspeceFormComponent } from "./pages/entities/espece/espece-form.compone
 import { EspeceTableComponent } from "./pages/entities/espece/espece-table.component";
 import { EspeceComponent } from "./pages/entities/espece/espece.component";
 import { LieuditRemovalConfirmationComponent } from "./pages/entities/lieudit/lieudit-delete-confirmation.component";
-import { LieuditDetailsComponent } from "./pages/entities/lieudit/lieudit-details.component";
 import { LieuditFormComponent } from "./pages/entities/lieudit/lieudit-form.component";
 import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.component";
 import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
@@ -271,7 +269,6 @@ const baseNaturalisteRoutes: Routes = [
     ConfigurationFormComponent,
     CommuneComponent,
     CommuneTableComponent,
-    CommuneDetailsComponent,
     CommuneFormComponent,
     CommuneRemovalConfirmationComponent,
     ComportementComponent,
@@ -310,7 +307,6 @@ const baseNaturalisteRoutes: Routes = [
     LcoEntiteSelectComponent,
     LieuditComponent,
     LieuditTableComponent,
-    LieuditDetailsComponent,
     LieuditFormComponent,
     LieuditRemovalConfirmationComponent,
     MeteoComponent,
@@ -364,4 +360,4 @@ const baseNaturalisteRoutes: Routes = [
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
   ]
 })
-export class AppModule { }
+export class AppModule {}

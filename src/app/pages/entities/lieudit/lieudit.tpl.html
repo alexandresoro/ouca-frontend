@@ -24,14 +24,14 @@
         (back)="cancelEdition()">
     </lieudit-form>
 
-    <lieudit-details *ngIf="isViewOneMode()"
-        [objectToView]="objectToView"
-        (back)="viewAll()">
-    </lieudit-details>
-
     <lieudit-removal-confirmation *ngIf="isRemoveMode()"
         [objectToRemove]="objectToRemove"
         (confirm)="confirmObjectRemoval($event)">
     </lieudit-removal-confirmation>
 
+    <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+        [detailsData]="getDetailsData()"
+        [isBackButtonDisplayed]="isViewOneMode()"
+        (back)="viewAll()">
+    </entite-details>
 </div>
