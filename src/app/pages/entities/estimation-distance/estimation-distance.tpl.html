@@ -24,13 +24,13 @@
     (confirm)="saveObject()"
     (back)="cancelEdition()"></estimation-distance-form>
 
-  <estimation-distance-details *ngIf="isViewOneMode()"
+  <entite-details *ngIf="isViewOneMode()"
     [objectToView]="objectToView"
-    (back)="viewAll()"></estimation-distance-details>
+    (back)="viewAll()"></entite-details>
 
-  <estimation-distance-removal-confirmation *ngIf="isRemoveMode()"
+  <entite-delete-confirmation *ngIf="isRemoveMode()"
     [objectToRemove]="objectToRemove"
     (confirm)="confirmObjectRemoval($event)">
-  </estimation-distance-removal-confirmation>
+  </entite-delete-confirmation>
 
 </div>

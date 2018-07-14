@@ -26,14 +26,14 @@
         (back)="cancelEdition()">
     </departement-form>
 
-    <departement-details *ngIf="isViewOneMode()"
+    <entite-details *ngIf="isViewOneMode()"
         [objectToView]="objectToView"
         (back)="viewAll()">
-    </departement-details>
+    </entite-details>
 
-    <departement-removal-confirmation *ngIf="isRemoveMode()"
+    <entite-delete-confirmation *ngIf="isRemoveMode()"
         [objectToRemove]="objectToRemove"
         (confirm)="confirmObjectRemoval($event)">
-    </departement-removal-confirmation>
+    </entite-delete-confirmation>
 
 </div>

@@ -26,10 +26,10 @@
         (back)="cancelEdition()">
     </commune-form>
 
-    <commune-removal-confirmation *ngIf="isRemoveMode()"
+    <entite-delete-confirmation *ngIf="isRemoveMode()"
         [objectToRemove]="objectToRemove"
         (confirm)="confirmObjectRemoval($event)">
-    </commune-removal-confirmation>
+    </entite-delete-confirmation>
 
     <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
         [detailsData]="getDetailsData()"

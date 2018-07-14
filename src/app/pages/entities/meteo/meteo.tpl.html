@@ -26,14 +26,14 @@
     (back)="cancelEdition()">
   </meteo-form>
 
-  <meteo-details *ngIf="isViewOneMode()"
+  <entite-details *ngIf="isViewOneMode()"
     [objectToView]="objectToView"
     (back)="viewAll()">
-  </meteo-details>
+  </entite-details>
 
-  <meteo-removal-confirmation *ngIf="isRemoveMode()"
+  <entite-delete-confirmation *ngIf="isRemoveMode()"
     [objectToRemove]="objectToRemove"
     (confirm)="confirmObjectRemoval($event)">
-  </meteo-removal-confirmation>
+  </entite-delete-confirmation>
 
 </div>

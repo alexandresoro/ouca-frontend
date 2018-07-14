@@ -26,14 +26,19 @@
     (back)="cancelEdition()">
   </observateur-form>
 
-  <observateur-details *ngIf="isViewOneMode()"
-    [objectToView]="objectToView"
-    (back)="viewAll()">
-  </observateur-details>
-
-  <observateur-removal-confirmation *ngIf="isRemoveMode()"
-    [objectToRemove]="objectToRemove"
+  <entite-delete-confirmation *ngIf="isRemoveMode()"
+    question="Êtes-vous certain de vouloir supprimer l'observateur ?"
+    details="Toutes les données avec cet observateur seront supprimées."
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer l'observateur"
     (confirm)="confirmObjectRemoval($event)">
-  </observateur-removal-confirmation>
+  </entite-delete-confirmation>
+
+  <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails de l'observateur"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()">
+  </entite-details>
 
 </div>

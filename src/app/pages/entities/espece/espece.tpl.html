@@ -24,13 +24,13 @@
         (confirm)="saveObject()"
         (back)="cancelEdition()"></espece-form>
 
-    <espece-details *ngIf="isViewOneMode()"
+    <entite-details *ngIf="isViewOneMode()"
         [objectToView]="objectToView"
-        (back)="viewAll()"></espece-details>
+        (back)="viewAll()"></entite-details>
 
-    <espece-removal-confirmation *ngIf="isRemoveMode()"
+    <entite-delete-confirmation *ngIf="isRemoveMode()"
         [objectToRemove]="objectToRemove"
         (confirm)="confirmObjectRemoval($event)">
-    </espece-removal-confirmation>
+    </entite-delete-confirmation>
 
 </div>

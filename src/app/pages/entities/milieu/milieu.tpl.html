@@ -26,14 +26,14 @@
     (back)="cancelEdition()">
   </milieu-form>
 
-  <milieu-details *ngIf="isViewOneMode()"
+  <entite-details *ngIf="isViewOneMode()"
     [objectToView]="objectToView"
     (back)="viewAll()">
-  </milieu-details>
+  </entite-details>
 
-  <milieu-removal-confirmation *ngIf="isRemoveMode()"
+  <entite-delete-confirmation *ngIf="isRemoveMode()"
     [objectToRemove]="objectToRemove"
     (confirm)="confirmObjectRemoval($event)">
-  </milieu-removal-confirmation>
+  </entite-delete-confirmation>
 
 </div>

@@ -1,17 +1,18 @@
 import { Component } from "@angular/core";
 import { Observateur } from "../../../model/observateur.object";
-import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
+import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
-    templateUrl: "./observateur.tpl.html"
+  templateUrl: "./observateur.tpl.html"
 })
-export class ObservateurComponent extends EntiteSimpleComponent<Observateur> {
+export class ObservateurComponent extends EntiteAvecLibelleComponent<
+  Observateur
+> {
+  getEntityName(): string {
+    return "observateur";
+  }
 
-    getEntityName(): string {
-        return "observateur";
-    }
-
-    getNewObject(): Observateur {
-        return new Observateur();
-    }
+  getNewObject(): Observateur {
+    return new Observateur();
+  }
 }

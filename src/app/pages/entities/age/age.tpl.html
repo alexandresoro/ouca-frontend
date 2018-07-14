@@ -26,13 +26,14 @@
         (confirm)="saveObject()"
         (back)="cancelEdition()"></age-form>
 
-    <age-details *ngIf="isViewOneMode()"
-        [objectToView]="objectToView"
-        detailsTitle="Détails de l'âge"
-        (back)="viewAll()"></age-details>
-
-    <age-removal-confirmation *ngIf="isRemoveMode()"
+    <entite-delete-confirmation *ngIf="isRemoveMode()"
         [objectToRemove]="objectToRemove"
-        (confirm)="confirmObjectRemoval($event)"></age-removal-confirmation>
+        (confirm)="confirmObjectRemoval($event)"></entite-delete-confirmation>
+
+    <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+        [detailsData]="getDetailsData()"
+        detailsTitle="Détails de l'âge"
+        (back)="viewAll()">
+    </entite-details>
 
 </div>

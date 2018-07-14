@@ -17,18 +17,18 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
 
   public getDetailsData(): EntiteDetailsData[] {
     const detailsData: EntiteDetailsData[] = [];
-    detailsData[0] = new EntiteDetailsData("ID", this.objectToView.id);
+    detailsData[0] = new EntiteDetailsData("ID", this.currentObject.id);
     detailsData[1] = new EntiteDetailsData(
       "Département",
-      this.objectToView.departement.code
+      this.currentObject.departement.code
     );
     detailsData[2] = new EntiteDetailsData(
       "Code de la Commune",
-      this.objectToView.code
+      this.currentObject.code
     );
     detailsData[3] = new EntiteDetailsData(
       "Nom de la Commune",
-      this.objectToView.nom
+      this.currentObject.nom
     );
     return detailsData;
   }
