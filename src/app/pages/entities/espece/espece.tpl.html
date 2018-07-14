@@ -24,13 +24,19 @@
         (confirm)="saveObject()"
         (back)="cancelEdition()"></espece-form>
 
-    <entite-details *ngIf="isViewOneMode()"
-        [objectToView]="objectToView"
-        (back)="viewAll()"></entite-details>
-
     <entite-delete-confirmation *ngIf="isRemoveMode()"
-        [objectToRemove]="objectToRemove"
+        question="Êtes-vous certain de vouloir supprimer l'espèce ?"
+        details="Toutes les données ({{currentObject.nbDonnees}}) avec cette espèce seront supprimées."
+        cancellationLabel="Non, annuler la suppression"
+        confirmationLabel="Oui, supprimer l'espèce"
         (confirm)="confirmObjectRemoval($event)">
     </entite-delete-confirmation>
+
+    <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+        [detailsData]="getDetailsData()"
+        detailsTitle="Détails de l'espèce"
+        [isBackButtonDisplayed]="isViewOneMode()"
+        (back)="viewAll()">
+    </entite-details>
 
 </div>

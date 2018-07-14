@@ -2,15 +2,17 @@ import { Departement } from "./departement.object";
 import { EntiteSimple } from "./entite-simple.object";
 
 export class Commune extends EntiteSimple {
+  public departement: Departement;
 
-    public departement: Departement;
+  public code: string;
 
-    public code: string;
+  public nom: string;
 
-    public nom: string;
+  public nbLieuxdits: number;
 
-    constructor() {
-        super();
-    }
+  public nbDonnees: number;
 
+  constructor() {
+    super();
+  }
 }

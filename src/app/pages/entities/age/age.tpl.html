@@ -27,12 +27,17 @@
         (back)="cancelEdition()"></age-form>
 
     <entite-delete-confirmation *ngIf="isRemoveMode()"
-        [objectToRemove]="objectToRemove"
-        (confirm)="confirmObjectRemoval($event)"></entite-delete-confirmation>
+        question="Êtes-vous certain de vouloir supprimer l'âge ?"
+        details="Toutes les données ({{currentObject.nbDonnees}}) avec cet âge seront supprimées."
+        cancellationLabel="Non, annuler la suppression"
+        confirmationLabel="Oui, supprimer l'âge"
+        (confirm)="confirmObjectRemoval($event)">
+    </entite-delete-confirmation>
 
     <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
         [detailsData]="getDetailsData()"
         detailsTitle="Détails de l'âge"
+        [isBackButtonDisplayed]="isViewOneMode()"
         (back)="viewAll()">
     </entite-details>
 

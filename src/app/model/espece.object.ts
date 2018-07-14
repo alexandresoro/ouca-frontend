@@ -2,16 +2,17 @@ import { Classe } from "./classe.object";
 import { EntiteAvecLibelle } from "./entite-avec-libelle.object";
 
 export class Espece extends EntiteAvecLibelle {
+  public classe: Classe;
 
-    public classe: Classe;
+  public code: string;
 
-    public code: string;
+  public nomFrancais: string;
 
-    public nomFrancais: string;
+  public nomLatin: string;
 
-    public nomLatin: string;
+  public nbDonnees: number;
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 }

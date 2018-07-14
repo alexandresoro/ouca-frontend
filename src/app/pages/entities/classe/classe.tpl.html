@@ -24,13 +24,20 @@
     (confirm)="saveObject()"
     (back)="cancelEdition()"></classe-form>
 
-  <entite-details *ngIf="isViewOneMode()"
-    [objectToView]="objectToView"
-    (back)="viewAll()"></entite-details>
-
   <entite-delete-confirmation *ngIf="isRemoveMode()"
-    [objectToRemove]="objectToRemove"
+    question="Êtes-vous certain de vouloir supprimer la classe ?"
+    details="Toutes les espèces ({{currentObject.nbEspeces}}) et toutes les données ({{currentObject.nbDonnees}}) avec cette classe seront supprimées."
+
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer la classe"
     (confirm)="confirmObjectRemoval($event)">
   </entite-delete-confirmation>
+
+  <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails de la classe"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()">
+  </entite-details>
 
 </div>

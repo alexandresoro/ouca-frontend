@@ -4,30 +4,31 @@ import { Meteo } from "./meteo.object";
 import { Observateur } from "./observateur.object";
 
 export class Inventaire extends EntiteSimple {
+  public associes: Observateur[];
 
-    public associes: Observateur[];
+  public date: Date;
 
-    public date: Date;
+  public duree: string;
 
-    public duree: string;
+  public heure: string;
 
-    public heure: string;
+  public lieudit: Lieudit;
 
-    public lieudit: Lieudit;
+  public altitude: number;
 
-    public altitude: number;
+  public longitude: number;
 
-    public longitude: number;
+  public latitude: number;
 
-    public latitude: number;
+  public meteos: Meteo[] = new Array<Meteo>();
 
-    public meteos: Meteo[] = new Array<Meteo>();
+  public observateur: Observateur;
 
-    public observateur: Observateur;
+  public temperature: number;
 
-    public temperature: number;
+  public nbDonnees: number;
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 }

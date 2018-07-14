@@ -26,14 +26,19 @@
     (back)="cancelEdition()">
   </sexe-form>
 
-  <entite-details *ngIf="isViewOneMode()"
-    [objectToView]="objectToView"
-    (back)="viewAll()">
-  </entite-details>
-
   <entite-delete-confirmation *ngIf="isRemoveMode()"
-    [objectToRemove]="objectToRemove"
+    question="Êtes-vous certain de vouloir supprimer le sexe ?"
+    details="Toutes les données ({{currentObject.nbDonnees}}) avec ce sexe seront supprimées."
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer le sexe"
     (confirm)="confirmObjectRemoval($event)">
   </entite-delete-confirmation>
+
+  <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails du sexe"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()">
+  </entite-details>
 
 </div>

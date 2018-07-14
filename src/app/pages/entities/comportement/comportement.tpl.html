@@ -26,14 +26,19 @@
     (back)="cancelEdition()">
   </comportement-form>
 
-  <entite-details *ngIf="isViewOneMode()"
-    [objectToView]="objectToView"
-    (back)="viewAll()">
-  </entite-details>
-
   <entite-delete-confirmation *ngIf="isRemoveMode()"
-    [objectToRemove]="objectToRemove"
+    question="Êtes-vous certain de vouloir supprimer le comportement ?"
+    details="{{currentObject.nbDonnees}} données ont ce comportement."
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer le comportement"
     (confirm)="confirmObjectRemoval($event)">
   </entite-delete-confirmation>
+
+  <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails du comportement"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()">
+  </entite-details>
 
 </div>

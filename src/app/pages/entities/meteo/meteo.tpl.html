@@ -26,14 +26,19 @@
     (back)="cancelEdition()">
   </meteo-form>
 
-  <entite-details *ngIf="isViewOneMode()"
-    [objectToView]="objectToView"
-    (back)="viewAll()">
-  </entite-details>
-
   <entite-delete-confirmation *ngIf="isRemoveMode()"
-    [objectToRemove]="objectToRemove"
+    question="Êtes-vous certain de vouloir supprimer la météo ?"
+    details="{{currentObject.nbDonnees}} données ont cette météo."
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer la météo"
     (confirm)="confirmObjectRemoval($event)">
   </entite-delete-confirmation>
+
+  <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails de la météo"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()">
+  </entite-details>
 
 </div>

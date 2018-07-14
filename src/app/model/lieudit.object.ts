@@ -15,6 +15,8 @@ export class Lieudit extends EntiteSimple {
 
   public latitude: number;
 
+  public nbDonnees: number;
+
   constructor() {
     super();
   }

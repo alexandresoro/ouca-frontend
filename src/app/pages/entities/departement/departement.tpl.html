@@ -26,14 +26,20 @@
         (back)="cancelEdition()">
     </departement-form>
 
-    <entite-details *ngIf="isViewOneMode()"
-        [objectToView]="objectToView"
-        (back)="viewAll()">
-    </entite-details>
-
     <entite-delete-confirmation *ngIf="isRemoveMode()"
-        [objectToRemove]="objectToRemove"
+        question="Êtes-vous certain de vouloir supprimer le département ?"
+        details="Toutes les communes ({{currentObject.nbCommunes}}), tous les lieux-dits ({{currentObject.nbLieuxdits}}) et toutes les données ({{currentObject.nbDonnees}}) avec ce département seront supprimés."
+
+        cancellationLabel="Non, annuler la suppression"
+        confirmationLabel="Oui, supprimer le département"
         (confirm)="confirmObjectRemoval($event)">
     </entite-delete-confirmation>
+
+    <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+        [detailsData]="getDetailsData()"
+        detailsTitle="Détails du département"
+        [isBackButtonDisplayed]="isViewOneMode()"
+        (back)="viewAll()">
+    </entite-details>
 
 </div>

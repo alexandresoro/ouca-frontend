@@ -27,12 +27,18 @@
     </commune-form>
 
     <entite-delete-confirmation *ngIf="isRemoveMode()"
-        [objectToRemove]="objectToRemove"
+        question="Êtes-vous certain de vouloir supprimer la commune ?"
+        details="Tous les lieux-dits ({{currentObject.nbLieuxdits}}) et toutes les données ({{currentObject.nbDonnees}}) avec cette communes seront supprimés."
+
+        cancellationLabel="Non, annuler la suppression"
+        confirmationLabel="Oui, supprimer la commune"
         (confirm)="confirmObjectRemoval($event)">
     </entite-delete-confirmation>
 
     <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
         [detailsData]="getDetailsData()"
+        detailsTitle="Détails de la commune"
+        [isBackButtonDisplayed]="isViewOneMode()"
         (back)="viewAll()">
     </entite-details>
 

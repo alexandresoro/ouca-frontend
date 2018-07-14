@@ -1,11 +1,15 @@
 import { EntiteSimple } from "./entite-simple.object";
 
 export class Departement extends EntiteSimple {
+  public code: string;
 
-    public code: string;
+  public nbCommunes: number;
 
-    constructor() {
-        super();
-    }
+  public nbLieuxdits: number;
 
+  public nbDonnees: number;
+
+  constructor() {
+    super();
+  }
 }
