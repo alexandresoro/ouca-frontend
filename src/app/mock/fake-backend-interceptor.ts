@@ -9,13 +9,13 @@ import {
 import { Observable, of, throwError } from "rxjs";
 import { delay, dematerialize, materialize, mergeMap } from "rxjs/operators";
 import { Injectable } from "../../../node_modules/@angular/core";
-import * as communesMock from "./communes.json";
 import * as creationPageCreateDonneeMock from "./creation-page/creation-page-create-donnee.json";
 import * as creationPageCreateInventaireMock from "./creation-page/creation-page-create-inventaire.json";
 import * as creationPageInitMock from "./creation-page/creation-page-init.json";
-import * as departementsMock from "./departements.json";
-import * as lieuxditsMock from "./lieuxdits.json";
-import * as observateursMock from "./observateurs.json";
+import * as communesMock from "./gestion-base-pages/communes.json";
+import * as departementsMock from "./gestion-base-pages/departements.json";
+import * as lieuxditsMock from "./gestion-base-pages/lieuxdits.json";
+import * as observateursMock from "./gestion-base-pages/observateurs.json";
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
