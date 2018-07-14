@@ -4,26 +4,22 @@
   </mat-card-title>
 
   <mat-card-content>
-    <p>
-      Êtes-vous certain de vouloir supprimer le lieu-dit ?
-    </p>
-    <p>
-      Toutes les données avec ce lieu-dit seront supprimées.
-    </p>
+    <p>{{question}}</p>
+    <p>{{details}}</p>
 
     <div class="cancel-submit-buttons">
       <button mat-raised-button
         color="accent"
         (click)="cancelRemoval()">
         <mat-icon>cancel</mat-icon>
-        <span>Non, annuler la suppression</span>
+        {{cancellationLabel}}
       </button>
       <span class="button-spacer"></span>
       <button mat-raised-button
         color="primary"
         (click)="confirmRemoval()">
         <mat-icon>save</mat-icon>
-        <span>Oui, supprimer le lieu-dit</span>
+        {{confirmationLabel}}
       </button>
     </div>
   </mat-card-content>

@@ -24,10 +24,13 @@
         (back)="cancelEdition()">
     </lieudit-form>
 
-    <lieudit-removal-confirmation *ngIf="isRemoveMode()"
-        [objectToRemove]="objectToRemove"
+    <entite-delete-confirmation *ngIf="isRemoveMode()"
+        [question]="'Êtes-vous certain de vouloir supprimer le lieu-dit ?'"
+        [details]="'Toutes les données avec ce lieu-dit seront supprimées.'"
+        [cancellationLabel]="'Non, annuler la suppression'"
+        [confirmationLabel]="'Oui, supprimer le lieu-dit'"
         (confirm)="confirmObjectRemoval($event)">
-    </lieudit-removal-confirmation>
+    </entite-delete-confirmation>
 
     <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
         [detailsData]="getDetailsData()"

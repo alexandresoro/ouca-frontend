@@ -124,7 +124,6 @@ import { EspeceDetailsComponent } from "./pages/entities/espece/espece-details.c
 import { EspeceFormComponent } from "./pages/entities/espece/espece-form.component";
 import { EspeceTableComponent } from "./pages/entities/espece/espece-table.component";
 import { EspeceComponent } from "./pages/entities/espece/espece.component";
-import { LieuditRemovalConfirmationComponent } from "./pages/entities/lieudit/lieudit-delete-confirmation.component";
 import { LieuditFormComponent } from "./pages/entities/lieudit/lieudit-form.component";
 import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.component";
 import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
@@ -308,7 +307,6 @@ const baseNaturalisteRoutes: Routes = [
     LieuditComponent,
     LieuditTableComponent,
     LieuditFormComponent,
-    LieuditRemovalConfirmationComponent,
     MeteoComponent,
     MeteoTableComponent,
     MeteoDetailsComponent,
