@@ -1,0 +1,9 @@
+[
+  { "id": 10, "libelle": "Amphibiens", "nbEspeces": 34 },
+  { "id": 11, "libelle": "Lépidoptères", "nbEspeces": 3 },
+  { "id": 12, "libelle": "Mammifères", "nbEspeces": 128 },
+  { "id": 13, "libelle": "Odonates", "nbEspeces": 106 },
+  { "id": 14, "libelle": "Oiseaux", "nbEspeces": 610 },
+  { "id": 15, "libelle": "Orthoptères", "nbEspeces": 66 },
+  { "id": 16, "libelle": "Reptiles", "nbEspeces": 37 }
+]

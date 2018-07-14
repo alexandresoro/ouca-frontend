@@ -1,0 +1,7 @@
+[
+  { "id": 15, "libelle": "Neige" },
+  { "id": 16, "libelle": "Nuages" },
+  { "id": 17, "libelle": "Soleil" },
+  { "id": 18, "libelle": "Vent faible" },
+  { "id": 19, "libelle": "Vent fort" }
+]
