@@ -255,6 +255,10 @@ mat-card.creation-footer {
   margin-right: 3 * $standardColumnGap;
 }
 
+input-code-libelle mat-form-field {
+  width: 400px;
+}
+
 .code-libelle-container {
   display: inline-block;
   .code-input {

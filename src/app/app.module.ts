@@ -56,6 +56,7 @@ import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
 import {
   MAT_DIALOG_DEFAULT_OPTIONS,
+  MatAutocompleteModule,
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
@@ -207,7 +208,8 @@ const baseNaturalisteRoutes: Routes = [
     MatPaginatorModule,
     MatSortModule,
     MatDialogModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatAutocompleteModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -227,7 +229,8 @@ const baseNaturalisteRoutes: Routes = [
     MatListModule,
     MatPaginatorModule,
     MatSortModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatAutocompleteModule
   ],
   declarations: [
     AppComponent,
@@ -297,7 +300,7 @@ const baseNaturalisteRoutes: Routes = [
     CreationService,
     DonneeService,
     EntiteSimpleService,
-    // fakeBackendProvider,
+    fakeBackendProvider,
     GestionModeHelper,
     InventaireService,
     ImportService,
