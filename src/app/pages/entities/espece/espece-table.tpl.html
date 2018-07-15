@@ -5,35 +5,70 @@
     (onFilterChange)="applyFilter($event)">
 </table-topbar>
 
-<div class="table-responsive">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Classe</th>
+<div class="mat-elevation-z8">
+    <table class="espece-table"
+        mat-table
+        [dataSource]="dataSource"
+        matSort>
 
-                <th>Code</th>
+        <!-- Classe -->
+        <ng-container matColumnDef="classe">
+            <th mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header> Classe </th>
+            <td mat-cell
+                *matCellDef="let row"> {{row.classe}} </td>
+        </ng-container>
 
-                <th>Nom français</th>
+        <!-- Code -->
+        <ng-container matColumnDef="code">
+            <th mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header> Code </th>
+            <td mat-cell
+                *matCellDef="let row"> {{row.code}} </td>
+        </ng-container>
 
-                <th>Nom latin</th>
+        <!-- Nom francais -->
+        <ng-container matColumnDef="nomFrancais">
+            <th mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="nom-francais"> Nom français </th>
+            <td mat-cell
+                *matCellDef="let row"> {{row.nomFrancais}} </td>
+        </ng-container>
 
-                <th></th>
-            </tr>
-        </thead>
+        <!-- Nom latin -->
+        <ng-container matColumnDef="nomLatin">
+            <th mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="nom-latin"> Nom latin </th>
+            <td mat-cell
+                *matCellDef="let row"
+                [style.color]="row.color"> {{row.nomLatin}} </td>
+        </ng-container>
 
-        <tbody>
-            <tr *ngFor="let object of objects">
+        <!-- Nombre de données -->
+        <ng-container matColumnDef="nbDonnees">
+            <th mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="nb-donnees"> Nombre de données </th>
+            <td mat-cell
+                *matCellDef="let row"
+                [style.color]="row.color"> {{row.nbDonnees}} </td>
+        </ng-container>
 
-                <td>{{object.classe.libelle}}</td>
-
-                <td>{{object.code}}</td>
-
-                <td>{{object.nomFrancais}}</td>
-
-                <td>{{object.nomLatin}}</td>
-
-
-            </tr>
-        </tbody>
+        <tr mat-header-row
+            *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row
+            *matRowDef="let row; columns: displayedColumns;"
+            (click)="onRowEspeceClicked(row.id)"
+            [ngClass]="{'mat-row-selected': (!!selectedObject && (selectedObject.id == row.id))}">
+        </tr>
     </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
 </div>
