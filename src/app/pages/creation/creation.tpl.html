@@ -4,7 +4,7 @@
 <div class="lco-creation-body">
 
   <!-- Bar containing the messages -->
-  <mat-card class="lco-creation-messages">
+  <div class="lco-creation-messages">
     <div [ngSwitch]="status">
       <div *ngSwitchCase="'ERROR'">
         <ul>
@@ -20,10 +20,10 @@
         <strong>Aucun message</strong>
       </div>
     </div>
-  </mat-card>
+  </div>
 
   <!-- Bar containing the top buttons -->
-  <mat-card class="lco-creation-buttons">
+  <div class="lco-creation-buttons">
     <!-- Top left buttons -->
     <span class="top-left-creation-buttons">
       <button mat-raised-button
@@ -84,7 +84,7 @@
         Supprimer la donnée
       </button>
     </span>
-  </mat-card>
+  </div>
 
   <!-- FORM TO CREATE DONNEES -->
   <form #donneeForm="ngForm">
@@ -624,31 +624,32 @@
 
     </div>
   </form>
+
+
+  <!-- BAR BOTTOM BUTTOM -->
+  <div class="creation-footer">
+    <span class="flex-spacer"></span>
+
+    <button mat-raised-button
+      color="primary"
+      *ngIf="modeHelper.isInventaireMode(mode)"
+      [disabled]="!donneeForm.form.valid"
+      (click)="saveInventaire()">
+      Enregistrer l'inventaire
+    </button>
+    <button mat-raised-button
+      color="primary"
+      *ngIf="modeHelper.isDonneeMode(mode)"
+      [disabled]="!donneeForm.form.valid"
+      (click)="saveDonnee()">
+      Enregistrer la donnée
+    </button>
+    <button mat-raised-button
+      color="primary"
+      *ngIf="modeHelper.isUpdateMode(mode)"
+      [disabled]="!donneeForm.form.valid"
+      (click)="saveInventaireAndDonnee()">
+      Mettre à jour la donnée
+    </button>
+  </div>
 </div>
-
-<!-- BAR BOTTOM BUTTOM -->
-<mat-card class="creation-footer">
-  <span class="flex-spacer"></span>
-
-  <button mat-raised-button
-    color="primary"
-    *ngIf="modeHelper.isInventaireMode(mode)"
-    [disabled]="!donneeForm.form.valid"
-    (click)="saveInventaire()">
-    Enregistrer l'inventaire
-  </button>
-  <button mat-raised-button
-    color="primary"
-    *ngIf="modeHelper.isDonneeMode(mode)"
-    [disabled]="!donneeForm.form.valid"
-    (click)="saveDonnee()">
-    Enregistrer la donnée
-  </button>
-  <button mat-raised-button
-    color="primary"
-    *ngIf="modeHelper.isUpdateMode(mode)"
-    [disabled]="!donneeForm.form.valid"
-    (click)="saveInventaireAndDonnee()">
-    Mettre à jour la donnée
-  </button>
-</mat-card>

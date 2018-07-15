@@ -77,13 +77,12 @@ mat-toolbar.base-naturaliste-header {
     rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
   flex: 0 0 auto;
   height: auto;
-  margin-bottom: 20px;
 }
 
 .baseNaturalisteContent {
   max-width: 1600px;
-  padding-left: 50px;
-  padding-right: 50px;
+  // padding-left: 50px;
+  // padding-right: 50px;
   margin-bottom: 10px;
 }
 
@@ -97,20 +96,14 @@ mat-toolbar.base-naturaliste-header {
 }
 
 .lco-creation-body {
-  margin-bottom: 20px;
-
-  mat-card.lco-creation-messages {
+  div.lco-creation-messages {
     display: block;
-    margin-bottom: 10px;
-    padding: 4px;
+    height: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
-  mat-card.lco-creation-buttons {
-    display: flex;
-    flex: 0 0 auto;
-    margin-bottom: 10px;
-    padding: 4px;
-
+  div.lco-creation-buttons {
     .top-left-creation-buttons {
       button {
         margin-right: 10px;
@@ -125,6 +118,11 @@ mat-toolbar.base-naturaliste-header {
   }
 
   .lco-creation-form {
+    background-color: mat-color($mat-brown, 100);
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     display: grid;
     grid-template-columns: 1fr 2fr;
     column-gap: 50px;
@@ -243,11 +241,16 @@ mat-toolbar.base-naturaliste-header {
   }
 }
 
-mat-card.creation-footer {
+div.creation-footer,
+div.lco-creation-buttons {
   display: flex;
   flex: 0 0 auto;
-  margin-bottom: 8px;
-  padding: 4px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: mat-color($mat-brown, 200);
+  min-height: 30px;
 }
 
 .comportements-container > input-code-libelle:not(:last-child),
@@ -397,4 +400,15 @@ table.lieudit-table {
 
 .mat-row-selected {
   background: mat-color($mat-brown, 100);
+}
+
+.lco-entity-page,
+.lco-creation-messages {
+  padding-right: 50px;
+  padding-left: 50px;
+}
+
+.lco-entity-page {
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
