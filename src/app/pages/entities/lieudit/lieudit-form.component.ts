@@ -15,7 +15,11 @@ import { GestionModeHelper } from "../gestion-mode.enum";
 export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
   public departements: Departement[];
 
-  public communes: Commune[];
+  private communes: Commune[];
+
+  public filteredCommunes: Commune[];
+
+  public selectedDepartement: Departement;
 
   public altitudeFormControl = new FormControl("", [Validators.required]);
   public longitudeFormControl = new FormControl("", [Validators.required]);
@@ -39,18 +43,34 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
         console.error("Impossible de trouver les départements (" + error + ")");
       }
     );
+
     // Get all communes
     this.entiteSimpleService.getAllObjects("commune").subscribe(
       (result: Commune[]) => {
         this.communes = result;
+        this.filteredCommunes = [];
+
+        if (!!this.object && !!this.object.commune) {
+          this.selectedDepartement = this.object.commune.departement;
+          this.updateCommunes();
+        }
       },
       (error: Response) => {
         console.error("Impossible de trouver les communes (" + error + ")");
       }
     );
+
   }
 
   getNewObject(): Lieudit {
     return new Lieudit();
+  }
+
+  private updateCommunes(): void {
+    if (!!this.selectedDepartement && !!this.selectedDepartement.id) {
+      this.filteredCommunes = this.communes.filter(
+        (commune) => commune.departement.id === this.selectedDepartement.id
+      );
+    }
   }
 }

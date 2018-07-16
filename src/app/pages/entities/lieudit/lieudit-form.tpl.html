@@ -27,7 +27,8 @@
         [placeholder]="'Département'"
         [fieldForDisplay]="'code'"
         [options]="departements"
-        [(model)]="object.commune.departement">
+        [(model)]="selectedDepartement"
+        (modelChange)="updateCommunes()">
       </lco-entite-select>
 
 
@@ -35,7 +36,7 @@
       <lco-entite-select [id]="'input-code-commune'"
         [placeholder]="'Code de la Commune'"
         [fieldForDisplay]="'code'"
-        [options]="communes"
+        [options]="filteredCommunes"
         [(model)]="object.commune">
       </lco-entite-select>
 
@@ -44,7 +45,7 @@
       <lco-entite-select [id]="'input-nom-commune'"
         [placeholder]="'Nom de la Commune'"
         [fieldForDisplay]="'nom'"
-        [options]="communes"
+        [options]="filteredCommunes"
         [(model)]="object.commune">
       </lco-entite-select>
 
