@@ -18,13 +18,13 @@
         (edit)="editObject($event)"
         (view)="viewObject($event)"></age-table>
 
-    <age-form *ngIf="isCreationMode() || isEditionMode()"
+    <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
         [object]="objectToSave"
         [mode]="mode"
         creationTitle="Création d'un âge"
         editionTitle="Edition de l'âge"
         (confirm)="saveObject()"
-        (back)="cancelEdition()"></age-form>
+        (back)="cancelEdition()"></entite-avec-libelle-form>
 
     <entite-delete-confirmation *ngIf="isRemoveMode()"
         question="Êtes-vous certain de vouloir supprimer l'âge ?"

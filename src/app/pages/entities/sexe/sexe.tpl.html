@@ -19,12 +19,14 @@
     (view)="viewObject($event)">
   </sexe-table>
 
-  <sexe-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
+    creationTitle="Création d'un sexe"
+    editionTitle="Édition d'un sexe"
     (confirm)="saveObject()"
     (back)="cancelEdition()">
-  </sexe-form>
+  </entite-avec-libelle-form>
 
   <entite-delete-confirmation *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le sexe ?"

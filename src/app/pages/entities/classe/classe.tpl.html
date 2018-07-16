@@ -18,11 +18,13 @@
     (edit)="editObject($event)"
     (view)="viewObject($event)"></classe-table>
 
-  <classe-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
+    creationTitle="Création d'une classe"
+    editionTitle="Édition d'une classe"
     (confirm)="saveObject()"
-    (back)="cancelEdition()"></classe-form>
+    (back)="cancelEdition()"></entite-avec-libelle-form>
 
   <entite-delete-confirmation *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la classe ?"

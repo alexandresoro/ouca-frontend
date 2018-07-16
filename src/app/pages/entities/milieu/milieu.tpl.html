@@ -22,6 +22,8 @@
   <entite-avec-libelle-et-code-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
+    creationTitle="Création d'un milieu"
+    editionTitle="Édition d'un milieu"
     (confirm)="saveObject()"
     (back)="cancelEdition()">
   </entite-avec-libelle-et-code-form>

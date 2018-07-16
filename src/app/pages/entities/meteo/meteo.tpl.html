@@ -19,12 +19,14 @@
     (view)="viewObject($event)">
   </meteo-table>
 
-  <meteo-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
+    creationTitle="Création d'une météo"
+    editionTitle="Édition d'une météo"
     (confirm)="saveObject()"
     (back)="cancelEdition()">
-  </meteo-form>
+  </entite-avec-libelle-form>
 
   <entite-delete-confirmation *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la météo ?"

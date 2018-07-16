@@ -18,11 +18,13 @@
     (edit)="editObject($event)"
     (view)="viewObject($event)"></estimation-distance-table>
 
-  <estimation-distance-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
+    creationTitle="Création d'une estimation de la distance"
+    editionTitle="Édition d'une estimation de la distance"
     (confirm)="saveObject()"
-    (back)="cancelEdition()"></estimation-distance-form>
+    (back)="cancelEdition()"></entite-avec-libelle-form>
 
   <entite-delete-confirmation *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'estimation de la distance ?"

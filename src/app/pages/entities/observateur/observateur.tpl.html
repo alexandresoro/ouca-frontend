@@ -19,12 +19,14 @@
     (view)="viewObject($event)">
   </observateur-table>
 
-  <observateur-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
+    creationTitle="Création d'un observateur"
+    editionTitle="Édition d'un observateur"
     (confirm)="saveObject()"
     (back)="cancelEdition()">
-  </observateur-form>
+  </entite-avec-libelle-form>
 
   <entite-delete-confirmation *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'observateur ?"

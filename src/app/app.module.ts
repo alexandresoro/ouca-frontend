@@ -12,10 +12,8 @@ import { CreationComponent } from "./pages/creation/creation.component";
 import { DonneeService } from "./pages/creation/donnee.service";
 import { InputCodeLibelleComponent } from "./pages/creation/input-code-libelle/input-code-libelle.component";
 import { InventaireService } from "./pages/creation/inventaire.service";
-import { AgeFormComponent } from "./pages/entities/age/age-form.component";
 import { AgeTableComponent } from "./pages/entities/age/age-table.component";
 import { AgeComponent } from "./pages/entities/age/age.component";
-import { ClasseFormComponent } from "./pages/entities/classe/classe-form.component";
 import { ClasseTableComponent } from "./pages/entities/classe/classe-table.component";
 import { ClasseComponent } from "./pages/entities/classe/classe.component";
 import { CommuneFormComponent } from "./pages/entities/commune/commune-form.component";
@@ -31,22 +29,18 @@ import { EntiteSimpleDetailsComponent } from "./pages/entities/entite-simple/ent
 import { EntiteSimpleFormComponent } from "./pages/entities/entite-simple/entite-simple-form.component";
 import { EntiteSimpleComponent } from "./pages/entities/entite-simple/entite-simple.component";
 import { EntiteSimpleService } from "./pages/entities/entite-simple/entite-simple.service";
-import { EstimationDistanceFormComponent } from "./pages/entities/estimation-distance/estimation-distance-form.component";
 import { EstimationDistanceTableComponent } from "./pages/entities/estimation-distance/estimation-distance-table.component";
 import { EstimationDistanceComponent } from "./pages/entities/estimation-distance/estimation-distance.component";
 import { EstimationNombreFormComponent } from "./pages/entities/estimation-nombre/estimation-nombre-form.component";
 import { EstimationNombreTableComponent } from "./pages/entities/estimation-nombre/estimation-nombre-table.component";
 import { EstimationNombreComponent } from "./pages/entities/estimation-nombre/estimation-nombre.component";
 import { GestionModeHelper } from "./pages/entities/gestion-mode.enum";
-import { MeteoFormComponent } from "./pages/entities/meteo/meteo-form.component";
 import { MeteoTableComponent } from "./pages/entities/meteo/meteo-table.component";
 import { MeteoComponent } from "./pages/entities/meteo/meteo.component";
 import { MilieuTableComponent } from "./pages/entities/milieu/milieu-table.component";
 import { MilieuComponent } from "./pages/entities/milieu/milieu.component";
-import { ObservateurFormComponent } from "./pages/entities/observateur/observateur-form.component";
 import { ObservateurTableComponent } from "./pages/entities/observateur/observateur-table.component";
 import { ObservateurComponent } from "./pages/entities/observateur/observateur.component";
-import { SexeFormComponent } from "./pages/entities/sexe/sexe-form.component";
 import { SexeTableComponent } from "./pages/entities/sexe/sexe-table.component";
 import { SexeComponent } from "./pages/entities/sexe/sexe.component";
 import { ViewComponent } from "./pages/vue/view.component";
@@ -236,10 +230,8 @@ const baseNaturalisteRoutes: Routes = [
     AppComponent,
     AgeComponent,
     AgeTableComponent,
-    AgeFormComponent,
     ClasseComponent,
     ClasseTableComponent,
-    ClasseFormComponent,
     ConfigurationComponent,
     ConfigurationFormComponent,
     CommuneComponent,
@@ -266,7 +258,6 @@ const baseNaturalisteRoutes: Routes = [
     EstimationNombreFormComponent,
     EstimationDistanceComponent,
     EstimationDistanceTableComponent,
-    EstimationDistanceFormComponent,
     ImportComponent,
     InputCodeLibelleComponent,
     LcoEntiteSelectComponent,
@@ -275,15 +266,12 @@ const baseNaturalisteRoutes: Routes = [
     LieuditFormComponent,
     MeteoComponent,
     MeteoTableComponent,
-    MeteoFormComponent,
     MilieuComponent,
     MilieuTableComponent,
     ObservateurComponent,
-    ObservateurFormComponent,
     ObservateurTableComponent,
     SexeComponent,
     SexeTableComponent,
-    SexeFormComponent,
     TopButtonsComponent,
     TableButtonsComponent,
     TableTopbarComponent,
