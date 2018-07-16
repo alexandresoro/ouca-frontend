@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Commune } from "../../../model/commune.object";
 import { Departement } from "../../../model/departement.object";
@@ -13,6 +14,9 @@ import { GestionModeHelper } from "../gestion-mode.enum";
 export class CommuneFormComponent extends EntiteSimpleFormComponent<Commune> {
 
     public departements: Departement[];
+
+    public codeFormControl = new FormControl("", [Validators.required]);
+    public nomFormControl = new FormControl("", [Validators.required]);
 
     constructor(private entiteSimpleService: EntiteSimpleService<Commune>,
                 modeHelper: GestionModeHelper) {
