@@ -81,10 +81,7 @@ import { HttpClientModule } from "../../node_modules/@angular/common/http";
 import { ConfirmationDialogComponent } from "./components/dialog/confirmation-dialog.component";
 import { TableTopbarComponent } from "./components/entities/table-topbar/table-topbar.component";
 import { LcoEntiteSelectComponent } from "./components/form/entite-select/lco-entite-select.component";
-import {
-  FakeBackendInterceptor,
-  fakeBackendProvider
-} from "./mock/fake-backend-interceptor";
+import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
 import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
 import { ConfigurationService } from "./pages/configuration/configuration.service";
@@ -303,4 +300,4 @@ const baseNaturalisteRoutes: Routes = [
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
   ]
 })
-export class AppModule { }
+export class AppModule {}

@@ -5,32 +5,35 @@ import { Observateur } from "./observateur.object";
 import { Sexe } from "./sexe.object";
 
 export class AppConfiguration {
+  applicationName: string;
 
-    applicationName: string;
+  defaultObservateur: Observateur;
 
-    defaultObservateur: Observateur;
+  defaultDepartement: Departement;
 
-    defaultDepartement: Departement;
+  defaultEstimationNombre: EstimationNombre;
 
-    defaultEstimationNombre: EstimationNombre;
+  defaultNombre: number;
 
-    defaultNombre: number;
+  defaultSexe: Sexe;
 
-    defaultSexe: Sexe;
+  defaultAge: Age;
 
-    defaultAge: Age;
+  areAssociesDisplayed: boolean;
 
-    areAssociesDisplayed: boolean;
+  isMeteoDisplayed: boolean;
 
-    isMeteoDisplayed: boolean;
+  isDistanceDisplayed: boolean;
 
-    isDistanceDisplayed: boolean;
+  isRegroupementDisplayed: boolean;
 
-    isRegroupementDisplayed: boolean;
+  displayedColumns: string;
 
-    displayedColumns: string;
+  mySqlPath: string;
 
-    mySqlPath: string;
+  mySqlDumpPath: string;
 
-    mySqlDumpPath: string;
+  importFolderPath: string;
+
+  exportFolderPath: string;
 }

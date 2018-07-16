@@ -392,10 +392,19 @@ table.lieudit-table {
   margin-top: 20px;
 }
 
-.entite-form {
+.entite-form,
+.configuration-form {
   width: 500px;
   mat-form-field.mat-form-field {
     width: 100%;
+  }
+
+  .mat-checkbox-label {
+    width: 500px;
+  }
+
+  label.mat-checkbox-layout {
+    padding-bottom: 20px;
   }
 }
 
@@ -415,6 +424,7 @@ table.lieudit-table {
 }
 
 .lco-base-naturaliste {
-.entite-simple-details {
-  margin-top: 10px;
-}}
+  .entite-simple-details {
+    margin-top: 10px;
+  }
+}

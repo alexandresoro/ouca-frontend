@@ -34,7 +34,9 @@ const PROPRIETES_A_AFFICHER: IdPropriete[] = [
   { id: 10, propriete: "Afficher la distance" },
   { id: 11, propriete: "Afficher le numéro de regroupement" },
   { id: 12, propriete: "Chemin vers MySQL" },
-  { id: 13, propriete: "Chemin vers MySQL dump" }
+  { id: 13, propriete: "Chemin vers MySQL dump" },
+  { id: 14, propriete: "Dossier d'import" },
+  { id: 15, propriete: "Dossier d'export" }
 ];
 
 @Component({
@@ -50,8 +52,6 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   public displayedColumns: string[] = ["propriete", "valeur"];
   public dataSource: MatTableDataSource<ProprieteValeur>;
-
-  // @ViewChild(MatTable) table: MatTable;
 
   constructor(
     private configurationService: ConfigurationService,
@@ -129,6 +129,12 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
             break;
           case 13:
             valeurToSet = this.configurationToSave.mySqlDumpPath;
+            break;
+          case 14:
+            valeurToSet = this.configurationToSave.importFolderPath;
+            break;
+          case 15:
+            valeurToSet = this.configurationToSave.exportFolderPath;
             break;
           default:
             break;
