@@ -21,7 +21,6 @@ import { ClasseComponent } from "./pages/entities/classe/classe.component";
 import { CommuneFormComponent } from "./pages/entities/commune/commune-form.component";
 import { CommuneTableComponent } from "./pages/entities/commune/commune-table.component";
 import { CommuneComponent } from "./pages/entities/commune/commune.component";
-import { ComportementFormComponent } from "./pages/entities/comportement/comportement-form.component";
 import { ComportementTableComponent } from "./pages/entities/comportement/comportement-table.component";
 import { ComportementComponent } from "./pages/entities/comportement/comportement.component";
 import { DepartementFormComponent } from "./pages/entities/departement/departement-form.component";
@@ -42,7 +41,6 @@ import { GestionModeHelper } from "./pages/entities/gestion-mode.enum";
 import { MeteoFormComponent } from "./pages/entities/meteo/meteo-form.component";
 import { MeteoTableComponent } from "./pages/entities/meteo/meteo-table.component";
 import { MeteoComponent } from "./pages/entities/meteo/meteo.component";
-import { MilieuFormComponent } from "./pages/entities/milieu/milieu-form.component";
 import { MilieuTableComponent } from "./pages/entities/milieu/milieu-table.component";
 import { MilieuComponent } from "./pages/entities/milieu/milieu.component";
 import { ObservateurFormComponent } from "./pages/entities/observateur/observateur-form.component";
@@ -99,6 +97,8 @@ import { ConfigurationService } from "./pages/configuration/configuration.servic
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
 import { NavigationService } from "./pages/creation/navigation.service";
+import { EntiteAvecLibelleEtCodeFormComponent } from "./pages/entities/entite-avec-libelle-et-code/entite-avec-libelle-et-code-form.component";
+import { EntiteAvecLibelleFormComponent } from "./pages/entities/entite-avec-libelle/entite-avec-libelle-form.component";
 import { EspeceFormComponent } from "./pages/entities/espece/espece-form.component";
 import { EspeceTableComponent } from "./pages/entities/espece/espece-table.component";
 import { EspeceComponent } from "./pages/entities/espece/espece.component";
@@ -247,12 +247,13 @@ const baseNaturalisteRoutes: Routes = [
     CommuneFormComponent,
     ComportementComponent,
     ComportementTableComponent,
-    ComportementFormComponent,
     ConfirmationDialogComponent,
     CreationComponent,
     DepartementComponent,
     DepartementTableComponent,
     DepartementFormComponent,
+    EntiteAvecLibelleEtCodeFormComponent,
+    EntiteAvecLibelleFormComponent,
     EntiteSimpleComponent,
     EntiteSimpleRemovalConfirmationComponent,
     EntiteSimpleDetailsComponent,
@@ -277,7 +278,6 @@ const baseNaturalisteRoutes: Routes = [
     MeteoFormComponent,
     MilieuComponent,
     MilieuTableComponent,
-    MilieuFormComponent,
     ObservateurComponent,
     ObservateurFormComponent,
     ObservateurTableComponent,
@@ -315,4 +315,4 @@ const baseNaturalisteRoutes: Routes = [
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
   ]
 })
-export class AppModule {}
+export class AppModule { }

@@ -19,12 +19,12 @@
     (view)="viewObject($event)">
   </milieu-table>
 
-  <milieu-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-et-code-form *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     (confirm)="saveObject()"
     (back)="cancelEdition()">
-  </milieu-form>
+  </entite-avec-libelle-et-code-form>
 
   <entite-delete-confirmation *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le milieu ?"
