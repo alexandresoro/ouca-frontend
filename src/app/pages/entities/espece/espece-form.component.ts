@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Classe } from "../../../model/classe.object";
 import { Espece } from "../../../model/espece.object";
@@ -13,6 +14,10 @@ import { GestionModeHelper } from "../gestion-mode.enum";
 export class EspeceFormComponent extends EntiteSimpleFormComponent<Espece> {
 
     public classes: Classe[];
+
+    public codeFormControl = new FormControl("", [Validators.required]);
+    public nomFrancaisFormControl = new FormControl("", [Validators.required]);
+    public nomLatinFormControl = new FormControl("", [Validators.required]);
 
     constructor(private entiteSimpleService: EntiteSimpleService<Espece>,
                 modeHelper: GestionModeHelper) {

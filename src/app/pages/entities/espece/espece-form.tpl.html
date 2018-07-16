@@ -1,124 +1,97 @@
-<div class="lco-entity-form lco-entite-simple-form">
-    <form (ngSubmit)="save()"
-        #entiteSimpleForm="ngForm">
-        <div>
-            <h2 *ngIf="isCreationMode()">{{creationTitle}}</h2>
-            <h2 *ngIf="isEditionMode()">{{editionTitle}}</h2>
-        </div>
-        <div>
-            <div *ngIf="isEditionMode()">
-                <label for="fieldId">ID</label>
+<mat-card>
+    <mat-card-title>
+        <h2 *ngIf="isCreationMode()">Création d'une espèce</h2>
+        <h2 *ngIf="isEditionMode()">Édition d'une espèce</h2>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form (ngSubmit)="save()"
+            #entiteSimpleForm="ngForm"
+            class="entite-form">
+
+            <!-- ID -->
+            <mat-form-field *ngIf="isEditionMode()">
                 <input matInput
                     type="text"
-                    class="form-control"
-                    id="fieldId"
-                    name="fieldId"
+                    placeholder="ID"
+                    id="input-id"
+                    name="id"
                     [(ngModel)]="object.id"
                     #fieldId="ngModel"
                     readonly/>
-            </div>
+            </mat-form-field>
 
             <!-- Classe -->
-            <div>
-                <label class="control-label"
-                    for="input-classe">Classe</label>
-                <mat-select class="form-control"
-                    id="input-classe"
-                    name="input-classe"
-                    [(ngModel)]="object.classe"
-                    required>
-                    <option *ngFor="let classe of classes"
-                        [value]="classe"
-                        required>
-                        {{classe.libelle}}
-                    </option>
-                </mat-select>
-            </div>
+            <lco-entite-select [id]="'input-classe'"
+                [placeholder]="'Classe espèce'"
+                [fieldForDisplay]="'libelle'"
+                [options]="classes"
+                [(model)]="object.classe">
+            </lco-entite-select>
 
-            <!-- Code -->
-            <div>
-                <label class="control-label"
-                    for="input-code">Code</label>
+
+            <!-- Code espece -->
+            <mat-form-field>
                 <input matInput
                     type="text"
-                    class="form-control"
-                    name="input-code"
+                    placeholder="Code"
                     id="input-code"
+                    name="code"
                     [(ngModel)]="object.code"
-                    #inputCode="ngModel"
+                    #fieldId="ngModel"
                     required/>
+                <mat-error *ngIf="codeFormControl.hasError('required')">
+                    Le code de l'espèce ne peut pas être vide.
+                </mat-error>
+            </mat-form-field>
 
-                <div [hidden]="inputCode.valid || inputCode.pristine">
-                    <p class="help-block"
-                        [hidden]="inputCode.valid.required">
-                        Le code de l'espèce ne peut pas être vide.
-                    </p>
-                </div>
-
-            </div>
 
             <!-- Nom francais -->
-            <div>
-                <label class="control-label"
-                    for="input-nom-francais">Nom français</label>
+            <mat-form-field>
                 <input matInput
                     type="text"
-                    class="form-control"
-                    name="input-nom-francais"
+                    placeholder="Nom français"
                     id="input-nom-francais"
+                    name="nom-francais"
                     [(ngModel)]="object.nomFrancais"
-                    #inputNomFrancais="ngModel"
+                    #fieldId="ngModel"
                     required/>
-
-                <div [hidden]="inputNomFrancais.valid || inputNomFrancais.pristine">
-                    <p class="help-block"
-                        [hidden]="inputNomFrancais.valid.required">
-                        Le nom français de l'espèce ne peut pas être vide.
-                    </p>
-                </div>
-
-            </div>
+                <mat-error *ngIf="nomFrancaisFormControl.hasError('required')">
+                    Le nom français de l'espèce ne peut pas être vide.
+                </mat-error>
+            </mat-form-field>
 
             <!-- Nom latin -->
-            <div>
-                <label class="control-label"
-                    for="input-nom-latin">Nom latin</label>
+            <mat-form-field>
                 <input matInput
                     type="text"
-                    class="form-control"
-                    name="input-nom-latin"
+                    placeholder="Nom latin"
                     id="input-nom-latin"
+                    name="nom-latin"
                     [(ngModel)]="object.nomLatin"
-                    #inputNomLatin="ngModel"
+                    #fieldId="ngModel"
                     required/>
+                <mat-error *ngIf="nomLatinFormControl.hasError('required')">
+                    Le nom latin de l'espèce ne peut pas être vide.
+                </mat-error>
+            </mat-form-field>
 
-                <div [hidden]="inputNomLatin.valid || inputNomLatin.pristine">
-                    <p class="help-block"
-                        [hidden]="inputNomLatin.valid.required">
-                        Le nom latin de l'espèce ne peut pas être vide.
-                    </p>
-                </div>
-
-            </div>
-        </div>
-
-        <div>
-            <div class="  text-right ">
+            <div class="cancel-submit-buttons">
                 <button mat-raised-button
                     color="accent"
                     (click)="cancel()">
                     <mat-icon>cancel</mat-icon>
-                    <span>Annuler</span>
+                    Annuler
                 </button>
+                <span class="button-spacer"></span>
                 <button mat-raised-button
                     color="primary"
                     type="submit"
                     [disabled]="!entiteSimpleForm.form.valid">
                     <mat-icon>save</mat-icon>
-                    <span>Enregistrer</span>
+                    Enregistrer
                 </button>
             </div>
-        </div>
-    </form>
-
-</div>
+        </form>
+    </mat-card-content>
+</mat-card>
