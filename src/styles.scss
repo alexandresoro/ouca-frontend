@@ -79,16 +79,15 @@ mat-toolbar.base-naturaliste-header {
   height: auto;
 }
 
-.baseNaturalisteContent {
-  max-width: 1600px;
-  // padding-left: 50px;
-  // padding-right: 50px;
-  margin-bottom: 10px;
-}
-
-.baseNaturalisteContent {
+.base-naturaliste-content {
   flex: 1 1 auto;
   overflow-y: auto;
+  margin-bottom: 10px;
+
+  .base-naturaliste-body {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
 }
 
 .header-spacer {
@@ -277,7 +276,7 @@ input-code-libelle mat-form-field {
   width: 100%;
 }
 
-.lco-base-naturaliste {
+.base-naturaliste {
   .mat-icon {
     height: 28px;
   }
@@ -423,7 +422,7 @@ table.lieudit-table {
   padding-bottom: 20px;
 }
 
-.lco-base-naturaliste {
+.base-naturaliste {
   .entite-simple-details {
     margin-top: 10px;
   }
