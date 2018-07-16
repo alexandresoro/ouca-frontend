@@ -1,63 +1,57 @@
-<div class="lco-entity-form lco-entite-simple-form">
-    <form (ngSubmit)="save()"
-        #entiteSimpleForm="ngForm">
-        <div>
-            <h2 *ngIf="isCreationMode()">{{creationTitle}}</h2>
-            <h2 *ngIf="isEditionMode()">{{editionTitle}}</h2>
-        </div>
-        <div>
-            <div *ngIf="isEditionMode()">
-                <label for="fieldId">ID</label>
+<mat-card>
+    <mat-card-title>
+        <h2 *ngIf="isCreationMode()">Création d'un dDépartement</h2>
+        <h2 *ngIf="isEditionMode()">Édition d'un département</h2>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form (ngSubmit)="save()"
+            #entiteSimpleForm="ngForm"
+            class="entite-form">
+
+            <!-- ID -->
+            <mat-form-field *ngIf="isEditionMode()">
                 <input matInput
                     type="text"
-                    class="form-control"
-                    id="fieldId"
-                    name="fieldId"
+                    placeholder="ID"
+                    id="input-id"
+                    name="id"
                     [(ngModel)]="object.id"
                     #fieldId="ngModel"
                     readonly/>
-            </div>
+            </mat-form-field>
 
-            <div>
-                <label class="control-label"
-                    for="input-code">Code</label>
+            <!-- Code -->
+            <mat-form-field>
                 <input matInput
                     type="text"
-                    class="form-control"
-                    name="input-code"
                     id="input-code"
+                    name="code"
+                    placeholder="Code"
                     [(ngModel)]="object.code"
-                    #inputCode="ngModel"
-                    required/>
+                    required
+                    [formControl]="codeFormControl" />
+                <mat-error *ngIf="codeFormControl.hasError('required')">
+                    Le code ne peut pas être vide.
+                </mat-error>
+            </mat-form-field>
 
-                <div [hidden]="inputCode.valid || inputCode.pristine">
-                    <p class="help-block"
-                        [hidden]="inputCode.valid.required">
-                        Le code ne peut pas être vide.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div>
-            <div class="  text-right ">
+            <div class="cancel-submit-buttons">
                 <button mat-raised-button
                     color="accent"
                     (click)="cancel()">
                     <mat-icon>cancel</mat-icon>
-                    <span>Annuler</span>
+                    Annuler
                 </button>
+                <span class="button-spacer"></span>
                 <button mat-raised-button
                     color="primary"
                     type="submit"
                     [disabled]="!entiteSimpleForm.form.valid">
                     <mat-icon>save</mat-icon>
-                    <span>Enregistrer</span>
+                    Enregistrer
                 </button>
             </div>
-        </div>
-    </form>
-
-</div>
+        </form>
+    </mat-card-content>
+</mat-card>
