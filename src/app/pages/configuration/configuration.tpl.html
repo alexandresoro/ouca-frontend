@@ -1,4 +1,4 @@
-<div class="lco-entity-page lco-age-page configuration-container">
+<div class="configuration-container">
   <div class="configuration-container-header">
     <div class="  lco-entity-page-title">
       <h1>Configuration</h1>
@@ -22,8 +22,6 @@
       </button>
     </ng-container>
   </div>
-
-  <hr>
 
   <configuration-form *ngIf="modeHelper.isEditionMode(mode)"
     [model]="configurationToSave"
