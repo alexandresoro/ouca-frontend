@@ -15,7 +15,8 @@
     <ng-container matColumnDef="departement">
       <th mat-header-cell
         *matHeaderCellDef
-        mat-sort-header> Département </th>
+        mat-sort-header
+        class="departement"> Département </th>
       <td mat-cell
         *matCellDef="let row"> {{row.departement}} </td>
     </ng-container>
@@ -24,7 +25,8 @@
     <ng-container matColumnDef="codeCommune">
       <th mat-header-cell
         *matHeaderCellDef
-        mat-sort-header> Code commune </th>
+        mat-sort-header
+        class="code-commune"> Code commune </th>
       <td mat-cell
         *matCellDef="let row"> {{row.codeCommune}} </td>
     </ng-container>
@@ -83,12 +85,12 @@
         [style.color]="row.color"> {{row.latitude}} </td>
     </ng-container>
 
-    <!-- Nombre de données -->
+    <!-- Nombre de fiches espèces -->
     <ng-container matColumnDef="nbDonnees">
       <th mat-header-cell
         *matHeaderCellDef
         mat-sort-header
-        class="nb-donnees"> Nombre de données </th>
+        class="nb-donnees"> Nombre de fiches espèces </th>
       <td mat-cell
         *matCellDef="let row"
         [style.color]="row.color"> {{row.nbDonnees}} </td>

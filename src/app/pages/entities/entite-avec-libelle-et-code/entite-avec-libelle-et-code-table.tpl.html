@@ -15,7 +15,8 @@
     <ng-container matColumnDef="code">
       <th mat-header-cell
         *matHeaderCellDef
-        mat-sort-header>Code</th>
+        mat-sort-header
+        class="code">Code</th>
       <td mat-cell
         *matCellDef="let row">{{row.code}}</td>
     </ng-container>
@@ -24,17 +25,18 @@
     <ng-container matColumnDef="libelle">
       <th mat-header-cell
         *matHeaderCellDef
-        mat-sort-header>Libellé</th>
+        mat-sort-header
+        class="libelle">Libellé</th>
       <td mat-cell
         *matCellDef="let row">{{row.libelle}}</td>
     </ng-container>
 
-    <!-- Nombre de données -->
+    <!-- Nombre de fiches espèces -->
     <ng-container matColumnDef="nbDonnees">
       <th mat-header-cell
         *matHeaderCellDef
         mat-sort-header
-        class="nb-donnees"> Nombre de données </th>
+        class="nb-donnees"> Nombre de fiches espèces </th>
       <td mat-cell
         *matCellDef="let row"
         [style.color]="row.color"> {{row.nbDonnees}} </td>

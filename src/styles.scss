@@ -308,17 +308,7 @@ input-code-libelle mat-form-field {
     .edit-button {
       min-width: 220px;
     }
-  }
-  .configuration-form-container {
-    .footer-buttons {
-      display: flex;
-      flex: 0 0 auto;
-    }
-
-    mat-list-item.mat-list-item {
-      min-height: 64px;
-    }
-  }
+  }  
 }
 
 .flex-spacer {
@@ -333,30 +323,7 @@ button mat-icon:first-child {
   margin-right: 10px;
 }
 
-table.lieudit-table {
-  table-layout: fixed;
-  width: 1200px;
 
-  th,
-  td {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  th.nom-commune {
-    width: 250px;
-  }
-
-  th.nom-lieu-dit {
-    width: 300px;
-  }
-
-  th.altitude,
-  th.longitude,
-  th.latitude {
-    width: 100px;
-  }
-}
 
 .table-topbar {
   display: flex;
@@ -385,45 +352,175 @@ table.lieudit-table {
   }
 }
 
-.cancel-submit-buttons {
-  display: flex;
-  flex: 0 0 auto;
-  margin-top: 20px;
-}
 
-.entite-form,
-.configuration-form {
-  width: 500px;
-  mat-form-field.mat-form-field {
-    width: 100%;
-  }
-
-  .mat-checkbox-label {
-    width: 500px;
-  }
-
-  label.mat-checkbox-layout {
-    padding-bottom: 20px;
-  }
-}
-
-.mat-row-selected {
-  background: mat-color($mat-brown, 100);
-}
-
-.lco-entity-page,
-.lco-creation-messages {
-  padding-right: 50px;
-  padding-left: 50px;
-}
-
-.lco-entity-page {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
 
 .base-naturaliste {
-  .entite-simple-details {
-    margin-top: 10px;
+  .lco-entity-page,
+  .configuration-container,
+  .import-page-container {
+    padding-right: 50px;
+    padding-left: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .mat-row-selected {
+    background: mat-color($mat-brown, 100);
+  }
+
+  .cancel-submit-buttons {
+    display: flex;
+    flex: 0 0 auto;
+    margin-top: 20px;
+  }
+  
+  .entite-form,
+  .configuration-form {
+    width: 500px;
+    mat-form-field.mat-form-field {
+      width: 100%;
+    }
+  
+    .mat-checkbox-label {
+      width: 500px;
+    }
+  
+    label.mat-checkbox-layout {
+      padding-bottom: 20px;
+    }
+  }
+
+  .lco-creation-messages {
+    padding-right: 50px;
+    padding-left: 50px;
+  }
+
+
+  .lco-entity-page {
+    .entite-simple-details {
+      margin-top: 10px;
+    }
+
+    table.mat-table {
+      table-layout: fixed;
+      width: 100%;
+    
+      th,
+      td {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+    }
+
+    table.entite-avec-libelle-table {
+      th.libelle {
+        width: 500px;
+      }
+    }
+
+    table.entite-avec-libelle-et-code-table {
+      th.code {
+        width: 200px;
+      }
+
+      th.libelle {
+        width: 500px;
+      }
+    }
+
+    table.departement-table {
+      th.code {
+        width: 200px;
+      }
+
+      th.nb-communes {
+        width: 200px;
+      }
+
+      th.nb-lieuxdits {
+        width: 200px;
+      }
+    }
+
+
+    table.commune-table {
+      th.departement {
+        width: 150px;
+      }
+
+      th.code {
+        width: 200px;
+      }
+
+      th.nom {
+        width: 300px;
+      }
+
+      th.nb-lieuxdits {
+        width: 200px;
+      }
+    }
+
+    table.lieudit-table {
+      th.departement {
+        width: 100px;
+      }
+
+      th.code-commune {
+        width: 150px;
+      }
+
+      th.nom-commune {
+        width: 300px;
+      }
+    
+      th.nom-lieu-dit {
+        width: 300px;
+      }
+    
+      th.altitude,
+      th.longitude,
+      th.latitude {
+        width: 100px;
+      }
+    }
+
+    table.estimation-nombre-table {
+      th.libelle {
+        width: 400px;
+      }
+
+      th.non-compte {
+        width: 200px;
+      }
+    }
+
+    table.classe-table {
+      th.libelle {
+        width: 400px;
+      }
+
+      th.nb-especes {
+        width: 200px;
+      }
+    }
+
+    table.espece-table {
+      th.classe {
+        width: 200px;
+      }
+
+      th.code {
+        width: 200px;
+      }
+
+      th.nom-francais {
+        width: 350px;
+      }
+
+      th.nom-latin {
+        width: 350px;
+      }
+    }
   }
 }

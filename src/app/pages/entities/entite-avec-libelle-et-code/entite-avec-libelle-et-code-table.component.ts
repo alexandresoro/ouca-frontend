@@ -7,6 +7,6 @@ import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table
 })
 export class EntiteAvecLibelleEtCodeTableComponent<
   T extends EntiteAvecLibelleEtCode
-> extends EntiteSimpleTableComponent<T> {
-  public displayedColumns: string[] = ["libelle", "code", "nbDonnees"];
+  > extends EntiteSimpleTableComponent<T> {
+  public displayedColumns: string[] = ["code", "libelle", "nbDonnees"];
 }

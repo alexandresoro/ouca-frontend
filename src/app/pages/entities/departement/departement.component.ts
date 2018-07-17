@@ -31,7 +31,7 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     );
 
     detailsData[4] = new EntiteDetailsData(
-      "Nombre de données",
+      "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
     return detailsData;

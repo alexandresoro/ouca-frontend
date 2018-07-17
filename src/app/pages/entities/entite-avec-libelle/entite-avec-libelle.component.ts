@@ -8,7 +8,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
 })
 export class EntiteAvecLibelleComponent<
   T extends EntiteAvecLibelle
-> extends EntiteSimpleComponent<T> {
+  > extends EntiteSimpleComponent<T> {
   public getDetailsData(): EntiteDetailsData[] {
     const detailsData: EntiteDetailsData[] = [];
     detailsData[0] = new EntiteDetailsData("ID", this.currentObject.id);
@@ -18,7 +18,7 @@ export class EntiteAvecLibelleComponent<
     );
 
     detailsData[2] = new EntiteDetailsData(
-      "Nombre de données",
+      "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
     return detailsData;

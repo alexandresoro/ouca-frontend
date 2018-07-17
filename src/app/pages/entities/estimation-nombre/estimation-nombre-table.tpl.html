@@ -6,7 +6,7 @@
 </table-topbar>
 
 <div class="mat-elevation-z8">
-  <table class="entite-avec-libelle-table"
+  <table class="estimation-nombre-table"
     mat-table
     [dataSource]="dataSource"
     matSort>
@@ -15,7 +15,8 @@
     <ng-container matColumnDef="libelle">
       <th mat-header-cell
         *matHeaderCellDef
-        mat-sort-header>Libellé</th>
+        mat-sort-header
+        class="libelle">Libellé</th>
       <td mat-cell
         *matCellDef="let row">{{row.libelle}}</td>
     </ng-container>
