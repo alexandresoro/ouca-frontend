@@ -34,6 +34,9 @@ module.exports = (env, argv) => {
     serve: {
       port: 3000,
       open: true,
+      hotClient: {
+        allEntries: true
+      },
       add: (app, middleware, options) => {
         app.use(webpackServeWaitpage(options));
         app.use(convert(history({})));

@@ -3,18 +3,16 @@
   <mat-toolbar class="base-naturaliste-header"
     color="primary">
     <a mat-button
-      href="#">
+      routerLink="/">
       <mat-icon>home</mat-icon>
       Base Naturaliste
     </a>
     <span class="header-spacer"></span>
     <a mat-button
-      routerLinkActive="active"
       routerLink="creation">
       <mat-icon>add</mat-icon>
       Création des données</a>
     <a mat-button
-      routerLinkActive="active"
       routerLink="vue">
       <mat-icon>search</mat-icon>
       Vue des données</a>
@@ -25,67 +23,67 @@
     <mat-menu #gestionBase="matMenu"
       [overlapTrigger]="false">
       <a mat-menu-item
-        href="observateur">
+        routerLink="/observateur">
         <mat-icon>star</mat-icon>
         Observateur
       </a>
       <a mat-menu-item
-        href="departement">
+        routerLink="/departement">
         <mat-icon>star</mat-icon>
         Département
       </a>
       <a mat-menu-item
-        href="commune">
+        routerLink="/commune">
         <mat-icon>star</mat-icon>
         Commune
       </a>
       <a mat-menu-item
-        href="lieudit">
+        routerLink="/lieudit">
         <mat-icon>star</mat-icon>
         Lieu-dit
       </a>
       <a mat-menu-item
-        href="meteo">
+        routerLink="/meteo">
         <mat-icon>star</mat-icon>
         Météo
       </a>
       <a mat-menu-item
-        href="classe">
+        routerLink="/classe">
         <mat-icon>star</mat-icon>
         Classe
       </a>
       <a mat-menu-item
-        href="espece">
+        routerLink="/espece">
         <mat-icon>star</mat-icon>
         Espèce
       </a>
       <a mat-menu-item
-        href="sexe">
+        routerLink="/sexe">
         <mat-icon>star</mat-icon>
         Sexe
       </a>
       <a mat-menu-item
-        href="age">
+        routerLink="/age">
         <mat-icon>star</mat-icon>
         Âge
       </a>
       <a mat-menu-item
-        href="estimation-nombre">
+        routerLink="/estimation-nombre">
         <mat-icon>star</mat-icon>
         Estimation Nombre
       </a>
       <a mat-menu-item
-        href="estimation-distance">
+        routerLink="/estimation-distance">
         <mat-icon>star</mat-icon>
         Estimation Distance
       </a>
       <a mat-menu-item
-        href="comportement">
+        routerLink="/comportement">
         <mat-icon>star</mat-icon>
         Comportement
       </a>
       <a mat-menu-item
-        href="milieu">
+        routerLink="/milieu">
         <mat-icon>star</mat-icon>
         Milieu
       </a>
@@ -98,17 +96,17 @@
     <mat-menu #autresActions="matMenu"
       [overlapTrigger]="false">
       <a mat-menu-item
-        href="/configuration">
+        routerLink="/configuration">
         <mat-icon>settings</mat-icon>
         Configurations
       </a>
       <a mat-menu-item
-        href="/sauvegarde">
+        routerLink="/sauvegarde">
         <mat-icon>save</mat-icon>
         Sauvegarde de la base
       </a>
       <a mat-menu-item
-        href="/import">
+        routerLink="/import">
         <mat-icon>import_export</mat-icon>
         Import de la base
       </a>
