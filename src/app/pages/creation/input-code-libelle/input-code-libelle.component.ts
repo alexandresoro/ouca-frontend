@@ -1,14 +1,23 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import {
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger
+} from "@angular/material/autocomplete";
+import { MatOption } from "@angular/material/typings";
 import * as diacritics from "diacritics";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { EntiteAvecLibelleEtCode } from "../../../model/entite-avec-libelle-et-code.object";
 import { InputCodeLibelleEventObject } from "./input-code-libelle-event.object";
@@ -17,7 +26,8 @@ import { InputCodeLibelleEventObject } from "./input-code-libelle-event.object";
   selector: "input-code-libelle",
   templateUrl: "./input-code-libelle.tpl.html"
 })
-export class InputCodeLibelleComponent {
+export class InputCodeLibelleComponent
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() public num: number;
 
   @Input() public type: string;
@@ -33,24 +43,40 @@ export class InputCodeLibelleComponent {
     InputCodeLibelleEventObject
   > = new EventEmitter<InputCodeLibelleEventObject>();
 
+  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+
+  subscription: Subscription;
+
   myControl = new FormControl();
 
   filteredValues: Observable<EntiteAvecLibelleEtCode[]>;
 
   private CHARACTERS_TO_IGNORE = /(\s|\'|\-|\,)/g;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.values && !!changes.values.currentValue) {
-      this.filteredValues = this.myControl.valueChanges.pipe(
-        startWith<string | EntiteAvecLibelleEtCode>(""),
-        map((value) => {
-          return typeof value === "string" || typeof value === "undefined"
-            ? value
-            : value.libelle;
-        }),
-        map((value) => (value ? this._filter(value) : this.values.slice()))
-      );
+  ngAfterViewInit() {
+    this._subscribeToClosingActions();
+  }
+
+  ngOnDestroy() {
+    if (this.subscription && !this.subscription.closed) {
+      this.subscription.unsubscribe();
     }
+  }
+
+  ngOnInit(): void {
+    this.filteredValues = this.myControl.valueChanges.pipe(
+      map((value) => {
+        return typeof value === "string" ||
+          typeof value === "undefined" ||
+          value === null
+          ? value
+          : value.libelle;
+      }),
+      map((value) => (value ? this._filter(value) : []))
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.isDisabled) {
       changes.isDisabled.currentValue
         ? this.myControl.disable()
@@ -60,6 +86,25 @@ export class InputCodeLibelleComponent {
 
   displayFn(value?: EntiteAvecLibelleEtCode): string | undefined {
     return value ? value.code + " - " + value.libelle : undefined;
+  }
+
+  private _subscribeToClosingActions(): void {
+    if (this.subscription && !this.subscription.closed) {
+      this.subscription.unsubscribe();
+    }
+
+    this.subscription = this.trigger.panelClosingActions.subscribe(
+      (e) => {
+        if (this.trigger.activeOption) {
+          this.updateSelectionWithOption(this.trigger.activeOption);
+        } else {
+          this.updateSelectionWithOption(null);
+        }
+        this.trigger.closePanel();
+      },
+      (err) => this._subscribeToClosingActions(),
+      () => this._subscribeToClosingActions()
+    );
   }
 
   private _filter(value: string): EntiteAvecLibelleEtCode[] {
@@ -80,9 +125,13 @@ export class InputCodeLibelleComponent {
   }
 
   public updateValue(newValue: MatAutocompleteSelectedEvent): void {
-    const newSelectedValue: EntiteAvecLibelleEtCode = newValue.option.value;
+    this.updateSelectionWithOption(newValue.option);
+  }
 
-    console.warn("coucou", newSelectedValue);
+  private updateSelectionWithOption(option: MatOption): void {
+    const newSelectedValue: EntiteAvecLibelleEtCode = option
+      ? option.value
+      : null;
 
     this.selectedValue = newSelectedValue;
 
