@@ -291,8 +291,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     // Prepare inventaire
     this.inventaireToSave.date = new Date(this.dateInventaire);
 
-    console.log("L'inventaire à sauvegarder est", this.inventaireToSave);
-
     this.inventaireService.saveInventaire(this.inventaireToSave).subscribe(
       (result: EntiteResult<Inventaire>) => {
         this.updatePageStatus(result.status, result.messages);

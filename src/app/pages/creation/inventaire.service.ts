@@ -9,17 +9,16 @@ import { BaseNaturalisteService } from "../../services/base-naturaliste.service"
 
 @Injectable()
 export class InventaireService extends BaseNaturalisteService {
-    private ENTITY_NAME: string = "creation/inventaire";
+  private ENTITY_NAME: string = "creation/inventaire";
 
   constructor(public http: HttpClient) {
-        super(http);
-    }
+    super(http);
+  }
 
   public saveInventaire(
     inventaireToSave: Inventaire
   ): Observable<EntiteResult<Inventaire>> {
-        // TODO
-        inventaireToSave.date = new Date();
-        return this.httpPost(this.ENTITY_NAME + "/create", inventaireToSave);
-    }
+    console.log("L'inventaire à sauvegarder est", inventaireToSave);
+    return this.httpPost(this.ENTITY_NAME + "/create", inventaireToSave);
+  }
 }
