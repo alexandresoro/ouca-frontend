@@ -81,6 +81,7 @@ import { HttpClientModule } from "../../node_modules/@angular/common/http";
 import { ConfirmationDialogComponent } from "./components/dialog/confirmation-dialog.component";
 import { TableTopbarComponent } from "./components/entities/table-topbar/table-topbar.component";
 import { LcoEntiteSelectComponent } from "./components/form/entite-select/lco-entite-select.component";
+import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
 import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
@@ -267,6 +268,7 @@ const baseNaturalisteRoutes: Routes = [
     MilieuTableComponent,
     ObservateurComponent,
     ObservateurTableComponent,
+    SearchByIdDialogComponent,
     SexeComponent,
     SexeTableComponent,
     TopButtonsComponent,
@@ -277,7 +279,7 @@ const baseNaturalisteRoutes: Routes = [
     ViewComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmationDialogComponent],
+  entryComponents: [ConfirmationDialogComponent, SearchByIdDialogComponent],
   providers: [
     BaseNaturalisteService,
     ConfigurationService,
@@ -285,7 +287,7 @@ const baseNaturalisteRoutes: Routes = [
     CreationService,
     DonneeService,
     EntiteSimpleService,
-    fakeBackendProvider,
+    // fakeBackendProvider,
     GestionModeHelper,
     InventaireService,
     ImportService,
