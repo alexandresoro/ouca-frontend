@@ -428,36 +428,51 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.switchToUpdateMode();
     }
 
-    // Set next donnee with current donnee
-    this.navigationService.setNextDonnee(this.donneeToSave);
+    let newNextDonnee = this.donneeToSave;
+    if (!!!this.navigationService.currentDonneeIndex) {
+      // We are displaying the creation form so the next donnee is the saved donnee
+      newNextDonnee = this.navigationService.savedDonnee;
+    }
 
-    // Set current donnee with previous donnee
-    this.inventaireToSave = this.navigationService.previousDonnee.inventaire;
+    // Set the current donnee to display
     this.donneeToSave = this.navigationService.previousDonnee;
-    this.navigationService.updateCurrentDonneeIndexWithPreviousDonnee();
-    console.log(
-      "La donnée courante est",
-      this.inventaireToSave,
-      this.donneeToSave
-    );
-    console.log(
-      "Index de la donnée courante",
-      this.navigationService.currentDonneeIndex
-    );
+    this.inventaireToSave = this.donneeToSave.inventaire;
+    this.navigationService.decreaseIndexOfCurrentDonnee();
 
-    // Set new previous donnee
-    this.navigationService.updatePreviousDonnee(this.donneeToSave);
-    console.log(
-      "La donnée courante est 1",
-      this.inventaireToSave,
-      this.donneeToSave
+    // Disable the navigation buttons
+    this.navigationService.setNextDonnee(null);
+    this.navigationService.setPreviousDonnee(null);
+
+    this.navigationService.updatePreviousAndNextDonnees(
+      this.donneeToSave,
+      null,
+      newNextDonnee
     );
   }
 
   public onNextDonneeBtnClicked(): void {
-    this.setPreviousDonneeToTheCurrentDonnee();
-    this.setCurrentDonneeToTheNextDonnee();
-    this.setNewNextDonnee();
+    this.mode = this.navigationService.getNextMode();
+    if (this.modeHelper.isInventaireMode(this.mode)) {
+      this.switchToInventaireMode();
+    } else if (this.modeHelper.isDonneeMode(this.mode)) {
+      this.switchToEditionDonneeMode();
+    }
+
+    const newPreviousDonnee = this.donneeToSave;
+
+    this.donneeToSave = this.navigationService.nextDonnee;
+    this.inventaireToSave = this.donneeToSave.inventaire;
+    this.navigationService.increaseIndexOfCurrentDonnee();
+
+    // Disable the navigation buttons
+    this.navigationService.setNextDonnee(null);
+    this.navigationService.setPreviousDonnee(null);
+
+    this.navigationService.updatePreviousAndNextDonnees(
+      this.donneeToSave,
+      newPreviousDonnee,
+      null
+    );
   }
 
   public onNewInventaireBtnClicked(): void {
@@ -467,11 +482,6 @@ export class CreationComponent extends PageComponent implements OnInit {
   public onEditInventaireBtnClicked(): void {
     this.switchToInventaireMode();
   }
-
-  private setPreviousDonneeToTheCurrentDonnee(): void {
-    this.navigationService.previousDonnee = this.donneeToSave;
-  }
-
   private setCurrentDonneeToTheNextDonnee(afterDelete: boolean = false): void {
     this.mode = this.navigationService.getNextMode();
     if (this.modeHelper.isInventaireMode(this.mode)) {
@@ -482,8 +492,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     this.inventaireToSave = this.navigationService.getNextInventaire();
     this.donneeToSave = this.navigationService.getNextDonnee();
-
-    this.navigationService.updateCurrentDonneeIndexWithNextDonnee(afterDelete);
 
     console.log(
       "Mode et inventaire et donnée courants:",
@@ -580,7 +588,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public isNextDonneeBtnDisplayed(): boolean {
-    return this.modeHelper.isUpdateMode(this.mode);
+    return this.navigationService.hasNextDonnee();
   }
 
   public onBackToCreationDonneeBtnClicked(): void {
