@@ -205,9 +205,26 @@ export class CreationComponent extends PageComponent implements OnInit {
    */
   private updateLieuxdits(): void {
     if (!!this.selectedCommune && !!this.selectedCommune.id) {
+      // METHOD 1 The lieux-dits are returned by init of the page
       this.filteredLieuxdits = this.pageModel.lieudits.filter(
         (lieudit) => lieudit.commune.id === this.selectedCommune.id
       );
+
+      // METHOD 2 We get the lieux-dits when selecting a commune
+      // You should comment the line creationPage.setLieudits(lieuditService.findAll()); in CreationService.java
+      /*
+      this.creationService
+        .getLieuxditsByCommuneId(this.selectedCommune.id)
+        .subscribe(
+          (lieuxdits: Lieudit[]) => {
+            this.filteredLieuxdits = lieuxdits;
+          },
+          (error: any) => {
+            console.error("error");
+          }
+        );
+        */
+
       this.initCoordinates();
     }
   }

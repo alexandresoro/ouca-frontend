@@ -6,6 +6,7 @@ import { Comportement } from "../../model/comportement.object";
 import { CreationPage } from "../../model/creation-page.object";
 import { Donnee } from "../../model/donnee.object";
 import { EntiteResult } from "../../model/entite-result.object";
+import { Lieudit } from "../../model/lieudit.object";
 import { BaseNaturalisteService } from "../../services/base-naturaliste.service";
 
 @Injectable()
@@ -34,6 +35,10 @@ export class CreationService extends BaseNaturalisteService {
 
   public getNextRegroupement(): Observable<number> {
     return this.httpGet(this.ENTITY_NAME + "/next_regroupement");
+  }
+
+  public getLieuxditsByCommuneId(idCommune: number): Observable<Lieudit[]> {
+    return this.httpGet("lieudit/search_by_commune/" + idCommune);
   }
 
   /**
