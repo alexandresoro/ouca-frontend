@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "../../../../node_modules/@angular/material";
 import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
+import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
@@ -652,8 +653,16 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onSearchByIdBtnClicked(): void {
-    // TODO
-    alert("It should open a popup asking for ID");
+    const dialogRef = this.dialog.open(SearchByIdDialogComponent, {
+      width: "450px"
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!!result) {
+        // TODO search donnée par ID
+        alert("Fonctionnalitée non supportée");
+      }
+    });
   }
 
   /**

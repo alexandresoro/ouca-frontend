@@ -72,7 +72,8 @@
         (click)="saveDonnee()">
         Enregistrer la donnée
       </button>
-      <button mat-raised-button
+      <button *ngIf="modeHelper.isUpdateMode(mode)"
+        mat-raised-button
         color="primary"
         (click)="saveInventaireAndDonnee()">
         Mettre à jour la donnée
