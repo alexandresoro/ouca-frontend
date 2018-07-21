@@ -28,8 +28,6 @@ import { InputCodeLibelleEventObject } from "./input-code-libelle-event.object";
 })
 export class InputCodeLibelleComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy {
-  @Input() public num: number;
-
   @Input() public type: string;
 
   @Input() public isDisabled: boolean;
@@ -136,8 +134,7 @@ export class InputCodeLibelleComponent
     this.selectedValue = newSelectedValue;
 
     const event: InputCodeLibelleEventObject = new InputCodeLibelleEventObject(
-      newSelectedValue,
-      this.num
+      newSelectedValue
     );
     this.onValueChanged.emit(event);
   }

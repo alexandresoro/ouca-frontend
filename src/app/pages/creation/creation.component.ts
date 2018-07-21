@@ -540,12 +540,15 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  public addComportement(event: InputCodeLibelleEventObject): void {
-    this.selectedComportements[event.index - 1] = event.value;
+  public addComportement(
+    event: InputCodeLibelleEventObject,
+    index: number
+  ): void {
+    this.selectedComportements[index] = event.value;
   }
 
-  public addMilieu(event: InputCodeLibelleEventObject): void {
-    this.selectedMilieux[event.index - 1] = event.value;
+  public addMilieu(event: InputCodeLibelleEventObject, index: number): void {
+    this.selectedMilieux[index] = event.value;
   }
 
   public isNewDonneeBtnDisplayed(): boolean {
