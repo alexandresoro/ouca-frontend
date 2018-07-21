@@ -258,7 +258,7 @@ div.lco-creation-buttons {
 }
 
 input-code-libelle mat-form-field {
-  width: 400px;
+  width: 340px;
 }
 
 .code-libelle-container {
@@ -308,7 +308,7 @@ input-code-libelle mat-form-field {
     .edit-button {
       min-width: 220px;
     }
-  }  
+  }
 }
 
 .flex-spacer {
@@ -322,8 +322,6 @@ input-code-libelle mat-form-field {
 button mat-icon:first-child {
   margin-right: 10px;
 }
-
-
 
 .table-topbar {
   display: flex;
@@ -352,8 +350,6 @@ button mat-icon:first-child {
   }
 }
 
-
-
 .base-naturaliste {
   .lco-entity-page,
   .configuration-container,
@@ -373,18 +369,18 @@ button mat-icon:first-child {
     flex: 0 0 auto;
     margin-top: 20px;
   }
-  
+
   .entite-form,
   .configuration-form {
     width: 500px;
     mat-form-field.mat-form-field {
       width: 100%;
     }
-  
+
     .mat-checkbox-label {
       width: 500px;
     }
-  
+
     label.mat-checkbox-layout {
       padding-bottom: 20px;
     }
@@ -395,7 +391,6 @@ button mat-icon:first-child {
     padding-left: 50px;
   }
 
-
   .lco-entity-page {
     .entite-simple-details {
       margin-top: 10px;
@@ -404,7 +399,7 @@ button mat-icon:first-child {
     table.mat-table {
       table-layout: fixed;
       width: 100%;
-    
+
       th,
       td {
         padding-left: 5px;
@@ -442,7 +437,6 @@ button mat-icon:first-child {
       }
     }
 
-
     table.commune-table {
       th.departement {
         width: 150px;
@@ -473,11 +467,11 @@ button mat-icon:first-child {
       th.nom-commune {
         width: 300px;
       }
-    
+
       th.nom-lieu-dit {
         width: 300px;
       }
-    
+
       th.altitude,
       th.longitude,
       th.latitude {
