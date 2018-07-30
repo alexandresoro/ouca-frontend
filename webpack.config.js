@@ -40,7 +40,8 @@ module.exports = (env, argv) => {
       add: (app, middleware, options) => {
         app.use(webpackServeWaitpage(options));
         app.use(convert(history({})));
-      }
+      },
+      host: "0.0.0.0"
     },
 
     // Add the loader for .ts files.
