@@ -81,6 +81,7 @@ import { HttpClientModule } from "../../node_modules/@angular/common/http";
 import { ConfirmationDialogComponent } from "./components/dialog/confirmation-dialog.component";
 import { TableTopbarComponent } from "./components/entities/table-topbar/table-topbar.component";
 import { LcoEntiteSelectComponent } from "./components/form/entite-select/lco-entite-select.component";
+import { LcoAutocompleteComponent } from "./components/form/lco-autocomplete/lco-autocomplete.component";
 import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
 import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
@@ -258,6 +259,7 @@ const baseNaturalisteRoutes: Routes = [
     EstimationDistanceTableComponent,
     ImportComponent,
     InputCodeLibelleComponent,
+    LcoAutocompleteComponent,
     LcoEntiteSelectComponent,
     LieuditComponent,
     LieuditTableComponent,
@@ -287,7 +289,7 @@ const baseNaturalisteRoutes: Routes = [
     CreationService,
     DonneeService,
     EntiteSimpleService,
-    // fakeBackendProvider,
+    fakeBackendProvider,
     GestionModeHelper,
     InventaireService,
     ImportService,

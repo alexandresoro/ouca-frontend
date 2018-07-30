@@ -1,0 +1,21 @@
+<span class="lco-autocomplete-container">
+  <mat-form-field class="lco-autocomplete-form-field">
+    <input type="text"
+      matInput
+      [placeholder]="type"
+      [id]="'input-' + type"
+      [name]="type"
+      [formControl]="myControl"
+      [matAutocomplete]="auto"
+      [ngModel]="selectedValue">
+    <mat-autocomplete autoActiveFirstOption
+      #auto="matAutocomplete"
+      [displayWith]="displayFn"
+      (optionSelected)="updateValue($event)">
+      <mat-option *ngFor="let value of filteredValues | async"
+        [value]="value">
+        {{getDisplayedValue(value)}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</span>
