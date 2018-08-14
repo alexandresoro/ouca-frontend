@@ -1,3 +1,92 @@
 <div class="lco-view-page">
 
+  <h1>Vue des données (en cours de dévelopement)</h1>
+
+  <div>
+    <!-- SELECT -->
+    <div>
+      <h2>Colonnes à afficher:</h2>
+      <mat-list>
+        <mat-list-item *ngFor="let selectOption of selectOptions; let index = index; let first = first; let last = last;">
+          <mat-checkbox id="select-{{selectOption.key}}"
+            [(ngModel)]="selectOption.isSelected">{{selectOption?.libelle}}</mat-checkbox>
+          <button mat-raised-button
+            *ngIf="!first"
+            (click)="onUpSelectOptionButtonClicked(index)">
+            Monter
+          </button>
+          <button mat-raised-button
+            *ngIf="!last"
+            (click)="onBottomSelectOptionButtonClicked(index)">
+            Descendre
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
+    <!-- WHERE -->
+    <div>
+      <h2>Filtres:</h2>
+      <div *ngFor="let whereOption of whereOptions; let first = first; let last = last; let index = index;">
+        <lco-entite-select *ngIf="!first"
+          placeholder="Opérateur"
+          fieldForDisplay="libelle"
+          [options]="operands"
+          [(model)]="whereOption.operand">
+        </lco-entite-select>
+        <lco-entite-select placeholder="Attribut"
+          fieldForDisplay="libelle"
+          [options]="whereColumns"
+          [(model)]="whereOption.column">
+        </lco-entite-select>
+        <lco-entite-select placeholder="Opérande"
+          fieldForDisplay="libelle"
+          [options]="operands"
+          [(model)]="whereOption.operand">
+        </lco-entite-select>
+        <mat-form-field>
+          <input matInput
+            type="text"
+            placeholder="Valeur"
+            [(ngModel)]="whereOption.value">
+        </mat-form-field>
+        <button mat-raised-button
+          *ngIf="!first"
+          (click)="onUpWhereOptionButtonClicked(index)">
+          Monter
+        </button>
+        <button mat-raised-button
+          *ngIf="!last"
+          (click)="onBottomWhereOptionButtonClicked(index)">
+          Descendre
+        </button>
+        <button mat-raised-button
+          *ngIf="!first"
+          (click)="onDeleteWhereOptionButtonClicked(index)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-raised-button
+          *ngIf="last"
+          (click)="onAddWhereOptionButtonClicked()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- GROUP BY -->
+    <div>
+      <h2>Grouper les données par:</h2>
+    </div>
+
+    <!-- ORDER BY -->
+    <div>
+      <h2>Trier les données par:</h2>
+    </div>
+
+    <button mat-raised-button
+      color="primary"
+      (click)="onSearchButtonClicked()">
+      Lancer la recherche
+    </button>
+  </div>
 </div>
