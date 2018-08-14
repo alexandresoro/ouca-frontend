@@ -114,19 +114,14 @@
           <!-- CARD OBSERVATEUR + ASSOCIES -->
           <mat-card class="mat-card-override full-width-container">
             <!-- OBSERVATEUR -->
-            <mat-form-field>
-              <mat-select placeholder="Observateur"
-                id="input-observateur"
-                name="input-observateur"
-                [(ngModel)]="inventaireToSave.observateur"
-                [required]="!isInventaireDisabled"
-                [disabled]="isInventaireDisabled">
-                <mat-option *ngFor="let observateur of pageModel.observateurs"
-                  [value]="observateur">
-                  {{observateur.libelle}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <lco-autocomplete [disabled]="isInventaireDisabled"
+              [required]="!isInventaireDisabled"
+              [type]="'Observateur'"
+              [values]="pageModel.observateurs"
+              [selectedValue]="inventaireToSave.observateur"
+              attributeToFilter="autocompleteOption1"
+              (onValueChanged)="inventaireToSave.observateur = $event.value">
+            </lco-autocomplete>
 
             <!-- ASSOCIES -->
             <mat-form-field *ngIf="pageModel.areAssociesDisplayed">
@@ -191,20 +186,15 @@
             <div>
               <div class="full-width-container">
                 <!-- DEPARTEMENT -->
-                <mat-form-field>
-                  <mat-select placeholder="Département"
-                    id="input-departement"
-                    name="departement"
-                    [(ngModel)]="selectedDepartement"
-                    [required]="!isInventaireDisabled"
-                    [disabled]="isInventaireDisabled"
-                    (selectionChange)="updateCommunes()">
-                    <mat-option *ngFor="let departement of pageModel.departements"
-                      [value]="departement">
-                      {{departement.code}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+                <lco-autocomplete attributeToFilter="autocompleteOption1"
+                  [disabled]="isInventaireDisabled"
+                  [required]="!isInventaireDisabled"
+                  [selectedValue]="selectedDepartement"
+                  [startWithMode]="true"
+                  type="Département"
+                  [values]="pageModel.departements"
+                  (onValueChanged)="updateCommunes($event.value)">
+                </lco-autocomplete>
               </div>
 
               <div class="commune-container">
