@@ -1,5 +1,20 @@
 [
-  { "id": 8, "libelle": "Environ" },
-  { "id": 9, "libelle": "Inférieur à" },
-  { "id": 10, "libelle": "Supérieur à" }
+  {
+    "id": 8,
+    "libelle": "Environ",
+    "nbDonnees": 0,
+    "autocompleteOption1": "Environ"
+  },
+  {
+    "id": 9,
+    "libelle": "Inférieur à",
+    "nbDonnees": 1,
+    "autocompleteOption1": "Inférieur à"
+  },
+  {
+    "id": 10,
+    "libelle": "Supérieur à",
+    "nbDonnees": 0,
+    "autocompleteOption1": "Supérieur à"
+  }
 ]

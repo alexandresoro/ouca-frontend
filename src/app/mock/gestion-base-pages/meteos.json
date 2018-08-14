@@ -1,7 +1,32 @@
 [
-  { "id": 15, "libelle": "Neige" },
-  { "id": 16, "libelle": "Nuages" },
-  { "id": 17, "libelle": "Soleil" },
-  { "id": 18, "libelle": "Vent faible" },
-  { "id": 19, "libelle": "Vent fort" }
+  {
+    "id": 15,
+    "libelle": "Neige",
+    "nbDonnees": 0,
+    "autocompleteOption1": "Neige"
+  },
+  {
+    "id": 16,
+    "libelle": "Nuages",
+    "nbDonnees": 0,
+    "autocompleteOption1": "Nuages"
+  },
+  {
+    "id": 17,
+    "libelle": "Soleil",
+    "nbDonnees": 1,
+    "autocompleteOption1": "Soleil"
+  },
+  {
+    "id": 18,
+    "libelle": "Vent faible",
+    "nbDonnees": 0,
+    "autocompleteOption1": "Vent faible"
+  },
+  {
+    "id": 19,
+    "libelle": "Vent fort",
+    "nbDonnees": 1,
+    "autocompleteOption1": "Vent fort"
+  }
 ]

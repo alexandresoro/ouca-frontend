@@ -1,10 +1,66 @@
 [
-  { "id": 12, "code": "01" },
-  { "id": 13, "code": "06" },
-  { "id": 7, "code": "07" },
-  { "id": 10, "code": "13" },
-  { "id": 6, "code": "26" },
-  { "id": 11, "code": "30" },
-  { "id": 8, "code": "38" },
-  { "id": 9, "code": "69" }
+  {
+    "id": 12,
+    "code": "01",
+    "autocompleteOption1": "01",
+    "nbLieuxdits": 5,
+    "nbDonnees": 0,
+    "nbCommunes": 1
+  },
+  {
+    "id": 13,
+    "code": "06",
+    "autocompleteOption1": "06",
+    "nbLieuxdits": 23,
+    "nbDonnees": 0,
+    "nbCommunes": 4
+  },
+  {
+    "id": 7,
+    "code": "07",
+    "autocompleteOption1": "07",
+    "nbLieuxdits": 41,
+    "nbDonnees": 0,
+    "nbCommunes": 17
+  },
+  {
+    "id": 10,
+    "code": "13",
+    "autocompleteOption1": "13",
+    "nbLieuxdits": 70,
+    "nbDonnees": 0,
+    "nbCommunes": 4
+  },
+  {
+    "id": 6,
+    "code": "26",
+    "autocompleteOption1": "26",
+    "nbLieuxdits": 4911,
+    "nbDonnees": 4,
+    "nbCommunes": 355
+  },
+  {
+    "id": 11,
+    "code": "30",
+    "autocompleteOption1": "30",
+    "nbLieuxdits": 15,
+    "nbDonnees": 0,
+    "nbCommunes": 2
+  },
+  {
+    "id": 8,
+    "code": "38",
+    "autocompleteOption1": "38",
+    "nbLieuxdits": 95,
+    "nbDonnees": 0,
+    "nbCommunes": 24
+  },
+  {
+    "id": 9,
+    "code": "69",
+    "autocompleteOption1": "69",
+    "nbLieuxdits": 13,
+    "nbDonnees": 0,
+    "nbCommunes": 3
+  }
 ]

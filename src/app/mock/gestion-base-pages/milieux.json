@@ -1,92 +1,466 @@
 [
-  { "id": 44, "libelle": "Arbre", "code": "6560" },
-  { "id": 59, "libelle": "Barrage", "code": "24F0" },
-  { "id": 58, "libelle": "Bâtiment inhabité", "code": "B001" },
-  { "id": 56, "libelle": "Bocage", "code": "9111" },
-  { "id": 65, "libelle": "Carrière", "code": "5344" },
-  { "id": 45, "libelle": "Cultures", "code": "8200" },
-  { "id": 37, "libelle": "Dunes intérieurs", "code": "6400" },
-  { "id": 15, "libelle": "Eaux courantes", "code": "2400" },
-  { "id": 14, "libelle": "Eaux stagnantes (Douces)", "code": "2200" },
+  {
+    "id": 44,
+    "libelle": "Arbre",
+    "code": "6560",
+    "nbDonnees": 1,
+    "autocompleteOption1": "6560",
+    "autocompleteOption2": "Arbre"
+  },
+  {
+    "id": 59,
+    "libelle": "Barrage",
+    "code": "24F0",
+    "nbDonnees": 2,
+    "autocompleteOption1": "24F0",
+    "autocompleteOption2": "Barrage"
+  },
+  {
+    "id": 58,
+    "libelle": "Bâtiment inhabité",
+    "code": "B001",
+    "nbDonnees": 0,
+    "autocompleteOption1": "B001",
+    "autocompleteOption2": "Bâtiment inhabité"
+  },
+  {
+    "id": 56,
+    "libelle": "Bocage",
+    "code": "9111",
+    "nbDonnees": 0,
+    "autocompleteOption1": "9111",
+    "autocompleteOption2": "Bocage"
+  },
+  {
+    "id": 65,
+    "libelle": "Carrière",
+    "code": "5344",
+    "nbDonnees": 1,
+    "autocompleteOption1": "5344",
+    "autocompleteOption2": "Carrière"
+  },
+  {
+    "id": 45,
+    "libelle": "Cultures",
+    "code": "8200",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8200",
+    "autocompleteOption2": "Cultures"
+  },
+  {
+    "id": 37,
+    "libelle": "Dunes intérieurs",
+    "code": "6400",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6400",
+    "autocompleteOption2": "Dunes intérieurs"
+  },
+  {
+    "id": 15,
+    "libelle": "Eaux courantes",
+    "code": "2400",
+    "nbDonnees": 0,
+    "autocompleteOption1": "2400",
+    "autocompleteOption2": "Eaux courantes"
+  },
+  {
+    "id": 14,
+    "libelle": "Eaux stagnantes (Douces)",
+    "code": "2200",
+    "nbDonnees": 0,
+    "autocompleteOption1": "2200",
+    "autocompleteOption2": "Eaux stagnantes (Douces)"
+  },
   {
     "id": 50,
     "libelle": "Ecrans d'arbres, haies, bosquets, bocage",
-    "code": "8400"
+    "code": "8400",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8400",
+    "autocompleteOption2": "Ecrans d'arbres, haies, bosquets, bocage"
   },
-  { "id": 40, "libelle": "Eglise (tous édifices religieux)", "code": "6520" },
-  { "id": 43, "libelle": "Falaise", "code": "6550" },
-  { "id": 13, "libelle": "Fleuves et rivière", "code": "1310" },
-  { "id": 25, "libelle": "Forêts", "code": "4000" },
-  { "id": 26, "libelle": "Forêts caducifoliées", "code": "4100" },
-  { "id": 27, "libelle": "Forêts de résineux", "code": "4200" },
+  {
+    "id": 40,
+    "libelle": "Eglise (tous édifices religieux)",
+    "code": "6520",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6520",
+    "autocompleteOption2": "Eglise (tous édifices religieux)"
+  },
+  {
+    "id": 43,
+    "libelle": "Falaise",
+    "code": "6550",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6550",
+    "autocompleteOption2": "Falaise"
+  },
+  {
+    "id": 13,
+    "libelle": "Fleuves et rivière",
+    "code": "1310",
+    "nbDonnees": 1,
+    "autocompleteOption1": "1310",
+    "autocompleteOption2": "Fleuves et rivière"
+  },
+  {
+    "id": 25,
+    "libelle": "Forêts",
+    "code": "4000",
+    "nbDonnees": 0,
+    "autocompleteOption1": "4000",
+    "autocompleteOption2": "Forêts"
+  },
+  {
+    "id": 26,
+    "libelle": "Forêts caducifoliées",
+    "code": "4100",
+    "nbDonnees": 0,
+    "autocompleteOption1": "4100",
+    "autocompleteOption2": "Forêts caducifoliées"
+  },
+  {
+    "id": 27,
+    "libelle": "Forêts de résineux",
+    "code": "4200",
+    "nbDonnees": 0,
+    "autocompleteOption1": "4200",
+    "autocompleteOption2": "Forêts de résineux"
+  },
   {
     "id": 29,
     "libelle": "Forêts et fourrés alluviaux ou très humi",
-    "code": "4400"
+    "code": "4400",
+    "nbDonnees": 0,
+    "autocompleteOption1": "4400",
+    "autocompleteOption2": "Forêts et fourrés alluviaux ou très humi"
   },
-  { "id": 28, "libelle": "Forêts mixtes", "code": "4300" },
+  {
+    "id": 28,
+    "libelle": "Forêts mixtes",
+    "code": "4300",
+    "nbDonnees": 0,
+    "autocompleteOption1": "4300",
+    "autocompleteOption2": "Forêts mixtes"
+  },
   {
     "id": 30,
     "libelle": "Forêts sempervirentes non résineuses",
-    "code": "4500"
+    "code": "4500",
+    "nbDonnees": 0,
+    "autocompleteOption1": "4500",
+    "autocompleteOption2": "Forêts sempervirentes non résineuses"
   },
-  { "id": 64, "libelle": "Gravière", "code": "5343" },
-  { "id": 38, "libelle": "Grotte", "code": "6500" },
-  { "id": 34, "libelle": "Habitats rocheux et grottes", "code": "6000" },
-  { "id": 51, "libelle": "Haies", "code": "8420" },
-  { "id": 17, "libelle": "Landes, broussailles, recrus", "code": "3100" },
-  { "id": 16, "libelle": "Landes, pelouses, prairies", "code": "3000" },
+  {
+    "id": 64,
+    "libelle": "Gravière",
+    "code": "5343",
+    "nbDonnees": 0,
+    "autocompleteOption1": "5343",
+    "autocompleteOption2": "Gravière"
+  },
+  {
+    "id": 38,
+    "libelle": "Grotte",
+    "code": "6500",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6500",
+    "autocompleteOption2": "Grotte"
+  },
+  {
+    "id": 34,
+    "libelle": "Habitats rocheux et grottes",
+    "code": "6000",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6000",
+    "autocompleteOption2": "Habitats rocheux et grottes"
+  },
+  {
+    "id": 51,
+    "libelle": "Haies",
+    "code": "8420",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8420",
+    "autocompleteOption2": "Haies"
+  },
+  {
+    "id": 17,
+    "libelle": "Landes, broussailles, recrus",
+    "code": "3100",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3100",
+    "autocompleteOption2": "Landes, broussailles, recrus"
+  },
+  {
+    "id": 16,
+    "libelle": "Landes, pelouses, prairies",
+    "code": "3000",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3000",
+    "autocompleteOption2": "Landes, pelouses, prairies"
+  },
   {
     "id": 42,
     "libelle": "Maison (toutes constructions humaines habitées)",
-    "code": "6540"
+    "code": "6540",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6540",
+    "autocompleteOption2": "Maison (toutes constructions humaines habitées)"
   },
-  { "id": 18, "libelle": "Maquis et garrigues", "code": "3200" },
-  { "id": 32, "libelle": "Marais", "code": "5300" },
-  { "id": 31, "libelle": "Marais, tourbières", "code": "5000" },
-  { "id": 60, "libelle": "Mare (<30m)", "code": "22A0" },
+  {
+    "id": 18,
+    "libelle": "Maquis et garrigues",
+    "code": "3200",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3200",
+    "autocompleteOption2": "Maquis et garrigues"
+  },
+  {
+    "id": 32,
+    "libelle": "Marais",
+    "code": "5300",
+    "nbDonnees": 0,
+    "autocompleteOption1": "5300",
+    "autocompleteOption2": "Marais"
+  },
+  {
+    "id": 31,
+    "libelle": "Marais, tourbières",
+    "code": "5000",
+    "nbDonnees": 0,
+    "autocompleteOption1": "5000",
+    "autocompleteOption2": "Marais, tourbières"
+  },
+  {
+    "id": 60,
+    "libelle": "Mare (<30m)",
+    "code": "22A0",
+    "nbDonnees": 0,
+    "autocompleteOption1": "22A0",
+    "autocompleteOption2": "Mare (<30m)"
+  },
   {
     "id": 39,
     "libelle": "Mine (puit, galerie ou cavité artificielle)",
-    "code": "6510"
+    "code": "6510",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6510",
+    "autocompleteOption2": "Mine (puit, galerie ou cavité artificielle)"
   },
-  { "id": 36, "libelle": "Neige ou glace permanente", "code": "6300" },
-  { "id": 66, "libelle": "Nichoir", "code": "1000" },
-  { "id": 12, "libelle": "Nichoir droit", "code": "1002" },
-  { "id": 11, "libelle": "Nichoir L", "code": "1001" },
-  { "id": 52, "libelle": "Parc", "code": "8500" },
-  { "id": 24, "libelle": "Pâtures", "code": "3810" },
-  { "id": 21, "libelle": "Pelouses alpines et boréales", "code": "3600" },
+  {
+    "id": 36,
+    "libelle": "Neige ou glace permanente",
+    "code": "6300",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6300",
+    "autocompleteOption2": "Neige ou glace permanente"
+  },
+  {
+    "id": 66,
+    "libelle": "Nichoir",
+    "code": "1000",
+    "nbDonnees": 0,
+    "autocompleteOption1": "1000",
+    "autocompleteOption2": "Nichoir"
+  },
+  {
+    "id": 12,
+    "libelle": "Nichoir droit",
+    "code": "1002",
+    "nbDonnees": 0,
+    "autocompleteOption1": "1002",
+    "autocompleteOption2": "Nichoir droit"
+  },
+  {
+    "id": 11,
+    "libelle": "Nichoir L",
+    "code": "1001",
+    "nbDonnees": 0,
+    "autocompleteOption1": "1001",
+    "autocompleteOption2": "Nichoir L"
+  },
+  {
+    "id": 52,
+    "libelle": "Parc",
+    "code": "8500",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8500",
+    "autocompleteOption2": "Parc"
+  },
+  {
+    "id": 24,
+    "libelle": "Pâtures",
+    "code": "3810",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3810",
+    "autocompleteOption2": "Pâtures"
+  },
+  {
+    "id": 21,
+    "libelle": "Pelouses alpines et boréales",
+    "code": "3600",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3600",
+    "autocompleteOption2": "Pelouses alpines et boréales"
+  },
   {
     "id": 19,
     "libelle": "Pelouses calcaires et pseudo-steppes",
-    "code": "3400"
+    "code": "3400",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3400",
+    "autocompleteOption2": "Pelouses calcaires et pseudo-steppes"
   },
-  { "id": 20, "libelle": "Pelouses silicicoles", "code": "3500" },
-  { "id": 67, "libelle": "Plage (galets)", "code": "6450" },
-  { "id": 49, "libelle": "Plantations", "code": "8330" },
-  { "id": 41, "libelle": "Pont", "code": "6530" },
-  { "id": 22, "libelle": "Prairies humides", "code": "3700" },
-  { "id": 23, "libelle": "Prairies mésophiles", "code": "3800" },
-  { "id": 68, "libelle": "Rizière", "code": "5350" },
+  {
+    "id": 20,
+    "libelle": "Pelouses silicicoles",
+    "code": "3500",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3500",
+    "autocompleteOption2": "Pelouses silicicoles"
+  },
+  {
+    "id": 67,
+    "libelle": "Plage (galets)",
+    "code": "6450",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6450",
+    "autocompleteOption2": "Plage (galets)"
+  },
+  {
+    "id": 49,
+    "libelle": "Plantations",
+    "code": "8330",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8330",
+    "autocompleteOption2": "Plantations"
+  },
+  {
+    "id": 41,
+    "libelle": "Pont",
+    "code": "6530",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6530",
+    "autocompleteOption2": "Pont"
+  },
+  {
+    "id": 22,
+    "libelle": "Prairies humides",
+    "code": "3700",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3700",
+    "autocompleteOption2": "Prairies humides"
+  },
+  {
+    "id": 23,
+    "libelle": "Prairies mésophiles",
+    "code": "3800",
+    "nbDonnees": 0,
+    "autocompleteOption1": "3800",
+    "autocompleteOption2": "Prairies mésophiles"
+  },
+  {
+    "id": 68,
+    "libelle": "Rizière",
+    "code": "5350",
+    "nbDonnees": 0,
+    "autocompleteOption1": "5350",
+    "autocompleteOption2": "Rizière"
+  },
   {
     "id": 35,
     "libelle": "Rochers, falaises calcaires intérieurs",
-    "code": "6200"
+    "code": "6200",
+    "nbDonnees": 0,
+    "autocompleteOption1": "6200",
+    "autocompleteOption2": "Rochers, falaises calcaires intérieurs"
   },
-  { "id": 33, "libelle": "Roselière en eau vive", "code": "5340" },
-  { "id": 62, "libelle": "Roselière sèche", "code": "5341" },
-  { "id": 61, "libelle": "Ruisselet (largeur<1m)", "code": "24A0" },
-  { "id": 57, "libelle": "Terrain d'aviation", "code": "9200" },
-  { "id": 53, "libelle": "Urbanisé et industriel", "code": "8600" },
-  { "id": 63, "libelle": "Vasière", "code": "5342" },
-  { "id": 48, "libelle": "Vergers  de basse tige", "code": "8320" },
-  { "id": 47, "libelle": "Vergers  de haute tige", "code": "8310" },
+  {
+    "id": 33,
+    "libelle": "Roselière en eau vive",
+    "code": "5340",
+    "nbDonnees": 0,
+    "autocompleteOption1": "5340",
+    "autocompleteOption2": "Roselière en eau vive"
+  },
+  {
+    "id": 62,
+    "libelle": "Roselière sèche",
+    "code": "5341",
+    "nbDonnees": 0,
+    "autocompleteOption1": "5341",
+    "autocompleteOption2": "Roselière sèche"
+  },
+  {
+    "id": 61,
+    "libelle": "Ruisselet (largeur<1m)",
+    "code": "24A0",
+    "nbDonnees": 0,
+    "autocompleteOption1": "24A0",
+    "autocompleteOption2": "Ruisselet (largeur<1m)"
+  },
+  {
+    "id": 57,
+    "libelle": "Terrain d'aviation",
+    "code": "9200",
+    "nbDonnees": 0,
+    "autocompleteOption1": "9200",
+    "autocompleteOption2": "Terrain d'aviation"
+  },
+  {
+    "id": 53,
+    "libelle": "Urbanisé et industriel",
+    "code": "8600",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8600",
+    "autocompleteOption2": "Urbanisé et industriel"
+  },
+  {
+    "id": 63,
+    "libelle": "Vasière",
+    "code": "5342",
+    "nbDonnees": 0,
+    "autocompleteOption1": "5342",
+    "autocompleteOption2": "Vasière"
+  },
+  {
+    "id": 48,
+    "libelle": "Vergers  de basse tige",
+    "code": "8320",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8320",
+    "autocompleteOption2": "Vergers  de basse tige"
+  },
+  {
+    "id": 47,
+    "libelle": "Vergers  de haute tige",
+    "code": "8310",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8310",
+    "autocompleteOption2": "Vergers  de haute tige"
+  },
   {
     "id": 46,
     "libelle": "Vergers, plantations de peupliers ou d'e",
-    "code": "8300"
+    "code": "8300",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8300",
+    "autocompleteOption2": "Vergers, plantations de peupliers ou d'e"
   },
-  { "id": 55, "libelle": "Village", "code": "8620" },
-  { "id": 54, "libelle": "Villes", "code": "8610" }
+  {
+    "id": 55,
+    "libelle": "Village",
+    "code": "8620",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8620",
+    "autocompleteOption2": "Village"
+  },
+  {
+    "id": 54,
+    "libelle": "Villes",
+    "code": "8610",
+    "nbDonnees": 0,
+    "autocompleteOption1": "8610",
+    "autocompleteOption2": "Villes"
+  }
 ]

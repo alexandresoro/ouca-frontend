@@ -1,9 +1,58 @@
 [
-  { "id": 10, "libelle": "Amphibiens", "nbEspeces": 34 },
-  { "id": 11, "libelle": "Lépidoptères", "nbEspeces": 3 },
-  { "id": 12, "libelle": "Mammifères", "nbEspeces": 128 },
-  { "id": 13, "libelle": "Odonates", "nbEspeces": 106 },
-  { "id": 14, "libelle": "Oiseaux", "nbEspeces": 610 },
-  { "id": 15, "libelle": "Orthoptères", "nbEspeces": 66 },
-  { "id": 16, "libelle": "Reptiles", "nbEspeces": 37 }
+  {
+    "id": 10,
+    "libelle": "Amphibiens",
+    "nbDonnees": 0,
+    "nbEspeces": 34,
+    "autocompleteOption1": "Amphibiens",
+    "autocompleteOption2": ""
+  },
+  {
+    "id": 11,
+    "libelle": "Lépidoptères",
+    "nbDonnees": 1,
+    "nbEspeces": 3,
+    "autocompleteOption1": "Lépidoptères",
+    "autocompleteOption2": ""
+  },
+  {
+    "id": 12,
+    "libelle": "Mammifères",
+    "nbDonnees": 0,
+    "nbEspeces": 128,
+    "autocompleteOption1": "Mammifères",
+    "autocompleteOption2": ""
+  },
+  {
+    "id": 13,
+    "libelle": "Odonates",
+    "nbDonnees": 0,
+    "nbEspeces": 106,
+    "autocompleteOption1": "Odonates",
+    "autocompleteOption2": ""
+  },
+  {
+    "id": 14,
+    "libelle": "Oiseaux",
+    "nbDonnees": 3,
+    "nbEspeces": 610,
+    "autocompleteOption1": "Oiseaux",
+    "autocompleteOption2": ""
+  },
+  {
+    "id": 15,
+    "libelle": "Orthoptères",
+    "nbDonnees": 0,
+    "nbEspeces": 66,
+    "autocompleteOption1": "Orthoptères",
+    "autocompleteOption2": ""
+  },
+  {
+    "id": 16,
+    "libelle": "Reptiles",
+    "nbDonnees": 0,
+    "nbEspeces": 37,
+    "autocompleteOption1": "Reptiles",
+    "autocompleteOption2": ""
+  }
 ]

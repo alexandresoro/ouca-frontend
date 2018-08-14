@@ -1,34 +1,15 @@
 [
-  {
-    "id": 10,
-    "libelle": "?"
-  },
+  { "id": 10, "libelle": "?", "nbDonnees": 3, "autocompleteOption1": "?" },
   {
     "id": 11,
-    "libelle": "Couple"
+    "libelle": "Couple",
+    "nbDonnees": 0,
+    "autocompleteOption1": "Couple"
   },
-  {
-    "id": 12,
-    "libelle": "F"
-  },
-  {
-    "id": 13,
-    "libelle": "F?"
-  },
-  {
-    "id": 14,
-    "libelle": "FI"
-  },
-  {
-    "id": 15,
-    "libelle": "M"
-  },
-  {
-    "id": 16,
-    "libelle": "M?"
-  },
-  {
-    "id": 17,
-    "libelle": "Nid"
-  }
+  { "id": 12, "libelle": "F", "nbDonnees": 0, "autocompleteOption1": "F" },
+  { "id": 13, "libelle": "F?", "nbDonnees": 1, "autocompleteOption1": "F?" },
+  { "id": 14, "libelle": "FI", "nbDonnees": 0, "autocompleteOption1": "FI" },
+  { "id": 15, "libelle": "M", "nbDonnees": 0, "autocompleteOption1": "M" },
+  { "id": 16, "libelle": "M?", "nbDonnees": 0, "autocompleteOption1": "M?" },
+  { "id": 17, "libelle": "Nid", "nbDonnees": 0, "autocompleteOption1": "Nid" }
 ]
