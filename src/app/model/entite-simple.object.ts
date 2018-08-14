@@ -1,6 +1,7 @@
 export class EntiteSimple {
   public id: number;
 
-  // tslint:disable-next-line:no-empty
-  constructor() {}
+  public autocompleteOption1: string;
+
+  public autocompleteOption2: string;
 }

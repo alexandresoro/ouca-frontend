@@ -19,7 +19,6 @@ import { MatOption } from "@angular/material/typings";
 import * as diacritics from "diacritics";
 import { Observable, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
-import { EntiteAvecLibelleEtCode } from "../../../model/entite-avec-libelle-et-code.object";
 import { EntiteSimple } from "../../../model/entite-simple.object";
 import { LcoAutocompleteEventObject } from "./lco-autocomplete-event.object";
 
@@ -29,28 +28,37 @@ import { LcoAutocompleteEventObject } from "./lco-autocomplete-event.object";
 })
 export class LcoAutocompleteComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy {
-  @Input() public type: string;
+  @Input()
+  public type: string;
 
-  @Input() public disabled: boolean;
+  @Input()
+  public disabled: boolean;
 
-  @Input() public required: boolean;
+  @Input()
+  public required: boolean;
 
-  @Input() public values: EntiteSimple[];
+  @Input()
+  public values: EntiteSimple[];
 
-  @Input() public selectedValue: EntiteSimple;
+  @Input()
+  public selectedValue: EntiteSimple;
 
-  @Input() public attributeToFilter: string;
+  @Input()
+  public attributeToFilter: string;
 
-  @Input() public startWithMode: boolean = false;
+  @Input()
+  public startWithMode: boolean = false;
 
-  @Input() public exactSearchMode: boolean = false;
+  @Input()
+  public exactSearchMode: boolean = false;
 
   @Output()
   public onValueChanged: EventEmitter<
     LcoAutocompleteEventObject
   > = new EventEmitter<LcoAutocompleteEventObject>();
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger)
+  trigger: MatAutocompleteTrigger;
 
   subscription: Subscription;
 
@@ -77,22 +85,22 @@ export class LcoAutocompleteComponent
           typeof value === "undefined" ||
           value === null
           ? value
-          : value.libelle;
+          : value[this.attributeToFilter];
       }),
       map((value) => (value ? this._filter(value) : []))
     );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.isDisabled) {
-      changes.isDisabled.currentValue
+    if (!!changes.disabled) {
+      changes.disabled.currentValue
         ? this.myControl.disable()
         : this.myControl.enable();
     }
   }
 
-  displayFn(value?: EntiteAvecLibelleEtCode): string | undefined {
-    return value ? value[this.attributeToFilter] : undefined;
+  public displayFn(value?: any): string | undefined {
+    return value ? value.libelle : undefined;
   }
 
   private _subscribeToClosingActions(): void {
@@ -161,9 +169,7 @@ export class LcoAutocompleteComponent
   }
 
   private updateSelectionWithOption(option: MatOption): void {
-    const newSelectedValue: EntiteAvecLibelleEtCode = option
-      ? option.value
-      : null;
+    const newSelectedValue: EntiteSimple = option ? option.value : null;
 
     this.selectedValue = newSelectedValue;
 

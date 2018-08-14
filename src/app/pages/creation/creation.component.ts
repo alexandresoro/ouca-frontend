@@ -187,6 +187,22 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.selectedMilieux = [];
   }
 
+  /*
+  private updateDepartementAndCommunes(
+    event: LcoAutocompleteEventObject
+  ): void {
+    this.selectedDepartement = event.value;
+
+    if (!!this.selectedDepartement && !!this.selectedDepartement.id) {
+      this.filteredCommunes = this.pageModel.communes.filter(
+        (commune) => commune.departement.id === this.selectedDepartement.id
+      );
+      this.filteredLieuxdits = new Array<Lieudit>();
+      this.initCoordinates();
+    }
+  }
+  */
+
   /**
    * When selecting a departement, filter the list of communes, set back the lieu-dit to empty lieu-dit
    */
