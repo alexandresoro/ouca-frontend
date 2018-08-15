@@ -3,4 +3,4 @@ dist/
 
 yarn-error.log
 *.orig
-.DS_STORE
+.DS_Store
