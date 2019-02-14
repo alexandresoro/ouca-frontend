@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack",
     "build:prod": "webpack --mode=production",
-    "start": "webpack-serve"
+    "start": "webpack-dev-server"
   },
   "keywords": [],
   "author": "Camille Carrier",
@@ -35,17 +35,15 @@
   "devDependencies": {
     "@types/diacritics": "*",
     "@types/lodash": "*",
-    "@types/node": "8",
+    "@types/node": "10",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^5.0.0",
-    "clean-webpack-plugin": "^0.1.19",
-    "connect-history-api-fallback": "*",
+    "clean-webpack-plugin": "*",
     "css-loader": "*",
     "favicons-webpack-plugin": "^0.0.9",
-    "file-loader": "^1.1.11",
+    "file-loader": "*",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
-    "koa-connect": "*",
     "mini-css-extract-plugin": "^0.4.0",
     "node-sass": "^4.9.0",
     "rimraf": "2",
@@ -56,9 +54,8 @@
     "typescript": "*",
     "typescript-tslint-plugin": "*",
     "webpack": "4",
-    "webpack-cli": "^3.0.3",
-    "webpack-serve": "*",
-    "webpack-serve-waitpage": "*"
+    "webpack-cli": "*",
+    "webpack-dev-server": "*"
   },
   "repository": {}
 }

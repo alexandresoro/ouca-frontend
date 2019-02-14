@@ -9,9 +9,6 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const path = require("path");
 const helpers = require("./config/helpers");
-const history = require("connect-history-api-fallback");
-const convert = require("koa-connect");
-const webpackServeWaitpage = require("webpack-serve-waitpage");
 
 module.exports = (env, argv) => {
   const isProductionMode = argv && argv.mode === "production";
@@ -31,17 +28,9 @@ module.exports = (env, argv) => {
     // Source maps support ('inline-source-map' also works)
     devtool: isProductionMode ? false : "source-map",
 
-    serve: {
+    devServer: {
       port: 3000,
-      open: true,
-      hotClient: {
-        allEntries: true
-      },
-      add: (app, middleware, options) => {
-        app.use(webpackServeWaitpage(options));
-        app.use(convert(history({})));
-      },
-      host: "0.0.0.0"
+      open: true
     },
 
     // Add the loader for .ts files.
