@@ -1,7 +1,6 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
 import { Observable } from "rxjs";
-import { HttpClient } from "../../../../node_modules/@angular/common/http";
 import { Comportement } from "../../model/comportement.object";
 import { CreationPage } from "../../model/creation-page.object";
 import { Donnee } from "../../model/donnee.object";

@@ -9,23 +9,23 @@ import {
 import { Observable, of, throwError } from "rxjs";
 import { delay, dematerialize, materialize, mergeMap } from "rxjs/operators";
 import { Injectable } from "../../../node_modules/@angular/core";
-import * as configurationPageMock from "./configuration-page/configuration.json";
-import * as creationPageCreateDonneeMock from "./creation-page/creation-page-create-donnee.json";
-import * as creationPageCreateInventaireMock from "./creation-page/creation-page-create-inventaire.json";
-import * as creationPageInitMock from "./creation-page/creation-page-init.json";
-import * as agesMock from "./gestion-base-pages/ages.json";
-import * as classesMock from "./gestion-base-pages/classes.json";
-import * as communesMock from "./gestion-base-pages/communes.json";
-import * as comportementsMock from "./gestion-base-pages/comportements.json";
-import * as departementsMock from "./gestion-base-pages/departements.json";
-import * as especesMock from "./gestion-base-pages/especes.json";
-import * as estimationsDistanceMock from "./gestion-base-pages/estimations-distance.json";
-import * as estimationsNombreMock from "./gestion-base-pages/estimations-nombre.json";
-import * as lieuxditsMock from "./gestion-base-pages/lieuxdits.json";
-import * as meteosMock from "./gestion-base-pages/meteos.json";
-import * as milieuxMock from "./gestion-base-pages/milieux.json";
-import * as observateursMock from "./gestion-base-pages/observateurs.json";
-import * as sexesMock from "./gestion-base-pages/sexes.json";
+import configurationPageMock from "./configuration-page/configuration.json";
+import creationPageCreateDonneeMock from "./creation-page/creation-page-create-donnee.json";
+import creationPageCreateInventaireMock from "./creation-page/creation-page-create-inventaire.json";
+import creationPageInitMock from "./creation-page/creation-page-init.json";
+import agesMock from "./gestion-base-pages/ages.json";
+import classesMock from "./gestion-base-pages/classes.json";
+import communesMock from "./gestion-base-pages/communes.json";
+import comportementsMock from "./gestion-base-pages/comportements.json";
+import departementsMock from "./gestion-base-pages/departements.json";
+import especesMock from "./gestion-base-pages/especes.json";
+import estimationsDistanceMock from "./gestion-base-pages/estimations-distance.json";
+import estimationsNombreMock from "./gestion-base-pages/estimations-nombre.json";
+import lieuxditsMock from "./gestion-base-pages/lieuxdits.json";
+import meteosMock from "./gestion-base-pages/meteos.json";
+import milieuxMock from "./gestion-base-pages/milieux.json";
+import observateursMock from "./gestion-base-pages/observateurs.json";
+import sexesMock from "./gestion-base-pages/sexes.json";
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {

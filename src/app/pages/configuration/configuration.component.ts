@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import * as _ from "lodash";
 import {
   MatTable,
   MatTableDataSource
-} from "../../../../node_modules/@angular/material";
+} from "@angular/material";
+import * as _ from "lodash";
 import { AppConfiguration } from "../../model/app-configuration.object";
 import { ConfigurationPage } from "../../model/configuration-page.object";
 import { EntiteResult } from "../../model/entite-result.object";

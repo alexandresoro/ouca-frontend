@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MatDialogRef } from "../../../../node_modules/@angular/material";
+import { MatDialogRef } from "@angular/material";
 
 @Component({
   selector: "search-by-id-dialog",

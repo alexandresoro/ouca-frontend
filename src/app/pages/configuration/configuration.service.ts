@@ -1,7 +1,7 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { Observable } from "rxjs";
-import { HttpClient } from "../../../../node_modules/@angular/common/http";
 import { AppConfiguration } from "../../model/app-configuration.object";
 import { ConfigurationPage } from "../../model/configuration-page.object";
 import { EntiteResult } from "../../model/entite-result.object";

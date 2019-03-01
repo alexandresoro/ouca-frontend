@@ -1,0 +1,326 @@
+{
+  "id": {
+    "displayName": "ID",
+    "sqlName": "id",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": false,
+    "isOrderBy": true
+  },
+  "observateur": {
+    "displayName": "Observateur",
+    "sqlName": "observateur",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "associes": {
+    "displayName": "Observateurs associés",
+    "sqlName": "associes",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "date": {
+    "displayName": "Date",
+    "sqlName": "date",
+    "dataType": "date",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "annee": {
+    "displayName": "Année",
+    "sqlName": "YEAR(date)",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "mois": {
+    "displayName": "Mois",
+    "sqlName": "MONTH(date)",
+    "dataType": "month",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "heure": {
+    "displayName": "Heure",
+    "sqlName": "heure",
+    "dataType": "heure",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "duree": {
+    "displayName": "Durée",
+    "sqlName": "duree",
+    "dataType": "heure",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "departement": {
+    "displayName": "Département",
+    "sqlName": "departement",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "codeCommune": {
+    "displayName": "Code",
+    "sqlName": "codeCommune",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "nomCommune": {
+    "displayName": "Nom de la commune",
+    "sqlName": "nomCommune",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "lieudit": {
+    "displayName": "Lieu-dit",
+    "sqlName": "lieudit",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "altitude": {
+    "displayName": "Altitude",
+    "sqlName": "altitude",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "longitude": {
+    "displayName": "Longitude",
+    "sqlName": "longitude",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "latitude": {
+    "displayName": "Latitude",
+    "sqlName": "latitude",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "personalisedLieudit": {
+    "displayName": "Coordonnées personnalisées",
+    "sqlName": "personalisedLieudit",
+    "dataType": "boolean",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "temperature": {
+    "displayName": "Température",
+    "sqlName": "temperature",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "meteos": {
+    "displayName": "Conditions météorologiques",
+    "sqlName": "meteos",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "classe": {
+    "displayName": "Classe",
+    "sqlName": "classe",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "codeEspece": {
+    "displayName": "Code espèce",
+    "sqlName": "codeEspece",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "nomFrancaisEspece": {
+    "displayName": "Nom francais",
+    "sqlName": "nomFrancais",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "nomLatinEspece": {
+    "displayName": "Nom latin",
+    "sqlName": "nomLatin",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "sexe": {
+    "displayName": "Sexe",
+    "sqlName": "sexe",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "age": {
+    "displayName": "Âge",
+    "sqlName": "age",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "estimationNombre": {
+    "displayName": "Estimation du nombre",
+    "sqlName": "estimationNombre",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "nombre": {
+    "displayName": "Nombre",
+    "sqlName": "nombre",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "estimationDistance": {
+    "displayName": "Estimation de la distance",
+    "sqlName": "estimationDistance",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "distance": {
+    "displayName": "Distance (m)",
+    "sqlName": "distance",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "codeComportement": {
+    "displayName": "Code",
+    "sqlName": "codeComportement",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "libelleComportement": {
+    "displayName": "Libellé",
+    "sqlName": "libelleComportement",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "codeMilieu": {
+    "displayName": "Code",
+    "sqlName": "codeMilieu",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "libelleMilieu": {
+    "displayName": "Libellé",
+    "sqlName": "libelleMilieu",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "commentaire": {
+    "displayName": "Commentaire",
+    "sqlName": "commentaire",
+    "dataType": "string",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "regroupement": {
+    "displayName": "Numéro de regroupement",
+    "sqlName": "regroupement",
+    "dataType": "number",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "inventaireCreationDate": {
+    "displayName": "Date de création",
+    "sqlName": "inventaireCreationDate",
+    "dataType": "date",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  },
+  "donneeCreationDate": {
+    "displayName": "Date de création",
+    "sqlName": "donneeCreationDate",
+    "dataType": "date",
+    "isSelect": true,
+    "isWhere": true,
+    "isGroupBy": true,
+    "isOrderBy": true
+  }
+}

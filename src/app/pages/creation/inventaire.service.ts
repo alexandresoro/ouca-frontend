@@ -1,8 +1,6 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
 import { Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
-import { HttpClient } from "../../../../node_modules/@angular/common/http";
 import { EntiteResult } from "../../model/entite-result.object";
 import { Inventaire } from "../../model/inventaire.object";
 import { BaseNaturalisteService } from "../../services/base-naturaliste.service";

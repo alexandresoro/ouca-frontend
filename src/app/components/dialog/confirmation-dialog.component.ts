@@ -2,7 +2,7 @@ import { Component, Inject } from "@angular/core";
 import {
   MAT_DIALOG_DATA,
   MatDialogRef
-} from "../../../../node_modules/@angular/material";
+} from "@angular/material";
 import { ConfirmationDialogData } from "./confirmation-dialog-data.object";
 
 @Component({

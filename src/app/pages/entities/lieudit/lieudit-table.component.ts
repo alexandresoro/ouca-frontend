@@ -1,6 +1,6 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
+import { MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
-import { MatTableDataSource } from "../../../../../node_modules/@angular/material";
 import { Lieudit } from "../../../model/lieudit.object";
 import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table.component";
 

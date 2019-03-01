@@ -64,7 +64,9 @@ import {
   MatSelectModule,
   MatSortModule,
   MatTableModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatTreeModule,
+  MatTreeNestedDataSource
 } from "@angular/material";
 import {
   MAT_MOMENT_DATE_FORMATS,
@@ -100,6 +102,7 @@ import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.co
 import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
 import { ImportComponent } from "./pages/import/import.component";
 import { ImportService } from "./pages/import/import.service";
+import { SelectDialogComponent } from "./pages/vue/select-dialog/select-dialog.component";
 
 const baseNaturalisteRoutes: Routes = [
   {
@@ -202,7 +205,8 @@ const baseNaturalisteRoutes: Routes = [
     MatSortModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatTreeModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -223,7 +227,8 @@ const baseNaturalisteRoutes: Routes = [
     MatPaginatorModule,
     MatSortModule,
     MatFormFieldModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatTreeModule
   ],
   declarations: [
     AppComponent,
@@ -271,6 +276,7 @@ const baseNaturalisteRoutes: Routes = [
     ObservateurComponent,
     ObservateurTableComponent,
     SearchByIdDialogComponent,
+    SelectDialogComponent,
     SexeComponent,
     SexeTableComponent,
     TopButtonsComponent,
@@ -281,7 +287,11 @@ const baseNaturalisteRoutes: Routes = [
     ViewComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmationDialogComponent, SearchByIdDialogComponent],
+  entryComponents: [
+    ConfirmationDialogComponent,
+    SearchByIdDialogComponent,
+    SelectDialogComponent
+  ],
   providers: [
     BaseNaturalisteService,
     ConfigurationService,

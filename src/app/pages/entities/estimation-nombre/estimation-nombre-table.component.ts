@@ -1,6 +1,6 @@
 import { Component, SimpleChanges } from "@angular/core";
+import { MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
-import { MatTableDataSource } from "../../../../../node_modules/@angular/material";
 import { EstimationNombre } from "../../../model/estimation-nombre.object";
 import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table.component";
 
