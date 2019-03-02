@@ -9,7 +9,7 @@ import { Observateur } from "../../../model/observateur.object";
 export class InputObservateursAssociesComponent {
   @Input() public observateurs: Observateur[];
 
-  @Input() public selectedAssocies: Observateur;
+  @Input() public selectedAssocies: Observateur[];
 
   @Input() public isDisabled: boolean;
 

@@ -197,35 +197,17 @@
             *ngIf="pageModel.isMeteoDisplayed"
           >
             <!-- TEMPERATURE -->
-            <mat-form-field class="temperature-container">
-              <input
-                matInput
-                type="number"
-                placeholder="Température"
-                id="input-temperature"
-                name="temperature"
-                [(ngModel)]="inventaireToSave.temperature"
-                [disabled]="isInventaireDisabled"
-              />
-            </mat-form-field>
+            <input-temperature
+              [isDisabled]="isInventaireDisabled"
+              [selectedTemperature]="inventaireToSave.temperature"
+            ></input-temperature>
+
             <!-- METEOS -->
-            <mat-form-field class="meteo-container">
-              <mat-select
-                placeholder="Météos"
-                id="input-meteos"
-                name="meteos"
-                [(ngModel)]="inventaireToSave.meteos"
-                [disabled]="isInventaireDisabled"
-                multiple
-              >
-                <mat-option
-                  *ngFor="let meteo of pageModel.meteos"
-                  [value]="meteo"
-                >
-                  {{ meteo.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <input-meteos
+              [isDisabled]="isInventaireDisabled"
+              [meteos]="pageModel.meteos"
+              [selectedMeteos]="inventaireToSave.meteos"
+            ></input-meteos>
           </mat-card>
           <!-- END CARD TEMPERATURE + METEO -->
         </div>

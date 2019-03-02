@@ -1,0 +1,15 @@
+<!-- METEOS -->
+<mat-form-field class="meteo-container">
+  <mat-select
+    placeholder="Météos"
+    id="input-meteos"
+    name="meteos"
+    [(ngModel)]="selectedMeteos"
+    [disabled]="isDisabled"
+    multiple
+  >
+    <mat-option *ngFor="let meteo of meteos" [value]="meteo">
+      {{ meteo.libelle }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
