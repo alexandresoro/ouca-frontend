@@ -5,6 +5,8 @@ import { EntiteSimple } from "./entite-simple.object";
 export class Lieudit extends EntiteSimple {
   readonly ENTITY_NAME = "lieudit";
 
+  public communeId: number;
+
   public commune: Commune;
 
   public nom: string;

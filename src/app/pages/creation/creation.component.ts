@@ -40,11 +40,6 @@ export class CreationComponent extends PageComponent implements OnInit {
   public donneeToSave: Donnee = new Donnee();
 
   public dateInventaire: string;
-  public selectedDepartement: Departement;
-  public selectedCommune: Commune;
-  public selectedAltitude: number;
-  public selectedLongitude: number;
-  public selectedLatitude: number;
   public selectedClasse: Classe;
   public selectedComportements: Comportement[] = new Array<Comportement>(6);
   public selectedMilieux: Comportement[] = new Array<Comportement>(6);
@@ -131,19 +126,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.dateInventaire = new Date().toISOString().substring(0, 10);
     this.inventaireToSave.duree = null;
     this.inventaireToSave.heure = null;
-
-    if (
-      !!this.pageModel.defaultDepartement &&
-      !!this.pageModel.defaultDepartement.id
-    ) {
-      this.selectedDepartement = this.pageModel.departements.find(
-        (departement) => departement.id === this.pageModel.defaultDepartement.id
-      );
-    }
-    this.selectedCommune = null;
-    this.updateCommunes();
-    this.filteredLieuxdits = new Array<Lieudit>();
-    this.initCoordinates();
   }
 
   /**
@@ -187,64 +169,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.selectedMilieux = [];
   }
 
-  /*
-  private updateDepartementAndCommunes(
-    event: LcoAutocompleteEventObject
-  ): void {
-    this.selectedDepartement = event.value;
-
-    if (!!this.selectedDepartement && !!this.selectedDepartement.id) {
-      this.filteredCommunes = this.pageModel.communes.filter(
-        (commune) => commune.departement.id === this.selectedDepartement.id
-      );
-      this.filteredLieuxdits = new Array<Lieudit>();
-      this.initCoordinates();
-    }
-  }
-  */
-
-  /**
-   * When selecting a departement, filter the list of communes, set back the lieu-dit to empty lieu-dit
-   */
-  private updateCommunes(): void {
-    if (!!this.selectedDepartement && !!this.selectedDepartement.id) {
-      this.filteredCommunes = this.pageModel.communes.filter(
-        (commune) => commune.departement.id === this.selectedDepartement.id
-      );
-      this.filteredLieuxdits = new Array<Lieudit>();
-      this.initCoordinates();
-    }
-  }
-
-  /**
-   * When selecting a commune, filter the list of lieux-dits
-   */
-  private updateLieuxdits(): void {
-    if (!!this.selectedCommune && !!this.selectedCommune.id) {
-      // METHOD 1 The lieux-dits are returned by init of the page
-      this.filteredLieuxdits = this.pageModel.lieudits.filter(
-        (lieudit) => lieudit.commune.id === this.selectedCommune.id
-      );
-
-      // METHOD 2 We get the lieux-dits when selecting a commune
-      // You should comment the line creationPage.setLieudits(lieuditService.findAll()); in CreationService.java
-      /*
-      this.creationService
-        .getLieuxditsByCommuneId(this.selectedCommune.id)
-        .subscribe(
-          (lieuxdits: Lieudit[]) => {
-            this.filteredLieuxdits = lieuxdits;
-          },
-          (error: any) => {
-            console.error("error");
-          }
-        );
-        */
-
-      this.initCoordinates();
-    }
-  }
-
   /**
    * When selecting a classe, filter the list of especes
    */
@@ -257,24 +181,6 @@ export class CreationComponent extends PageComponent implements OnInit {
       // If "Toutes" we display all the especes
       this.filteredEspeces = this.pageModel.especes;
     }
-  }
-
-  /**
-   * Called when selecting a lieu-dit in the dropdown
-   */
-  private updateCoordinates(): void {
-    this.inventaireToSave.altitude = this.inventaireToSave.lieudit.altitude;
-    this.inventaireToSave.longitude = this.inventaireToSave.lieudit.longitude;
-    this.inventaireToSave.latitude = this.inventaireToSave.lieudit.latitude;
-  }
-
-  /**
-   * Re-initialize the coordinates to empty
-   */
-  private initCoordinates(): void {
-    this.inventaireToSave.altitude = null;
-    this.inventaireToSave.longitude = null;
-    this.inventaireToSave.latitude = null;
   }
 
   /**
@@ -323,9 +229,9 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onSaveInventaireSuccess() {
-    if (this.inventaireToSave.altitude == null) {
-      this.updateCoordinates();
-    }
+    // if (this.inventaireToSave.altitude == null) {
+    //  this.updateCoordinates();
+    // }
 
     // this.donneeToSave = new Donnee();
     this.donneeToSave.inventaire = this.inventaireToSave;
