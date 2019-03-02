@@ -18,7 +18,7 @@ import {
 import { MatOption } from "@angular/material/typings";
 import * as diacritics from "diacritics";
 import { Observable, Subscription } from "rxjs";
-import { map, startWith } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { EntiteAvecLibelleEtCode } from "../../../model/entite-avec-libelle-et-code.object";
 import { InputCodeLibelleEventObject } from "./input-code-libelle-event.object";
 
