@@ -42,12 +42,14 @@ export class InputLieuditComponent implements OnInit {
     if (!this.selectedLieudit) {
       // No lieudit is selected, form is initialized with default values
       if (!!this.defaultDepartementId) {
+        // A default departement is existing so we select it in the form
         this.selectedDepartement = this.getDepartementById(
           this.defaultDepartementId
         );
         this.updateCommunes(this.selectedDepartement);
       }
     } else {
+      // A lieu-dit is already selected, we display it in the form
       const altitude = this.selectedAltitude;
       const longitude = this.selectedLongitude;
       const latitude = this.selectedLatitude;
@@ -62,15 +64,18 @@ export class InputLieuditComponent implements OnInit {
 
       this.updateCommunes(this.selectedDepartement);
       this.updateLieuxdits();
+      this.updateCoordinates();
 
-      if (this.areCoordinatesCustomized(altitude, latitude, longitude)) {
+      if (!!altitude || !!longitude || !!latitude) {
+        // The coordinates were modified by the user
         this.setSelectedCoordinates(altitude, longitude, latitude);
       }
     }
   }
 
   /**
-   * When selecting a departement, filter the list of communes, set back the lieu-dit to empty lieu-dit
+   * When selecting a departement, filter the list of communes and reset the list of lieux-dits
+   * and reset coordinates
    */
   public updateCommunes(selectedDepartement: Departement): void {
     if (!!selectedDepartement && !!selectedDepartement.id) {
@@ -84,7 +89,7 @@ export class InputLieuditComponent implements OnInit {
   }
 
   /**
-   * When selecting a commune, filter the list of lieux-dits
+   * When selecting a commune, filter the list of lieux-dits and reset coordinates
    */
   public updateLieuxdits(): void {
     if (!!this.selectedCommune && !!this.selectedCommune.id) {
@@ -97,6 +102,9 @@ export class InputLieuditComponent implements OnInit {
     }
   }
 
+  /**
+   * When selecting a lieu-dit, update coordinates
+   */
   public updateCoordinates(): void {
     if (
       !!this.selectedLieudit &&
@@ -127,12 +135,25 @@ export class InputLieuditComponent implements OnInit {
     this.selectedLongitude = longitude;
     this.selectedLatitude = latitude;
   }
+
+  /**
+   * Check if at least one of the coordinates has been modified by the user
+   * @param lieudit selected lieu-dit
+   * @param altitude current value of altitude
+   * @param longitude current value of longitude
+   * @param latitude current value of latitude
+   */
   private areCoordinatesCustomized(
+    lieudit: Lieudit,
     altitude: number,
     longitude: number,
     latitude: number
   ): boolean {
-    return !!altitude || !!longitude || !!latitude;
+    return (
+      altitude !== lieudit.altitude ||
+      longitude !== lieudit.longitude ||
+      latitude !== lieudit.latitude
+    );
   }
 
   private getDepartementById(id: number): Departement {
