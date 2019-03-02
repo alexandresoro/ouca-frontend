@@ -1,19 +1,17 @@
-<h1 class="mat-display-1"
-  style="display: none">Création des données</h1>
+<h1 class="mat-display-1" style="display: none">Création des données</h1>
 
 <div class="lco-creation-body">
-
   <!-- Bar containing the messages -->
   <div class="lco-creation-messages">
     <div [ngSwitch]="status">
       <div *ngSwitchCase="'ERROR'">
         <ul>
-          <li *ngFor="let message of messages">{{message?.value}}</li>
+          <li *ngFor="let message of messages">{{ message?.value }}</li>
         </ul>
       </div>
       <div *ngSwitchCase="'SUCCESS'">
         <ul>
-          <li *ngFor="let message of messages">{{message?.value}}</li>
+          <li *ngFor="let message of messages">{{ message?.value }}</li>
         </ul>
       </div>
       <div *ngSwitchDefault>
@@ -26,30 +24,38 @@
   <div class="lco-creation-buttons">
     <!-- Top left buttons -->
     <span class="top-left-creation-buttons">
-      <button mat-raised-button
+      <button
+        mat-raised-button
         color="primary"
         *ngIf="isNewDonneeBtnDisplayed()"
-        (click)="onNewDonneeBtnClicked()">
+        (click)="onNewDonneeBtnClicked()"
+      >
         Nouvelle donnée
       </button>
 
-      <button mat-raised-button
+      <button
+        mat-raised-button
         color="primary"
         [disabled]="!isPreviousDonneeBtnDisplayed()"
-        (click)="onPreviousDonneeBtnClicked()">
+        (click)="onPreviousDonneeBtnClicked()"
+      >
         Donnée précédente
       </button>
 
-      <button mat-raised-button
+      <button
+        mat-raised-button
         color="primary"
         [disabled]="!isNextDonneeBtnDisplayed()"
-        (click)="onNextDonneeBtnClicked()">
+        (click)="onNextDonneeBtnClicked()"
+      >
         Donnée suivante
       </button>
 
-      <button mat-raised-button
+      <button
+        mat-raised-button
         color="primary"
-        (click)="onSearchByIdBtnClicked()">
+        (click)="onSearchByIdBtnClicked()"
+      >
         Recherche par ID
       </button>
     </span>
@@ -58,30 +64,38 @@
 
     <!-- Top right buttons -->
     <span class="top-right-creation-buttons">
-      <button mat-raised-button
+      <button
+        mat-raised-button
         color="primary"
         *ngIf="modeHelper.isInventaireMode(mode)"
         [disabled]="!donneeForm.form.valid"
-        (click)="saveInventaire()">
+        (click)="saveInventaire()"
+      >
         Enregistrer l'inventaire
       </button>
-      <button mat-raised-button
+      <button
+        mat-raised-button
         color="primary"
         *ngIf="modeHelper.isDonneeMode(mode)"
         [disabled]="!donneeForm.form.valid"
-        (click)="saveDonnee()">
+        (click)="saveDonnee()"
+      >
         Enregistrer la donnée
       </button>
-      <button *ngIf="modeHelper.isUpdateMode(mode)"
+      <button
+        *ngIf="modeHelper.isUpdateMode(mode)"
         mat-raised-button
         color="primary"
-        (click)="saveInventaireAndDonnee()">
+        (click)="saveInventaireAndDonnee()"
+      >
         Mettre à jour la donnée
       </button>
-      <button mat-raised-button
+      <button
+        mat-raised-button
         color="primary"
         *ngIf="isDeleteDonneeBtnDisplayed()"
-        (click)="onDeleteDonneeBtnClicked()">
+        (click)="onDeleteDonneeBtnClicked()"
+      >
         Supprimer la donnée
       </button>
     </span>
@@ -90,94 +104,73 @@
   <!-- FORM TO CREATE DONNEES -->
   <form #donneeForm="ngForm">
     <div class="lco-creation-form">
-
       <div>
         <div class="creation-inventaire-titre flex-container">
           <h2>Fiche Inventaire</h2>
           <span class="flex-spacer"></span>
-          <button mat-button
+          <button
+            mat-button
             color="primary"
             *ngIf="modeHelper.isDonneeMode(mode)"
-            (click)="onNewInventaireBtnClicked()">
+            (click)="onNewInventaireBtnClicked()"
+          >
             Nouvel inventaire
           </button>
-          <button mat-button
+          <button
+            mat-button
             color="primary"
             *ngIf="modeHelper.isDonneeMode(mode)"
-            (click)="onEditInventaireBtnClicked()">
+            (click)="onEditInventaireBtnClicked()"
+          >
             Modifier l'inventaire
           </button>
         </div>
 
         <div class="inventaire-form">
-
           <!-- CARD OBSERVATEUR + ASSOCIES -->
           <mat-card class="mat-card-override full-width-container">
             <!-- OBSERVATEUR -->
-            <lco-autocomplete [disabled]="isInventaireDisabled"
-              [required]="!isInventaireDisabled"
-              [type]="'Observateur'"
-              [values]="pageModel.observateurs"
-              [selectedValue]="inventaireToSave.observateur"
-              attributeToFilter="autocompleteOption1"
-              (onValueChanged)="inventaireToSave.observateur = $event.value">
-            </lco-autocomplete>
+            <input-observateur
+              [isDisabled]="isInventaireDisabled"
+              [observateurs]="pageModel.observateurs"
+              [selectedObservateur]="inventaireToSave.observateur"
+            >
+            </input-observateur>
 
             <!-- ASSOCIES -->
-            <mat-form-field *ngIf="pageModel.areAssociesDisplayed">
-              <mat-select placeholder="Associés"
-                id="input-associes"
-                name="input-associes"
-                [disabled]="isInventaireDisabled"
-                [(ngModel)]="inventaireToSave.associes"
-                multiple>
-                <mat-option *ngFor="let observateur of pageModel.observateurs"
-                  [value]="observateur">
-                  {{observateur.libelle}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <input-observateurs-associes
+              [isDisabled]="isInventaireDisabled"
+              [isDisplayed]="pageModel.areAssociesDisplayed"
+              [observateurs]="pageModel.observateurs"
+              [selectedAssocies]="inventaireToSave.associes"
+            >
+            </input-observateurs-associes>
           </mat-card>
           <!-- END CARD OBSERVATEUR + ASSOCIES -->
 
           <!-- CARD DATE + HEURE + DUREE -->
           <mat-card class="mat-card-override lco-creation-date">
             <!-- DATE -->
-            <mat-form-field class="date-creation-input">
-              <input matInput
-                [matDatepicker]="picker"
-                placeholder="Date"
-                id="input-date"
-                name="date"
-                [(ngModel)]="dateInventaire"
-                [disabled]="isInventaireDisabled"
-                [required]="!isInventaireDisabled">
-              <mat-datepicker-toggle matSuffix
-                [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+            <input-date
+              [isDisabled]="isInventaireDisabled"
+              [selectedDate]="dateInventaire"
+            ></input-date>
 
             <!-- HEURE -->
-            <mat-form-field class="time-input">
-              <input matInput
-                placeholder="Heure"
-                type="time"
-                id="input-heure"
-                name="heure"
-                [(ngModel)]="inventaireToSave.heure"
-                [disabled]="isInventaireDisabled">
-            </mat-form-field>
+            <input-time
+              [id]="heure"
+              [isDisabled]="isInventaireDisabled"
+              label="Heure"
+              [selectedTime]="inventaireToSave.heure"
+            ></input-time>
 
             <!-- DUREE -->
-            <mat-form-field class="time-input">
-              <input matInput
-                placeholder="Durée"
-                type="time"
-                id="input-duree"
-                name="duree"
-                [(ngModel)]="inventaireToSave.duree"
-                [disabled]="isInventaireDisabled">
-            </mat-form-field>
+            <input-time
+              [id]="duree"
+              [isDisabled]="isInventaireDisabled"
+              label="Durée"
+              [selectedTime]="inventaireToSave.duree"
+            ></input-time>
           </mat-card>
           <!-- END CARD DATE + HEURE + DUREE -->
 
@@ -186,47 +179,57 @@
             <div>
               <div class="full-width-container">
                 <!-- DEPARTEMENT -->
-                <lco-autocomplete attributeToFilter="autocompleteOption1"
+                <lco-autocomplete
+                  attributeToFilter="autocompleteOption1"
                   [disabled]="isInventaireDisabled"
                   [required]="!isInventaireDisabled"
                   [selectedValue]="selectedDepartement"
                   [startWithMode]="true"
                   type="Département"
                   [values]="pageModel.departements"
-                  (onValueChanged)="updateCommunes($event.value)">
+                  (onValueChanged)="updateCommunes($event.value)"
+                >
                 </lco-autocomplete>
               </div>
 
               <div class="commune-container">
                 <!-- CODE COMMUNE -->
                 <mat-form-field class="code-commune">
-                  <mat-select placeholder="Code"
+                  <mat-select
+                    placeholder="Code"
                     id="input-code-commune"
                     name="code-commune"
                     [(ngModel)]="selectedCommune"
                     [required]="!isInventaireDisabled"
                     [disabled]="isInventaireDisabled"
-                    (selectionChange)="updateLieuxdits()">
-                    <mat-option *ngFor="let commune of filteredCommunes"
-                      [value]="commune">
-                      {{commune.code}}
+                    (selectionChange)="updateLieuxdits()"
+                  >
+                    <mat-option
+                      *ngFor="let commune of filteredCommunes"
+                      [value]="commune"
+                    >
+                      {{ commune.code }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
 
                 <!-- NOM COMMUNE -->
                 <mat-form-field class="nom-commune">
-                  <mat-select placeholder="Nom commune"
+                  <mat-select
+                    placeholder="Nom commune"
                     id="input-nom-commune"
                     name="nom-commune"
                     [(ngModel)]="selectedCommune"
                     [required]="!isInventaireDisabled"
                     [disabled]="isInventaireDisabled"
-                    (selectionChange)="updateLieuxdits()">
-                    <mat-option *ngFor="let commune of filteredCommunes"
+                    (selectionChange)="updateLieuxdits()"
+                  >
+                    <mat-option
+                      *ngFor="let commune of filteredCommunes"
                       [value]="commune"
-                      [disabled]="isInventaireDisabled">
-                      {{commune.nom}}
+                      [disabled]="isInventaireDisabled"
+                    >
+                      {{ commune.nom }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -235,16 +238,20 @@
               <div class="full-width-container">
                 <!-- LIEUDIT -->
                 <mat-form-field>
-                  <mat-select placeholder="Lieu-dit"
+                  <mat-select
+                    placeholder="Lieu-dit"
                     id="input-lieudit"
                     name="lieudit"
                     [(ngModel)]="inventaireToSave.lieudit"
                     [required]="!isInventaireDisabled"
                     [disabled]="isInventaireDisabled"
-                    (selectionChange)="updateCoordinates()">
-                    <mat-option *ngFor="let lieudit of filteredLieuxdits"
-                      [value]="lieudit">
-                      {{lieudit.nom}}
+                    (selectionChange)="updateCoordinates()"
+                  >
+                    <mat-option
+                      *ngFor="let lieudit of filteredLieuxdits"
+                      [value]="lieudit"
+                    >
+                      {{ lieudit.nom }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -253,38 +260,44 @@
               <div class="coordonnees-form">
                 <!-- ALTITUDE -->
                 <mat-form-field>
-                  <input matInput
+                  <input
+                    matInput
                     type="number"
                     placeholder="Altitude"
                     id="input-altitude"
                     name="altitude"
                     [(ngModel)]="inventaireToSave.altitude"
                     [required]="!isInventaireDisabled"
-                    [disabled]="isInventaireDisabled">
+                    [disabled]="isInventaireDisabled"
+                  />
                 </mat-form-field>
 
                 <!-- LONGITUDE -->
                 <mat-form-field>
-                  <input matInput
+                  <input
+                    matInput
                     type="number"
                     placeholder="Longitude"
                     id="input-longitude"
                     name="longitude"
                     [(ngModel)]="inventaireToSave.longitude"
                     [required]="!isInventaireDisabled"
-                    [disabled]="isInventaireDisabled">
+                    [disabled]="isInventaireDisabled"
+                  />
                 </mat-form-field>
 
                 <!-- LATITUDE -->
                 <mat-form-field>
-                  <input matInput
+                  <input
+                    matInput
                     type="number"
                     placeholder="Latitude"
                     id="input-latitude"
                     name="latitude"
                     [(ngModel)]="inventaireToSave.latitude"
                     [required]="!isInventaireDisabled"
-                    [disabled]="isInventaireDisabled">
+                    [disabled]="isInventaireDisabled"
+                  />
                 </mat-form-field>
               </div>
             </div>
@@ -292,29 +305,37 @@
           <!-- END CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
 
           <!-- CARD TEMPERATURE + METEO -->
-          <mat-card class="mat-card-override lco-creation-meteo"
-            *ngIf="pageModel.isMeteoDisplayed">
+          <mat-card
+            class="mat-card-override lco-creation-meteo"
+            *ngIf="pageModel.isMeteoDisplayed"
+          >
             <!-- TEMPERATURE -->
             <mat-form-field class="temperature-container">
-              <input matInput
+              <input
+                matInput
                 type="number"
                 placeholder="Température"
                 id="input-temperature"
                 name="temperature"
                 [(ngModel)]="inventaireToSave.temperature"
-                [disabled]="isInventaireDisabled">
+                [disabled]="isInventaireDisabled"
+              />
             </mat-form-field>
             <!-- METEOS -->
             <mat-form-field class="meteo-container">
-              <mat-select placeholder="Météos"
+              <mat-select
+                placeholder="Météos"
                 id="input-meteos"
                 name="meteos"
                 [(ngModel)]="inventaireToSave.meteos"
                 [disabled]="isInventaireDisabled"
-                multiple>
-                <mat-option *ngFor="let meteo of pageModel.meteos"
-                  [value]="meteo">
-                  {{meteo.libelle}}
+                multiple
+              >
+                <mat-option
+                  *ngFor="let meteo of pageModel.meteos"
+                  [value]="meteo"
+                >
+                  {{ meteo.libelle }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -322,61 +343,76 @@
           <!-- END CARD TEMPERATURE + METEO -->
         </div>
         <!-- END FICHE INVENTAIRE -->
-
       </div>
 
       <!-- FICHE ESPECE  -->
       <div>
-        <h2>Fiche espèce
-          <span *ngIf="navigationService.currentDonneeIndex">n°{{navigationService.currentDonneeIndex}} (ID={{donneeToSave.id}})</span>
+        <h2>
+          Fiche espèce
+          <span *ngIf="navigationService.currentDonneeIndex"
+            >n°{{ navigationService.currentDonneeIndex }} (ID={{
+              donneeToSave.id
+            }})</span
+          >
         </h2>
 
         <div class="espece-form">
-
           <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
           <mat-card class="mat-card-override lco-creation-quoi">
             <!-- CLASSE -->
             <mat-form-field class="quoi-classe">
-              <mat-select (selectionChange)="updateEspeces()"
+              <mat-select
+                (selectionChange)="updateEspeces()"
                 placeholder="Classe"
                 [disabled]="isDonneeDisabled"
                 id="input-classe"
                 name="classe"
-                [(ngModel)]="selectedClasse">
+                [(ngModel)]="selectedClasse"
+              >
                 <mat-option>Toutes</mat-option>
-                <mat-option *ngFor="let classe of pageModel.classes"
-                  [value]="classe">
-                  {{classe.libelle}}
+                <mat-option
+                  *ngFor="let classe of pageModel.classes"
+                  [value]="classe"
+                >
+                  {{ classe.libelle }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
 
             <!-- CODE ESPECE -->
             <mat-form-field class="quoi-espece">
-              <mat-select placeholder="Code espèce"
+              <mat-select
+                placeholder="Code espèce"
                 id="input-code-espece"
                 name="input-code-espece"
                 [disabled]="isDonneeDisabled"
                 [required]="!isDonneeDisabled"
-                [(ngModel)]="donneeToSave.espece">
-                <mat-option *ngFor="let espece of filteredEspeces"
-                  [value]="espece">
-                  {{espece.code}}
+                [(ngModel)]="donneeToSave.espece"
+              >
+                <mat-option
+                  *ngFor="let espece of filteredEspeces"
+                  [value]="espece"
+                >
+                  {{ espece.code }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
 
             <!-- NOM FRANCAIS ESPECE -->
             <mat-form-field class="quoi-nom-classe">
-              <mat-select id="input-nom-espece"
+              <mat-select
+                id="input-nom-espece"
                 placeholder="Nom français"
                 name="nom-espece"
                 [disabled]="isDonneeDisabled"
                 [required]="!isDonneeDisabled"
-                [(ngModel)]="donneeToSave.espece">
-                <mat-option *ngFor="let espece of filteredEspeces"
-                  [value]="espece">
-                  {{espece.nomFrancais}}
+                [(ngModel)]="donneeToSave.espece"
+              >
+                <mat-option
+                  *ngFor="let espece of filteredEspeces"
+                  [value]="espece"
+                >
+                  {{ espece.nomFrancais }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -388,121 +424,157 @@
             <div class="combien-de-container">
               <!-- NOMBRE -->
               <mat-form-field class="nombre-espece">
-                <input matInput
+                <input
+                  matInput
                   placeholder="Nombre ind."
                   id="input-nombre"
                   min="1"
                   name="nombre"
                   type="number"
                   [(ngModel)]="donneeToSave.nombre"
-                  [disabled]="isDonneeDisabled || donneeToSave.estimationNombre?.nonCompte"
-                  [required]="!isDonneeDisabled && !donneeToSave.estimationNombre?.nonCompte">
+                  [disabled]="
+                    isDonneeDisabled || donneeToSave.estimationNombre?.nonCompte
+                  "
+                  [required]="
+                    !isDonneeDisabled &&
+                    !donneeToSave.estimationNombre?.nonCompte
+                  "
+                />
               </mat-form-field>
 
               <!-- ESTIMATION NOMBRE -->
               <mat-form-field class="estimation-nombre-espece">
-                <mat-select id="input-estimation-nombre"
+                <mat-select
+                  id="input-estimation-nombre"
                   placeholder="Estimation du nombre"
                   name="estimation-nombre"
                   [(ngModel)]="donneeToSave.estimationNombre"
                   (ngModelChange)="onEstimationNombreChanged($event)"
                   [disabled]="isDonneeDisabled"
-                  [required]="!isDonneeDisabled">
-                  <mat-option *ngFor="let estimNombre of pageModel.estimationsNombre"
-                    [value]="estimNombre">
-                    {{estimNombre.libelle}}
+                  [required]="!isDonneeDisabled"
+                >
+                  <mat-option
+                    *ngFor="let estimNombre of pageModel.estimationsNombre"
+                    [value]="estimNombre"
+                  >
+                    {{ estimNombre.libelle }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
 
               <!-- SEXE -->
               <mat-form-field class="sexe-espece">
-                <mat-select placeholder="Sexe"
+                <mat-select
+                  placeholder="Sexe"
                   id="input-sexe"
                   name="sexe"
                   [(ngModel)]="donneeToSave.sexe"
                   [disabled]="isDonneeDisabled"
-                  [required]="!isDonneeDisabled">
-                  <mat-option *ngFor="let sexe of pageModel.sexes"
-                    [value]="sexe">
-                    {{sexe.libelle}}
+                  [required]="!isDonneeDisabled"
+                >
+                  <mat-option
+                    *ngFor="let sexe of pageModel.sexes"
+                    [value]="sexe"
+                  >
+                    {{ sexe.libelle }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
 
               <!-- AGE -->
               <mat-form-field class="age-espece">
-                <mat-select placeholder="Age"
+                <mat-select
+                  placeholder="Age"
                   id="input-age"
                   name="age"
                   [(ngModel)]="donneeToSave.age"
                   [disabled]="isDonneeDisabled"
-                  [required]="!isDonneeDisabled">
-                  <mat-option *ngFor="let age of pageModel.ages"
-                    [value]="age">
-                    {{age.libelle}}
+                  [required]="!isDonneeDisabled"
+                >
+                  <mat-option *ngFor="let age of pageModel.ages" [value]="age">
+                    {{ age.libelle }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
 
             <!-- DISTANCE AND ESTIMATION DISTANCE -->
-            <div *ngIf="pageModel.isDistanceDisplayed || pageModel.isRegroupementDisplayed"
-              class="distance-regroupement-container">
+            <div
+              *ngIf="
+                pageModel.isDistanceDisplayed ||
+                pageModel.isRegroupementDisplayed
+              "
+              class="distance-regroupement-container"
+            >
               <ng-container *ngIf="pageModel.isDistanceDisplayed">
                 <span class="distance-container">
-
                   <!-- ESTIMATION DISTANCE -->
                   <mat-form-field class="estimation-distance-container">
-                    <mat-select placeholder="Estimation de la distance"
+                    <mat-select
+                      placeholder="Estimation de la distance"
                       id="input-estimation-distance"
                       name="estimation-distance"
                       [(ngModel)]="donneeToSave.estimationDistance"
                       [disabled]="isDonneeDisabled"
-                      [required]="!!donneeToSave.distance || donneeToSave.distance==0">
+                      [required]="
+                        !!donneeToSave.distance || donneeToSave.distance == 0
+                      "
+                    >
                       <mat-option></mat-option>
-                      <mat-option *ngFor="let estimDistance of pageModel.estimationsDistance"
-                        [value]="estimDistance">
-                        {{estimDistance.libelle}}
+                      <mat-option
+                        *ngFor="
+                          let estimDistance of pageModel.estimationsDistance
+                        "
+                        [value]="estimDistance"
+                      >
+                        {{ estimDistance.libelle }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
 
                   <!-- DISTANCE -->
                   <mat-form-field class="distance-container">
-                    <input matInput
+                    <input
+                      matInput
                       placeholder="Distance (m)"
                       id="input-distance"
                       min="0"
                       name="distance"
                       type="number"
                       [(ngModel)]="donneeToSave.distance"
-                      [disabled]="isDonneeDisabled || !!!donneeToSave.estimationDistance"
-                      [required]="!!donneeToSave.estimationDistance">
+                      [disabled]="
+                        isDonneeDisabled || !!!donneeToSave.estimationDistance
+                      "
+                      [required]="!!donneeToSave.estimationDistance"
+                    />
                   </mat-form-field>
-
                 </span>
               </ng-container>
 
               <!-- REGROUPEMENT -->
-              <mat-form-field *ngIf="pageModel.isRegroupementDisplayed"
-                class="regroupement-container">
-                <input matInput
+              <mat-form-field
+                *ngIf="pageModel.isRegroupementDisplayed"
+                class="regroupement-container"
+              >
+                <input
+                  matInput
                   placeholder="Regroupement"
                   id="input-regroupement"
                   name="regroupement"
                   type="number"
                   min="1"
                   [(ngModel)]="donneeToSave.regroupement"
-                  [disabled]="isDonneeDisabled">
-                <button matSuffix
+                  [disabled]="isDonneeDisabled"
+                />
+                <button
+                  matSuffix
                   mat-icon-button
                   [disabled]="isDonneeDisabled"
-                  (click)="displayNextRegroupement()">
+                  (click)="displayNextRegroupement()"
+                >
                   <mat-icon>add_box</mat-icon>
                 </button>
               </mat-form-field>
-
             </div>
           </mat-card>
           <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
@@ -511,41 +583,53 @@
           <mat-card class="mat-card-override">
             <mat-card-content class="comportements-container">
               <ng-container *ngIf="pageModel && pageModel.comportements">
-                <input-code-libelle [isDisabled]="isDonneeDisabled"
+                <input-code-libelle
+                  [isDisabled]="isDonneeDisabled"
                   [type]="'Comportement 1'"
                   [values]="pageModel.comportements"
                   [selectedValue]="selectedComportements[0]"
-                  (onValueChanged)="addComportement($event, 0)">
+                  (onValueChanged)="addComportement($event, 0)"
+                >
                 </input-code-libelle>
-                <input-code-libelle [isDisabled]="isComportementDisabled(2)"
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(2)"
                   [type]="'Comportement 2'"
                   [values]="pageModel.comportements"
                   [selectedValue]="selectedComportements[1]"
-                  (onValueChanged)="addComportement($event, 1)">
+                  (onValueChanged)="addComportement($event, 1)"
+                >
                 </input-code-libelle>
-                <input-code-libelle [isDisabled]="isComportementDisabled(3)"
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(3)"
                   [type]="'Comportement 3'"
                   [values]="pageModel.comportements"
                   [selectedValue]="selectedComportements[2]"
-                  (onValueChanged)="addComportement($event, 2)">
+                  (onValueChanged)="addComportement($event, 2)"
+                >
                 </input-code-libelle>
-                <input-code-libelle [isDisabled]="isComportementDisabled(4)"
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(4)"
                   [type]="'Comportement 4'"
                   [values]="pageModel.comportements"
                   [selectedValue]="selectedComportements[3]"
-                  (onValueChanged)="addComportement($event, 3)">
+                  (onValueChanged)="addComportement($event, 3)"
+                >
                 </input-code-libelle>
-                <input-code-libelle [isDisabled]="isComportementDisabled(5)"
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(5)"
                   [type]="'Comportement 5'"
                   [values]="pageModel.comportements"
                   [selectedValue]="selectedComportements[4]"
-                  (onValueChanged)="addComportement($event, 4)">
+                  (onValueChanged)="addComportement($event, 4)"
+                >
                 </input-code-libelle>
-                <input-code-libelle [isDisabled]="isComportementDisabled(6)"
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(6)"
                   [type]="'Comportement 6'"
                   [values]="pageModel.comportements"
                   [selectedValue]="selectedComportements[5]"
-                  (onValueChanged)="addComportement($event, 5)">
+                  (onValueChanged)="addComportement($event, 5)"
+                >
                 </input-code-libelle>
               </ng-container>
             </mat-card-content>
@@ -556,29 +640,37 @@
           <mat-card class="mat-card-override">
             <mat-card-content class="milieux-container">
               <ng-container *ngIf="pageModel && pageModel.milieux">
-                <input-code-libelle [isDisabled]="isDonneeDisabled"
+                <input-code-libelle
+                  [isDisabled]="isDonneeDisabled"
                   [type]="'Milieu 1'"
                   [values]="pageModel.milieux"
                   [selectedValue]="selectedMilieux[0]"
-                  (onValueChanged)="addMilieu($event, 0)">
+                  (onValueChanged)="addMilieu($event, 0)"
+                >
                 </input-code-libelle>
-                <input-code-libelle [isDisabled]="isMilieuDisabled(2)"
+                <input-code-libelle
+                  [isDisabled]="isMilieuDisabled(2)"
                   [type]="'Milieu 2'"
                   [values]="pageModel.milieux"
                   [selectedValue]="selectedMilieux[1]"
-                  (onValueChanged)="addMilieu($event, 1)">
+                  (onValueChanged)="addMilieu($event, 1)"
+                >
                 </input-code-libelle>
-                <input-code-libelle [isDisabled]="isMilieuDisabled(3)"
+                <input-code-libelle
+                  [isDisabled]="isMilieuDisabled(3)"
                   [type]="'Milieu 3'"
                   [values]="pageModel.milieux"
                   [selectedValue]="selectedMilieux[2]"
-                  (onValueChanged)="addMilieu($event, 2)">
+                  (onValueChanged)="addMilieu($event, 2)"
+                >
                 </input-code-libelle>
-                <input-code-libelle [isDisabled]="isMilieuDisabled(4)"
+                <input-code-libelle
+                  [isDisabled]="isMilieuDisabled(4)"
                   [type]="'Milieu 4'"
                   [values]="pageModel.milieux"
                   [selectedValue]="selectedMilieux[3]"
-                  (onValueChanged)="addMilieu($event, 3)">
+                  (onValueChanged)="addMilieu($event, 3)"
+                >
                 </input-code-libelle>
               </ng-container>
             </mat-card-content>
@@ -590,50 +682,54 @@
             <mat-card-content class="full-width-container">
               <!-- COMMENTAIRE -->
               <mat-form-field>
-                <textarea matInput
+                <textarea
+                  matInput
                   id="input-commentaire"
                   placeholder="Commentaires"
                   name="commentaire"
                   rows="2"
                   [disabled]="isDonneeDisabled"
                   [(ngModel)]="donneeToSave.commentaire"
-                  (keypress)="commentaireKeyPress($event)"></textarea>
+                  (keypress)="commentaireKeyPress($event)"
+                ></textarea>
               </mat-form-field>
             </mat-card-content>
           </mat-card>
           <!-- END CARD COMMENTAIRE -->
-
         </div>
       </div>
-
-
     </div>
   </form>
-
 
   <!-- BAR BOTTOM BUTTOM -->
   <div class="creation-footer">
     <span class="flex-spacer"></span>
 
-    <button mat-raised-button
+    <button
+      mat-raised-button
       color="primary"
       *ngIf="modeHelper.isInventaireMode(mode)"
       [disabled]="!donneeForm.form.valid"
-      (click)="saveInventaire()">
+      (click)="saveInventaire()"
+    >
       Enregistrer l'inventaire
     </button>
-    <button mat-raised-button
+    <button
+      mat-raised-button
       color="primary"
       *ngIf="modeHelper.isDonneeMode(mode)"
       [disabled]="!donneeForm.form.valid"
-      (click)="saveDonnee()">
+      (click)="saveDonnee()"
+    >
       Enregistrer la donnée
     </button>
-    <button mat-raised-button
+    <button
+      mat-raised-button
       color="primary"
       *ngIf="modeHelper.isUpdateMode(mode)"
       [disabled]="!donneeForm.form.valid"
-      (click)="saveInventaireAndDonnee()">
+      (click)="saveInventaireAndDonnee()"
+    >
       Mettre à jour la donnée
     </button>
   </div>

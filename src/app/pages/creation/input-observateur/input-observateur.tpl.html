@@ -1,0 +1,11 @@
+<!-- OBSERVATEUR -->
+<lco-autocomplete
+  [disabled]="isDisabled"
+  [required]="!isDisabled"
+  [type]="'Observateur'"
+  [values]="observateurs"
+  [selectedValue]="selectedObservateur"
+  attributeToFilter="libelle"
+  (onValueChanged)="selectedObservateur = $event.value"
+>
+</lco-autocomplete>

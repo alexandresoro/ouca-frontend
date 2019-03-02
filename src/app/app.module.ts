@@ -91,6 +91,10 @@ import { ConfigurationComponent } from "./pages/configuration/configuration.comp
 import { ConfigurationService } from "./pages/configuration/configuration.service";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
+import { InputDateComponent } from "./pages/creation/input-date/input-date.component";
+import { InputObservateurComponent } from "./pages/creation/input-observateur/input-observateur.component";
+import { InputObservateursAssociesComponent } from "./pages/creation/input-observateurs-associes/input-observateurs-associes.component";
+import { InputTimeComponent } from "./pages/creation/input-time/input-time.component";
 import { NavigationService } from "./pages/creation/navigation.service";
 import { EntiteAvecLibelleEtCodeFormComponent } from "./pages/entities/entite-avec-libelle-et-code/entite-avec-libelle-et-code-form.component";
 import { EntiteAvecLibelleFormComponent } from "./pages/entities/entite-avec-libelle/entite-avec-libelle-form.component";
@@ -264,6 +268,10 @@ const baseNaturalisteRoutes: Routes = [
     EstimationDistanceTableComponent,
     ImportComponent,
     InputCodeLibelleComponent,
+    InputDateComponent,
+    InputTimeComponent,
+    InputObservateurComponent,
+    InputObservateursAssociesComponent,
     LcoAutocompleteComponent,
     LcoEntiteSelectComponent,
     LieuditComponent,
