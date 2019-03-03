@@ -17,6 +17,7 @@ import { Espece } from "../../model/espece.object";
 import { EstimationNombre } from "../../model/estimation-nombre.object";
 import { Inventaire } from "../../model/inventaire.object";
 import { Lieudit } from "../../model/lieudit.object";
+import { Meteo } from "../../model/meteo.object";
 import { Observateur } from "../../model/observateur.object";
 import { PageComponent } from "../page.component";
 import { CreationMode, CreationModeHelper } from "./creation-mode.enum";
@@ -40,10 +41,11 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public testAlex: boolean;
 
-  public inventaireToSave: Inventaire = new Inventaire();
+  // public inventaireToSave: Inventaire = new Inventaire();
+  public displayedInventaireId: number = null;
+
   public donneeToSave: Donnee = new Donnee();
 
-  public dateInventaire: string;
   public selectedClasse: Classe;
   public selectedComportements: Comportement[] = new Array<Comportement>(6);
   public selectedMilieux: Comportement[] = new Array<Comportement>(6);
@@ -113,15 +115,16 @@ export class CreationComponent extends PageComponent implements OnInit {
    */
   private onInitCreationPageSucces(creationPage: CreationPage): void {
     this.pageModel = creationPage;
+    console.log("Modèle de la page de Création", this.pageModel);
+
     this.nextRegroupement = this.pageModel.nextRegroupement;
+
     this.navigationService.init(
       this.pageModel.lastDonnee,
       this.pageModel.numberOfDonnees
     );
 
     this.switchToNewInventaireMode();
-
-    console.log("Le modèle initial de la page de création est", this.pageModel);
   }
 
   private onInitCreationPageError(error: any): void {
@@ -140,20 +143,150 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Set observateur to the default observateur...
    */
   private initInventaireDefaultValues(): void {
+    let defaultObservateur: Observateur = null;
     if (
       !!this.pageModel.defaultObservateur &&
       !!this.pageModel.defaultObservateur.id
     ) {
-      this.inventaireToSave.observateur = this.pageModel.observateurs.find(
+      defaultObservateur = this.pageModel.observateurs.find(
         (observateur) => observateur.id === this.pageModel.defaultObservateur.id
       );
     }
 
-    this.inventaireToSave.associes = new Array<Observateur>();
+    let defaultDepartement: Departement = null;
+    if (
+      !!this.pageModel.defaultDepartement &&
+      !!this.pageModel.defaultDepartement.id
+    ) {
+      defaultDepartement = this.pageModel.departements.find(
+        (departement) => departement.id === this.pageModel.defaultDepartement.id
+      );
+    }
 
-    this.dateInventaire = new Date().toISOString().substring(0, 10);
-    this.inventaireToSave.duree = null;
-    this.inventaireToSave.heure = null;
+    this.displayedInventaireId = null;
+
+    const inventaireFormControls = this.inventaireForm.controls;
+    const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
+      .controls;
+
+    inventaireFormControls.observateur.setValue(defaultObservateur);
+    inventaireFormControls.observateursAssocies.setValue(
+      new Array<Observateur>()
+    );
+    inventaireFormControls.date.setValue(
+      new Date().toISOString().substring(0, 10)
+    );
+    inventaireFormControls.heure.setValue(null);
+    inventaireFormControls.duree.setValue(null);
+    lieuditFormControls.departement.setValue(defaultDepartement);
+    lieuditFormControls.commune.setValue(null);
+    lieuditFormControls.lieudit.setValue(null);
+    lieuditFormControls.altitude.setValue(null);
+    lieuditFormControls.longitude.setValue(null);
+    lieuditFormControls.latitude.setValue(null);
+    inventaireFormControls.temperature.setValue(null);
+    inventaireFormControls.meteos.setValue(new Array<Meteo>());
+  }
+
+  private getInventaireFromInventaireFormControls(): Inventaire {
+    const inventaireFormControls = this.inventaireForm.controls;
+    const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
+      .controls;
+
+    const inventaire: Inventaire = {
+      id: this.displayedInventaireId,
+      observateur: inventaireFormControls.observateur.value,
+      associes: inventaireFormControls.observateursAssocies.value,
+      date: inventaireFormControls.date.value.toDate(),
+      heure: inventaireFormControls.heure.value,
+      duree: inventaireFormControls.duree.value,
+      lieudit: lieuditFormControls.lieudit.value,
+      altitude: lieuditFormControls.altitude.value,
+      longitude: lieuditFormControls.longitude.value,
+      latitude: lieuditFormControls.latitude.value,
+      temperature: inventaireFormControls.temperature.value,
+      meteos: inventaireFormControls.meteos.value
+    };
+
+    if (
+      !this.areCoordinatesCustomized(
+        inventaire.lieudit,
+        inventaire.altitude,
+        inventaire.longitude,
+        inventaire.latitude
+      )
+    ) {
+      inventaire.altitude = null;
+      inventaire.longitude = null;
+      inventaire.latitude = null;
+    }
+
+    console.log("Inventaire:", inventaire);
+
+    return inventaire;
+  }
+
+  /**
+   * Check if at least one of the coordinates has been modified by the user
+   * @param lieudit selected lieu-dit
+   * @param altitude current value of altitude
+   * @param longitude current value of longitude
+   * @param latitude current value of latitude
+   */
+  private areCoordinatesCustomized(
+    lieudit: Lieudit,
+    altitude: number,
+    longitude: number,
+    latitude: number
+  ): boolean {
+    return (
+      altitude !== lieudit.altitude ||
+      longitude !== lieudit.longitude ||
+      latitude !== lieudit.latitude
+    );
+  }
+  private setInventaireFormControlsFromInventaire(
+    inventaire: Inventaire
+  ): void {
+    let commune: Commune = null;
+    if (!!inventaire.lieudit && !!inventaire.lieudit.communeId) {
+      commune = this.getCommuneById(inventaire.lieudit.communeId);
+    }
+
+    let departement: Departement = null;
+    if (!!commune && !!commune.departementId) {
+      departement = this.getDepartementById(commune.departementId);
+    }
+
+    this.displayedInventaireId = inventaire.id;
+
+    const inventaireFormControls = this.inventaireForm.controls;
+    const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
+      .controls;
+
+    inventaireFormControls.observateur.setValue(inventaire.observateur);
+    inventaireFormControls.observateursAssocies.setValue(inventaire.associes);
+    inventaireFormControls.date.setValue(inventaire.date);
+    inventaireFormControls.heure.setValue(inventaire.heure);
+    inventaireFormControls.duree.setValue(inventaire.duree);
+    lieuditFormControls.departement.setValue(departement);
+    lieuditFormControls.commune.setValue(commune);
+    lieuditFormControls.lieudit.setValue(inventaire.lieudit);
+    if (
+      !!inventaire.altitude &&
+      !!inventaire.longitude &&
+      !!inventaire.latitude
+    ) {
+      lieuditFormControls.altitude.setValue(inventaire.altitude);
+      lieuditFormControls.longitude.setValue(inventaire.longitude);
+      lieuditFormControls.latitude.setValue(inventaire.latitude);
+    } else {
+      lieuditFormControls.altitude.setValue(inventaire.lieudit.altitude);
+      lieuditFormControls.longitude.setValue(inventaire.lieudit.longitude);
+      lieuditFormControls.latitude.setValue(inventaire.lieudit.latitude);
+    }
+    inventaireFormControls.temperature.setValue(inventaire.temperature);
+    inventaireFormControls.meteos.setValue(inventaire.meteos);
   }
 
   /**
@@ -197,56 +330,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.selectedMilieux = [];
   }
 
-  /**
-   * When selecting a departement, filter the list of communes, set back the lieu-dit to empty lieu-dit
-   */
-  private updateCommunes(selectedDepartement: Departement): void {
-    if (!!selectedDepartement && !!selectedDepartement.id) {
-      this.filteredCommunes = this.pageModel.communes.filter(
-        (commune) => commune.departementId === selectedDepartement.id
-      );
-      this.filteredLieuxdits = new Array<Lieudit>();
-      this.initCoordinates();
-    }
-  }
-
-  /**
-   * When selecting a commune, filter the list of lieux-dits
-   */
-  private updateLieuxdits(): void {
-    if (
-      !!this.inventaireForm.controls.commune &&
-      !!this.inventaireForm.controls.commune.value
-    ) {
-      // METHOD 1 The lieux-dits are returned by init of the page
-      this.filteredLieuxdits = this.pageModel.lieudits.filter(
-        (lieudit) =>
-          lieudit.communeId === this.inventaireForm.controls.commune.value.id
-      );
-
-      // METHOD 2 We get the lieux-dits when selecting a commune
-      // You should comment the line creationPage.setLieudits(lieuditService.findAll()); in CreationService.java
-      /*
-      this.creationService
-        .getLieuxditsByCommuneId(this.selectedCommune.id)
-        .subscribe(
-          (lieuxdits: Lieudit[]) => {
-            this.filteredLieuxdits = lieuxdits;
-          },
-          (error: any) => {
-            console.error("error");
-          }
-        );
-        */
-
-      this.initCoordinates();
-    }
-  }
-
   private testIdiot = () => {
-    this.inventaireForm.controls.observateur.setValue(
-      this.pageModel.observateurs[0]
-    );
+    // TODO
   }
 
   /**
@@ -261,30 +346,6 @@ export class CreationComponent extends PageComponent implements OnInit {
       // If "Toutes" we display all the especes
       this.filteredEspeces = this.pageModel.especes;
     }
-  }
-
-  /**
-   * Called when selecting a lieu-dit in the dropdown
-   */
-  private updateCoordinates(): void {
-    this.inventaireForm.controls.altitude.setValue(
-      this.inventaireForm.controls.lieudit.value.altitude
-    );
-    this.inventaireForm.controls.longitude.setValue(
-      this.inventaireForm.controls.lieudit.value.longitude
-    );
-    this.inventaireForm.controls.latitude.setValue(
-      this.inventaireForm.controls.lieudit.value.latitude
-    );
-  }
-
-  /**
-   * Re-initialize the coordinates to empty
-   */
-  private initCoordinates(): void {
-    this.inventaireToSave.altitude = null;
-    this.inventaireToSave.longitude = null;
-    this.inventaireToSave.latitude = null;
   }
 
   /**
@@ -314,33 +375,14 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on Save Inventaire button
    */
   public saveInventaire(): void {
-    const inventaireToBeSaved: Inventaire = {
-      id: null,
-      observateur: this.inventaireForm.controls.observateur.value,
-      associes: this.inventaireForm.controls.observateursAssocies.value,
-      date: this.inventaireForm.controls.date.value.toDate(),
-      heure: this.inventaireForm.controls.heure.value,
-      duree: this.inventaireForm.controls.duree.value,
-      lieudit: this.inventaireForm.controls.lieudit.value,
-      altitude: this.inventaireForm.controls.altitude.value,
-      longitude: this.inventaireForm.controls.longitude.value,
-      latitude: this.inventaireForm.controls.latitude.value,
-      temperature: this.inventaireForm.controls.temperature.value,
-      meteos: this.inventaireForm.controls.meteos.value
-    };
-
-    console.log("tobesent", inventaireToBeSaved);
-
-    // Prepare inventaire
-    // this.inventaireToSave.date = new Date(this.dateInventaire);
+    const inventaireToBeSaved: Inventaire = this.getInventaireFromInventaireFormControls();
 
     this.inventaireService.saveInventaire(inventaireToBeSaved).subscribe(
       (result: EntiteResult<Inventaire>) => {
         this.updatePageStatus(result.status, result.messages);
-        // this.inventaireToSave = result.object;
 
         if (this.isSuccess()) {
-          this.onSaveInventaireSuccess();
+          this.onSaveInventaireSuccess(result.object);
         }
       },
       (error: any) => {
@@ -349,13 +391,10 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onSaveInventaireSuccess() {
-    // if (this.inventaireToSave.altitude == null) {
-    //  this.updateCoordinates();
-    // }
-
+  private onSaveInventaireSuccess(savedInventaire: Inventaire) {
+    this.setInventaireFormControlsFromInventaire(savedInventaire);
     // this.donneeToSave = new Donnee();
-    this.donneeToSave.inventaire = this.inventaireToSave;
+    this.donneeToSave.inventaire = savedInventaire;
 
     this.switchToEditionDonneeMode();
   }
@@ -402,7 +441,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onSaveDonneeSuccess(savedDonnee: Donnee) {
     this.donneeToSave = new Donnee();
-    this.donneeToSave.inventaire = this.inventaireToSave;
+    // this.donneeToSave.inventaire = this.inventaireToSave;
     this.navigationService.numberOfDonnees++;
     this.navigationService.previousDonnee = savedDonnee;
     this.initializeDonneePanel();
@@ -465,7 +504,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     if (!this.modeHelper.isUpdateMode(this.mode)) {
       this.navigationService.saveCurrentContext(
         this.mode,
-        this.inventaireToSave,
+        this.getInventaireFromInventaireFormControls(),
         this.donneeToSave
       );
       this.switchToUpdateMode();
@@ -479,7 +518,8 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     // Set the current donnee to display
     this.donneeToSave = this.navigationService.previousDonnee;
-    this.inventaireToSave = this.donneeToSave.inventaire;
+    // this.inventaireToSave = this.donneeToSave.inventaire;
+    this.setInventaireFormControlsFromInventaire(this.donneeToSave.inventaire);
     this.navigationService.decreaseIndexOfCurrentDonnee();
 
     // Disable the navigation buttons
@@ -504,7 +544,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     const newPreviousDonnee = this.donneeToSave;
 
     this.donneeToSave = this.navigationService.nextDonnee;
-    this.inventaireToSave = this.donneeToSave.inventaire;
+    // this.inventaireToSave = this.donneeToSave.inventaire;
+    this.setInventaireFormControlsFromInventaire(this.donneeToSave.inventaire);
     this.navigationService.increaseIndexOfCurrentDonnee();
 
     // Disable the navigation buttons
@@ -533,19 +574,11 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.switchToEditionDonneeMode();
     }
 
-    this.inventaireToSave = this.navigationService.getNextInventaire();
+    // this.inventaireToSave = this.navigationService.getNextInventaire();
+    this.setInventaireFormControlsFromInventaire(
+      this.navigationService.getNextInventaire()
+    );
     this.donneeToSave = this.navigationService.getNextDonnee();
-
-    console.log(
-      "Mode et inventaire et donnée courants:",
-      this.mode.toString(),
-      this.inventaireToSave,
-      this.donneeToSave
-    );
-    console.log(
-      "Index de la donnée courante",
-      this.navigationService.currentDonneeIndex
-    );
   }
 
   private setNewNextDonnee() {
@@ -670,18 +703,24 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.mode = this.navigationService.savedMode;
     if (this.modeHelper.isInventaireMode(this.mode)) {
       this.switchToInventaireMode();
-      this.inventaireToSave = this.navigationService.savedInventaire;
+      // this.inventaireToSave = this.navigationService.savedInventaire;
+      this.setInventaireFormControlsFromInventaire(
+        this.navigationService.savedInventaire
+      );
       this.donneeToSave = new Donnee();
     } else if (this.modeHelper.isDonneeMode(this.mode)) {
       this.switchToEditionDonneeMode();
-      this.inventaireToSave = this.navigationService.savedInventaire;
+      // this.inventaireToSave = this.navigationService.savedInventaire;
+      this.setInventaireFormControlsFromInventaire(
+        this.navigationService.savedInventaire
+      );
       this.donneeToSave = this.navigationService.savedDonnee;
     }
   }
 
   private switchToNewInventaireMode(): void {
-    this.inventaireToSave = new Inventaire();
-    this.donneeToSave = new Donnee();
+    // this.inventaireToSave = new Inventaire();
+    // this.donneeToSave = new Donnee();
     this.initInventaireDefaultValues();
     this.initializeDonneePanel();
 
@@ -692,7 +731,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.mode = CreationMode.NEW_INVENTAIRE;
     this.isDonneeDisabled = true;
     this.handleInventaireFormState(true);
-    document.getElementById("input-observateur").focus();
+    document.getElementById("input-Observateur").focus();
   }
 
   private switchToEditionDonneeMode(): void {
@@ -745,16 +784,20 @@ export class CreationComponent extends PageComponent implements OnInit {
    * @param createNewInventaire If we should create a new inventaire for the donnee or just update it
    */
   private updateInventaireAndDonnee(createNewInventaire: boolean): void {
+    const inventaireToBeSaved: Inventaire = this.getInventaireFromInventaireFormControls();
+
     if (!!createNewInventaire) {
-      this.inventaireToSave.id = null;
+      inventaireToBeSaved.id = null;
 
-      console.log("L'inventaire à créer est", this.inventaireToSave);
+      console.log("L'inventaire à créer est", inventaireToBeSaved);
 
-      this.inventaireService.saveInventaire(this.inventaireToSave).subscribe(
+      this.inventaireService.saveInventaire(inventaireToBeSaved).subscribe(
         (result: EntiteResult<Inventaire>) => {
           if (this.isSuccessStatus(result.status)) {
-            this.inventaireToSave = result.object;
-            this.donneeToSave.inventaire = this.inventaireToSave;
+            // this.inventaireToSave = result.object;
+            const savedInventaire: Inventaire = result.object;
+            this.setInventaireFormControlsFromInventaire(savedInventaire);
+            this.donneeToSave.inventaire = savedInventaire;
             this.updateDonnee();
           } else {
             this.updatePageStatus(result.status, result.messages);
@@ -794,5 +837,15 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.setErrorMessage(
       "Impossible de mettre à jour la fiche inventaire et la fiche espèce affichées."
     );
+  }
+
+  private getDepartementById(id: number): Departement {
+    return this.pageModel.departements.find(
+      (departement) => departement.id === id
+    );
+  }
+
+  private getCommuneById(id: number): Commune {
+    return this.pageModel.communes.find((commune) => commune.id === id);
   }
 }

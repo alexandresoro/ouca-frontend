@@ -108,41 +108,43 @@ export class LcoAutocompleteComponent
       .remove(value.toLowerCase())
       .replace(this.CHARACTERS_TO_IGNORE, "");
 
-    return this.values.filter((valueFromList) => {
-      if (this.startWithMode) {
-        if (this.exactSearchMode) {
-          return (
-            valueFromList[this.attributeToFilter]
-              .toLowerCase()
-              .indexOf(filterValue) === 0
-          );
+    if (!!this.values) {
+      return this.values.filter((valueFromList) => {
+        if (this.startWithMode) {
+          if (this.exactSearchMode) {
+            return (
+              valueFromList[this.attributeToFilter]
+                .toLowerCase()
+                .indexOf(filterValue) === 0
+            );
+          } else {
+            return (
+              diacritics
+                .remove(valueFromList[this.attributeToFilter])
+                .toLowerCase()
+                .replace(this.CHARACTERS_TO_IGNORE, "")
+                .indexOf(filterValue) === 0
+            );
+          }
         } else {
-          return (
-            diacritics
-              .remove(valueFromList[this.attributeToFilter])
-              .toLowerCase()
-              .replace(this.CHARACTERS_TO_IGNORE, "")
-              .indexOf(filterValue) === 0
-          );
+          if (this.exactSearchMode) {
+            return (
+              valueFromList[this.attributeToFilter]
+                .toLowerCase()
+                .indexOf(filterValue) > -1
+            );
+          } else {
+            return (
+              diacritics
+                .remove(valueFromList[this.attributeToFilter])
+                .toLowerCase()
+                .replace(this.CHARACTERS_TO_IGNORE, "")
+                .indexOf(filterValue) > -1
+            );
+          }
         }
-      } else {
-        if (this.exactSearchMode) {
-          return (
-            valueFromList[this.attributeToFilter]
-              .toLowerCase()
-              .indexOf(filterValue) > -1
-          );
-        } else {
-          return (
-            diacritics
-              .remove(valueFromList[this.attributeToFilter])
-              .toLowerCase()
-              .replace(this.CHARACTERS_TO_IGNORE, "")
-              .indexOf(filterValue) > -1
-          );
-        }
-      }
-    });
+      });
+    }
   }
 
   public updateValue(newValue: MatAutocompleteSelectedEvent): void {

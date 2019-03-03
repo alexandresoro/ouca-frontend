@@ -30,40 +30,6 @@ export class InputLieuditComponent implements OnInit {
   public ngOnInit(): void {
     this.filteredCommunes = [];
     this.filteredLieuxdits = [];
-    this.resetSelectedCoordinates();
-
-    if (!this.selectedLieudit) {
-      // No lieudit is selected, form is initialized with default values
-      if (!!this.defaultDepartementId) {
-        // A default departement is existing so we select it in the form
-        this.selectedDepartement = this.getDepartementById(
-          this.defaultDepartementId
-        );
-        this.updateCommunes(this.selectedDepartement);
-      }
-    } else {
-      // A lieu-dit is already selected, we display it in the form
-      const altitude = this.selectedAltitude;
-      const longitude = this.selectedLongitude;
-      const latitude = this.selectedLatitude;
-
-      this.selectedCommune = this.getCommuneById(
-        this.selectedLieudit.communeId
-      );
-
-      this.selectedDepartement = this.getDepartementById(
-        this.selectedCommune.departementId
-      );
-
-      this.updateCommunes(this.selectedDepartement);
-      this.updateLieuxDits(this.selectedCommune);
-      this.updateCoordinates();
-
-      if (!!altitude || !!longitude || !!latitude) {
-        // The coordinates were modified by the user
-        this.setSelectedCoordinates(altitude, longitude, latitude);
-      }
-    }
   }
 
   /**
@@ -129,34 +95,6 @@ export class InputLieuditComponent implements OnInit {
     this.controlGroup.controls.altitude.setValue(altitude);
     this.controlGroup.controls.longitude.setValue(longitude);
     this.controlGroup.controls.latitude.setValue(latitude);
-  }
-
-  /**
-   * Check if at least one of the coordinates has been modified by the user
-   * @param lieudit selected lieu-dit
-   * @param altitude current value of altitude
-   * @param longitude current value of longitude
-   * @param latitude current value of latitude
-   */
-  private areCoordinatesCustomized(
-    lieudit: Lieudit,
-    altitude: number,
-    longitude: number,
-    latitude: number
-  ): boolean {
-    return (
-      altitude !== lieudit.altitude ||
-      longitude !== lieudit.longitude ||
-      latitude !== lieudit.latitude
-    );
-  }
-
-  private getDepartementById(id: number): Departement {
-    return this.departements.find((departement) => departement.id === id);
-  }
-
-  private getCommuneById(id: number): Commune {
-    return this.communes.find((commune) => commune.id === id);
   }
 
   private displayCommuneFormat = (commune: Commune): string => {
