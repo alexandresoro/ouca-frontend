@@ -1,17 +1,15 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { FormControl } from "@angular/forms";
 import { Observateur } from "../../../model/observateur.object";
 
 @Component({
   selector: "input-observateurs-associes",
-  templateUrl: "./input-observateurs-associes.tpl.html"
+  templateUrl: "./input-observateurs-associes.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputObservateursAssociesComponent {
+  @Input() public control: FormControl;
+
   @Input() public observateurs: Observateur[];
-
-  @Input() public selectedAssocies: Observateur[];
-
-  @Input() public isDisabled: boolean;
-
-  @Input() public isDisplayed: boolean;
 }

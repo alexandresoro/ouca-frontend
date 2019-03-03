@@ -1,12 +1,11 @@
-<!-- HEURE -->
+<!-- TIME -->
 <mat-form-field class="time-input">
   <input
     matInput
-    placeholder="{{ label }}"
+    [formControl]="control"
+    [placeholder]="label"
     type="time"
     id="input-{{ id }}"
-    name="{{ id }}"
-    [(ngModel)]="selectedTime"
-    [disabled]="isDisabled"
+    [name]="id"
   />
 </mat-form-field>

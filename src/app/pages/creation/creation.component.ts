@@ -795,10 +795,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private displayObservateurFormat = (observateur: Observateur): string => {
-    return observateur.libelle;
-  }
-
   private displayCommuneFormat = (commune: Commune): string => {
     return !!commune ? commune.code + " - " + commune.nom : "";
   }

@@ -1,8 +1,9 @@
 <!-- OBSERVATEUR -->
 <lco-autocomplete
+  attributeToFilter="libelle"
+  [displayFn]="displayObservateurFormat"
+  [control]="control"
   [type]="'Observateur'"
   [values]="observateurs"
-  attributeToFilter="libelle"
-  (onValueChanged)="selectedObservateur = $event.value"
 >
 </lco-autocomplete>

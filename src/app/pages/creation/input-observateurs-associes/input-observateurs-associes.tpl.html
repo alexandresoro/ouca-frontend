@@ -1,12 +1,11 @@
 <!-- ASSOCIES -->
-<mat-form-field *ngIf="isDisplayed">
+<mat-form-field>
   <mat-select
-    placeholder="Associés"
+    [formControl]="control"
     id="input-associes"
-    name="input-associes"
-    [disabled]="isDisabled"
-    [(ngModel)]="selectedAssocies"
     multiple
+    name="input-associes"
+    placeholder="Associés"
   >
     <mat-option *ngFor="let observateur of observateurs" [value]="observateur">
       {{ observateur.libelle }}

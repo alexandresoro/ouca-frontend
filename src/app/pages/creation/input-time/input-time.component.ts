@@ -1,13 +1,13 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { FormControl } from "@angular/forms";
 
 @Component({
   selector: "input-time",
-  templateUrl: "./input-time.tpl.html"
+  templateUrl: "./input-time.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputTimeComponent {
-  @Input() public selectedTime: string;
-
-  @Input() public isDisabled: boolean;
+  @Input() public control: FormControl;
 
   @Input() public label: string;
 

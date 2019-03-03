@@ -135,32 +135,17 @@
           <!-- CARD OBSERVATEUR + ASSOCIES -->
           <mat-card class="mat-card-override full-width-container">
             <!-- OBSERVATEUR -->
-            <lco-autocomplete
-              [type]="'Observateur'"
-              [values]="pageModel.observateurs"
+            <input-observateur
               [control]="inventaireForm.controls['observateur']"
-              attributeToFilter="libelle"
-              [displayFn]="displayObservateurFormat"
-            >
-            </lco-autocomplete>
+              [observateurs]="pageModel.observateurs">
+            </input-observateur>
 
             <!-- ASSOCIES -->
-            <mat-form-field *ngIf="pageModel.areAssociesDisplayed">
-              <mat-select
-                formControlName="observateursAssocies"
-                placeholder="Associés"
-                id="input-associes"
-                name="input-associes"
-                multiple
-              >
-                <mat-option
-                  *ngFor="let observateur of pageModel.observateurs"
-                  [value]="observateur"
-                >
-                  {{ observateur.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <input-observateurs-associes
+              *ngIf="pageModel.areAssociesDisplayed"
+              [control]="inventaireForm.controls['observateursAssocies']"
+              [observateurs]="pageModel.observateurs">
+            </input-observateurs-associes>
           </mat-card>
           <!-- END CARD OBSERVATEUR + ASSOCIES -->
 
@@ -173,28 +158,18 @@
             ></input-date>
 
             <!-- HEURE -->
-            <mat-form-field class="time-input">
-              <input
-                formControlName="heure"
-                matInput
-                placeholder="Heure"
-                type="time"
-                id="input-heure"
-                name="heure"
-              />
-            </mat-form-field>
+            <input-time
+              [control]="inventaireForm.controls['heure']"
+              id="heure"
+              label="Heure"
+            ></input-time>
 
             <!-- DUREE -->
-            <mat-form-field class="time-input">
-              <input
-                formControlName="duree"
-                matInput
-                placeholder="Durée"
-                type="time"
-                id="input-duree"
-                name="duree"
-              />
-            </mat-form-field>
+            <input-time
+              [control]="inventaireForm.controls['duree']"
+              id="duree"
+              label="Durée"
+            ></input-time>
           </mat-card>
           <!-- END CARD DATE + HEURE + DUREE -->
 
