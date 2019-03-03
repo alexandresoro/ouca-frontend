@@ -68,7 +68,7 @@
         mat-raised-button
         color="primary"
         *ngIf="modeHelper.isInventaireMode(mode)"
-        [disabled]="!donneeForm.form.valid"
+        [disabled]="!inventaireForm.valid"
         (click)="saveInventaire()"
       >
         Enregistrer l'inventaire
@@ -77,7 +77,6 @@
         mat-raised-button
         color="primary"
         *ngIf="modeHelper.isDonneeMode(mode)"
-        [disabled]="!donneeForm.form.valid"
         (click)="saveDonnee()"
       >
         Enregistrer la donnée
@@ -102,49 +101,66 @@
   </div>
 
   <!-- FORM TO CREATE DONNEES -->
-  <form #donneeForm="ngForm">
-    <div class="lco-creation-form">
-      <div>
-        <div class="creation-inventaire-titre flex-container">
-          <h2>Fiche Inventaire</h2>
-          <span class="flex-spacer"></span>
-          <button
-            mat-button
-            color="primary"
-            *ngIf="modeHelper.isDonneeMode(mode)"
-            (click)="onNewInventaireBtnClicked()"
-          >
-            Nouvel inventaire
-          </button>
-          <button
-            mat-button
-            color="primary"
-            *ngIf="modeHelper.isDonneeMode(mode)"
-            (click)="onEditInventaireBtnClicked()"
-          >
-            Modifier l'inventaire
-          </button>
-        </div>
+  <div class="lco-creation-form">
+    <div>
+      <div class="creation-inventaire-titre flex-container">
+        <h2>Fiche Inventaire</h2>
+        <span class="flex-spacer"></span>
+        <button
+          mat-button
+          color="primary"
+          *ngIf="modeHelper.isDonneeMode(mode)"
+          (click)="onNewInventaireBtnClicked()"
+        >
+          Nouvel inventaire
+        </button>
+        <button
+          mat-button
+          color="primary"
+          *ngIf="modeHelper.isDonneeMode(mode)"
+          (click)="onEditInventaireBtnClicked()"
+        >
+          Modifier l'inventaire
+        </button>
 
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="testIdiot()"
+        ></button>
+      </div>
+
+      <form [formGroup]="inventaireForm">
         <div class="inventaire-form">
           <!-- CARD OBSERVATEUR + ASSOCIES -->
           <mat-card class="mat-card-override full-width-container">
             <!-- OBSERVATEUR -->
-            <input-observateur
-              [isDisabled]="isInventaireDisabled"
-              [observateurs]="pageModel.observateurs"
-              [selectedObservateur]="inventaireToSave.observateur"
+            <lco-autocomplete
+              [type]="'Observateur'"
+              [values]="pageModel.observateurs"
+              [control]="inventaireForm.controls['observateur']"
+              attributeToFilter="libelle"
+              [displayFn]="displayObservateurFormat"
             >
-            </input-observateur>
+            </lco-autocomplete>
 
             <!-- ASSOCIES -->
-            <input-observateurs-associes
-              [isDisabled]="isInventaireDisabled"
-              [isDisplayed]="pageModel.areAssociesDisplayed"
-              [observateurs]="pageModel.observateurs"
-              [selectedAssocies]="inventaireToSave.associes"
-            >
-            </input-observateurs-associes>
+            <mat-form-field *ngIf="pageModel.areAssociesDisplayed">
+              <mat-select
+                formControlName="observateursAssocies"
+                placeholder="Associés"
+                id="input-associes"
+                name="input-associes"
+                multiple
+              >
+                <mat-option
+                  *ngFor="let observateur of pageModel.observateurs"
+                  [value]="observateur"
+                >
+                  {{ observateur.libelle }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </mat-card>
           <!-- END CARD OBSERVATEUR + ASSOCIES -->
 
@@ -152,25 +168,33 @@
           <mat-card class="mat-card-override lco-creation-date">
             <!-- DATE -->
             <input-date
-              [isDisabled]="isInventaireDisabled"
+              [control]="inventaireForm.controls['date']"
               [selectedDate]="dateInventaire"
             ></input-date>
 
             <!-- HEURE -->
-            <input-time
-              [id]="heure"
-              [isDisabled]="isInventaireDisabled"
-              label="Heure"
-              [selectedTime]="inventaireToSave.heure"
-            ></input-time>
+            <mat-form-field class="time-input">
+              <input
+                formControlName="heure"
+                matInput
+                placeholder="Heure"
+                type="time"
+                id="input-heure"
+                name="heure"
+              />
+            </mat-form-field>
 
             <!-- DUREE -->
-            <input-time
-              [id]="duree"
-              [isDisabled]="isInventaireDisabled"
-              label="Durée"
-              [selectedTime]="inventaireToSave.duree"
-            ></input-time>
+            <mat-form-field class="time-input">
+              <input
+                formControlName="duree"
+                matInput
+                placeholder="Durée"
+                type="time"
+                id="input-duree"
+                name="duree"
+              />
+            </mat-form-field>
           </mat-card>
           <!-- END CARD DATE + HEURE + DUREE -->
 
@@ -188,6 +212,91 @@
               [selectedLatitude]="inventaireToSave.selectedLatitude"
             >
             </input-lieudit>
+            <div>
+              <div class="full-width-container">
+                <!-- DEPARTEMENT -->
+                <lco-autocomplete
+                  attributeToFilter="code"
+                  [startWithMode]="true"
+                  type="Departement"
+                  [values]="pageModel.departements"
+                  [control]="inventaireForm.controls['departement']"
+                  [displayFn]="displayDepartementFormat"
+                  (onValueChanged)="updateCommunes($event.value)"
+                >
+                </lco-autocomplete>
+              </div>
+
+              <div class="full-width-container">
+                <!-- COMMUNE -->
+                <lco-autocomplete
+                  [type]="'Commune'"
+                  [values]="filteredCommunes"
+                  [control]="inventaireForm.controls['commune']"
+                  attributeToFilter="nom"
+                  [displayFn]="displayCommuneFormat"
+                >
+                </lco-autocomplete>
+              </div>
+
+              <div class="full-width-container">
+                <!-- LIEUDIT -->
+                <mat-form-field>
+                  <mat-select
+                    formControlName="lieudit"
+                    placeholder="Lieu-dit"
+                    id="input-lieudit"
+                    name="lieudit"
+                    (selectionChange)="updateCoordinates()"
+                  >
+                    <mat-option
+                      *ngFor="let lieudit of filteredLieuxdits"
+                      [value]="lieudit"
+                    >
+                      {{ lieudit.nom }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="coordonnees-form">
+                <!-- ALTITUDE -->
+                <mat-form-field>
+                  <input
+                    formControlName="altitude"
+                    matInput
+                    type="number"
+                    placeholder="Altitude"
+                    id="input-altitude"
+                    name="altitude"
+                  />
+                </mat-form-field>
+
+                <!-- LONGITUDE -->
+                <mat-form-field>
+                  <input
+                    formControlName="longitude"
+                    matInput
+                    type="number"
+                    placeholder="Longitude"
+                    id="input-longitude"
+                    name="longitude"
+                  />
+                </mat-form-field>
+
+                <!-- LATITUDE -->
+                <mat-form-field>
+                  <input
+                    formControlName="latitude"
+                    matInput
+                    type="number"
+                    placeholder="Latitude"
+                    id="input-latitude"
+                    name="latitude"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
           </mat-card>
           <!-- END CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
 
@@ -198,22 +307,22 @@
           >
             <!-- TEMPERATURE -->
             <input-temperature
-              [isDisabled]="isInventaireDisabled"
-              [selectedTemperature]="inventaireToSave.temperature"
+              [control]="inventaireForm.controls['temperature']"
             ></input-temperature>
 
             <!-- METEOS -->
             <input-meteos
-              [isDisabled]="isInventaireDisabled"
               [meteos]="pageModel.meteos"
-              [selectedMeteos]="inventaireToSave.meteos"
+              [control]="inventaireForm.controls['meteos']"
             ></input-meteos>
           </mat-card>
           <!-- END CARD TEMPERATURE + METEO -->
         </div>
         <!-- END FICHE INVENTAIRE -->
-      </div>
+      </form>
+    </div>
 
+    <form>
       <!-- FICHE ESPECE  -->
       <div>
         <h2>
@@ -567,8 +676,8 @@
           <!-- END CARD COMMENTAIRE -->
         </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
 
   <!-- BAR BOTTOM BUTTOM -->
   <div class="creation-footer">
@@ -578,7 +687,7 @@
       mat-raised-button
       color="primary"
       *ngIf="modeHelper.isInventaireMode(mode)"
-      [disabled]="!donneeForm.form.valid"
+      [disabled]="!inventaireForm.valid"
       (click)="saveInventaire()"
     >
       Enregistrer l'inventaire
@@ -587,7 +696,6 @@
       mat-raised-button
       color="primary"
       *ngIf="modeHelper.isDonneeMode(mode)"
-      [disabled]="!donneeForm.form.valid"
       (click)="saveDonnee()"
     >
       Enregistrer la donnée
@@ -596,10 +704,24 @@
       mat-raised-button
       color="primary"
       *ngIf="modeHelper.isUpdateMode(mode)"
-      [disabled]="!donneeForm.form.valid"
       (click)="saveInventaireAndDonnee()"
     >
       Mettre à jour la donnée
     </button>
   </div>
 </div>
+
+{{ inventaireForm.controls["observateur"].value | json }}
+{{ inventaireForm.controls["observateursAssocies"].value | json }}
+{{ inventaireForm.controls["date"].value | json }}
+{{ inventaireForm.controls["heure"].value | json }}
+{{ inventaireForm.controls["duree"].value | json }}
+{{ inventaireForm.controls["departement"].value | json }}
+{{ inventaireForm.controls["commune"].value | json }}
+{{ inventaireForm.controls["nomCommune"].value | json }}
+{{ inventaireForm.controls["lieudit"].value | json }}
+{{ inventaireForm.controls["altitude"].value | json }}
+{{ inventaireForm.controls["longitude"].value | json }}
+{{ inventaireForm.controls["latitude"].value | json }}
+{{ inventaireForm.controls["temperature"].value | json }}
+{{ inventaireForm.controls["meteos"].value | json }}

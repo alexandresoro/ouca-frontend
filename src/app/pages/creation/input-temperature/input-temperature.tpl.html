@@ -6,7 +6,6 @@
     placeholder="Température"
     id="input-temperature"
     name="temperature"
-    [(ngModel)]="selectedTemperature"
-    [disabled]="isDisabled"
+    [formControl]="control"
   />
 </mat-form-field>

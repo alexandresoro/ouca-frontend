@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material";
+import _ from "lodash";
+import moment = require("moment");
 import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
@@ -34,7 +37,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   public mode: CreationMode;
 
   public isDonneeDisabled: boolean;
-  public isInventaireDisabled: boolean;
+
+  public testAlex: boolean;
 
   public inventaireToSave: Inventaire = new Inventaire();
   public donneeToSave: Donnee = new Donnee();
@@ -49,6 +53,23 @@ export class CreationComponent extends PageComponent implements OnInit {
   public filteredLieuxdits: Lieudit[];
   public filteredEspeces: Espece[];
 
+  inventaireForm = new FormGroup({
+    observateur: new FormControl("", Validators.required),
+    observateursAssocies: new FormControl(""),
+    date: new FormControl("", Validators.required),
+    heure: new FormControl(""),
+    duree: new FormControl(""),
+    departement: new FormControl("", Validators.required),
+    commune: new FormControl("", Validators.required),
+    nomCommune: new FormControl("", Validators.required),
+    lieudit: new FormControl("", Validators.required),
+    altitude: new FormControl("", Validators.required),
+    longitude: new FormControl("", Validators.required),
+    latitude: new FormControl("", Validators.required),
+    temperature: new FormControl(""),
+    meteos: new FormControl("")
+  });
+
   constructor(
     public modeHelper: CreationModeHelper,
     private creationService: CreationService,
@@ -62,6 +83,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initCreationPage();
+    this.testAlex = false;
   }
 
   /**
@@ -77,6 +99,11 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.onInitCreationPageError(error);
       }
     );
+  }
+
+  private toggleDateDisabled = (): void => {
+    this.testAlex = !this.testAlex;
+    this.handleInventaireFormState(this.testAlex);
   }
 
   /**
@@ -170,6 +197,58 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   /**
+   * When selecting a departement, filter the list of communes, set back the lieu-dit to empty lieu-dit
+   */
+  private updateCommunes(selectedDepartement: Departement): void {
+    if (!!selectedDepartement && !!selectedDepartement.id) {
+      this.filteredCommunes = this.pageModel.communes.filter(
+        (commune) => commune.departementId === selectedDepartement.id
+      );
+      this.filteredLieuxdits = new Array<Lieudit>();
+      this.initCoordinates();
+    }
+  }
+
+  /**
+   * When selecting a commune, filter the list of lieux-dits
+   */
+  private updateLieuxdits(): void {
+    if (
+      !!this.inventaireForm.controls.commune &&
+      !!this.inventaireForm.controls.commune.value
+    ) {
+      // METHOD 1 The lieux-dits are returned by init of the page
+      this.filteredLieuxdits = this.pageModel.lieudits.filter(
+        (lieudit) =>
+          lieudit.communeId === this.inventaireForm.controls.commune.value.id
+      );
+
+      // METHOD 2 We get the lieux-dits when selecting a commune
+      // You should comment the line creationPage.setLieudits(lieuditService.findAll()); in CreationService.java
+      /*
+      this.creationService
+        .getLieuxditsByCommuneId(this.selectedCommune.id)
+        .subscribe(
+          (lieuxdits: Lieudit[]) => {
+            this.filteredLieuxdits = lieuxdits;
+          },
+          (error: any) => {
+            console.error("error");
+          }
+        );
+        */
+
+      this.initCoordinates();
+    }
+  }
+
+  private testIdiot = () => {
+    this.inventaireForm.controls.observateur.setValue(
+      this.pageModel.observateurs[0]
+    );
+  }
+
+  /**
    * When selecting a classe, filter the list of especes
    */
   public updateEspeces(): void {
@@ -181,6 +260,30 @@ export class CreationComponent extends PageComponent implements OnInit {
       // If "Toutes" we display all the especes
       this.filteredEspeces = this.pageModel.especes;
     }
+  }
+
+  /**
+   * Called when selecting a lieu-dit in the dropdown
+   */
+  private updateCoordinates(): void {
+    this.inventaireForm.controls.altitude.setValue(
+      this.inventaireForm.controls.lieudit.value.altitude
+    );
+    this.inventaireForm.controls.longitude.setValue(
+      this.inventaireForm.controls.lieudit.value.longitude
+    );
+    this.inventaireForm.controls.latitude.setValue(
+      this.inventaireForm.controls.lieudit.value.latitude
+    );
+  }
+
+  /**
+   * Re-initialize the coordinates to empty
+   */
+  private initCoordinates(): void {
+    this.inventaireToSave.altitude = null;
+    this.inventaireToSave.longitude = null;
+    this.inventaireToSave.latitude = null;
   }
 
   /**
@@ -210,13 +313,30 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on Save Inventaire button
    */
   public saveInventaire(): void {
-    // Prepare inventaire
-    this.inventaireToSave.date = new Date(this.dateInventaire);
+    const inventaireToBeSaved: Inventaire = {
+      id: null,
+      observateur: this.inventaireForm.controls.observateur.value,
+      associes: this.inventaireForm.controls.observateursAssocies.value,
+      date: this.inventaireForm.controls.date.value.toDate(),
+      heure: this.inventaireForm.controls.heure.value,
+      duree: this.inventaireForm.controls.duree.value,
+      lieudit: this.inventaireForm.controls.lieudit.value,
+      altitude: this.inventaireForm.controls.altitude.value,
+      longitude: this.inventaireForm.controls.longitude.value,
+      latitude: this.inventaireForm.controls.latitude.value,
+      temperature: this.inventaireForm.controls.temperature.value,
+      meteos: this.inventaireForm.controls.meteos.value
+    };
 
-    this.inventaireService.saveInventaire(this.inventaireToSave).subscribe(
+    console.log("tobesent", inventaireToBeSaved);
+
+    // Prepare inventaire
+    // this.inventaireToSave.date = new Date(this.dateInventaire);
+
+    this.inventaireService.saveInventaire(inventaireToBeSaved).subscribe(
       (result: EntiteResult<Inventaire>) => {
         this.updatePageStatus(result.status, result.messages);
-        this.inventaireToSave = result.object;
+        // this.inventaireToSave = result.object;
 
         if (this.isSuccess()) {
           this.onSaveInventaireSuccess();
@@ -570,21 +690,21 @@ export class CreationComponent extends PageComponent implements OnInit {
   private switchToInventaireMode(): void {
     this.mode = CreationMode.NEW_INVENTAIRE;
     this.isDonneeDisabled = true;
-    this.isInventaireDisabled = false;
+    this.handleInventaireFormState(true);
     document.getElementById("input-observateur").focus();
   }
 
   private switchToEditionDonneeMode(): void {
     this.mode = CreationMode.NEW_DONNEE;
     this.isDonneeDisabled = false;
-    this.isInventaireDisabled = true;
+    this.handleInventaireFormState(false);
     document.getElementById("input-code-espece").focus();
   }
 
   private switchToUpdateMode(): void {
     this.mode = CreationMode.UPDATE;
     this.isDonneeDisabled = false;
-    this.isInventaireDisabled = false;
+    this.handleInventaireFormState(true);
     document.getElementById("input-observateur").focus();
   }
 
@@ -594,6 +714,14 @@ export class CreationComponent extends PageComponent implements OnInit {
     if (pattern.test(inputChar)) {
       // invalid character, prevent input
       event.preventDefault();
+    }
+  }
+
+  private handleInventaireFormState = (toEnable: boolean): void => {
+    if (toEnable) {
+      this.inventaireForm.enable();
+    } else {
+      this.inventaireForm.disable();
     }
   }
 
@@ -665,5 +793,17 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.setErrorMessage(
       "Impossible de mettre à jour la fiche inventaire et la fiche espèce affichées."
     );
+  }
+
+  private displayObservateurFormat = (observateur: Observateur): string => {
+    return observateur.libelle;
+  }
+
+  private displayCommuneFormat = (commune: Commune): string => {
+    return !!commune ? commune.code + " - " + commune.nom : "";
+  }
+
+  private displayDepartementFormat = (departement: Departement): string => {
+    return departement.code;
   }
 }

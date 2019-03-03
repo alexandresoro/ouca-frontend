@@ -1,14 +1,13 @@
 <!-- DATE -->
 <mat-form-field class="date-creation-input">
   <input
+    #input
     matInput
     [matDatepicker]="picker"
     placeholder="Date"
     id="input-date"
     name="date"
-    [(ngModel)]="selectedDate"
-    [disabled]="isDisabled"
-    [required]="!isDisabled"
+    [formControl]="control"
   />
   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>

@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -24,7 +25,8 @@ import { InputCodeLibelleEventObject } from "./input-code-libelle-event.object";
 
 @Component({
   selector: "input-code-libelle",
-  templateUrl: "./input-code-libelle.tpl.html"
+  templateUrl: "./input-code-libelle.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputCodeLibelleComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy {

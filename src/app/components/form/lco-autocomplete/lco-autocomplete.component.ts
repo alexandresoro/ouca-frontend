@@ -1,13 +1,12 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
@@ -24,24 +23,16 @@ import { LcoAutocompleteEventObject } from "./lco-autocomplete-event.object";
 
 @Component({
   selector: "lco-autocomplete",
-  templateUrl: "./lco-autocomplete.tpl.html"
+  templateUrl: "./lco-autocomplete.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LcoAutocompleteComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy {
   @Input()
   public type: string;
 
   @Input()
-  public disabled: boolean;
-
-  @Input()
-  public required: boolean;
-
-  @Input()
   public values: EntiteSimple[];
-
-  @Input()
-  public selectedValue: EntiteSimple;
 
   @Input()
   public attributeToFilter: string;
@@ -52,6 +43,10 @@ export class LcoAutocompleteComponent
   @Input()
   public exactSearchMode: boolean = false;
 
+  @Input() public control: FormControl;
+
+  @Input() public displayFn: ((value: any) => string) | null;
+
   @Output()
   public onValueChanged: EventEmitter<
     LcoAutocompleteEventObject
@@ -61,8 +56,6 @@ export class LcoAutocompleteComponent
   trigger: MatAutocompleteTrigger;
 
   subscription: Subscription;
-
-  myControl = new FormControl();
 
   filteredValues: Observable<EntiteSimple[]>;
 
@@ -79,7 +72,7 @@ export class LcoAutocompleteComponent
   }
 
   ngOnInit(): void {
-    this.filteredValues = this.myControl.valueChanges.pipe(
+    this.filteredValues = this.control.valueChanges.pipe(
       map((value) => {
         return typeof value === "string" ||
           typeof value === "undefined" ||
@@ -89,18 +82,6 @@ export class LcoAutocompleteComponent
       }),
       map((value) => (value ? this._filter(value) : []))
     );
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.disabled) {
-      changes.disabled.currentValue
-        ? this.myControl.disable()
-        : this.myControl.enable();
-    }
-  }
-
-  public displayFn(value?: any): string | undefined {
-    return value ? value.libelle : undefined;
   }
 
   private _subscribeToClosingActions(): void {
@@ -171,8 +152,6 @@ export class LcoAutocompleteComponent
   private updateSelectionWithOption(option: MatOption): void {
     const newSelectedValue: EntiteSimple = option ? option.value : null;
 
-    this.selectedValue = newSelectedValue;
-
     const event: LcoAutocompleteEventObject = new LcoAutocompleteEventObject(
       newSelectedValue
     );
@@ -180,6 +159,7 @@ export class LcoAutocompleteComponent
   }
 
   public getDisplayedValue(object: EntiteSimple): string {
+    console.log("prout", object);
     if (!!object) {
       return object[this.attributeToFilter];
     } else {

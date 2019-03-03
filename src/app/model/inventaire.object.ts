@@ -26,8 +26,6 @@ export class Inventaire extends EntiteSimple {
 
   public temperature: number;
 
-  public nbDonnees: number;
-
   constructor() {
     super();
   }

@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { FormControl } from "@angular/forms";
 
 @Component({
   selector: "input-date",
@@ -7,5 +8,5 @@ import { Component, Input } from "@angular/core";
 export class InputDateComponent {
   @Input() public selectedDate: string;
 
-  @Input() public isDisabled: boolean;
+  @Input() public control: FormControl;
 }

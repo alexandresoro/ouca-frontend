@@ -4,8 +4,7 @@
     placeholder="Météos"
     id="input-meteos"
     name="meteos"
-    [(ngModel)]="selectedMeteos"
-    [disabled]="isDisabled"
+    [formControl]="control"
     multiple
   >
     <mat-option *ngFor="let meteo of meteos" [value]="meteo">
