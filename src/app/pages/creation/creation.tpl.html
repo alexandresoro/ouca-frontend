@@ -250,21 +250,11 @@
                 [sexes]="pageModel.sexes"
               ></input-sexe>
 
-              <!-- AGE 
-            <mat-form-field class="age-espece">
-              <mat-select
-                placeholder="Age"
-                id="input-age"
-                name="age"
-                [(ngModel)]="donneeToSave.age"
-                [disabled]="isDonneeDisabled"
-                [required]="!isDonneeDisabled"
-              >
-                <mat-option *ngFor="let age of pageModel.ages" [value]="age">
-                  {{ age.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>-->
+              <!-- AGE  -->
+              <input-age
+                [control]="donneeForm.controls['age']"
+                [ages]="pageModel.ages"
+              ></input-age>
             </div>
 
             <!-- DISTANCE AND ESTIMATION DISTANCE 

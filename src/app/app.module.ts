@@ -91,6 +91,7 @@ import { ConfigurationComponent } from "./pages/configuration/configuration.comp
 import { ConfigurationService } from "./pages/configuration/configuration.service";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
+import { InputAgeComponent } from "./pages/creation/input-age/input-age.component";
 import { InputDateComponent } from "./pages/creation/input-date/input-date.component";
 import { InputEspeceComponent } from "./pages/creation/input-espece/input-espece.component";
 import { InputLieuditComponent } from "./pages/creation/input-lieudit/input-lieudit.component";
@@ -273,6 +274,7 @@ const baseNaturalisteRoutes: Routes = [
     EstimationDistanceComponent,
     EstimationDistanceTableComponent,
     ImportComponent,
+    InputAgeComponent,
     InputCodeLibelleComponent,
     InputDateComponent,
     InputEspeceComponent,
