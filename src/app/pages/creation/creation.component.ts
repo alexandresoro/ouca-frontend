@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material";
-import _ from "lodash";
-import moment = require("moment");
+import moment from "moment";
 import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
@@ -19,13 +18,13 @@ import { EstimationNombre } from "../../model/estimation-nombre.object";
 import { Inventaire } from "../../model/inventaire.object";
 import { Lieudit } from "../../model/lieudit.object";
 import { Meteo } from "../../model/meteo.object";
+import { Milieu } from "../../model/milieu.object";
 import { Observateur } from "../../model/observateur.object";
 import { Sexe } from "../../model/sexe.object";
 import { PageComponent } from "../page.component";
 import { CreationMode, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
 import { DonneeService } from "./donnee.service";
-import { InputCodeLibelleEventObject } from "./input-code-libelle/input-code-libelle-event.object";
 import { InventaireService } from "./inventaire.service";
 import { NavigationService } from "./navigation.service";
 
@@ -719,15 +718,38 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  public addComportement(
-    event: InputCodeLibelleEventObject,
-    index: number
-  ): void {
-    this.selectedComportements[index] = event.value;
+  public addComportement(event: any, index: number): void {
+    // TODO make this less crappy
+    const isComportementSet = !!event.value;
+    const nextComportement = index + 2;
+    const nextComportementControl = this.donneeForm.controls[
+      "comportement" + nextComportement
+    ];
+
+    if (!!nextComportementControl) {
+      if (isComportementSet) {
+        nextComportementControl.enable();
+      } else {
+        nextComportementControl.disable();
+        nextComportementControl.setValue(null);
+      }
+    }
   }
 
-  public addMilieu(event: InputCodeLibelleEventObject, index: number): void {
-    this.selectedMilieux[index] = event.value;
+  public addMilieu(event: any, index: number): void {
+    // TODO make this less crappy
+    const isComportementSet = !!event.value;
+    const nextMilieu = index + 2;
+    const nextMilieuControl = this.donneeForm.controls["milieu" + nextMilieu];
+
+    if (!!nextMilieuControl) {
+      if (isComportementSet) {
+        nextMilieuControl.enable();
+      } else {
+        nextMilieuControl.disable();
+        nextMilieuControl.setValue(null);
+      }
+    }
   }
 
   public isNewDonneeBtnDisplayed(): boolean {
@@ -931,5 +953,15 @@ export class CreationComponent extends PageComponent implements OnInit {
     return this.pageModel.estimationsNombre.find(
       (estimation) => estimation.id === id
     );
+  }
+
+  private displayComportementFormat = (comportement: Comportement): string => {
+    return !!comportement
+      ? comportement.code + " - " + comportement.libelle
+      : null;
+  }
+
+  private displayMilieuFormat = (milieu: Milieu): string => {
+    return !!milieu ? milieu.code + " - " + milieu.libelle : null;
   }
 }

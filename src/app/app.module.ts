@@ -10,7 +10,6 @@ import { TopButtonsComponent } from "./components/entities/top-buttons/top-butto
 import { LcoInputTextComponent } from "./components/form/input-text/lco-input-text.component";
 import { CreationComponent } from "./pages/creation/creation.component";
 import { DonneeService } from "./pages/creation/donnee.service";
-import { InputCodeLibelleComponent } from "./pages/creation/input-code-libelle/input-code-libelle.component";
 import { InventaireService } from "./pages/creation/inventaire.service";
 import { AgeTableComponent } from "./pages/entities/age/age-table.component";
 import { AgeComponent } from "./pages/entities/age/age.component";
@@ -278,7 +277,6 @@ const baseNaturalisteRoutes: Routes = [
     EstimationDistanceTableComponent,
     ImportComponent,
     InputAgeComponent,
-    InputCodeLibelleComponent,
     InputCommentaireComponent,
     InputDateComponent,
     InputDistanceComponent,
