@@ -287,124 +287,116 @@
             </div>
           </mat-card>
           <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+
+          <!-- CARD COMPORTEMENT x6 -->
+          <mat-card class="mat-card-override">
+            <mat-card-content class="comportements-container">
+              <ng-container *ngIf="pageModel && pageModel.comportements">
+                <input-code-libelle
+                  [isDisabled]="isDonneeDisabled"
+                  [type]="'Comportement 1'"
+                  [values]="pageModel.comportements"
+                  [selectedValue]="selectedComportements[0]"
+                  (onValueChanged)="addComportement($event, 0)"
+                >
+                </input-code-libelle>
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(2)"
+                  [type]="'Comportement 2'"
+                  [values]="pageModel.comportements"
+                  [selectedValue]="selectedComportements[1]"
+                  (onValueChanged)="addComportement($event, 1)"
+                >
+                </input-code-libelle>
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(3)"
+                  [type]="'Comportement 3'"
+                  [values]="pageModel.comportements"
+                  [selectedValue]="selectedComportements[2]"
+                  (onValueChanged)="addComportement($event, 2)"
+                >
+                </input-code-libelle>
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(4)"
+                  [type]="'Comportement 4'"
+                  [values]="pageModel.comportements"
+                  [selectedValue]="selectedComportements[3]"
+                  (onValueChanged)="addComportement($event, 3)"
+                >
+                </input-code-libelle>
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(5)"
+                  [type]="'Comportement 5'"
+                  [values]="pageModel.comportements"
+                  [selectedValue]="selectedComportements[4]"
+                  (onValueChanged)="addComportement($event, 4)"
+                >
+                </input-code-libelle>
+                <input-code-libelle
+                  [isDisabled]="isComportementDisabled(6)"
+                  [type]="'Comportement 6'"
+                  [values]="pageModel.comportements"
+                  [selectedValue]="selectedComportements[5]"
+                  (onValueChanged)="addComportement($event, 5)"
+                >
+                </input-code-libelle>
+              </ng-container>
+            </mat-card-content>
+          </mat-card>
+          <!-- END CARD COMPORTEMENT x6 -->
+
+          <!-- CARD MILIEU x4 -->
+          <mat-card class="mat-card-override">
+            <mat-card-content class="milieux-container">
+              <ng-container *ngIf="pageModel && pageModel.milieux">
+                <input-code-libelle
+                  [isDisabled]="isDonneeDisabled"
+                  [type]="'Milieu 1'"
+                  [values]="pageModel.milieux"
+                  [selectedValue]="selectedMilieux[0]"
+                  (onValueChanged)="addMilieu($event, 0)"
+                >
+                </input-code-libelle>
+                <input-code-libelle
+                  [isDisabled]="isMilieuDisabled(2)"
+                  [type]="'Milieu 2'"
+                  [values]="pageModel.milieux"
+                  [selectedValue]="selectedMilieux[1]"
+                  (onValueChanged)="addMilieu($event, 1)"
+                >
+                </input-code-libelle>
+                <input-code-libelle
+                  [isDisabled]="isMilieuDisabled(3)"
+                  [type]="'Milieu 3'"
+                  [values]="pageModel.milieux"
+                  [selectedValue]="selectedMilieux[2]"
+                  (onValueChanged)="addMilieu($event, 2)"
+                >
+                </input-code-libelle>
+                <input-code-libelle
+                  [isDisabled]="isMilieuDisabled(4)"
+                  [type]="'Milieu 4'"
+                  [values]="pageModel.milieux"
+                  [selectedValue]="selectedMilieux[3]"
+                  (onValueChanged)="addMilieu($event, 3)"
+                >
+                </input-code-libelle>
+              </ng-container>
+            </mat-card-content>
+          </mat-card>
+          <!-- END CARD MILIEU x4 -->
+
+          <!-- CARD COMMENTAIRE -->
+          <mat-card class="mat-card-override">
+            <mat-card-content class="full-width-container">
+              <!-- COMMENTAIRE -->
+              <input-commentaire
+                [control]="donneeForm.controls['commentaire']"
+              ></input-commentaire>
+            </mat-card-content>
+          </mat-card>
+          <!-- END CARD COMMENTAIRE -->
         </form>
-        <!-- CARD COMPORTEMENT x6 -->
-        <mat-card class="mat-card-override">
-          <mat-card-content class="comportements-container">
-            <ng-container *ngIf="pageModel && pageModel.comportements">
-              <input-code-libelle
-                [isDisabled]="isDonneeDisabled"
-                [type]="'Comportement 1'"
-                [values]="pageModel.comportements"
-                [selectedValue]="selectedComportements[0]"
-                (onValueChanged)="addComportement($event, 0)"
-              >
-              </input-code-libelle>
-              <input-code-libelle
-                [isDisabled]="isComportementDisabled(2)"
-                [type]="'Comportement 2'"
-                [values]="pageModel.comportements"
-                [selectedValue]="selectedComportements[1]"
-                (onValueChanged)="addComportement($event, 1)"
-              >
-              </input-code-libelle>
-              <input-code-libelle
-                [isDisabled]="isComportementDisabled(3)"
-                [type]="'Comportement 3'"
-                [values]="pageModel.comportements"
-                [selectedValue]="selectedComportements[2]"
-                (onValueChanged)="addComportement($event, 2)"
-              >
-              </input-code-libelle>
-              <input-code-libelle
-                [isDisabled]="isComportementDisabled(4)"
-                [type]="'Comportement 4'"
-                [values]="pageModel.comportements"
-                [selectedValue]="selectedComportements[3]"
-                (onValueChanged)="addComportement($event, 3)"
-              >
-              </input-code-libelle>
-              <input-code-libelle
-                [isDisabled]="isComportementDisabled(5)"
-                [type]="'Comportement 5'"
-                [values]="pageModel.comportements"
-                [selectedValue]="selectedComportements[4]"
-                (onValueChanged)="addComportement($event, 4)"
-              >
-              </input-code-libelle>
-              <input-code-libelle
-                [isDisabled]="isComportementDisabled(6)"
-                [type]="'Comportement 6'"
-                [values]="pageModel.comportements"
-                [selectedValue]="selectedComportements[5]"
-                (onValueChanged)="addComportement($event, 5)"
-              >
-              </input-code-libelle>
-            </ng-container>
-          </mat-card-content>
-        </mat-card>
-        <!-- END CARD COMPORTEMENT x6 -->
-
-        <!-- CARD MILIEU x4 -->
-        <mat-card class="mat-card-override">
-          <mat-card-content class="milieux-container">
-            <ng-container *ngIf="pageModel && pageModel.milieux">
-              <input-code-libelle
-                [isDisabled]="isDonneeDisabled"
-                [type]="'Milieu 1'"
-                [values]="pageModel.milieux"
-                [selectedValue]="selectedMilieux[0]"
-                (onValueChanged)="addMilieu($event, 0)"
-              >
-              </input-code-libelle>
-              <input-code-libelle
-                [isDisabled]="isMilieuDisabled(2)"
-                [type]="'Milieu 2'"
-                [values]="pageModel.milieux"
-                [selectedValue]="selectedMilieux[1]"
-                (onValueChanged)="addMilieu($event, 1)"
-              >
-              </input-code-libelle>
-              <input-code-libelle
-                [isDisabled]="isMilieuDisabled(3)"
-                [type]="'Milieu 3'"
-                [values]="pageModel.milieux"
-                [selectedValue]="selectedMilieux[2]"
-                (onValueChanged)="addMilieu($event, 2)"
-              >
-              </input-code-libelle>
-              <input-code-libelle
-                [isDisabled]="isMilieuDisabled(4)"
-                [type]="'Milieu 4'"
-                [values]="pageModel.milieux"
-                [selectedValue]="selectedMilieux[3]"
-                (onValueChanged)="addMilieu($event, 3)"
-              >
-              </input-code-libelle>
-            </ng-container>
-          </mat-card-content>
-        </mat-card>
-        <!-- END CARD MILIEU x4 -->
-
-        <!-- CARD COMMENTAIRE -->
-        <mat-card class="mat-card-override">
-          <mat-card-content class="full-width-container">
-            <!-- COMMENTAIRE -->
-            <mat-form-field>
-              <textarea
-                matInput
-                id="input-commentaire"
-                placeholder="Commentaires"
-                name="commentaire"
-                rows="2"
-                [disabled]="isDonneeDisabled"
-                [(ngModel)]="donneeToSave.commentaire"
-                (keypress)="commentaireKeyPress($event)"
-              ></textarea>
-            </mat-form-field>
-          </mat-card-content>
-        </mat-card>
-        <!-- END CARD COMMENTAIRE -->
       </div>
     </div>
   </div>

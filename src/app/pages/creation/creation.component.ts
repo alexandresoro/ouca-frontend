@@ -823,15 +823,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     document.getElementById("input-observateur").focus();
   }
 
-  public commentaireKeyPress(event: any) {
-    const pattern = new RegExp(";");
-    const inputChar = String.fromCharCode(event.charCode);
-    if (pattern.test(inputChar)) {
-      // invalid character, prevent input
-      event.preventDefault();
-    }
-  }
-
   private handleInventaireFormState = (toEnable: boolean): void => {
     if (toEnable) {
       this.inventaireForm.enable();

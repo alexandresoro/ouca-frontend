@@ -1,0 +1,12 @@
+<!-- COMMENTAIRES -->
+<mat-form-field>
+  <textarea
+    matInput
+    id="input-commentaire"
+    placeholder="Commentaires"
+    name="commentaire"
+    rows="2"
+    [formControl]="control"
+    (keypress)="commentaireKeyPress($event)"
+  ></textarea>
+</mat-form-field>
