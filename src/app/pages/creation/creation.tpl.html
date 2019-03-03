@@ -244,21 +244,11 @@
               >
               </input-nombre>
 
-              <!-- SEXE 
-            <mat-form-field class="sexe-espece">
-              <mat-select
-                placeholder="Sexe"
-                id="input-sexe"
-                name="sexe"
-                [(ngModel)]="donneeToSave.sexe"
-                [disabled]="isDonneeDisabled"
-                [required]="!isDonneeDisabled"
-              >
-                <mat-option *ngFor="let sexe of pageModel.sexes" [value]="sexe">
-                  {{ sexe.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>-->
+              <!-- SEXE -->
+              <input-sexe
+                [control]="donneeForm.controls['sexe']"
+                [sexes]="pageModel.sexes"
+              ></input-sexe>
 
               <!-- AGE 
             <mat-form-field class="age-espece">
