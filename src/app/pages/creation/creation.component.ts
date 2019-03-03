@@ -82,8 +82,10 @@ export class CreationComponent extends PageComponent implements OnInit {
       classe: new FormControl(""),
       espece: new FormControl("", Validators.required)
     }),
-    nombre: new FormControl("", Validators.required),
-    estimationNombre: new FormControl("", Validators.required),
+    nombreGroup: new FormGroup({
+      nombre: new FormControl("", Validators.required),
+      estimationNombre: new FormControl("", Validators.required)
+    }),
     sexe: new FormControl("", Validators.required),
     age: new FormControl("", Validators.required),
     distance: new FormControl(""),
@@ -351,20 +353,21 @@ export class CreationComponent extends PageComponent implements OnInit {
       defaultNombre = this.pageModel.defaultNombre;
     }
 
-    if (!!defaultEstimationNombre && !defaultEstimationNombre.nonCompte) {
-      // TODO disable nombre input
-    }
-
     this.displayedDonneeId = null;
 
     const donneeFormControls = this.donneeForm.controls;
+    const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
+      .controls;
     const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
       .controls;
 
     especeFormControls.classe.setValue(null);
     especeFormControls.espece.setValue(null);
-    donneeFormControls.nombre.setValue(defaultNombre);
-    donneeFormControls.estimationNombre.setValue(defaultEstimationNombre);
+    nombreFormControls.nombre.setValue(defaultNombre);
+    nombreFormControls.estimationNombre.setValue(defaultEstimationNombre);
+    if (!!defaultEstimationNombre && !!defaultEstimationNombre.nonCompte) {
+      nombreFormControls.nombre.disable();
+    }
     donneeFormControls.sexe.setValue(defaultSexe);
     donneeFormControls.age.setValue(defaultAge);
     donneeFormControls.distance.setValue(null);
@@ -690,14 +693,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onDeleteError(error: any): void {
     console.error("Echec lors de la suppression de la donnée (" + error + ")");
-  }
-  public onEstimationNombreChanged(estimation: EstimationNombre) {
-    if (estimation.nonCompte) {
-      this.donneeToSave.nombre = null;
-    } else if (!this.donneeToSave.nombre) {
-      // Set default value
-      this.donneeToSave.nombre = this.pageModel.defaultNombre;
-    }
   }
 
   public isComportementDisabled(index: number): boolean {

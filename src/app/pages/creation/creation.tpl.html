@@ -232,50 +232,19 @@
             ></input-espece>
           </mat-card>
           <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
-        </form>
-        <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
-        <mat-card class="mat-card-override">
-          <div class="combien-de-container">
-            <!-- NOMBRE -->
-            <mat-form-field class="nombre-espece">
-              <input
-                matInput
-                placeholder="Nombre ind."
-                id="input-nombre"
-                min="1"
-                name="nombre"
-                type="number"
-                [(ngModel)]="donneeToSave.nombre"
-                [disabled]="
-                  isDonneeDisabled || donneeToSave.estimationNombre?.nonCompte
-                "
-                [required]="
-                  !isDonneeDisabled && !donneeToSave.estimationNombre?.nonCompte
-                "
-              />
-            </mat-form-field>
 
-            <!-- ESTIMATION NOMBRE -->
-            <mat-form-field class="estimation-nombre-espece">
-              <mat-select
-                id="input-estimation-nombre"
-                placeholder="Estimation du nombre"
-                name="estimation-nombre"
-                [(ngModel)]="donneeToSave.estimationNombre"
-                (ngModelChange)="onEstimationNombreChanged($event)"
-                [disabled]="isDonneeDisabled"
-                [required]="!isDonneeDisabled"
+          <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+          <mat-card class="mat-card-override">
+            <div class="combien-de-container">
+              <input-nombre
+                [controlGroup]="donneeForm.controls['nombreGroup']"
+                [defaultNombre]="pageModel.defaultNombre"
+                [estimationsNombre]="pageModel.estimationsNombre"
+                formGroupName="nombreGroup"
               >
-                <mat-option
-                  *ngFor="let estimNombre of pageModel.estimationsNombre"
-                  [value]="estimNombre"
-                >
-                  {{ estimNombre.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+              </input-nombre>
 
-            <!-- SEXE -->
+              <!-- SEXE 
             <mat-form-field class="sexe-espece">
               <mat-select
                 placeholder="Sexe"
@@ -289,9 +258,9 @@
                   {{ sexe.libelle }}
                 </mat-option>
               </mat-select>
-            </mat-form-field>
+            </mat-form-field>-->
 
-            <!-- AGE -->
+              <!-- AGE 
             <mat-form-field class="age-espece">
               <mat-select
                 placeholder="Age"
@@ -305,10 +274,10 @@
                   {{ age.libelle }}
                 </mat-option>
               </mat-select>
-            </mat-form-field>
-          </div>
+            </mat-form-field>-->
+            </div>
 
-          <!-- DISTANCE AND ESTIMATION DISTANCE -->
+            <!-- DISTANCE AND ESTIMATION DISTANCE 
           <div
             *ngIf="
               pageModel.isDistanceDisplayed || pageModel.isRegroupementDisplayed
@@ -316,8 +285,8 @@
             class="distance-regroupement-container"
           >
             <ng-container *ngIf="pageModel.isDistanceDisplayed">
-              <span class="distance-container">
-                <!-- ESTIMATION DISTANCE -->
+              <span class="distance-container">-->
+            <!-- ESTIMATION DISTANCE 
                 <mat-form-field class="estimation-distance-container">
                   <mat-select
                     placeholder="Estimation de la distance"
@@ -339,9 +308,9 @@
                       {{ estimDistance.libelle }}
                     </mat-option>
                   </mat-select>
-                </mat-form-field>
+                </mat-form-field>-->
 
-                <!-- DISTANCE -->
+            <!-- DISTANCE 
                 <mat-form-field class="distance-container">
                   <input
                     matInput
@@ -358,9 +327,9 @@
                   />
                 </mat-form-field>
               </span>
-            </ng-container>
+            </ng-container>-->
 
-            <!-- REGROUPEMENT -->
+            <!-- REGROUPEMENT
             <mat-form-field
               *ngIf="pageModel.isRegroupementDisplayed"
               class="regroupement-container"
@@ -383,11 +352,11 @@
               >
                 <mat-icon>add_box</mat-icon>
               </button>
-            </mat-form-field>
-          </div>
-        </mat-card>
-        <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
-
+            </mat-form-field> 
+          </div>-->
+          </mat-card>
+          <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+        </form>
         <!-- CARD COMPORTEMENT x6 -->
         <mat-card class="mat-card-override">
           <mat-card-content class="comportements-container">

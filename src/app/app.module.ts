@@ -95,6 +95,7 @@ import { InputDateComponent } from "./pages/creation/input-date/input-date.compo
 import { InputEspeceComponent } from "./pages/creation/input-espece/input-espece.component";
 import { InputLieuditComponent } from "./pages/creation/input-lieudit/input-lieudit.component";
 import { InputMeteosComponent } from "./pages/creation/input-meteos/input-metos.component";
+import { InputNombreComponent } from "./pages/creation/input-nombre/input-nombre.component";
 import { InputObservateurComponent } from "./pages/creation/input-observateur/input-observateur.component";
 import { InputObservateursAssociesComponent } from "./pages/creation/input-observateurs-associes/input-observateurs-associes.component";
 import { InputTemperatureComponent } from "./pages/creation/input-temperature/input-temperature.component";
@@ -277,6 +278,7 @@ const baseNaturalisteRoutes: Routes = [
     InputLieuditComponent,
     InputTimeComponent,
     InputMeteosComponent,
+    InputNombreComponent,
     InputObservateurComponent,
     InputObservateursAssociesComponent,
     InputTemperatureComponent,

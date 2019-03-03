@@ -24,7 +24,8 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
     );
     detailsData[2] = new EntiteDetailsData(
       "Nombre d'espèces",
-      this.currentObject.nbEspeces
+      null
+      // this.currentObject.nbEspeces
     );
     detailsData[3] = new EntiteDetailsData(
       "Nombre de fiches espèces",

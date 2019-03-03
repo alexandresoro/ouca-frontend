@@ -1,0 +1,24 @@
+<!-- NOMBRE -->
+<mat-form-field class="nombre-espece">
+  <input
+    #input
+    matInput
+    [formControl]="controlGroup.controls['nombre']"
+    placeholder="Nombre ind."
+    id="input-nombre"
+    min="1"
+    name="nombre"
+    type="number"
+  />
+</mat-form-field>
+
+<!-- ESTIMATION NOMBRE -->
+<lco-autocomplete
+  [type]="'Estimation du nombre'"
+  [values]="estimationsNombre"
+  [control]="controlGroup.controls['estimationNombre']"
+  attributeToFilter="libelle"
+  [displayFn]="displayEstimationNombreFormat"
+  (onValueChanged)="onEstimationNombreChanged($event.value)"
+>
+</lco-autocomplete>
