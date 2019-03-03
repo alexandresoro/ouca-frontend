@@ -1,11 +1,18 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit
+} from "@angular/core";
+import { FormGroup } from "@angular/forms";
 import { Commune } from "../../../model/commune.object";
 import { Departement } from "../../../model/departement.object";
 import { Lieudit } from "../../../model/lieudit.object";
 
 @Component({
   selector: "input-lieudit",
-  templateUrl: "./input-lieudit.tpl.html"
+  templateUrl: "./input-lieudit.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputLieuditComponent implements OnInit {
   @Input() public departements: Departement[];
@@ -14,21 +21,7 @@ export class InputLieuditComponent implements OnInit {
 
   @Input() public lieuxdits: Lieudit[];
 
-  @Input() public defaultDepartementId: number;
-
-  @Input() public selectedLieudit: Lieudit;
-
-  @Input() public selectedAltitude: number;
-
-  @Input() public selectedLongitude: number;
-
-  @Input() public selectedLatitude: number;
-
-  @Input() public isDisabled: boolean;
-
-  public selectedDepartement: Departement;
-
-  public selectedCommune: Commune;
+  @Input() public controlGroup: FormGroup;
 
   public filteredCommunes: Commune[];
 
@@ -63,7 +56,7 @@ export class InputLieuditComponent implements OnInit {
       );
 
       this.updateCommunes(this.selectedDepartement);
-      this.updateLieuxdits();
+      this.updateLieuxDits(this.selectedCommune);
       this.updateCoordinates();
 
       if (!!altitude || !!longitude || !!latitude) {
@@ -79,6 +72,8 @@ export class InputLieuditComponent implements OnInit {
    */
   public updateCommunes(selectedDepartement: Departement): void {
     if (!!selectedDepartement && !!selectedDepartement.id) {
+      this.controlGroup.controls.commune.setValue(null);
+      this.controlGroup.controls.lieudit.setValue(null);
       this.filteredCommunes = this.communes.filter(
         (commune) => commune.departementId === selectedDepartement.id
       );
@@ -91,11 +86,11 @@ export class InputLieuditComponent implements OnInit {
   /**
    * When selecting a commune, filter the list of lieux-dits and reset coordinates
    */
-  public updateLieuxdits(): void {
-    if (!!this.selectedCommune && !!this.selectedCommune.id) {
-      // METHOD 1 The lieux-dits are returned by init of the page
+  public updateLieuxDits(selectedCommune: Commune): void {
+    if (!!selectedCommune && !!selectedCommune.id) {
+      this.controlGroup.controls.lieudit.setValue(null);
       this.filteredLieuxdits = this.lieuxdits.filter(
-        (lieudit) => lieudit.communeId === this.selectedCommune.id
+        (lieudit) => lieudit.communeId === selectedCommune.id
       );
 
       this.resetSelectedCoordinates();
@@ -105,17 +100,17 @@ export class InputLieuditComponent implements OnInit {
   /**
    * When selecting a lieu-dit, update coordinates
    */
-  public updateCoordinates(): void {
+  public updateCoordinates(lieuDit: Lieudit): void {
     if (
-      !!this.selectedLieudit &&
-      !!this.selectedLieudit.altitude &&
-      !!this.selectedLieudit.longitude &&
-      !!this.selectedLieudit.latitude
+      !!lieuDit &&
+      !!lieuDit.altitude &&
+      !!lieuDit.longitude &&
+      !!lieuDit.latitude
     ) {
       this.setSelectedCoordinates(
-        this.selectedLieudit.altitude,
-        this.selectedLieudit.longitude,
-        this.selectedLieudit.latitude
+        lieuDit.altitude,
+        lieuDit.longitude,
+        lieuDit.latitude
       );
     } else {
       this.resetSelectedCoordinates();
@@ -131,9 +126,9 @@ export class InputLieuditComponent implements OnInit {
     longitude: number,
     latitude: number
   ): void {
-    this.selectedAltitude = altitude;
-    this.selectedLongitude = longitude;
-    this.selectedLatitude = latitude;
+    this.controlGroup.controls.altitude.setValue(altitude);
+    this.controlGroup.controls.longitude.setValue(longitude);
+    this.controlGroup.controls.latitude.setValue(latitude);
   }
 
   /**
@@ -162,5 +157,17 @@ export class InputLieuditComponent implements OnInit {
 
   private getCommuneById(id: number): Commune {
     return this.communes.find((commune) => commune.id === id);
+  }
+
+  private displayCommuneFormat = (commune: Commune): string => {
+    return !!commune ? commune.code + " - " + commune.nom : "";
+  }
+
+  private displayDepartementFormat = (departement: Departement): string => {
+    return departement.code;
+  }
+
+  private displayLieuDitFormat = (lieuDit: Lieudit): string => {
+    return !!lieuDit ? lieuDit.nom : null;
   }
 }

@@ -137,14 +137,16 @@
             <!-- OBSERVATEUR -->
             <input-observateur
               [control]="inventaireForm.controls['observateur']"
-              [observateurs]="pageModel.observateurs">
+              [observateurs]="pageModel.observateurs"
+            >
             </input-observateur>
 
             <!-- ASSOCIES -->
             <input-observateurs-associes
               *ngIf="pageModel.areAssociesDisplayed"
               [control]="inventaireForm.controls['observateursAssocies']"
-              [observateurs]="pageModel.observateurs">
+              [observateurs]="pageModel.observateurs"
+            >
             </input-observateurs-associes>
           </mat-card>
           <!-- END CARD OBSERVATEUR + ASSOCIES -->
@@ -175,102 +177,13 @@
           <!-- CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
           <mat-card class="mat-card-override">
             <input-lieudit
-              [isDisabled]="isInventaireDisabled"
+              formGroupName="lieu"
+              [controlGroup]="inventaireForm.controls['lieu']"
               [departements]="pageModel.departements"
               [communes]="pageModel.communes"
               [lieuxdits]="pageModel.lieudits"
-              [defaultDepartementId]="pageModel.defaultDepartement?.id"
-              [selectedLieudit]="inventaireToSave.lieudit"
-              [selectedAltitude]="inventaireToSave.selectedAltitude"
-              [selectedLongitude]="inventaireToSave.selectedLongitude"
-              [selectedLatitude]="inventaireToSave.selectedLatitude"
             >
             </input-lieudit>
-            <div>
-              <div class="full-width-container">
-                <!-- DEPARTEMENT -->
-                <lco-autocomplete
-                  attributeToFilter="code"
-                  [startWithMode]="true"
-                  type="Departement"
-                  [values]="pageModel.departements"
-                  [control]="inventaireForm.controls['departement']"
-                  [displayFn]="displayDepartementFormat"
-                  (onValueChanged)="updateCommunes($event.value)"
-                >
-                </lco-autocomplete>
-              </div>
-
-              <div class="full-width-container">
-                <!-- COMMUNE -->
-                <lco-autocomplete
-                  [type]="'Commune'"
-                  [values]="filteredCommunes"
-                  [control]="inventaireForm.controls['commune']"
-                  attributeToFilter="nom"
-                  [displayFn]="displayCommuneFormat"
-                >
-                </lco-autocomplete>
-              </div>
-
-              <div class="full-width-container">
-                <!-- LIEUDIT -->
-                <mat-form-field>
-                  <mat-select
-                    formControlName="lieudit"
-                    placeholder="Lieu-dit"
-                    id="input-lieudit"
-                    name="lieudit"
-                    (selectionChange)="updateCoordinates()"
-                  >
-                    <mat-option
-                      *ngFor="let lieudit of filteredLieuxdits"
-                      [value]="lieudit"
-                    >
-                      {{ lieudit.nom }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-
-              <div class="coordonnees-form">
-                <!-- ALTITUDE -->
-                <mat-form-field>
-                  <input
-                    formControlName="altitude"
-                    matInput
-                    type="number"
-                    placeholder="Altitude"
-                    id="input-altitude"
-                    name="altitude"
-                  />
-                </mat-form-field>
-
-                <!-- LONGITUDE -->
-                <mat-form-field>
-                  <input
-                    formControlName="longitude"
-                    matInput
-                    type="number"
-                    placeholder="Longitude"
-                    id="input-longitude"
-                    name="longitude"
-                  />
-                </mat-form-field>
-
-                <!-- LATITUDE -->
-                <mat-form-field>
-                  <input
-                    formControlName="latitude"
-                    matInput
-                    type="number"
-                    placeholder="Latitude"
-                    id="input-latitude"
-                    name="latitude"
-                  />
-                </mat-form-field>
-              </div>
-            </div>
           </mat-card>
           <!-- END CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
 
@@ -690,12 +603,11 @@
 {{ inventaireForm.controls["date"].value | json }}
 {{ inventaireForm.controls["heure"].value | json }}
 {{ inventaireForm.controls["duree"].value | json }}
-{{ inventaireForm.controls["departement"].value | json }}
-{{ inventaireForm.controls["commune"].value | json }}
-{{ inventaireForm.controls["nomCommune"].value | json }}
-{{ inventaireForm.controls["lieudit"].value | json }}
-{{ inventaireForm.controls["altitude"].value | json }}
-{{ inventaireForm.controls["longitude"].value | json }}
-{{ inventaireForm.controls["latitude"].value | json }}
+{{ inventaireForm.controls["lieu"].controls["departement"].value | json }}
+{{ inventaireForm.controls["lieu"].controls["commune"].value | json }}
+{{ inventaireForm.controls["lieu"].controls["lieudit"].value | json }}
+{{ inventaireForm.controls["lieu"].controls["altitude"].value | json }}
+{{ inventaireForm.controls["lieu"].controls["longitude"].value | json }}
+{{ inventaireForm.controls["lieu"].controls["latitude"].value | json }}
 {{ inventaireForm.controls["temperature"].value | json }}
 {{ inventaireForm.controls["meteos"].value | json }}

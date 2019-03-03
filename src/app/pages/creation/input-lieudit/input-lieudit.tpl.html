@@ -6,110 +6,73 @@
       [startWithMode]="true"
       type="Département"
       [values]="departements"
+      [control]="controlGroup.controls['departement']"
+      [displayFn]="displayDepartementFormat"
       (onValueChanged)="updateCommunes($event.value)"
     >
     </lco-autocomplete>
   </div>
 
-  <div class="commune-container">
-    <!-- CODE COMMUNE -->
-    <mat-form-field class="code-commune">
-      <mat-select
-        placeholder="Code"
-        id="input-code-commune"
-        name="code-commune"
-        [(ngModel)]="selectedCommune"
-        [required]="!isDisabled"
-        [disabled]="isDisabled"
-        (selectionChange)="updateLieuxdits()"
-      >
-        <mat-option *ngFor="let commune of filteredCommunes" [value]="commune">
-          {{ commune.code }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <!-- NOM COMMUNE -->
-    <mat-form-field class="nom-commune">
-      <mat-select
-        placeholder="Nom commune"
-        id="input-nom-commune"
-        name="nom-commune"
-        [(ngModel)]="selectedCommune"
-        [required]="!isDisabled"
-        [disabled]="isDisabled"
-        (selectionChange)="updateLieuxdits()"
-      >
-        <mat-option
-          *ngFor="let commune of filteredCommunes"
-          [value]="commune"
-          [disabled]="isDisabled"
-        >
-          {{ commune.nom }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <div class="full-width-container">
+    <!-- COMMUNE -->
+    <lco-autocomplete
+      [type]="'Commune'"
+      [values]="filteredCommunes"
+      [control]="controlGroup.controls['commune']"
+      attributeToFilter="nom"
+      [displayFn]="displayCommuneFormat"
+      (onValueChanged)="updateLieuxDits($event.value)"
+    >
+    </lco-autocomplete>
   </div>
 
   <div class="full-width-container">
-    <!-- LIEUDIT -->
-    <mat-form-field>
-      <mat-select
-        placeholder="Lieu-dit"
-        id="input-lieudit"
-        name="lieudit"
-        [(ngModel)]="selectedLieudit"
-        [required]="!isDisabled"
-        [disabled]="isDisabled"
-        (selectionChange)="updateCoordinates()"
-      >
-        <mat-option *ngFor="let lieudit of filteredLieuxdits" [value]="lieudit">
-          {{ lieudit.nom }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <!-- LIEU-DIT -->
+    <lco-autocomplete
+      [type]="'Lieu-dit'"
+      [values]="filteredLieuxdits"
+      [control]="controlGroup.controls['lieudit']"
+      attributeToFilter="nom"
+      [displayFn]="displayLieuDitFormat"
+      (onValueChanged)="updateCoordinates($event.value)"
+    >
+    </lco-autocomplete>
   </div>
 
   <div class="coordonnees-form">
     <!-- ALTITUDE -->
     <mat-form-field>
       <input
+        [formControl]="controlGroup.controls['altitude']"
         matInput
         type="number"
         placeholder="Altitude"
         id="input-altitude"
         name="altitude"
-        [(ngModel)]="selectedAltitude"
-        [required]="!isDisabled"
-        [disabled]="isDisabled"
       />
     </mat-form-field>
 
     <!-- LONGITUDE -->
     <mat-form-field>
       <input
+        [formControl]="controlGroup.controls['longitude']"
         matInput
         type="number"
         placeholder="Longitude"
         id="input-longitude"
         name="longitude"
-        [(ngModel)]="selectedLongitude"
-        [required]="!isDisabled"
-        [disabled]="isDisabled"
       />
     </mat-form-field>
 
     <!-- LATITUDE -->
     <mat-form-field>
       <input
+        [formControl]="controlGroup.controls['latitude']"
         matInput
         type="number"
         placeholder="Latitude"
         id="input-latitude"
         name="latitude"
-        [(ngModel)]="selectedLatitude"
-        [required]="!isDisabled"
-        [disabled]="isDisabled"
       />
     </mat-form-field>
   </div>
