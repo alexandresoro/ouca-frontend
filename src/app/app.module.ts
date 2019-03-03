@@ -93,6 +93,7 @@ import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
 import { InputAgeComponent } from "./pages/creation/input-age/input-age.component";
 import { InputDateComponent } from "./pages/creation/input-date/input-date.component";
+import { InputDistanceComponent } from "./pages/creation/input-distance/input-distance.component";
 import { InputEspeceComponent } from "./pages/creation/input-espece/input-espece.component";
 import { InputLieuditComponent } from "./pages/creation/input-lieudit/input-lieudit.component";
 import { InputMeteosComponent } from "./pages/creation/input-meteos/input-metos.component";
@@ -277,6 +278,7 @@ const baseNaturalisteRoutes: Routes = [
     InputAgeComponent,
     InputCodeLibelleComponent,
     InputDateComponent,
+    InputDistanceComponent,
     InputEspeceComponent,
     InputLieuditComponent,
     InputTimeComponent,

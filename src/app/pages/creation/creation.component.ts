@@ -88,8 +88,10 @@ export class CreationComponent extends PageComponent implements OnInit {
     }),
     sexe: new FormControl("", Validators.required),
     age: new FormControl("", Validators.required),
-    distance: new FormControl(""),
-    estimationDistance: new FormControl(""),
+    distanceGroup: new FormGroup({
+      distance: new FormControl(""),
+      estimationDistance: new FormControl("")
+    }),
     regroupement: new FormControl(""),
     comportement1: new FormControl(""),
     comportement2: new FormControl(""),
@@ -358,6 +360,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     const donneeFormControls = this.donneeForm.controls;
     const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
       .controls;
+    const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
+      .controls;
     const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
       .controls;
 
@@ -370,8 +374,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
     donneeFormControls.sexe.setValue(defaultSexe);
     donneeFormControls.age.setValue(defaultAge);
-    donneeFormControls.distance.setValue(null);
-    donneeFormControls.estimationDistance.setValue(null);
+    distanceFormControls.distance.setValue(null);
+    distanceFormControls.estimationDistance.setValue(null);
     donneeFormControls.regroupement.setValue(null);
     donneeFormControls.comportement1.setValue(null);
     donneeFormControls.comportement2.setValue(null);

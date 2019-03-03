@@ -257,59 +257,27 @@
               ></input-age>
             </div>
 
-            <!-- DISTANCE AND ESTIMATION DISTANCE 
-          <div
-            *ngIf="
-              pageModel.isDistanceDisplayed || pageModel.isRegroupementDisplayed
-            "
-            class="distance-regroupement-container"
-          >
-            <ng-container *ngIf="pageModel.isDistanceDisplayed">
-              <span class="distance-container">-->
-            <!-- ESTIMATION DISTANCE 
-                <mat-form-field class="estimation-distance-container">
-                  <mat-select
-                    placeholder="Estimation de la distance"
-                    id="input-estimation-distance"
-                    name="estimation-distance"
-                    [(ngModel)]="donneeToSave.estimationDistance"
-                    [disabled]="isDonneeDisabled"
-                    [required]="
-                      !!donneeToSave.distance || donneeToSave.distance == 0
-                    "
+            <!-- DISTANCE AND ESTIMATION DISTANCE -->
+            <div
+              *ngIf="
+                pageModel.isDistanceDisplayed ||
+                pageModel.isRegroupementDisplayed
+              "
+              class="distance-regroupement-container"
+            >
+              <ng-container *ngIf="pageModel.isDistanceDisplayed">
+                <span class="distance-container">
+                  <!-- ESTIMATION DISTANCE -->
+                  <input-distance
+                    [controlGroup]="donneeForm.controls['distanceGroup']"
+                    [estimationsDistance]="pageModel.estimationsDistance"
+                    formGroupName="distanceGroup"
                   >
-                    <mat-option></mat-option>
-                    <mat-option
-                      *ngFor="
-                        let estimDistance of pageModel.estimationsDistance
-                      "
-                      [value]="estimDistance"
-                    >
-                      {{ estimDistance.libelle }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>-->
+                  </input-distance>
+                </span>
+              </ng-container>
 
-            <!-- DISTANCE 
-                <mat-form-field class="distance-container">
-                  <input
-                    matInput
-                    placeholder="Distance (m)"
-                    id="input-distance"
-                    min="0"
-                    name="distance"
-                    type="number"
-                    [(ngModel)]="donneeToSave.distance"
-                    [disabled]="
-                      isDonneeDisabled || !!!donneeToSave.estimationDistance
-                    "
-                    [required]="!!donneeToSave.estimationDistance"
-                  />
-                </mat-form-field>
-              </span>
-            </ng-container>-->
-
-            <!-- REGROUPEMENT
+              <!-- REGROUPEMENT
             <mat-form-field
               *ngIf="pageModel.isRegroupementDisplayed"
               class="regroupement-container"
@@ -332,8 +300,8 @@
               >
                 <mat-icon>add_box</mat-icon>
               </button>
-            </mat-form-field> 
-          </div>-->
+            </mat-form-field> -->
+            </div>
           </mat-card>
           <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
         </form>

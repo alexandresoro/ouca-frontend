@@ -1,0 +1,23 @@
+<!-- ESTIMATION DISTANCE -->
+<lco-autocomplete
+  [type]="'Estimation de la distance'"
+  [values]="estimationsDistance"
+  [control]="controlGroup.controls['estimationDistance']"
+  attributeToFilter="libelle"
+  [displayFn]="displayEstimationDistanceFormat"
+>
+</lco-autocomplete>
+
+<!-- DISTANCE -->
+<mat-form-field class="distance">
+  <input
+    #input
+    matInput
+    [formControl]="controlGroup.controls['distance']"
+    placeholder="Distance (m)"
+    id="input-nombre"
+    min="0"
+    name="distance"
+    type="number"
+  />
+</mat-form-field>
