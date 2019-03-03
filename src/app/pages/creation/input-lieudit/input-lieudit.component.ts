@@ -102,7 +102,7 @@ export class InputLieuditComponent implements OnInit {
   }
 
   private displayDepartementFormat = (departement: Departement): string => {
-    return departement.code;
+    return !!departement ? departement.code : null;
   }
 
   private displayLieuDitFormat = (lieuDit: Lieudit): string => {

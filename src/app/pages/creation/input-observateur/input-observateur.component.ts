@@ -14,6 +14,6 @@ export class InputObservateurComponent {
   @Input() public observateurs: Observateur[];
 
   private displayObservateurFormat = (observateur: Observateur): string => {
-    return observateur.libelle;
+    return !!observateur ? observateur.libelle : null;
   }
 }
