@@ -207,7 +207,11 @@ export class CreationComponent extends PageComponent implements OnInit {
       new Array<Observateur>()
     );
     inventaireFormControls.date.setValue(
-      new Date().toISOString().substring(0, 10)
+      moment()
+        .milliseconds(0)
+        .seconds(0)
+        .minutes(0)
+        .hours(0)
     );
     inventaireFormControls.heure.setValue(null);
     inventaireFormControls.duree.setValue(null);
