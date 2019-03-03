@@ -277,30 +277,13 @@
                 </span>
               </ng-container>
 
-              <!-- REGROUPEMENT
-            <mat-form-field
-              *ngIf="pageModel.isRegroupementDisplayed"
-              class="regroupement-container"
-            >
-              <input
-                matInput
-                placeholder="Regroupement"
-                id="input-regroupement"
-                name="regroupement"
-                type="number"
-                min="1"
-                [(ngModel)]="donneeToSave.regroupement"
-                [disabled]="isDonneeDisabled"
-              />
-              <button
-                matSuffix
-                mat-icon-button
-                [disabled]="isDonneeDisabled"
-                (click)="displayNextRegroupement()"
-              >
-                <mat-icon>add_box</mat-icon>
-              </button>
-            </mat-form-field> -->
+              <!-- REGROUPEMENT-->
+              <ng-container *ngIf="pageModel.isRegroupementDisplayed">
+                <input-regroupement
+                  [control]="donneeForm.controls['regroupement']"
+                  [nextRegroupement]="nextRegroupement"
+                ></input-regroupement>
+              </ng-container>
             </div>
           </mat-card>
           <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
