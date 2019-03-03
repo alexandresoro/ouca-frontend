@@ -1,0 +1,20 @@
+<!-- CLASSE -->
+<lco-autocomplete
+  attributeToFilter="libelle"
+  type="Classe"
+  [values]="classes"
+  [control]="controlGroup.controls['classe']"
+  [displayFn]="displayClasseFormat"
+  (onValueChanged)="updateEspeces($event.value)"
+>
+</lco-autocomplete>
+
+<!-- ESPECE -->
+<lco-autocomplete
+  attributeToFilter="code"
+  type="Espèce"
+  [values]="filteredEspeces"
+  [control]="controlGroup.controls['espece']"
+  [displayFn]="displayEspeceFormat"
+>
+</lco-autocomplete>

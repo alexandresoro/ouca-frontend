@@ -92,6 +92,7 @@ import { ConfigurationService } from "./pages/configuration/configuration.servic
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
 import { InputDateComponent } from "./pages/creation/input-date/input-date.component";
+import { InputEspeceComponent } from "./pages/creation/input-espece/input-espece.component";
 import { InputLieuditComponent } from "./pages/creation/input-lieudit/input-lieudit.component";
 import { InputMeteosComponent } from "./pages/creation/input-meteos/input-metos.component";
 import { InputObservateurComponent } from "./pages/creation/input-observateur/input-observateur.component";
@@ -272,6 +273,7 @@ const baseNaturalisteRoutes: Routes = [
     ImportComponent,
     InputCodeLibelleComponent,
     InputDateComponent,
+    InputEspeceComponent,
     InputLieuditComponent,
     InputTimeComponent,
     InputMeteosComponent,

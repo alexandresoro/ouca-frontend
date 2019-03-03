@@ -6,6 +6,7 @@ import moment = require("moment");
 import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
+import { Age } from "../../model/age.object";
 import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
@@ -19,6 +20,7 @@ import { Inventaire } from "../../model/inventaire.object";
 import { Lieudit } from "../../model/lieudit.object";
 import { Meteo } from "../../model/meteo.object";
 import { Observateur } from "../../model/observateur.object";
+import { Sexe } from "../../model/sexe.object";
 import { PageComponent } from "../page.component";
 import { CreationMode, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
@@ -43,6 +45,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   // public inventaireToSave: Inventaire = new Inventaire();
   public displayedInventaireId: number = null;
+  public displayedDonneeId: number = null;
 
   public donneeToSave: Donnee = new Donnee();
 
@@ -71,6 +74,32 @@ export class CreationComponent extends PageComponent implements OnInit {
     }),
     temperature: new FormControl(""),
     meteos: new FormControl("")
+  });
+
+  // TODO nombre is required only when estimationNombre is not Non compté
+  donneeForm = new FormGroup({
+    especeGroup: new FormGroup({
+      classe: new FormControl(""),
+      espece: new FormControl("", Validators.required)
+    }),
+    nombre: new FormControl("", Validators.required),
+    estimationNombre: new FormControl("", Validators.required),
+    sexe: new FormControl("", Validators.required),
+    age: new FormControl("", Validators.required),
+    distance: new FormControl(""),
+    estimationDistance: new FormControl(""),
+    regroupement: new FormControl(""),
+    comportement1: new FormControl(""),
+    comportement2: new FormControl(""),
+    comportement3: new FormControl(""),
+    comportement4: new FormControl(""),
+    comportement5: new FormControl(""),
+    comportement6: new FormControl(""),
+    milieu1: new FormControl(""),
+    milieu2: new FormControl(""),
+    milieu3: new FormControl(""),
+    milieu4: new FormControl(""),
+    commentaire: new FormControl("")
   });
 
   constructor(
@@ -293,8 +322,69 @@ export class CreationComponent extends PageComponent implements OnInit {
    * When creating a new donne, initialize the form
    */
   private initDonneeDefaultValues(): void {
+    let defaultAge: Age = null;
+    if (!!this.pageModel.defaultAge && !!this.pageModel.defaultAge.id) {
+      defaultAge = this.getAgeById(this.pageModel.defaultAge.id);
+    }
+
+    let defaultSexe: Sexe = null;
+    if (!!this.pageModel.defaultSexe && !!this.pageModel.defaultSexe.id) {
+      defaultSexe = this.getSexeById(this.pageModel.defaultSexe.id);
+    }
+
+    let defaultEstimationNombre: EstimationNombre = null;
+    if (
+      !!this.pageModel.defaultEstimationNombre &&
+      !!this.pageModel.defaultEstimationNombre.id
+    ) {
+      defaultEstimationNombre = this.getEstimationNombreById(
+        this.pageModel.defaultEstimationNombre.id
+      );
+    }
+
+    let defaultNombre: number = null;
+    if (
+      !!this.pageModel.defaultNombre &&
+      (!!!defaultEstimationNombre ||
+        (!!defaultEstimationNombre && !defaultEstimationNombre.nonCompte))
+    ) {
+      defaultNombre = this.pageModel.defaultNombre;
+    }
+
+    if (!!defaultEstimationNombre && !defaultEstimationNombre.nonCompte) {
+      // TODO disable nombre input
+    }
+
+    this.displayedDonneeId = null;
+
+    const donneeFormControls = this.donneeForm.controls;
+    const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
+      .controls;
+
+    especeFormControls.classe.setValue(null);
+    especeFormControls.espece.setValue(null);
+    donneeFormControls.nombre.setValue(defaultNombre);
+    donneeFormControls.estimationNombre.setValue(defaultEstimationNombre);
+    donneeFormControls.sexe.setValue(defaultSexe);
+    donneeFormControls.age.setValue(defaultAge);
+    donneeFormControls.distance.setValue(null);
+    donneeFormControls.estimationDistance.setValue(null);
+    donneeFormControls.regroupement.setValue(null);
+    donneeFormControls.comportement1.setValue(null);
+    donneeFormControls.comportement2.setValue(null);
+    donneeFormControls.comportement3.setValue(null);
+    donneeFormControls.comportement4.setValue(null);
+    donneeFormControls.comportement5.setValue(null);
+    donneeFormControls.comportement6.setValue(null);
+    donneeFormControls.milieu1.setValue(null);
+    donneeFormControls.milieu2.setValue(null);
+    donneeFormControls.milieu3.setValue(null);
+    donneeFormControls.milieu4.setValue(null);
+    donneeFormControls.commentaire.setValue(null);
+
+    /*
     // Especes
-    this.filteredEspeces = this.pageModel.especes;
+    // this.filteredEspeces = this.pageModel.especes;
 
     // Nombre
     this.donneeToSave.nombre = this.pageModel.defaultNombre;
@@ -324,7 +414,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.donneeToSave.age = this.pageModel.ages.find(
         (age) => age.id === this.pageModel.defaultAge.id
       );
-    }
+    } */
 
     this.selectedComportements = [];
     this.selectedMilieux = [];
@@ -332,20 +422,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private testIdiot = () => {
     // TODO
-  }
-
-  /**
-   * When selecting a classe, filter the list of especes
-   */
-  public updateEspeces(): void {
-    if (!!this.selectedClasse && !!this.selectedClasse.id) {
-      this.filteredEspeces = this.pageModel.especes.filter(
-        (espece) => espece.classe.id === this.selectedClasse.id
-      );
-    } else {
-      // If "Toutes" we display all the especes
-      this.filteredEspeces = this.pageModel.especes;
-    }
   }
 
   /**
@@ -456,8 +532,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private initializeDonneePanel(): void {
-    this.selectedClasse = null; // TODO toutes or null?
-    this.updateEspeces();
+    // this.selectedClasse = null; // TODO toutes or null?
+    // this.updateEspeces();
     this.initDonneeDefaultValues();
   }
 
@@ -847,5 +923,19 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private getCommuneById(id: number): Commune {
     return this.pageModel.communes.find((commune) => commune.id === id);
+  }
+
+  private getAgeById(id: number): Age {
+    return this.pageModel.ages.find((age) => age.id === id);
+  }
+
+  private getSexeById(id: number): Sexe {
+    return this.pageModel.sexes.find((sexe) => sexe.id === id);
+  }
+
+  private getEstimationNombreById(id: number): EstimationNombre {
+    return this.pageModel.estimationsNombre.find(
+      (estimation) => estimation.id === id
+    );
   }
 }
