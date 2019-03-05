@@ -728,7 +728,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.setInventaireFormControlsFromInventaire(
         this.navigationService.savedInventaire
       );
-      this.displayedDonneeId = null;-
+      this.displayedDonneeId = null;
     } else if (this.modeHelper.isDonneeMode(this.mode)) {
       this.switchToEditionDonneeMode();
       this.setInventaireFormControlsFromInventaire(
