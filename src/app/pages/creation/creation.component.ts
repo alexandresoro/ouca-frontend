@@ -4,12 +4,9 @@ import { MatDialog } from "@angular/material";
 import moment from "moment";
 import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
-import { AutocompleteAttribute } from "../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { Age } from "../../model/age.object";
-import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
-import { Comportement } from "../../model/comportement.object";
 import { CreationPage } from "../../model/creation-page.object";
 import { Departement } from "../../model/departement.object";
 import { Donnee } from "../../model/donnee.object";
@@ -42,20 +39,13 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public testAlex: boolean;
 
-  // public inventaireToSave: Inventaire = new Inventaire();
   public displayedInventaireId: number = null;
+
   public displayedDonneeId: number = null;
 
-  public donneeToSave: Donnee = new Donnee();
+  public donneeToSave: Donnee = new Donnee(); // TODO remove
 
-  public selectedClasse: Classe;
-  public selectedComportements: Comportement[] = new Array<Comportement>(6);
-  public selectedMilieux: Comportement[] = new Array<Comportement>(6);
   public nextRegroupement: number;
-
-  public filteredCommunes: Commune[];
-  public filteredLieuxdits: Lieudit[];
-  public filteredEspeces: Espece[];
 
   inventaireForm = new FormGroup({
     observateur: new FormControl("", Validators.required),
@@ -432,10 +422,11 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.donneeToSave.age = this.pageModel.ages.find(
         (age) => age.id === this.pageModel.defaultAge.id
       );
-    } */
+    }
 
     this.selectedComportements = [];
     this.selectedMilieux = [];
+    */
   }
 
   private testIdiot = () => {
@@ -503,6 +494,7 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on Save Donnee button
    */
   public saveDonnee(): void {
+    /*
     // Comportements
     for (const comportement of this.selectedComportements) {
       if (!!comportement && !!comportement.id) {
@@ -516,6 +508,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.donneeToSave.milieux.push(milieu);
       }
     }
+    */
 
     console.log("Donnée to save is", this.donneeToSave);
 
@@ -708,22 +701,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onDeleteError(error: any): void {
     console.error("Echec lors de la suppression de la donnée (" + error + ")");
-  }
-
-  public isComportementDisabled(index: number): boolean {
-    return (
-      this.isDonneeDisabled ||
-      !this.selectedComportements[index - 2] ||
-      !this.selectedComportements[index - 2].id
-    );
-  }
-
-  public isMilieuDisabled(index: number): boolean {
-    return (
-      this.isDonneeDisabled ||
-      !this.selectedMilieux[index - 2] ||
-      !this.selectedComportements[index - 2].id
-    );
   }
 
   public isNewDonneeBtnDisplayed(): boolean {
