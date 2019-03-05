@@ -1,0 +1,36 @@
+<lco-autocomplete
+  [attributesToFilter]="autocompleteAttributes"
+  [displayFn]="displayMilieuFormat"
+  [control]="controlGroup.controls['milieu1']"
+  [type]="'Milieu 1'"
+  [values]="milieux"
+  (onValueChanged)="addMilieu($event, 0)"
+>
+</lco-autocomplete>
+<lco-autocomplete
+  [attributesToFilter]="autocompleteAttributes"
+  [displayFn]="displayMilieuFormat"
+  [control]="controlGroup.controls['milieu2']"
+  [type]="'Milieu 2'"
+  [values]="milieux"
+  (onValueChanged)="addMilieu($event, 1)"
+>
+</lco-autocomplete>
+<lco-autocomplete
+  [attributesToFilter]="autocompleteAttributes"
+  [displayFn]="displayMilieuFormat"
+  [control]="controlGroup.controls['milieu3']"
+  [type]="'Milieu 3'"
+  [values]="milieux"
+  (onValueChanged)="addMilieu($event, 2)"
+>
+</lco-autocomplete>
+<lco-autocomplete
+  [attributesToFilter]="autocompleteAttributes"
+  [displayFn]="displayMilieuFormat"
+  [control]="controlGroup.controls['milieu4']"
+  [type]="'Milieu 4'"
+  [values]="milieux"
+  (onValueChanged)="addMilieu($event, 3)"
+>
+</lco-autocomplete>

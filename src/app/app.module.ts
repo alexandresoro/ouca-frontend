@@ -92,11 +92,13 @@ import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
 import { InputAgeComponent } from "./pages/creation/input-age/input-age.component";
 import { InputCommentaireComponent } from "./pages/creation/input-commentaire/input-commentaire.component";
+import { InputComportementsComponent } from "./pages/creation/input-comportements/input-comportements.component";
 import { InputDateComponent } from "./pages/creation/input-date/input-date.component";
 import { InputDistanceComponent } from "./pages/creation/input-distance/input-distance.component";
 import { InputEspeceComponent } from "./pages/creation/input-espece/input-espece.component";
 import { InputLieuditComponent } from "./pages/creation/input-lieudit/input-lieudit.component";
 import { InputMeteosComponent } from "./pages/creation/input-meteos/input-metos.component";
+import { InputMilieuxComponent } from "./pages/creation/input-milieux/input-milieux.component";
 import { InputNombreComponent } from "./pages/creation/input-nombre/input-nombre.component";
 import { InputObservateurComponent } from "./pages/creation/input-observateur/input-observateur.component";
 import { InputObservateursAssociesComponent } from "./pages/creation/input-observateurs-associes/input-observateurs-associes.component";
@@ -280,10 +282,12 @@ const baseNaturalisteRoutes: Routes = [
     InputCommentaireComponent,
     InputDateComponent,
     InputDistanceComponent,
+    InputComportementsComponent,
     InputEspeceComponent,
     InputLieuditComponent,
     InputTimeComponent,
     InputMeteosComponent,
+    InputMilieuxComponent,
     InputNombreComponent,
     InputObservateurComponent,
     InputObservateursAssociesComponent,

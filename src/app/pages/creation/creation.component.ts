@@ -19,7 +19,6 @@ import { EstimationNombre } from "../../model/estimation-nombre.object";
 import { Inventaire } from "../../model/inventaire.object";
 import { Lieudit } from "../../model/lieudit.object";
 import { Meteo } from "../../model/meteo.object";
-import { Milieu } from "../../model/milieu.object";
 import { Observateur } from "../../model/observateur.object";
 import { Sexe } from "../../model/sexe.object";
 import { PageComponent } from "../page.component";
@@ -58,19 +57,6 @@ export class CreationComponent extends PageComponent implements OnInit {
   public filteredLieuxdits: Lieudit[];
   public filteredEspeces: Espece[];
 
-  public entiteCodeEtLibelleAutocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "code",
-      exactSearchMode: true,
-      startWithMode: true
-    },
-    {
-      key: "libelle",
-      exactSearchMode: false,
-      startWithMode: false
-    }
-  ];
-
   inventaireForm = new FormGroup({
     observateur: new FormControl("", Validators.required),
     observateursAssocies: new FormControl(""),
@@ -106,16 +92,20 @@ export class CreationComponent extends PageComponent implements OnInit {
       estimationDistance: new FormControl("")
     }),
     regroupement: new FormControl(""),
-    comportement1: new FormControl(""),
-    comportement2: new FormControl(""),
-    comportement3: new FormControl(""),
-    comportement4: new FormControl(""),
-    comportement5: new FormControl(""),
-    comportement6: new FormControl(""),
-    milieu1: new FormControl(""),
-    milieu2: new FormControl(""),
-    milieu3: new FormControl(""),
-    milieu4: new FormControl(""),
+    comportementGroup: new FormGroup({
+      comportement1: new FormControl(""),
+      comportement2: new FormControl(""),
+      comportement3: new FormControl(""),
+      comportement4: new FormControl(""),
+      comportement5: new FormControl(""),
+      comportement6: new FormControl("")
+    }),
+    milieuxGroup: new FormGroup({
+      milieu1: new FormControl(""),
+      milieu2: new FormControl(""),
+      milieu3: new FormControl(""),
+      milieu4: new FormControl("")
+    }),
     commentaire: new FormControl("")
   });
 
@@ -381,6 +371,10 @@ export class CreationComponent extends PageComponent implements OnInit {
       .controls;
     const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
       .controls;
+    const comportementsFormControls = (donneeFormControls.comportementGroup as FormGroup)
+      .controls;
+    const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
+      .controls;
 
     especeFormControls.classe.setValue(null);
     especeFormControls.espece.setValue(null);
@@ -394,16 +388,16 @@ export class CreationComponent extends PageComponent implements OnInit {
     distanceFormControls.distance.setValue(null);
     distanceFormControls.estimationDistance.setValue(null);
     donneeFormControls.regroupement.setValue(null);
-    donneeFormControls.comportement1.setValue(null);
-    donneeFormControls.comportement2.setValue(null);
-    donneeFormControls.comportement3.setValue(null);
-    donneeFormControls.comportement4.setValue(null);
-    donneeFormControls.comportement5.setValue(null);
-    donneeFormControls.comportement6.setValue(null);
-    donneeFormControls.milieu1.setValue(null);
-    donneeFormControls.milieu2.setValue(null);
-    donneeFormControls.milieu3.setValue(null);
-    donneeFormControls.milieu4.setValue(null);
+    comportementsFormControls.comportement1.setValue(null);
+    comportementsFormControls.comportement2.setValue(null);
+    comportementsFormControls.comportement3.setValue(null);
+    comportementsFormControls.comportement4.setValue(null);
+    comportementsFormControls.comportement5.setValue(null);
+    comportementsFormControls.comportement6.setValue(null);
+    milieuxFormControls.milieu1.setValue(null);
+    milieuxFormControls.milieu2.setValue(null);
+    milieuxFormControls.milieu3.setValue(null);
+    milieuxFormControls.milieu4.setValue(null);
     donneeFormControls.commentaire.setValue(null);
 
     /*
@@ -732,40 +726,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  public addComportement(event: any, index: number): void {
-    // TODO make this less crappy
-    const isComportementSet = !!event.value;
-    const nextComportement = index + 2;
-    const nextComportementControl = this.donneeForm.controls[
-      "comportement" + nextComportement
-    ];
-
-    if (!!nextComportementControl) {
-      if (isComportementSet) {
-        nextComportementControl.enable();
-      } else {
-        nextComportementControl.disable();
-        nextComportementControl.setValue(null);
-      }
-    }
-  }
-
-  public addMilieu(event: any, index: number): void {
-    // TODO make this less crappy
-    const isComportementSet = !!event.value;
-    const nextMilieu = index + 2;
-    const nextMilieuControl = this.donneeForm.controls["milieu" + nextMilieu];
-
-    if (!!nextMilieuControl) {
-      if (isComportementSet) {
-        nextMilieuControl.enable();
-      } else {
-        nextMilieuControl.disable();
-        nextMilieuControl.setValue(null);
-      }
-    }
-  }
-
   public isNewDonneeBtnDisplayed(): boolean {
     return false; // TODO
   }
@@ -967,15 +927,5 @@ export class CreationComponent extends PageComponent implements OnInit {
     return this.pageModel.estimationsNombre.find(
       (estimation) => estimation.id === id
     );
-  }
-
-  private displayComportementFormat = (comportement: Comportement): string => {
-    return !!comportement
-      ? comportement.code + " - " + comportement.libelle
-      : null;
-  }
-
-  private displayMilieuFormat = (milieu: Milieu): string => {
-    return !!milieu ? milieu.code + " - " + milieu.libelle : null;
   }
 }
