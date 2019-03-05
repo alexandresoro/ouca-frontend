@@ -6,12 +6,12 @@ import { ConfirmationDialogData } from "../../components/dialog/confirmation-dia
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { Age } from "../../model/age.object";
+import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { CreationPage } from "../../model/creation-page.object";
 import { Departement } from "../../model/departement.object";
 import { Donnee } from "../../model/donnee.object";
 import { EntiteResult } from "../../model/entite-result.object";
-import { Espece } from "../../model/espece.object";
 import { EstimationNombre } from "../../model/estimation-nombre.object";
 import { Inventaire } from "../../model/inventaire.object";
 import { Lieudit } from "../../model/lieudit.object";
@@ -29,21 +29,15 @@ import { NavigationService } from "./navigation.service";
   templateUrl: "./creation.tpl.html"
 })
 export class CreationComponent extends PageComponent implements OnInit {
-  // Page model returned from back-end
   public pageModel: CreationPage = {} as CreationPage;
 
-  // Inventaire, Donnee, UPDATE
   public mode: CreationMode;
 
   public isDonneeDisabled: boolean;
 
-  public testAlex: boolean;
-
   public displayedInventaireId: number = null;
 
   public displayedDonneeId: number = null;
-
-  public donneeToSave: Donnee = new Donnee(); // TODO remove
 
   public nextRegroupement: number;
 
@@ -65,7 +59,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     meteos: new FormControl("")
   });
 
-  // TODO nombre is required only when estimationNombre is not Non compté
   donneeForm = new FormGroup({
     especeGroup: new FormGroup({
       classe: new FormControl(""),
@@ -82,7 +75,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       estimationDistance: new FormControl("")
     }),
     regroupement: new FormControl(""),
-    comportementGroup: new FormGroup({
+    comportementsGroup: new FormGroup({
       comportement1: new FormControl(""),
       comportement2: new FormControl(""),
       comportement3: new FormControl(""),
@@ -112,7 +105,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initCreationPage();
-    this.testAlex = false;
   }
 
   /**
@@ -128,11 +120,6 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.onInitCreationPageError(error);
       }
     );
-  }
-
-  private toggleDateDisabled = (): void => {
-    this.testAlex = !this.testAlex;
-    this.handleInventaireFormState(this.testAlex);
   }
 
   /**
@@ -275,6 +262,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       latitude !== lieudit.latitude
     );
   }
+
   private setInventaireFormControlsFromInventaire(
     inventaire: Inventaire
   ): void {
@@ -361,7 +349,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       .controls;
     const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
       .controls;
-    const comportementsFormControls = (donneeFormControls.comportementGroup as FormGroup)
+    const comportementsFormControls = (donneeFormControls.comportementsGroup as FormGroup)
       .controls;
     const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
       .controls;
@@ -389,48 +377,53 @@ export class CreationComponent extends PageComponent implements OnInit {
     milieuxFormControls.milieu3.setValue(null);
     milieuxFormControls.milieu4.setValue(null);
     donneeFormControls.commentaire.setValue(null);
-
-    /*
-    // Especes
-    // this.filteredEspeces = this.pageModel.especes;
-
-    // Nombre
-    this.donneeToSave.nombre = this.pageModel.defaultNombre;
-    if (
-      !!this.pageModel.defaultEstimationNombre &&
-      !!this.pageModel.defaultEstimationNombre.id
-    ) {
-      this.donneeToSave.estimationNombre = this.pageModel.estimationsNombre.find(
-        (estimation) =>
-          estimation.id === this.pageModel.defaultEstimationNombre.id
-      );
-
-      if (this.pageModel.defaultEstimationNombre.nonCompte) {
-        this.donneeToSave.nombre = null;
-      }
-    }
-
-    // Sexe
-    if (!!this.pageModel.defaultSexe && !!this.pageModel.defaultSexe.id) {
-      this.donneeToSave.sexe = this.pageModel.sexes.find(
-        (sexe) => sexe.id === this.pageModel.defaultSexe.id
-      );
-    }
-
-    // Age
-    if (!!this.pageModel.defaultAge && !!this.pageModel.defaultAge.id) {
-      this.donneeToSave.age = this.pageModel.ages.find(
-        (age) => age.id === this.pageModel.defaultAge.id
-      );
-    }
-
-    this.selectedComportements = [];
-    this.selectedMilieux = [];
-    */
   }
 
-  private testIdiot = () => {
-    // TODO
+  private getDonneeFromDonneeFormControls(): Donnee {
+    // TO DO
+    return null;
+  }
+
+  private setDonneeFormControlsFromDonnee(donnee: Donnee): void {
+    this.displayedDonneeId = donnee.id;
+
+    const classe: Classe = this.getClasseById(donnee.espece.classeId);
+
+    const donneeFormControls = this.donneeForm.controls;
+    const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
+      .controls;
+    const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
+      .controls;
+    const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
+      .controls;
+    const comportementsFormControls = (donneeFormControls.comportementsGroup as FormGroup)
+      .controls;
+    const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
+      .controls;
+
+    especeFormControls.classe.setValue(classe);
+    especeFormControls.espece.setValue(donnee.espece);
+    nombreFormControls.nombre.setValue(donnee.nombre);
+    nombreFormControls.estimationNombre.setValue(donnee.estimationNombre);
+    if (!!donnee.estimationNombre && !!donnee.estimationNombre.nonCompte) {
+      nombreFormControls.nombre.disable();
+    }
+    donneeFormControls.sexe.setValue(donnee.sexe);
+    donneeFormControls.age.setValue(donnee.age);
+    distanceFormControls.distance.setValue(donnee.distance);
+    distanceFormControls.estimationDistance.setValue(donnee.estimationDistance);
+    donneeFormControls.regroupement.setValue(donnee.regroupement);
+    comportementsFormControls.comportement1.setValue(donnee.comportements[0]);
+    comportementsFormControls.comportement2.setValue(null);
+    comportementsFormControls.comportement3.setValue(null);
+    comportementsFormControls.comportement4.setValue(null);
+    comportementsFormControls.comportement5.setValue(null);
+    comportementsFormControls.comportement6.setValue(null);
+    milieuxFormControls.milieu1.setValue(null);
+    milieuxFormControls.milieu2.setValue(null);
+    milieuxFormControls.milieu3.setValue(null);
+    milieuxFormControls.milieu4.setValue(null);
+    donneeFormControls.commentaire.setValue(null);
   }
 
   /**
@@ -447,13 +440,6 @@ export class CreationComponent extends PageComponent implements OnInit {
         );
       }
     );
-  }
-
-  /**
-   * Called when clicking on Regroupement button
-   */
-  public displayNextRegroupement(): void {
-    this.donneeToSave.regroupement = this.nextRegroupement;
   }
 
   /**
@@ -478,9 +464,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onSaveInventaireSuccess(savedInventaire: Inventaire) {
     this.setInventaireFormControlsFromInventaire(savedInventaire);
-    // this.donneeToSave = new Donnee();
-    this.donneeToSave.inventaire = savedInventaire;
-
     this.switchToEditionDonneeMode();
   }
   private onSaveInventaireError(error: any) {
@@ -494,28 +477,12 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on Save Donnee button
    */
   public saveDonnee(): void {
-    /*
-    // Comportements
-    for (const comportement of this.selectedComportements) {
-      if (!!comportement && !!comportement.id) {
-        this.donneeToSave.comportements.push(comportement);
-      }
-    }
+    const donneeToBeSaved: Donnee = this.getDonneeFromDonneeFormControls();
 
-    // Milieux
-    for (const milieu of this.selectedMilieux) {
-      if (!!milieu && !!milieu.id) {
-        this.donneeToSave.milieux.push(milieu);
-      }
-    }
-    */
-
-    console.log("Donnée to save is", this.donneeToSave);
-
-    this.donneeService.saveDonnee(this.donneeToSave).subscribe(
+    this.donneeService.saveDonnee(donneeToBeSaved).subscribe(
       (result: EntiteResult<Donnee>) => {
         this.updatePageStatus(result.status, result.messages);
-        this.donneeToSave = result.object;
+
         if (this.isSuccess()) {
           this.onSaveDonneeSuccess(result.object);
         }
@@ -527,8 +494,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onSaveDonneeSuccess(savedDonnee: Donnee) {
-    this.donneeToSave = new Donnee();
-    // this.donneeToSave.inventaire = this.inventaireToSave;
+    this.displayedDonneeId = null;
     this.navigationService.numberOfDonnees++;
     this.navigationService.previousDonnee = savedDonnee;
     this.initializeDonneePanel();
@@ -543,8 +509,6 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private initializeDonneePanel(): void {
-    // this.selectedClasse = null; // TODO toutes or null?
-    // this.updateEspeces();
     this.initDonneeDefaultValues();
   }
 
@@ -587,26 +551,29 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on "Donnee precedente" button
    */
   public onPreviousDonneeBtnClicked(): void {
+    const currentInventaire: Inventaire = this.getInventaireFromInventaireFormControls();
+    const currentDonnee: Donnee = this.getDonneeFromDonneeFormControls();
+
     // Save the current donnee or inventaire and mode
     if (!this.modeHelper.isUpdateMode(this.mode)) {
       this.navigationService.saveCurrentContext(
         this.mode,
-        this.getInventaireFromInventaireFormControls(),
-        this.donneeToSave
+        currentInventaire,
+        currentDonnee
       );
       this.switchToUpdateMode();
     }
 
-    let newNextDonnee = this.donneeToSave;
+    let newNextDonnee = currentDonnee;
     if (!!!this.navigationService.currentDonneeIndex) {
       // We are displaying the creation form so the next donnee is the saved donnee
       newNextDonnee = this.navigationService.savedDonnee;
     }
 
     // Set the current donnee to display
-    this.donneeToSave = this.navigationService.previousDonnee;
-    // this.inventaireToSave = this.donneeToSave.inventaire;
-    this.setInventaireFormControlsFromInventaire(this.donneeToSave.inventaire);
+    const newCurrentDonnee: Donnee = this.navigationService.previousDonnee;
+    this.setDonneeFormControlsFromDonnee(newCurrentDonnee);
+    this.setInventaireFormControlsFromInventaire(newCurrentDonnee.inventaire);
     this.navigationService.decreaseIndexOfCurrentDonnee();
 
     // Disable the navigation buttons
@@ -614,13 +581,15 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.navigationService.setPreviousDonnee(null);
 
     this.navigationService.updatePreviousAndNextDonnees(
-      this.donneeToSave,
+      newCurrentDonnee,
       null,
       newNextDonnee
     );
   }
 
   public onNextDonneeBtnClicked(): void {
+    const currentDonnee: Donnee = this.getDonneeFromDonneeFormControls();
+
     this.mode = this.navigationService.getNextMode();
     if (this.modeHelper.isInventaireMode(this.mode)) {
       this.switchToInventaireMode();
@@ -628,11 +597,10 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.switchToEditionDonneeMode();
     }
 
-    const newPreviousDonnee = this.donneeToSave;
+    const newPreviousDonnee: Donnee = currentDonnee;
 
-    this.donneeToSave = this.navigationService.nextDonnee;
-    // this.inventaireToSave = this.donneeToSave.inventaire;
-    this.setInventaireFormControlsFromInventaire(this.donneeToSave.inventaire);
+    const newCurrentDonnee: Donnee = this.navigationService.nextDonnee;
+    this.setInventaireFormControlsFromInventaire(newCurrentDonnee.inventaire);
     this.navigationService.increaseIndexOfCurrentDonnee();
 
     // Disable the navigation buttons
@@ -640,7 +608,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.navigationService.setPreviousDonnee(null);
 
     this.navigationService.updatePreviousAndNextDonnees(
-      this.donneeToSave,
+      newCurrentDonnee,
       newPreviousDonnee,
       null
     );
@@ -653,6 +621,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   public onEditInventaireBtnClicked(): void {
     this.switchToInventaireMode();
   }
+
   private setCurrentDonneeToTheNextDonnee(afterDelete: boolean = false): void {
     this.mode = this.navigationService.getNextMode();
     if (this.modeHelper.isInventaireMode(this.mode)) {
@@ -661,18 +630,19 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.switchToEditionDonneeMode();
     }
 
-    // this.inventaireToSave = this.navigationService.getNextInventaire();
     this.setInventaireFormControlsFromInventaire(
       this.navigationService.getNextInventaire()
     );
-    this.donneeToSave = this.navigationService.getNextDonnee();
+    const newCurrentDonnee: Donnee = this.navigationService.getNextDonnee();
+    this.setDonneeFormControlsFromDonnee(newCurrentDonnee);
   }
 
-  private setNewNextDonnee() {
-    this.navigationService.updateNextDonnee(this.donneeToSave);
+  private setNewNextDonnee(currentDonnee: Donnee) {
+    this.navigationService.updateNextDonnee(currentDonnee);
   }
-  public deleteDonnee(donnee: Donnee): void {
-    this.creationService.deleteDonnee(donnee.id).subscribe(
+
+  public deleteDonnee(donneeId: number): void {
+    this.creationService.deleteDonnee(donneeId).subscribe(
       (result: EntiteResult<Donnee>) => {
         this.onDeleteSuccess(result);
       },
@@ -688,7 +658,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     if (this.isSuccess()) {
       this.setCurrentDonneeToTheNextDonnee(true);
       this.navigationService.numberOfDonnees--;
-      this.setNewNextDonnee();
+      this.setNewNextDonnee(result.object);
 
       // TODO remove the donnee from the list of donnee
       // let index = this._objects.indexOf(object);
@@ -748,31 +718,27 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onDeleteConfirmButtonClicked(): void {
-    this.deleteDonnee(this.donneeToSave);
+    this.deleteDonnee(this.displayedDonneeId);
   }
 
   private redisplayCurrentInventaireAndDonnee(): void {
     this.mode = this.navigationService.savedMode;
     if (this.modeHelper.isInventaireMode(this.mode)) {
       this.switchToInventaireMode();
-      // this.inventaireToSave = this.navigationService.savedInventaire;
       this.setInventaireFormControlsFromInventaire(
         this.navigationService.savedInventaire
       );
-      this.donneeToSave = new Donnee();
+      this.displayedDonneeId = null;-
     } else if (this.modeHelper.isDonneeMode(this.mode)) {
       this.switchToEditionDonneeMode();
-      // this.inventaireToSave = this.navigationService.savedInventaire;
       this.setInventaireFormControlsFromInventaire(
         this.navigationService.savedInventaire
       );
-      this.donneeToSave = this.navigationService.savedDonnee;
+      this.setDonneeFormControlsFromDonnee(this.navigationService.savedDonnee);
     }
   }
 
   private switchToNewInventaireMode(): void {
-    // this.inventaireToSave = new Inventaire();
-    // this.donneeToSave = new Donnee();
     this.initInventaireDefaultValues();
     this.initializeDonneePanel();
 
@@ -837,10 +803,8 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.inventaireService.saveInventaire(inventaireToBeSaved).subscribe(
         (result: EntiteResult<Inventaire>) => {
           if (this.isSuccessStatus(result.status)) {
-            // this.inventaireToSave = result.object;
             const savedInventaire: Inventaire = result.object;
             this.setInventaireFormControlsFromInventaire(savedInventaire);
-            this.donneeToSave.inventaire = savedInventaire;
             this.updateDonnee();
           } else {
             this.updatePageStatus(result.status, result.messages);
@@ -856,14 +820,13 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private updateDonnee(): void {
-    console.log("La donnée à mettre à jour est", this.donneeToSave);
-
-    this.donneeService.saveDonnee(this.donneeToSave).subscribe(
+    const donneeToBeSaved: Donnee = this.getDonneeFromDonneeFormControls();
+    this.donneeService.saveDonnee(donneeToBeSaved).subscribe(
       (result: EntiteResult<Donnee>) => {
         this.updatePageStatus(result.status, result.messages);
 
         if (this.isSuccess()) {
-          this.donneeToSave = result.object;
+          this.setDonneeFormControlsFromDonnee(result.object);
         }
       },
       (error: any) => {
@@ -890,6 +853,10 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private getCommuneById(id: number): Commune {
     return this.pageModel.communes.find((commune) => commune.id === id);
+  }
+
+  private getClasseById(id: number): Classe {
+    return this.pageModel.classes.find((classe) => classe.id === id);
   }
 
   private getAgeById(id: number): Age {

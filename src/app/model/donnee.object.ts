@@ -9,35 +9,35 @@ import { Milieu } from "./milieu.object";
 import { Sexe } from "./sexe.object";
 
 export class Donnee extends EntiteSimple {
+  public id: number;
 
-    public id: number;
+  public inventaire: Inventaire;
 
-    public inventaire: Inventaire;
+  public inventaireId: number;
 
-    public espece: Espece;
+  public espece: Espece;
 
-    public estimationNombre: EstimationNombre;
+  public estimationNombre: EstimationNombre;
 
-    public nombre: number;
+  public nombre: number;
 
-    public age: Age;
+  public age: Age;
 
-    public sexe: Sexe;
+  public sexe: Sexe;
 
-    public estimationDistance: EstimationDistance;
+  public estimationDistance: EstimationDistance;
 
-    public distance: number;
+  public distance: number;
 
-    public regroupement: number;
+  public regroupement: number;
 
-    public comportements: Comportement[] = [];
+  public comportements: Comportement[] = [];
 
-    public milieux: Milieu[] = [];
+  public milieux: Milieu[] = [];
 
-    public commentaire: string;
+  public commentaire: string;
 
-    constructor() {
-        super();
-    }
-
+  constructor() {
+    super();
+  }
 }
