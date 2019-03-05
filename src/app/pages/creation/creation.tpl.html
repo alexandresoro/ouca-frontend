@@ -77,6 +77,7 @@
         mat-raised-button
         color="primary"
         *ngIf="modeHelper.isDonneeMode(mode)"
+        [disabled]="!donneForm.valid"
         (click)="saveDonnee()"
       >
         Enregistrer la donnée
@@ -292,8 +293,8 @@
           <mat-card class="mat-card-override">
             <mat-card-content class="comportements-container">
               <input-comportements
-                formGroupName="comportementGroup"
-                [controlGroup]="donneeForm.controls['comportementGroup']"
+                formGroupName="comportementsGroup"
+                [controlGroup]="donneeForm.controls['comportementsGroup']"
                 [comportements]="pageModel.comportements"
               ></input-comportements>
             </mat-card-content>
@@ -344,6 +345,7 @@
       mat-raised-button
       color="primary"
       *ngIf="modeHelper.isDonneeMode(mode)"
+      [disabled]="!donneeForm.valid"
       (click)="saveDonnee()"
     >
       Enregistrer la donnée
@@ -358,17 +360,3 @@
     </button>
   </div>
 </div>
-
-{{ inventaireForm.controls["observateur"].value | json }}
-{{ inventaireForm.controls["observateursAssocies"].value | json }}
-{{ inventaireForm.controls["date"].value | json }}
-{{ inventaireForm.controls["heure"].value | json }}
-{{ inventaireForm.controls["duree"].value | json }}
-{{ inventaireForm.controls["lieu"].controls["departement"].value | json }}
-{{ inventaireForm.controls["lieu"].controls["commune"].value | json }}
-{{ inventaireForm.controls["lieu"].controls["lieudit"].value | json }}
-{{ inventaireForm.controls["lieu"].controls["altitude"].value | json }}
-{{ inventaireForm.controls["lieu"].controls["longitude"].value | json }}
-{{ inventaireForm.controls["lieu"].controls["latitude"].value | json }}
-{{ inventaireForm.controls["temperature"].value | json }}
-{{ inventaireForm.controls["meteos"].value | json }}
