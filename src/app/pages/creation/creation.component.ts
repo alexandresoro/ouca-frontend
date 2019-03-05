@@ -18,6 +18,7 @@ import { Lieudit } from "../../model/lieudit.object";
 import { Meteo } from "../../model/meteo.object";
 import { Observateur } from "../../model/observateur.object";
 import { Sexe } from "../../model/sexe.object";
+import { ListHelper } from "../../services/list-helper";
 import { PageComponent } from "../page.component";
 import { CreationMode, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
@@ -40,6 +41,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   public displayedDonneeId: number = null;
 
   public nextRegroupement: number;
+
+  private listHelper: ListHelper;
 
   inventaireForm = new FormGroup({
     observateur: new FormControl("", Validators.required),
@@ -138,6 +141,21 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
 
     this.switchToNewInventaireMode();
+
+    this.listHelper = new ListHelper(
+      this.pageModel.ages,
+      this.pageModel.classes,
+      this.pageModel.communes,
+      this.pageModel.comportements,
+      this.pageModel.departements,
+      this.pageModel.estimationsDistance,
+      this.pageModel.estimationsNombre,
+      this.pageModel.lieudits,
+      this.pageModel.meteos,
+      this.pageModel.milieux,
+      this.pageModel.observateurs,
+      this.pageModel.sexes
+    );
   }
 
   private onInitCreationPageError(error: any): void {
@@ -268,12 +286,12 @@ export class CreationComponent extends PageComponent implements OnInit {
   ): void {
     let commune: Commune = null;
     if (!!inventaire.lieudit && !!inventaire.lieudit.communeId) {
-      commune = this.getCommuneById(inventaire.lieudit.communeId);
+      commune = this.listHelper.getCommuneById(inventaire.lieudit.communeId);
     }
 
     let departement: Departement = null;
     if (!!commune && !!commune.departementId) {
-      departement = this.getDepartementById(commune.departementId);
+      departement = this.listHelper.getDepartementById(commune.departementId);
     }
 
     this.displayedInventaireId = inventaire.id;
@@ -313,12 +331,12 @@ export class CreationComponent extends PageComponent implements OnInit {
   private initDonneeDefaultValues(): void {
     let defaultAge: Age = null;
     if (!!this.pageModel.defaultAge && !!this.pageModel.defaultAge.id) {
-      defaultAge = this.getAgeById(this.pageModel.defaultAge.id);
+      defaultAge = this.listHelper.getAgeById(this.pageModel.defaultAge.id);
     }
 
     let defaultSexe: Sexe = null;
     if (!!this.pageModel.defaultSexe && !!this.pageModel.defaultSexe.id) {
-      defaultSexe = this.getSexeById(this.pageModel.defaultSexe.id);
+      defaultSexe = this.listHelper.getSexeById(this.pageModel.defaultSexe.id);
     }
 
     let defaultEstimationNombre: EstimationNombre = null;
@@ -326,7 +344,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       !!this.pageModel.defaultEstimationNombre &&
       !!this.pageModel.defaultEstimationNombre.id
     ) {
-      defaultEstimationNombre = this.getEstimationNombreById(
+      defaultEstimationNombre = this.listHelper.getEstimationNombreById(
         this.pageModel.defaultEstimationNombre.id
       );
     }
@@ -387,7 +405,9 @@ export class CreationComponent extends PageComponent implements OnInit {
   private setDonneeFormControlsFromDonnee(donnee: Donnee): void {
     this.displayedDonneeId = donnee.id;
 
-    const classe: Classe = this.getClasseById(donnee.espece.classeId);
+    const classe: Classe = this.listHelper.getClasseById(
+      donnee.espece.classeId
+    );
 
     const donneeFormControls = this.donneeForm.controls;
     const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
@@ -842,34 +862,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
     this.setErrorMessage(
       "Impossible de mettre à jour la fiche inventaire et la fiche espèce affichées."
-    );
-  }
-
-  private getDepartementById(id: number): Departement {
-    return this.pageModel.departements.find(
-      (departement) => departement.id === id
-    );
-  }
-
-  private getCommuneById(id: number): Commune {
-    return this.pageModel.communes.find((commune) => commune.id === id);
-  }
-
-  private getClasseById(id: number): Classe {
-    return this.pageModel.classes.find((classe) => classe.id === id);
-  }
-
-  private getAgeById(id: number): Age {
-    return this.pageModel.ages.find((age) => age.id === id);
-  }
-
-  private getSexeById(id: number): Sexe {
-    return this.pageModel.sexes.find((sexe) => sexe.id === id);
-  }
-
-  private getEstimationNombreById(id: number): EstimationNombre {
-    return this.pageModel.estimationsNombre.find(
-      (estimation) => estimation.id === id
     );
   }
 }
