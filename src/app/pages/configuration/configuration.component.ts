@@ -1,8 +1,5 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import {
-  MatTable,
-  MatTableDataSource
-} from "@angular/material";
+import { Component, OnInit } from "@angular/core";
+import { MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
 import { AppConfiguration } from "../../model/app-configuration.object";
 import { ConfigurationPage } from "../../model/configuration-page.object";
