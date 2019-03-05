@@ -11,7 +11,7 @@ import { Sexe } from "./sexe.object";
 export class Donnee extends EntiteSimple {
   public id: number;
 
-  public inventaire: Inventaire;
+  public inventaire?: Inventaire;
 
   public inventaireId: number;
 
