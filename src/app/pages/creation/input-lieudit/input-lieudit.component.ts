@@ -5,6 +5,7 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { Commune } from "../../../model/commune.object";
 import { Departement } from "../../../model/departement.object";
 import { Lieudit } from "../../../model/lieudit.object";
@@ -26,6 +27,34 @@ export class InputLieuditComponent implements OnInit {
   public filteredCommunes: Commune[];
 
   public filteredLieuxdits: Lieudit[];
+
+  public departementAutocompleteAttributes: AutocompleteAttribute[] = [
+    {
+      key: "code",
+      exactSearchMode: true,
+      startWithMode: true
+    }
+  ];
+  public communeAutocompleteAttributes: AutocompleteAttribute[] = [
+    {
+      key: "code",
+      exactSearchMode: true,
+      startWithMode: true
+    },
+    {
+      key: "nom",
+      exactSearchMode: false,
+      startWithMode: false
+    }
+  ];
+
+  public lieuditAutocompleteAttributes: AutocompleteAttribute[] = [
+    {
+      key: "nom",
+      exactSearchMode: false,
+      startWithMode: false
+    }
+  ];
 
   public ngOnInit(): void {
     this.filteredCommunes = [];

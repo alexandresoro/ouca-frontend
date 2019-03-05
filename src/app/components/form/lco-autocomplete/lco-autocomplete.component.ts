@@ -19,7 +19,10 @@ import * as diacritics from "diacritics";
 import { Observable, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import { EntiteSimple } from "../../../model/entite-simple.object";
+import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 import { LcoAutocompleteEventObject } from "./lco-autocomplete-event.object";
+
+import * as _ from "lodash";
 
 @Component({
   selector: "lco-autocomplete",
@@ -28,27 +31,21 @@ import { LcoAutocompleteEventObject } from "./lco-autocomplete-event.object";
 })
 export class LcoAutocompleteComponent
   implements OnInit, AfterViewInit, OnDestroy {
-  @Input()
-  public type: string;
+  @Input() public type: string;
 
-  @Input()
-  public values: EntiteSimple[];
+  @Input() public values: EntiteSimple[];
 
-  @Input()
-  public attributeToFilter: string;
+  @Input() public attributesToFilter: AutocompleteAttribute[];
 
-  @Input()
-  public startWithMode: boolean = false;
+  @Input() public startWithMode: boolean = false;
 
-  @Input()
-  public exactSearchMode: boolean = false;
+  @Input() public exactSearchMode: boolean = false;
 
   @Input() public control: FormControl;
 
   @Input() public displayFn: ((value: any) => string) | null;
 
-  @Output()
-  public onValueChanged: EventEmitter<
+  @Output() public onValueChanged: EventEmitter<
     LcoAutocompleteEventObject
   > = new EventEmitter<LcoAutocompleteEventObject>();
 
@@ -78,7 +75,7 @@ export class LcoAutocompleteComponent
           typeof value === "undefined" ||
           value === null
           ? value
-          : value[this.attributeToFilter];
+          : value[this.attributesToFilter[0].key];
       }),
       map((value) => (value ? this._filter(value) : []))
     );
@@ -110,41 +107,82 @@ export class LcoAutocompleteComponent
 
     if (!!this.values) {
       return this.values.filter((valueFromList) => {
-        if (this.startWithMode) {
-          if (this.exactSearchMode) {
-            return (
-              valueFromList[this.attributeToFilter]
-                .toLowerCase()
-                .indexOf(filterValue) === 0
-            );
-          } else {
-            return (
-              diacritics
-                .remove(valueFromList[this.attributeToFilter])
-                .toLowerCase()
-                .replace(this.CHARACTERS_TO_IGNORE, "")
-                .indexOf(filterValue) === 0
-            );
-          }
-        } else {
-          if (this.exactSearchMode) {
-            return (
-              valueFromList[this.attributeToFilter]
-                .toLowerCase()
-                .indexOf(filterValue) > -1
-            );
-          } else {
-            return (
-              diacritics
-                .remove(valueFromList[this.attributeToFilter])
-                .toLowerCase()
-                .replace(this.CHARACTERS_TO_IGNORE, "")
-                .indexOf(filterValue) > -1
-            );
-          }
+        if (this.attributesToFilter.length === 1) {
+          return this.search(
+            valueFromList,
+            filterValue,
+            this.attributesToFilter[0]
+          );
+        } else if (this.attributesToFilter.length === 2) {
+          return (
+            this.search(
+              valueFromList,
+              filterValue,
+              this.attributesToFilter[0]
+            ) ||
+            this.search(valueFromList, filterValue, this.attributesToFilter[1])
+          );
         }
       });
     }
+  }
+
+  private search(
+    valueFromList: EntiteSimple,
+    filterValue: string,
+    attributeToFilter: AutocompleteAttribute
+  ): any {
+    if (attributeToFilter.startWithMode) {
+      return !!attributeToFilter.exactSearchMode
+        ? this.exactSearch(
+            valueFromList,
+            filterValue,
+            attributeToFilter.key
+          ) === 0
+        : this.approximativeSearch(
+            valueFromList,
+            filterValue,
+            attributeToFilter.key
+          ) === 0;
+    } else {
+      return !!attributeToFilter.exactSearchMode
+        ? this.exactSearch(valueFromList, filterValue, attributeToFilter.key) >
+            -1
+        : this.approximativeSearch(
+            valueFromList,
+            filterValue,
+            attributeToFilter.key
+          ) > -1;
+    }
+  }
+  private exactSearch(
+    valueFromList: EntiteSimple,
+    filterValue: string,
+    attributeToFilter: string
+  ): number {
+    const valueFromListStr =
+      typeof valueFromList[attributeToFilter] === "string"
+        ? valueFromList[attributeToFilter]
+        : "" + valueFromList[attributeToFilter];
+
+    return valueFromListStr.toLowerCase().indexOf(filterValue);
+  }
+
+  private approximativeSearch(
+    valueFromList: EntiteSimple,
+    filterValue: string,
+    attributeToFilter: string
+  ): number {
+    const valueFromListStr =
+      typeof valueFromList[attributeToFilter] === "string"
+        ? valueFromList[attributeToFilter]
+        : "" + valueFromList[attributeToFilter];
+
+    return diacritics
+      .remove(valueFromListStr)
+      .toLowerCase()
+      .replace(this.CHARACTERS_TO_IGNORE, "")
+      .indexOf(filterValue);
   }
 
   public updateValue(newValue: MatAutocompleteSelectedEvent): void {
@@ -161,11 +199,22 @@ export class LcoAutocompleteComponent
   }
 
   public getDisplayedValue(object: EntiteSimple): string {
-    console.log("prout", object);
+    let displayedValue: string = "";
+
     if (!!object) {
-      return object[this.attributeToFilter];
-    } else {
-      return "";
+      displayedValue = object[this.attributesToFilter[0].key];
+      for (
+        let indexAttribute = 1;
+        indexAttribute < this.attributesToFilter.length;
+        indexAttribute++
+      ) {
+        displayedValue =
+          displayedValue +
+          " - " +
+          object[this.attributesToFilter[indexAttribute].key];
+      }
     }
+
+    return displayedValue;
   }
 }

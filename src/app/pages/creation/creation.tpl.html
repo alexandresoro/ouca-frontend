@@ -293,7 +293,7 @@
             <mat-card-content class="comportements-container">
               <ng-container *ngIf="pageModel && pageModel.comportements">
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayComportementFormat"
                   [control]="donneeForm.controls['comportement1']"
                   [type]="'Comportement 1'"
@@ -302,7 +302,7 @@
                 >
                 </lco-autocomplete>
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayComportementFormat"
                   [control]="donneeForm.controls['comportement2']"
                   [type]="'Comportement 2'"
@@ -311,7 +311,7 @@
                 >
                 </lco-autocomplete>
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayComportementFormat"
                   [control]="donneeForm.controls['comportement3']"
                   [type]="'Comportement 3'"
@@ -320,7 +320,7 @@
                 >
                 </lco-autocomplete>
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayComportementFormat"
                   [control]="donneeForm.controls['comportement4']"
                   [type]="'Comportement 4'"
@@ -329,7 +329,7 @@
                 >
                 </lco-autocomplete>
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayComportementFormat"
                   [control]="donneeForm.controls['comportement5']"
                   [type]="'Comportement 5'"
@@ -338,7 +338,7 @@
                 >
                 </lco-autocomplete>
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayComportementFormat"
                   [control]="donneeForm.controls['comportement6']"
                   [type]="'Comportement 6'"
@@ -356,7 +356,7 @@
             <mat-card-content class="milieux-container">
               <ng-container *ngIf="pageModel && pageModel.milieux">
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayMilieuFormat"
                   [control]="donneeForm.controls['milieu1']"
                   [type]="'Milieu 1'"
@@ -365,7 +365,7 @@
                 >
                 </lco-autocomplete>
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayMilieuFormat"
                   [control]="donneeForm.controls['milieu2']"
                   [type]="'Milieu 2'"
@@ -374,7 +374,7 @@
                 >
                 </lco-autocomplete>
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayMilieuFormat"
                   [control]="donneeForm.controls['milieu3']"
                   [type]="'Milieu 3'"
@@ -383,7 +383,7 @@
                 >
                 </lco-autocomplete>
                 <lco-autocomplete
-                  attributeToFilter="libelle"
+                  [attributesToFilter]="entiteCodeEtLibelleAutocompleteAttributes"
                   [displayFn]="displayMilieuFormat"
                   [control]="donneeForm.controls['milieu4']"
                   [type]="'Milieu 4'"

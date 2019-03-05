@@ -5,6 +5,7 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { Classe } from "../../../model/classe.object";
 import { Espece } from "../../../model/espece.object";
 
@@ -21,6 +22,26 @@ export class InputEspeceComponent implements OnInit {
   @Input() public controlGroup: FormGroup;
 
   public filteredEspeces: Espece[];
+
+  public classeAutocompleteAttributes: AutocompleteAttribute[] = [
+    {
+      key: "libelle",
+      exactSearchMode: false,
+      startWithMode: false
+    }
+  ];
+  public especeAutocompleteAttributes: AutocompleteAttribute[] = [
+    {
+      key: "code",
+      exactSearchMode: true,
+      startWithMode: true
+    },
+    {
+      key: "nomFrancais",
+      exactSearchMode: false,
+      startWithMode: false
+    }
+  ];
 
   public ngOnInit(): void {
     this.filteredEspeces = this.especes;

@@ -4,6 +4,7 @@ import { MatDialog } from "@angular/material";
 import moment from "moment";
 import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
+import { AutocompleteAttribute } from "../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { Age } from "../../model/age.object";
 import { Classe } from "../../model/classe.object";
@@ -56,6 +57,19 @@ export class CreationComponent extends PageComponent implements OnInit {
   public filteredCommunes: Commune[];
   public filteredLieuxdits: Lieudit[];
   public filteredEspeces: Espece[];
+
+  public entiteCodeEtLibelleAutocompleteAttributes: AutocompleteAttribute[] = [
+    {
+      key: "code",
+      exactSearchMode: true,
+      startWithMode: true
+    },
+    {
+      key: "libelle",
+      exactSearchMode: false,
+      startWithMode: false
+    }
+  ];
 
   inventaireForm = new FormGroup({
     observateur: new FormControl("", Validators.required),

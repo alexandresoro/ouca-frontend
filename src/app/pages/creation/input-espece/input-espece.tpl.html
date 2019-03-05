@@ -1,6 +1,6 @@
 <!-- CLASSE -->
 <lco-autocomplete
-  attributeToFilter="libelle"
+  [attributesToFilter]="classeAutocompleteAttributes"
   type="Classe"
   [values]="classes"
   [control]="controlGroup.controls['classe']"
@@ -11,7 +11,7 @@
 
 <!-- ESPECE -->
 <lco-autocomplete
-  attributeToFilter="code"
+  [attributesToFilter]="especeAutocompleteAttributes"
   type="Espèce"
   [values]="filteredEspeces"
   [control]="controlGroup.controls['espece']"

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { EstimationDistance } from "../../../model/estimation-distance.object";
 
 @Component({
@@ -12,6 +13,13 @@ export class InputDistanceComponent {
 
   @Input() public controlGroup: FormGroup;
 
+  public autocompleteAttributes: AutocompleteAttribute[] = [
+    {
+      key: "libelle",
+      exactSearchMode: false,
+      startWithMode: false
+    }
+  ];
   private displayEstimationDistanceFormat = (
     estimation: EstimationDistance
   ): string => {

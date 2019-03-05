@@ -17,7 +17,7 @@
   [type]="'Estimation du nombre'"
   [values]="estimationsNombre"
   [control]="controlGroup.controls['estimationNombre']"
-  attributeToFilter="libelle"
+  [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayEstimationNombreFormat"
   (onValueChanged)="onEstimationNombreChanged($event.value)"
 >

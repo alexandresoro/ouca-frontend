@@ -1,6 +1,6 @@
 <!-- OBSERVATEUR -->
 <lco-autocomplete
-  attributeToFilter="libelle"
+  [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayObservateurFormat"
   [control]="control"
   [type]="'Observateur'"

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { EstimationNombre } from "../../../model/estimation-nombre.object";
 
 @Component({
@@ -13,6 +14,14 @@ export class InputNombreComponent {
   @Input() public controlGroup: FormGroup;
 
   @Input() public defaultNombre: number;
+
+  public autocompleteAttributes: AutocompleteAttribute[] = [
+    {
+      key: "libelle",
+      exactSearchMode: false,
+      startWithMode: false
+    }
+  ];
 
   public onEstimationNombreChanged(estimation: EstimationNombre) {
     if (!!estimation && !!estimation.nonCompte) {
