@@ -1,11 +1,27 @@
 {
-    "defaultObservateur": null,
+    "defaultObservateur": {
+        "id": 27,
+        "libelle": "CARRIER Laurent"
+    },
     "defaultDate": 1551472077871,
-    "defaultDepartement": null,
-    "defaultEstimationNombre": null,
+    "defaultDepartement": {
+        "id": 6,
+        "code": "26"
+    },
+    "defaultEstimationNombre": {
+        "id": 7,
+        "libelle": "Précis",
+        "nonCompte": false
+    },
     "defaultNombre": 1,
-    "defaultSexe": null,
-    "defaultAge": null,
+    "defaultSexe": {
+        "id": 10,
+        "libelle": "?"
+    },
+    "defaultAge": {
+        "id": 30,
+        "libelle": "?"
+    },
     "observateurs": [
         {
             "id": 17,
