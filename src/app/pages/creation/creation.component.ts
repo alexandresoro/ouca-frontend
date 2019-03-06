@@ -6,7 +6,6 @@ import { ConfirmationDialogData } from "../../components/dialog/confirmation-dia
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { Age } from "../../model/age.object";
-import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
 import { CreationPage } from "../../model/creation-page.object";
@@ -22,9 +21,8 @@ import { Milieu } from "../../model/milieu.object";
 import { Observateur } from "../../model/observateur.object";
 import { Sexe } from "../../model/sexe.object";
 import { ListHelper } from "../../services/list-helper";
-import { EntiteAvecLibelleComponent } from "../entities/entite-avec-libelle/entite-avec-libelle.component";
 import { PageComponent } from "../page.component";
-import { CreationMode, CreationModeHelper } from "./creation-mode.enum";
+import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
 import { DonneeService } from "./donnee.service";
 import { InventaireService } from "./inventaire.service";
@@ -36,9 +34,7 @@ import { NavigationService } from "./navigation.service";
 export class CreationComponent extends PageComponent implements OnInit {
   public pageModel: CreationPage = {} as CreationPage;
 
-  public mode: CreationMode;
-
-  public isDonneeDisabled: boolean;
+  public mode: CreationModeEnum;
 
   public displayedInventaireId: number = null;
 
@@ -48,7 +44,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private listHelper: ListHelper;
 
-  inventaireForm = new FormGroup({
+  public inventaireForm: FormGroup = new FormGroup({
     observateur: new FormControl("", Validators.required),
     observateursAssocies: new FormControl(""),
     date: new FormControl("", Validators.required),
@@ -66,7 +62,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     meteos: new FormControl("")
   });
 
-  donneeForm = new FormGroup({
+  public donneeForm: FormGroup = new FormGroup({
     especeGroup: new FormGroup({
       classe: new FormControl(""),
       espece: new FormControl("", Validators.required)
@@ -129,12 +125,24 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
+  private onInitCreationPageError(error: any): void {
+    this.setErrorMessage(
+      "Impossible de charger la page de création.\nErreur: " + error
+    );
+    console.error(
+      "Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: " +
+        error +
+        ")"
+    );
+  }
+
   /**
    * If back-end call is successful, use the initial creation page model to build the page
    * @param creationPage: CreationPage
    */
   private onInitCreationPageSucces(creationPage: CreationPage): void {
     this.pageModel = creationPage;
+
     console.log("Modèle de la page de Création", this.pageModel);
 
     this.nextRegroupement = this.pageModel.nextRegroupement;
@@ -143,8 +151,6 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.pageModel.lastDonnee,
       this.pageModel.numberOfDonnees
     );
-
-    this.switchToNewInventaireMode();
 
     this.listHelper = new ListHelper(
       this.pageModel.ages,
@@ -160,22 +166,24 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.pageModel.observateurs,
       this.pageModel.sexes
     );
-  }
 
-  private onInitCreationPageError(error: any): void {
-    this.setErrorMessage(
-      "Impossible de charger la page de création.\nErreur: " + error
-    );
-    console.error(
-      "Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: " +
-        error +
-        ")"
-    );
+    // Page model is ready, initalize the page to create a first inventaire
+    this.switchToNewInventaireMode();
   }
 
   /**
-   * When creating a new inventaire, initialize the form
-   * Set observateur to the default observateur...
+   * Initialize the page to be ready to create an inventaire
+   */
+  private switchToNewInventaireMode(): void {
+    this.initializeInventaireFormControls();
+    this.initializeDonneeFormControls();
+
+    this.switchToInventaireMode();
+  }
+
+  /**
+   * Initialize the inventaire form
+   * Reset the form and set defaults values if any
    */
   private initializeInventaireFormControls(): void {
     let defaultObservateur: Observateur = null;
@@ -225,8 +233,13 @@ export class CreationComponent extends PageComponent implements OnInit {
     lieuditFormControls.latitude.setValue(null);
     inventaireFormControls.temperature.setValue(null);
     inventaireFormControls.meteos.setValue(new Array<Meteo>());
+
+    this.inventaireForm.markAsUntouched();
   }
 
+  /**
+   * Returns an inventaire object from the values filled in the inventaire form
+   */
   private getInventaireFromInventaireFormControls(): Inventaire {
     const inventaireFormControls = this.inventaireForm.controls;
     const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
@@ -285,10 +298,14 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
+  /**
+   * Fill the inventaire form with the values from an existing inventaire
+   * @param inventaire Inventaire
+   */
   private setInventaireFormControlsFromInventaire(
     inventaire: Inventaire
   ): void {
-    console.log("Inventaire à afficher dans le formulaire", inventaire);
+    console.log("Inventaire à afficher dans le formulaire:", inventaire);
 
     let commune: Commune = null;
     if (!!inventaire.lieudit && !!inventaire.lieudit.communeId) {
@@ -332,7 +349,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   /**
-   * When creating a new donne, initialize the form
+   * Initialize the donnee form
+   * Reset the form and set defaults values if any
    */
   private initializeDonneeFormControls(): void {
     let defaultAge: Age = null;
@@ -401,8 +419,14 @@ export class CreationComponent extends PageComponent implements OnInit {
     milieuxFormControls.milieu3.setValue(null);
     milieuxFormControls.milieu4.setValue(null);
     donneeFormControls.commentaire.setValue(null);
+
+    this.donneeForm.markAsUntouched();
+    document.getElementById("input-Espèce").focus();
   }
 
+  /**
+   * Returns a donnee object from the values filled in donnee form
+   */
   private getDonneeFromDonneeFormControls(): Donnee {
     const donneeFormControls = this.donneeForm.controls;
     const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
@@ -443,10 +467,10 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
 
     const milieux: Milieu[] = [];
-    this.addComportement(milieux, milieuxFormControls.milieu1.value);
-    this.addComportement(milieux, milieuxFormControls.milieu2.value);
-    this.addComportement(milieux, milieuxFormControls.milieu3.value);
-    this.addComportement(milieux, milieuxFormControls.milieu4.value);
+    this.addMilieu(milieux, milieuxFormControls.milieu1.value);
+    this.addMilieu(milieux, milieuxFormControls.milieu2.value);
+    this.addMilieu(milieux, milieuxFormControls.milieu3.value);
+    this.addMilieu(milieux, milieuxFormControls.milieu4.value);
 
     const donnee: Donnee = {
       id: this.displayedDonneeId,
@@ -469,6 +493,9 @@ export class CreationComponent extends PageComponent implements OnInit {
     return donnee;
   }
 
+  /**
+   * Fill the donnee form with the values of an existing donnee
+   */
   private setDonneeFormControlsFromDonnee(donnee: Donnee): void {
     console.log("Donnée à afficher dans le formulaire:", donnee);
 
@@ -525,6 +552,11 @@ export class CreationComponent extends PageComponent implements OnInit {
     donneeFormControls.commentaire.setValue(donnee.commentaire);
   }
 
+  /**
+   * Add the entity to the list of entities if this entity is not already part of the list
+   * @param entitesCodeEtLibelle list to complete
+   * @param entiteCodeEtLibelle entity to add
+   */
   private addEntiteCodeEtLibelle(
     entitesCodeEtLibelle: EntiteAvecLibelleEtCode[],
     entiteCodeEtLibelle: EntiteAvecLibelleEtCode
@@ -537,6 +569,11 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
   }
 
+  /**
+   * Get the entity stored at index of a list if it exists
+   * @param entitesCodeEtLibelle list of entities
+   * @param index index of the entity to return
+   */
   private getEntiteCodeEtLibelle(
     entitesCodeEtLibelle: EntiteAvecLibelleEtCode[],
     index: number
@@ -547,6 +584,11 @@ export class CreationComponent extends PageComponent implements OnInit {
       : null;
   }
 
+  /**
+   * Returns the comportement at specified index if it exists
+   * @param comportements list of comportements
+   * @param index index of the comportement to return
+   */
   private getComportement(
     comportements: Comportement[],
     index: number
@@ -554,6 +596,11 @@ export class CreationComponent extends PageComponent implements OnInit {
     return this.getEntiteCodeEtLibelle(comportements, index);
   }
 
+  /**
+   * Add a comportement to the list of comportements if not already in the list
+   * @param comportements list of comportements
+   * @param comportement comportement to add in the list
+   */
   private addComportement(
     comportements: Comportement[],
     comportement: Comportement
@@ -561,28 +608,22 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.addEntiteCodeEtLibelle(comportements, comportement);
   }
 
+  /**
+   * Returns the milieu at specified index if it exists
+   * @param milieux list of milieux
+   * @param index index of the milieu to return
+   */
   private getMilieu(milieux: Milieu[], index: number): Milieu {
     return this.getEntiteCodeEtLibelle(milieux, index);
   }
 
+  /**
+   * Add a milieu to the list of milieux if not already in the list
+   * @param milieux list of milieux
+   * @param milieu milieu to add in the list
+   */
   private addMilieu(milieux: Milieu[], milieu: Milieu): void {
     this.addEntiteCodeEtLibelle(milieux, milieu);
-  }
-
-  /**
-   * Called when a donnee is saved
-   */
-  private updateNextRegroupement(): void {
-    this.creationService.getNextRegroupement().subscribe(
-      (regroupement: number) => {
-        this.nextRegroupement = regroupement;
-      },
-      (error: any) => {
-        console.error(
-          "Impossible de trouver le prochain regroupement (" + error + ")"
-        );
-      }
-    );
   }
 
   /**
@@ -605,15 +646,17 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onSaveInventaireSuccess(savedInventaire: Inventaire) {
-    this.setInventaireFormControlsFromInventaire(savedInventaire);
-    this.switchToEditionDonneeMode();
-  }
-  private onSaveInventaireError(error: any) {
+  private onSaveInventaireError(error: any): void {
     this.setErrorMessage("L'inventaire n'a pas pu êtr créé/modifié.");
     console.error(
       "Impossible de créer l'inventaire.\nDétails de l'erreur:" + error
     );
+  }
+
+  private onSaveInventaireSuccess(savedInventaire: Inventaire): void {
+    // this.setInventaireFormControlsFromInventaire(savedInventaire);
+    this.displayedInventaireId = savedInventaire.id;
+    this.switchToEditionDonneeMode();
   }
 
   /**
@@ -636,14 +679,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onSaveDonneeSuccess(savedDonnee: Donnee) {
-    this.displayedDonneeId = null;
-    this.navigationService.numberOfDonnees++;
-    this.navigationService.previousDonnee = savedDonnee;
-    this.initializeDonneePanel();
-    this.updateNextRegroupement();
-  }
-
   private onSaveDonneeError(error: any) {
     this.setErrorMessage("La donnée n'a pas pu être créée ou modifiée.");
     console.error(
@@ -651,13 +686,34 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private initializeDonneePanel(): void {
+  private onSaveDonneeSuccess(savedDonnee: Donnee) {
+    this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
+
+    this.updateNextRegroupement();
+
     this.initializeDonneeFormControls();
   }
 
   /**
-   * Update
+   * Called when a donnee is saved to get the next regroupement number
    */
+  private updateNextRegroupement(): void {
+    this.creationService.getNextRegroupement().subscribe(
+      (regroupement: number) => {
+        this.nextRegroupement = regroupement;
+      },
+      (error: any) => {
+        console.error(
+          "Impossible de récupérer le prochain regroupement (" + error + ")"
+        );
+      }
+    );
+  }
+
+  /**
+   * Called when clicking on save donnee when in update mode
+   */
+  // TODO
   public saveInventaireAndDonnee(): void {
     const isInventaireUpdated: boolean = true; // TODO
 
@@ -697,7 +753,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     const currentInventaire: Inventaire = this.getInventaireFromInventaireFormControls();
     const currentDonnee: Donnee = this.getDonneeFromDonneeFormControls();
 
-    // Save the current donnee or inventaire and mode
+    // Save the current donnee, inventaire and mode
     if (!this.modeHelper.isUpdateMode(this.mode)) {
       this.navigationService.saveCurrentContext(
         this.mode,
@@ -744,6 +800,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     const newCurrentDonnee: Donnee = this.navigationService.nextDonnee;
     this.setInventaireFormControlsFromInventaire(newCurrentDonnee.inventaire);
+    this.setDonneeFormControlsFromDonnee(newCurrentDonnee);
     this.navigationService.increaseIndexOfCurrentDonnee();
 
     // Disable the navigation buttons
@@ -833,11 +890,9 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onBackToCreationDonneeBtnClicked(): void {
-    // TODO
     this.redisplayCurrentInventaireAndDonnee();
   }
   public onNewDonneeBtnClicked(): void {
-    // TODO
     this.switchToNewInventaireMode();
   }
 
@@ -881,39 +936,40 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
   }
 
-  private switchToNewInventaireMode(): void {
-    this.initializeInventaireFormControls();
-    this.initializeDonneePanel();
-
-    this.switchToInventaireMode();
-  }
-
   private switchToInventaireMode(): void {
-    this.mode = CreationMode.NEW_INVENTAIRE;
-    this.isDonneeDisabled = true;
+    this.mode = CreationModeEnum.NEW_INVENTAIRE;
     this.handleInventaireFormState(true);
+    this.handleDonneeFormState(false);
     document.getElementById("input-Observateur").focus();
   }
 
   private switchToEditionDonneeMode(): void {
-    this.mode = CreationMode.NEW_DONNEE;
-    this.isDonneeDisabled = false;
+    this.mode = CreationModeEnum.NEW_DONNEE;
     this.handleInventaireFormState(false);
-    document.getElementById("input-code-espece").focus();
+    this.handleDonneeFormState(true);
+    document.getElementById("input-Espèce").focus();
   }
 
   private switchToUpdateMode(): void {
-    this.mode = CreationMode.UPDATE;
-    this.isDonneeDisabled = false;
+    this.mode = CreationModeEnum.UPDATE;
     this.handleInventaireFormState(true);
-    document.getElementById("input-observateur").focus();
+    this.handleDonneeFormState(true);
+    document.getElementById("input-Observateur").focus();
   }
 
-  private handleInventaireFormState = (toEnable: boolean): void => {
+  private handleInventaireFormState(toEnable: boolean): void {
     if (toEnable) {
       this.inventaireForm.enable();
     } else {
       this.inventaireForm.disable();
+    }
+  }
+
+  private handleDonneeFormState(toEnable: boolean): void {
+    if (toEnable) {
+      this.donneeForm.enable();
+    } else {
+      this.donneeForm.disable();
     }
   }
 

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Donnee } from "../../model/donnee.object";
 import { Inventaire } from "../../model/inventaire.object";
-import { CreationMode, CreationModeHelper } from "./creation-mode.enum";
+import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class NavigationService {
 
   public savedDonnee: Donnee;
   public savedInventaire: Inventaire;
-  public savedMode: CreationMode;
+  public savedMode: CreationModeEnum;
 
   private inventaireToBeUpdated: Inventaire;
 
@@ -34,7 +34,7 @@ export class NavigationService {
     this.savedMode = null;
   }
   public saveCurrentContext(
-    modeToSave: CreationMode,
+    modeToSave: CreationModeEnum,
     inventaireToSave: Inventaire,
     donneeToSave: Donnee
   ): void {
@@ -54,6 +54,10 @@ export class NavigationService {
     console.log("Sauvegarde de la donnée courante", this.savedDonnee);
   }
 
+  public updateNavigationAfterADonneeWasSaved(savedDonnee: Donnee) {
+    this.numberOfDonnees++;
+    this.previousDonnee = savedDonnee;
+  }
   public decreaseIndexOfCurrentDonnee(): void {
     if (!!!this.currentDonneeIndex) {
       this.currentDonneeIndex = this.numberOfDonnees;
@@ -200,14 +204,14 @@ export class NavigationService {
     return nextInventaire;
   }
 
-  public getNextMode(): CreationMode {
-    let nextMode: CreationMode;
+  public getNextMode(): CreationModeEnum {
+    let nextMode: CreationModeEnum;
 
     if (this.isLastDonneeCurrentlyDisplayed()) {
       // Last donnee
       nextMode = this.savedMode;
     } else {
-      nextMode = CreationMode.UPDATE;
+      nextMode = CreationModeEnum.UPDATE;
     }
 
     return nextMode;
