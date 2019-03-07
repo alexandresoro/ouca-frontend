@@ -81,7 +81,7 @@ module.exports = (env, argv) => {
         $: "jquery",
         jquery: "jquery"
       }),
-      new CleanWebpackPlugin(["dist"]),
+      new CleanWebpackPlugin({}),
       new FaviconsWebpackPlugin("./src/favicon.png"),
       // Workaround for angular/angular#11580
       new webpack.ContextReplacementPlugin(
