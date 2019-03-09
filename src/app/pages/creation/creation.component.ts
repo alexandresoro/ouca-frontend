@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import moment from "moment";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
@@ -43,6 +45,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   public nextRegroupement: number;
 
   private listHelper: ListHelper;
+
+  public communes$: Observable<Commune[]>;
 
   public inventaireForm: FormGroup = new FormGroup({
     observateur: new FormControl("", Validators.required),
@@ -123,6 +127,10 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.onInitCreationPageError(error);
       }
     );
+
+    this.communes$ = this.creationService
+      .getInitialPageModel()
+      .pipe(map((creationPage) => (creationPage ? creationPage.communes : [])));
   }
 
   private onInitCreationPageError(error: any): void {

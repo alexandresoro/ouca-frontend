@@ -75,7 +75,7 @@ export class LcoAutocompleteComponent
           typeof value === "undefined" ||
           value === null
           ? value
-          : value[this.attributesToFilter[0].key];
+          : "" + value[this.attributesToFilter[0].key];
       }),
       map((value) => (value ? this._filter(value) : []))
     );
@@ -114,26 +114,16 @@ export class LcoAutocompleteComponent
 
   private searchInOptionsList(
     valueFromList: EntiteSimple,
-    filterValue: string,
-    indexAttribute: number = 0
+    filterValue: string
   ): boolean {
-    if (indexAttribute === this.attributesToFilter.length - 1) {
-      return this.search(
-        valueFromList,
-        filterValue,
-        this.attributesToFilter[indexAttribute]
-      );
-    } else {
-      return (
-        this.search(
-          valueFromList,
-          filterValue,
-          this.attributesToFilter[indexAttribute]
-        ) ||
-        this.searchInOptionsList(valueFromList, filterValue, indexAttribute + 1)
-      );
-    }
+    return _.some(
+      this.attributesToFilter,
+      (attributeToFilter: AutocompleteAttribute) => {
+        return this.search(valueFromList, filterValue, attributeToFilter);
+      }
+    );
   }
+
   private search(
     valueFromList: EntiteSimple,
     filterValue: string,

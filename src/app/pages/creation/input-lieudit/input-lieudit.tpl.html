@@ -8,7 +8,6 @@
       [values]="departements"
       [control]="controlGroup.controls['departement']"
       [displayFn]="displayDepartementFormat"
-      (onValueChanged)="updateCommunes($event.value)"
     >
     </lco-autocomplete>
   </div>
@@ -17,7 +16,7 @@
     <!-- COMMUNE -->
     <lco-autocomplete
       [type]="'Commune'"
-      [values]="filteredCommunes"
+      [values]="filteredCommunes$ | async"
       [control]="controlGroup.controls['commune']"
       [attributesToFilter]="communeAutocompleteAttributes"
       [displayFn]="displayCommuneFormat"

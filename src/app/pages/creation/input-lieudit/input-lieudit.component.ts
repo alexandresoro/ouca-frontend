@@ -5,6 +5,8 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { combineLatest, Observable } from "rxjs";
+import { filter, map } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { Commune } from "../../../model/commune.object";
 import { Departement } from "../../../model/departement.object";
@@ -18,15 +20,15 @@ import { Lieudit } from "../../../model/lieudit.object";
 export class InputLieuditComponent implements OnInit {
   @Input() public departements: Departement[];
 
-  @Input() public communes: Commune[];
+  @Input() public communes: Observable<Commune[]>;
 
   @Input() public lieuxdits: Lieudit[];
 
   @Input() public controlGroup: FormGroup;
 
-  public filteredCommunes: Commune[];
-
   public filteredLieuxdits: Lieudit[];
+
+  public filteredCommunes$: Observable<Commune[]>;
 
   public departementAutocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -57,8 +59,29 @@ export class InputLieuditComponent implements OnInit {
   ];
 
   public ngOnInit(): void {
-    this.filteredCommunes = [];
     this.filteredLieuxdits = [];
+    this.departementUpdated();
+  }
+
+  private departementUpdated = () => {
+    const departementControl = this.controlGroup.get("departement");
+    departementControl.valueChanges.subscribe(
+      (selectedDepartement: Departement) => {
+        this.updateCommunes(selectedDepartement);
+      }
+    );
+
+    this.filteredCommunes$ = combineLatest(
+      departementControl.valueChanges as Observable<Departement>,
+      this.communes,
+      (selectedDepartement, communes) => {
+        return communes && selectedDepartement && selectedDepartement.id
+          ? communes.filter((commune) => {
+              return commune.departementId === selectedDepartement.id;
+            })
+          : [];
+      }
+    );
   }
 
   /**
@@ -66,12 +89,9 @@ export class InputLieuditComponent implements OnInit {
    * and reset coordinates
    */
   public updateCommunes(selectedDepartement: Departement): void {
-    if (!!selectedDepartement && !!selectedDepartement.id) {
+    if (this.communes && !!selectedDepartement && !!selectedDepartement.id) {
       this.controlGroup.controls.commune.setValue(null);
       this.controlGroup.controls.lieudit.setValue(null);
-      this.filteredCommunes = this.communes.filter(
-        (commune) => commune.departementId === selectedDepartement.id
-      );
 
       this.filteredLieuxdits = [];
       this.resetSelectedCoordinates();
