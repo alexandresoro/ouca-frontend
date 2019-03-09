@@ -5,7 +5,7 @@
       [attributesToFilter]="departementAutocompleteAttributes"
       [startWithMode]="true"
       type="Département"
-      [values]="departements"
+      [values]="departements | async"
       [control]="controlGroup.controls['departement']"
       [displayFn]="displayDepartementFormat"
     >
@@ -20,7 +20,6 @@
       [control]="controlGroup.controls['commune']"
       [attributesToFilter]="communeAutocompleteAttributes"
       [displayFn]="displayCommuneFormat"
-      (onValueChanged)="updateLieuxDits($event.value)"
     >
     </lco-autocomplete>
   </div>
@@ -29,11 +28,10 @@
     <!-- LIEU-DIT -->
     <lco-autocomplete
       [type]="'Lieu-dit'"
-      [values]="filteredLieuxdits"
+      [values]="filteredLieuxdits$ | async"
       [control]="controlGroup.controls['lieudit']"
       [attributesToFilter]="lieuditAutocompleteAttributes"
       [displayFn]="displayLieuDitFormat"
-      (onValueChanged)="updateCoordinates($event.value)"
     >
     </lco-autocomplete>
   </div>

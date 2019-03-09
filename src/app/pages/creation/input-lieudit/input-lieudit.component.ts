@@ -6,7 +6,6 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { combineLatest, Observable } from "rxjs";
-import { filter, map } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { Commune } from "../../../model/commune.object";
 import { Departement } from "../../../model/departement.object";
@@ -18,15 +17,15 @@ import { Lieudit } from "../../../model/lieudit.object";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputLieuditComponent implements OnInit {
-  @Input() public departements: Departement[];
+  @Input() public departements: Observable<Departement[]>;
 
   @Input() public communes: Observable<Commune[]>;
 
-  @Input() public lieuxdits: Lieudit[];
+  @Input() public lieuxdits: Observable<Lieudit[]>;
 
   @Input() public controlGroup: FormGroup;
 
-  public filteredLieuxdits: Lieudit[];
+  public filteredLieuxdits$: Observable<Lieudit[]>;
 
   public filteredCommunes$: Observable<Commune[]>;
 
@@ -59,17 +58,23 @@ export class InputLieuditComponent implements OnInit {
   ];
 
   public ngOnInit(): void {
-    this.filteredLieuxdits = [];
-    this.departementUpdated();
-  }
-
-  private departementUpdated = () => {
     const departementControl = this.controlGroup.get("departement");
+    const communeControl = this.controlGroup.get("commune");
+    const lieuDitControl = this.controlGroup.get("lieudit");
+
     departementControl.valueChanges.subscribe(
       (selectedDepartement: Departement) => {
-        this.updateCommunes(selectedDepartement);
+        this.resetCommunes();
       }
     );
+
+    communeControl.valueChanges.subscribe((selectedCommune: Commune) => {
+      this.resetLieuxDits();
+    });
+
+    lieuDitControl.valueChanges.subscribe((selectedLieuDit: Lieudit) => {
+      this.updateCoordinates(selectedLieuDit);
+    });
 
     this.filteredCommunes$ = combineLatest(
       departementControl.valueChanges as Observable<Departement>,
@@ -82,34 +87,32 @@ export class InputLieuditComponent implements OnInit {
           : [];
       }
     );
+
+    this.filteredLieuxdits$ = combineLatest(
+      communeControl.valueChanges as Observable<Commune>,
+      this.lieuxdits,
+      (selectedCommune, lieuxdits) => {
+        return lieuxdits && selectedCommune && selectedCommune.id
+          ? lieuxdits.filter((lieudit) => {
+              return lieudit.communeId === selectedCommune.id;
+            })
+          : [];
+      }
+    );
   }
 
   /**
-   * When selecting a departement, filter the list of communes and reset the list of lieux-dits
-   * and reset coordinates
+   * When selecting a departement, filter the list of communes
    */
-  public updateCommunes(selectedDepartement: Departement): void {
-    if (this.communes && !!selectedDepartement && !!selectedDepartement.id) {
-      this.controlGroup.controls.commune.setValue(null);
-      this.controlGroup.controls.lieudit.setValue(null);
-
-      this.filteredLieuxdits = [];
-      this.resetSelectedCoordinates();
-    }
+  public resetCommunes(): void {
+    this.controlGroup.controls.commune.setValue(null);
   }
 
   /**
    * When selecting a commune, filter the list of lieux-dits and reset coordinates
    */
-  public updateLieuxDits(selectedCommune: Commune): void {
-    if (!!selectedCommune && !!selectedCommune.id) {
-      this.controlGroup.controls.lieudit.setValue(null);
-      this.filteredLieuxdits = this.lieuxdits.filter(
-        (lieudit) => lieudit.communeId === selectedCommune.id
-      );
-
-      this.resetSelectedCoordinates();
-    }
+  public resetLieuxDits(): void {
+    this.controlGroup.controls.lieudit.setValue(null);
   }
 
   /**
@@ -128,12 +131,8 @@ export class InputLieuditComponent implements OnInit {
         lieuDit.latitude
       );
     } else {
-      this.resetSelectedCoordinates();
+      this.setSelectedCoordinates(null, null, null);
     }
-  }
-
-  private resetSelectedCoordinates(): void {
-    this.setSelectedCoordinates(null, null, null);
   }
 
   private setSelectedCoordinates(
@@ -146,15 +145,15 @@ export class InputLieuditComponent implements OnInit {
     this.controlGroup.controls.latitude.setValue(latitude);
   }
 
-  private displayCommuneFormat = (commune: Commune): string => {
+  public displayCommuneFormat = (commune: Commune): string => {
     return !!commune ? commune.code + " - " + commune.nom : "";
   }
 
-  private displayDepartementFormat = (departement: Departement): string => {
+  public displayDepartementFormat = (departement: Departement): string => {
     return !!departement ? departement.code : null;
   }
 
-  private displayLieuDitFormat = (lieuDit: Lieudit): string => {
+  public displayLieuDitFormat = (lieuDit: Lieudit): string => {
     return !!lieuDit ? lieuDit.nom : null;
   }
 }

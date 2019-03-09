@@ -46,7 +46,11 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private listHelper: ListHelper;
 
+  public departements$: Observable<Departement[]>;
+
   public communes$: Observable<Commune[]>;
+
+  public lieuxdits$: Observable<Lieudit[]>;
 
   public inventaireForm: FormGroup = new FormGroup({
     observateur: new FormControl("", Validators.required),
@@ -131,6 +135,16 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.communes$ = this.creationService
       .getInitialPageModel()
       .pipe(map((creationPage) => (creationPage ? creationPage.communes : [])));
+
+    this.departements$ = this.creationService
+      .getInitialPageModel()
+      .pipe(
+        map((creationPage) => (creationPage ? creationPage.departements : []))
+      );
+
+    this.lieuxdits$ = this.creationService
+      .getInitialPageModel()
+      .pipe(map((creationPage) => (creationPage ? creationPage.lieudits : [])));
   }
 
   private onInitCreationPageError(error: any): void {

@@ -174,9 +174,9 @@
             <input-lieudit
               formGroupName="lieu"
               [controlGroup]="inventaireForm.controls['lieu']"
-              [departements]="pageModel.departements"
+              [departements]="departements$"
               [communes]="communes$"
-              [lieuxdits]="pageModel.lieudits"
+              [lieuxdits]="lieuxdits$"
             >
             </input-lieudit>
           </mat-card>
