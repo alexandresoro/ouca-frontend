@@ -101,37 +101,44 @@ export class LcoAutocompleteComponent
   }
 
   private _filter(value: string): EntiteSimple[] {
-    const filterValue = diacritics
+    const filterValue: string = diacritics
       .remove(value.toLowerCase())
       .replace(this.CHARACTERS_TO_IGNORE, "");
 
     if (!!this.values) {
       return this.values.filter((valueFromList) => {
-        if (this.attributesToFilter.length === 1) {
-          return this.search(
-            valueFromList,
-            filterValue,
-            this.attributesToFilter[0]
-          );
-        } else if (this.attributesToFilter.length === 2) {
-          return (
-            this.search(
-              valueFromList,
-              filterValue,
-              this.attributesToFilter[0]
-            ) ||
-            this.search(valueFromList, filterValue, this.attributesToFilter[1])
-          );
-        }
+        return this.searchInOptionsList(valueFromList, filterValue);
       });
     }
   }
 
+  private searchInOptionsList(
+    valueFromList: EntiteSimple,
+    filterValue: string,
+    indexAttribute: number = 0
+  ): boolean {
+    if (indexAttribute === this.attributesToFilter.length - 1) {
+      return this.search(
+        valueFromList,
+        filterValue,
+        this.attributesToFilter[indexAttribute]
+      );
+    } else {
+      return (
+        this.search(
+          valueFromList,
+          filterValue,
+          this.attributesToFilter[indexAttribute]
+        ) ||
+        this.searchInOptionsList(valueFromList, filterValue, indexAttribute + 1)
+      );
+    }
+  }
   private search(
     valueFromList: EntiteSimple,
     filterValue: string,
     attributeToFilter: AutocompleteAttribute
-  ): any {
+  ): boolean {
     if (attributeToFilter.startWithMode) {
       return !!attributeToFilter.exactSearchMode
         ? this.exactSearch(

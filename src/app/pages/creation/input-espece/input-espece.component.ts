@@ -40,6 +40,11 @@ export class InputEspeceComponent implements OnInit {
       key: "nomFrancais",
       exactSearchMode: false,
       startWithMode: false
+    },
+    {
+      key: "nomLatin",
+      exactSearchMode: false,
+      startWithMode: false
     }
   ];
 
@@ -67,6 +72,8 @@ export class InputEspeceComponent implements OnInit {
   }
 
   private displayEspeceFormat = (espece: Espece): string => {
-    return !!espece ? espece.code + " - " + espece.nomFrancais : "";
+    return !!espece
+      ? espece.code + " - " + espece.nomFrancais + " - " + espece.nomLatin
+      : "";
   }
 }
