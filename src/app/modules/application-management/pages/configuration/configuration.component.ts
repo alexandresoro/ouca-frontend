@@ -4,11 +4,11 @@ import * as _ from "lodash";
 import { AppConfiguration } from "../../../../model/app-configuration.object";
 import { ConfigurationPage } from "../../../../model/configuration-page.object";
 import { EntiteResult } from "../../../../model/entite-result.object";
+import { PageComponent } from "../../../../pages/page.component";
 import {
   GestionMode,
   GestionModeHelper
-} from "../../../../pages/entities/gestion-mode.enum";
-import { PageComponent } from "../../../../pages/page.component";
+} from "../../../model-management/pages/gestion-mode.enum";
 import { ConfigurationService } from "./configuration.service";
 
 export interface IdPropriete {

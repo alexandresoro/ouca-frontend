@@ -8,37 +8,6 @@ import { LcoInputTextComponent } from "./components/form/input-text/lco-input-te
 import { CreationComponent } from "./pages/creation/creation.component";
 import { DonneeService } from "./pages/creation/donnee.service";
 import { InventaireService } from "./pages/creation/inventaire.service";
-import { AgeTableComponent } from "./pages/entities/age/age-table.component";
-import { AgeComponent } from "./pages/entities/age/age.component";
-import { ClasseTableComponent } from "./pages/entities/classe/classe-table.component";
-import { ClasseComponent } from "./pages/entities/classe/classe.component";
-import { CommuneFormComponent } from "./pages/entities/commune/commune-form.component";
-import { CommuneTableComponent } from "./pages/entities/commune/commune-table.component";
-import { CommuneComponent } from "./pages/entities/commune/commune.component";
-import { ComportementTableComponent } from "./pages/entities/comportement/comportement-table.component";
-import { ComportementComponent } from "./pages/entities/comportement/comportement.component";
-import { DepartementFormComponent } from "./pages/entities/departement/departement-form.component";
-import { DepartementTableComponent } from "./pages/entities/departement/departement-table.component";
-import { DepartementComponent } from "./pages/entities/departement/departement.component";
-import { EntiteSimpleRemovalConfirmationComponent } from "./pages/entities/entite-simple/entite-simple-delete-confirmation.component";
-import { EntiteSimpleDetailsComponent } from "./pages/entities/entite-simple/entite-simple-details.component";
-import { EntiteSimpleFormComponent } from "./pages/entities/entite-simple/entite-simple-form.component";
-import { EntiteSimpleComponent } from "./pages/entities/entite-simple/entite-simple.component";
-import { EntiteSimpleService } from "./pages/entities/entite-simple/entite-simple.service";
-import { EstimationDistanceTableComponent } from "./pages/entities/estimation-distance/estimation-distance-table.component";
-import { EstimationDistanceComponent } from "./pages/entities/estimation-distance/estimation-distance.component";
-import { EstimationNombreFormComponent } from "./pages/entities/estimation-nombre/estimation-nombre-form.component";
-import { EstimationNombreTableComponent } from "./pages/entities/estimation-nombre/estimation-nombre-table.component";
-import { EstimationNombreComponent } from "./pages/entities/estimation-nombre/estimation-nombre.component";
-import { GestionModeHelper } from "./pages/entities/gestion-mode.enum";
-import { MeteoTableComponent } from "./pages/entities/meteo/meteo-table.component";
-import { MeteoComponent } from "./pages/entities/meteo/meteo.component";
-import { MilieuTableComponent } from "./pages/entities/milieu/milieu-table.component";
-import { MilieuComponent } from "./pages/entities/milieu/milieu.component";
-import { ObservateurTableComponent } from "./pages/entities/observateur/observateur-table.component";
-import { ObservateurComponent } from "./pages/entities/observateur/observateur.component";
-import { SexeTableComponent } from "./pages/entities/sexe/sexe-table.component";
-import { SexeComponent } from "./pages/entities/sexe/sexe.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material";
@@ -56,8 +25,9 @@ import { TableTopbarComponent } from "./components/entities/table-topbar/table-t
 import { LcoAutocompleteComponent } from "./components/form/lco-autocomplete/lco-autocomplete.component";
 import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
+import { ApplicationManagementModule } from "./modules/application-management/application-management.module";
 import { DonneeViewModule } from "./modules/donnee-view/donnee-view.module";
-import { ManagementModule } from "./modules/management/management.module";
+import { ModelManagementModule } from "./modules/model-management/model-management.module";
 import { SharedModule } from "./modules/shared/shared.module";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
@@ -78,14 +48,6 @@ import { InputSexeComponent } from "./pages/creation/input-sexe/input-sexe.compo
 import { InputTemperatureComponent } from "./pages/creation/input-temperature/input-temperature.component";
 import { InputTimeComponent } from "./pages/creation/input-time/input-time.component";
 import { NavigationService } from "./pages/creation/navigation.service";
-import { EntiteAvecLibelleEtCodeFormComponent } from "./pages/entities/entite-avec-libelle-et-code/entite-avec-libelle-et-code-form.component";
-import { EntiteAvecLibelleFormComponent } from "./pages/entities/entite-avec-libelle/entite-avec-libelle-form.component";
-import { EspeceFormComponent } from "./pages/entities/espece/espece-form.component";
-import { EspeceTableComponent } from "./pages/entities/espece/espece-table.component";
-import { EspeceComponent } from "./pages/entities/espece/espece.component";
-import { LieuditFormComponent } from "./pages/entities/lieudit/lieudit-form.component";
-import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.component";
-import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
 
 const baseNaturalisteRoutes: Routes = [
   {
@@ -95,58 +57,6 @@ const baseNaturalisteRoutes: Routes = [
   {
     path: "creation",
     component: CreationComponent
-  },
-  {
-    path: "age",
-    component: AgeComponent
-  },
-  {
-    path: "classe",
-    component: ClasseComponent
-  },
-  {
-    path: "commune",
-    component: CommuneComponent
-  },
-  {
-    path: "comportement",
-    component: ComportementComponent
-  },
-  {
-    path: "departement",
-    component: DepartementComponent
-  },
-  {
-    path: "espece",
-    component: EspeceComponent
-  },
-  {
-    path: "estimation-nombre",
-    component: EstimationNombreComponent
-  },
-  {
-    path: "estimation-distance",
-    component: EstimationDistanceComponent
-  },
-  {
-    path: "lieudit",
-    component: LieuditComponent
-  },
-  {
-    path: "meteo",
-    component: MeteoComponent
-  },
-  {
-    path: "milieu",
-    component: MilieuComponent
-  },
-  {
-    path: "observateur",
-    component: ObservateurComponent
-  },
-  {
-    path: "sexe",
-    component: SexeComponent
   }
 ];
 
@@ -154,40 +64,15 @@ const baseNaturalisteRoutes: Routes = [
   imports: [
     RouterModule.forRoot(baseNaturalisteRoutes),
     SharedModule,
+    ApplicationManagementModule,
     DonneeViewModule,
-    ManagementModule
+    ModelManagementModule
   ],
   exports: [],
   declarations: [
     AppComponent,
-    AgeComponent,
-    AgeTableComponent,
-    ClasseComponent,
-    ClasseTableComponent,
-    CommuneComponent,
-    CommuneTableComponent,
-    CommuneFormComponent,
-    ComportementComponent,
-    ComportementTableComponent,
     ConfirmationDialogComponent,
     CreationComponent,
-    DepartementComponent,
-    DepartementTableComponent,
-    DepartementFormComponent,
-    EntiteAvecLibelleEtCodeFormComponent,
-    EntiteAvecLibelleFormComponent,
-    EntiteSimpleComponent,
-    EntiteSimpleRemovalConfirmationComponent,
-    EntiteSimpleDetailsComponent,
-    EntiteSimpleFormComponent,
-    EspeceComponent,
-    EspeceTableComponent,
-    EspeceFormComponent,
-    EstimationNombreComponent,
-    EstimationNombreTableComponent,
-    EstimationNombreFormComponent,
-    EstimationDistanceComponent,
-    EstimationDistanceTableComponent,
     InputAgeComponent,
     InputCommentaireComponent,
     InputDateComponent,
@@ -205,18 +90,7 @@ const baseNaturalisteRoutes: Routes = [
     InputTemperatureComponent,
     InputSexeComponent,
     LcoAutocompleteComponent,
-    LieuditComponent,
-    LieuditTableComponent,
-    LieuditFormComponent,
-    MeteoComponent,
-    MeteoTableComponent,
-    MilieuComponent,
-    MilieuTableComponent,
-    ObservateurComponent,
-    ObservateurTableComponent,
     SearchByIdDialogComponent,
-    SexeComponent,
-    SexeTableComponent,
     TopButtonsComponent,
     TableButtonsComponent,
     TableTopbarComponent,
@@ -230,9 +104,7 @@ const baseNaturalisteRoutes: Routes = [
     CreationModeHelper,
     CreationService,
     DonneeService,
-    EntiteSimpleService,
     fakeBackendProvider,
-    GestionModeHelper,
     InventaireService,
     NavigationService,
     { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
