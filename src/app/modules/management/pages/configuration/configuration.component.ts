@@ -1,11 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
-import { AppConfiguration } from "../../model/app-configuration.object";
-import { ConfigurationPage } from "../../model/configuration-page.object";
-import { EntiteResult } from "../../model/entite-result.object";
-import { GestionMode, GestionModeHelper } from "../entities/gestion-mode.enum";
-import { PageComponent } from "../page.component";
+import { AppConfiguration } from "../../../../model/app-configuration.object";
+import { ConfigurationPage } from "../../../../model/configuration-page.object";
+import { EntiteResult } from "../../../../model/entite-result.object";
+import {
+  GestionMode,
+  GestionModeHelper
+} from "../../../../pages/entities/gestion-mode.enum";
+import { PageComponent } from "../../../../pages/page.component";
 import { ConfigurationService } from "./configuration.service";
 
 export interface IdPropriete {

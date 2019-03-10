@@ -1,7 +1,4 @@
 import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpModule } from "@angular/http";
-import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "./app.component";
 import { EntityMessagesComponent } from "./components/entities/messages/messages.component";
@@ -45,31 +42,9 @@ import { SexeComponent } from "./pages/entities/sexe/sexe.component";
 import { ViewComponent } from "./pages/vue/view.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
-import {
-  MAT_DIALOG_DEFAULT_OPTIONS,
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatPaginatorModule,
-  MatSelectModule,
-  MatSortModule,
-  MatTableModule,
-  MatToolbarModule,
-  MatTreeModule,
-  MatTreeNestedDataSource
-} from "@angular/material";
+import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material";
 import {
   MAT_MOMENT_DATE_FORMATS,
-  MatMomentDateModule,
   MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {
@@ -77,17 +52,13 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE
 } from "@angular/material/core";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { HttpClientModule } from "../../node_modules/@angular/common/http";
 import { ConfirmationDialogComponent } from "./components/dialog/confirmation-dialog.component";
 import { TableTopbarComponent } from "./components/entities/table-topbar/table-topbar.component";
-import { LcoEntiteSelectComponent } from "./components/form/entite-select/lco-entite-select.component";
 import { LcoAutocompleteComponent } from "./components/form/lco-autocomplete/lco-autocomplete.component";
 import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
-import { ConfigurationFormComponent } from "./pages/configuration/configuration-form.component";
-import { ConfigurationComponent } from "./pages/configuration/configuration.component";
-import { ConfigurationService } from "./pages/configuration/configuration.service";
+import { ManagementModule } from "./modules/management/management.module";
+import { SharedModule } from "./modules/shared/shared.module";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationService } from "./pages/creation/creation.service";
 import { InputAgeComponent } from "./pages/creation/input-age/input-age.component";
@@ -115,8 +86,6 @@ import { EspeceComponent } from "./pages/entities/espece/espece.component";
 import { LieuditFormComponent } from "./pages/entities/lieudit/lieudit-form.component";
 import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.component";
 import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
-import { ImportComponent } from "./pages/import/import.component";
-import { ImportService } from "./pages/import/import.service";
 import { SelectDialogComponent } from "./pages/vue/select-dialog/select-dialog.component";
 
 const baseNaturalisteRoutes: Routes = [
@@ -183,76 +152,22 @@ const baseNaturalisteRoutes: Routes = [
   {
     path: "sexe",
     component: SexeComponent
-  },
-  {
-    path: "configuration",
-    component: ConfigurationComponent
-  },
-  {
-    path: "import",
-    component: ImportComponent
   }
 ];
 
 @NgModule({
   imports: [
-    BrowserModule,
     RouterModule.forRoot(baseNaturalisteRoutes),
-    HttpModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatCardModule,
-    MatSelectModule,
-    MatInputModule,
-    MatMomentDateModule,
-    MatDatepickerModule,
-    MatExpansionModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatAutocompleteModule,
-    MatTreeModule
+    SharedModule,
+    ManagementModule
   ],
-  exports: [
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatCardModule,
-    MatSelectModule,
-    MatInputModule,
-    MatMomentDateModule,
-    MatDatepickerModule,
-    MatExpansionModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatAutocompleteModule,
-    MatTreeModule
-  ],
+  exports: [],
   declarations: [
     AppComponent,
     AgeComponent,
     AgeTableComponent,
     ClasseComponent,
     ClasseTableComponent,
-    ConfigurationComponent,
-    ConfigurationFormComponent,
     CommuneComponent,
     CommuneTableComponent,
     CommuneFormComponent,
@@ -277,7 +192,6 @@ const baseNaturalisteRoutes: Routes = [
     EstimationNombreFormComponent,
     EstimationDistanceComponent,
     EstimationDistanceTableComponent,
-    ImportComponent,
     InputAgeComponent,
     InputCommentaireComponent,
     InputDateComponent,
@@ -295,7 +209,6 @@ const baseNaturalisteRoutes: Routes = [
     InputTemperatureComponent,
     InputSexeComponent,
     LcoAutocompleteComponent,
-    LcoEntiteSelectComponent,
     LieuditComponent,
     LieuditTableComponent,
     LieuditFormComponent,
@@ -324,7 +237,6 @@ const baseNaturalisteRoutes: Routes = [
   ],
   providers: [
     BaseNaturalisteService,
-    ConfigurationService,
     CreationModeHelper,
     CreationService,
     DonneeService,
@@ -332,7 +244,6 @@ const baseNaturalisteRoutes: Routes = [
     fakeBackendProvider,
     GestionModeHelper,
     InventaireService,
-    ImportService,
     NavigationService,
     { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
     {
