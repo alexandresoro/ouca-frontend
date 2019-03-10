@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { AppComponent } from "./app.component";
-import { LcoInputTextComponent } from "./components/form/input-text/lco-input-text.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material";
@@ -14,7 +13,6 @@ import {
   MAT_DATE_LOCALE
 } from "@angular/material/core";
 import { RouterModule, Routes } from "@angular/router";
-import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
 import { ApplicationManagementModule } from "./modules/application-management/application-management.module";
 import { DonneeCreationModule } from "./modules/donnee-creation/donnee-creation.module";
@@ -33,13 +31,9 @@ const routes: Routes = [];
     ModelManagementModule
   ],
   exports: [],
-  declarations: [
-    AppComponent,
-    SearchByIdDialogComponent,
-    LcoInputTextComponent
-  ],
+  declarations: [AppComponent],
   bootstrap: [AppComponent],
-  entryComponents: [SearchByIdDialogComponent],
+  entryComponents: [],
   providers: [
     BaseNaturalisteService,
     fakeBackendProvider,

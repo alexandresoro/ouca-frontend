@@ -19,10 +19,10 @@ import * as diacritics from "diacritics";
 import { Observable, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import { EntiteSimple } from "../../../../model/entite-simple.object";
-import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 import { LcoAutocompleteEventObject } from "./lco-autocomplete-event.object";
 
 import * as _ from "lodash";
+import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 
 @Component({
   selector: "lco-autocomplete",

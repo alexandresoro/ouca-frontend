@@ -6,9 +6,9 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { combineLatest, Observable } from "rxjs";
-import { AutocompleteAttribute } from "../../../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { Classe } from "../../../../model/classe.object";
 import { Espece } from "../../../../model/espece.object";
+import { AutocompleteAttribute } from "../../../shared/components/lco-autocomplete/autocomplete-attribute.object";
 
 @Component({
   selector: "input-espece",

@@ -16,6 +16,7 @@ import { InputRegroupementComponent } from "./components/input-regroupement/inpu
 import { InputSexeComponent } from "./components/input-sexe/input-sexe.component";
 import { InputTemperatureComponent } from "./components/input-temperature/input-temperature.component";
 import { InputTimeComponent } from "./components/input-time/input-time.component";
+import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { DonneeCreationRoutingModule } from "./donnee-creation-routing.module";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationComponent } from "./pages/creation/creation.component";
@@ -43,9 +44,10 @@ import { NavigationService } from "./pages/creation/navigation.service";
     InputRegroupementComponent,
     InputSexeComponent,
     InputTemperatureComponent,
-    InputTimeComponent
+    InputTimeComponent,
+    SearchByIdDialogComponent
   ],
-  entryComponents: [],
+  entryComponents: [SearchByIdDialogComponent],
   exports: [],
   providers: [
     CreationModeHelper,
