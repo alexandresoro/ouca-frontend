@@ -2,29 +2,21 @@
   {
     "id": 4,
     "libelle": "Environ",
-    "nonCompte": false,
-    "nbDonnees": 0,
-    "autocompleteOption1": "Environ"
+    "nonCompte": false
   },
   {
     "id": 5,
     "libelle": "Minimum",
-    "nonCompte": false,
-    "nbDonnees": 0,
-    "autocompleteOption1": "Minimum"
+    "nonCompte": false
   },
   {
     "id": 6,
     "libelle": "Non compté",
-    "nonCompte": true,
-    "nbDonnees": 1,
-    "autocompleteOption1": "Non compté"
+    "nonCompte": true
   },
   {
     "id": 7,
     "libelle": "Précis",
-    "nonCompte": false,
-    "nbDonnees": 3,
-    "autocompleteOption1": "Précis"
+    "nonCompte": false
   }
 ]

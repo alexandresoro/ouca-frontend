@@ -1,194 +1,130 @@
 [
   {
     "id": 17,
-    "libelle": "AROD François",
-    "nbDonnees": 0,
-    "autocompleteOption1": "AROD François"
+    "libelle": "AROD François"
   },
   {
     "id": 18,
-    "libelle": "BEAUVALLET Yves",
-    "nbDonnees": 0,
-    "autocompleteOption1": "BEAUVALLET Yves"
+    "libelle": "BEAUVALLET Yves"
   },
   {
     "id": 19,
-    "libelle": "BELIGNE Léa",
-    "nbDonnees": 0,
-    "autocompleteOption1": "BELIGNE Léa"
+    "libelle": "BELIGNE Léa"
   },
   {
     "id": 20,
-    "libelle": "BERTHALIN Hervé",
-    "nbDonnees": 0,
-    "autocompleteOption1": "BERTHALIN Hervé"
+    "libelle": "BERTHALIN Hervé"
   },
   {
     "id": 21,
-    "libelle": "BILLON Michel",
-    "nbDonnees": 0,
-    "autocompleteOption1": "BILLON Michel"
+    "libelle": "BILLON Michel"
   },
   {
     "id": 22,
-    "libelle": "BLACHE Sébastien",
-    "nbDonnees": 0,
-    "autocompleteOption1": "BLACHE Sébastien"
+    "libelle": "BLACHE Sébastien"
   },
   {
     "id": 23,
-    "libelle": "BOUTIN Bernard",
-    "nbDonnees": 0,
-    "autocompleteOption1": "BOUTIN Bernard"
+    "libelle": "BOUTIN Bernard"
   },
   {
     "id": 24,
-    "libelle": "CAILLETON Stéphane",
-    "nbDonnees": 0,
-    "autocompleteOption1": "CAILLETON Stéphane"
+    "libelle": "CAILLETON Stéphane"
   },
   {
     "id": 25,
-    "libelle": "CARRIER Antoine",
-    "nbDonnees": 0,
-    "autocompleteOption1": "CARRIER Antoine"
+    "libelle": "CARRIER Antoine"
   },
   {
     "id": 26,
-    "libelle": "CARRIER Camille",
-    "nbDonnees": 0,
-    "autocompleteOption1": "CARRIER Camille"
+    "libelle": "CARRIER Camille"
   },
   {
     "id": 27,
-    "libelle": "CARRIER Laurent",
-    "nbDonnees": 4,
-    "autocompleteOption1": "CARRIER Laurent"
+    "libelle": "CARRIER Laurent"
   },
   {
     "id": 28,
-    "libelle": "CARRIER Marie",
-    "nbDonnees": 0,
-    "autocompleteOption1": "CARRIER Marie"
+    "libelle": "CARRIER Marie"
   },
   {
     "id": 29,
-    "libelle": "CARTON Christophe",
-    "nbDonnees": 0,
-    "autocompleteOption1": "CARTON Christophe"
+    "libelle": "CARTON Christophe"
   },
   {
     "id": 30,
-    "libelle": "CHAMBON Myriam",
-    "nbDonnees": 0,
-    "autocompleteOption1": "CHAMBON Myriam"
+    "libelle": "CHAMBON Myriam"
   },
   {
     "id": 31,
-    "libelle": "CLAVEL Alain",
-    "nbDonnees": 0,
-    "autocompleteOption1": "CLAVEL Alain"
+    "libelle": "CLAVEL Alain"
   },
   {
     "id": 33,
-    "libelle": "Com Or",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Com Or"
+    "libelle": "Com Or"
   },
   {
     "id": 32,
-    "libelle": "CREMILLIEUX Lionel",
-    "nbDonnees": 0,
-    "autocompleteOption1": "CREMILLIEUX Lionel"
+    "libelle": "CREMILLIEUX Lionel"
   },
   {
     "id": 34,
-    "libelle": "D'ADAMO Pauline",
-    "nbDonnees": 0,
-    "autocompleteOption1": "D'ADAMO Pauline"
+    "libelle": "D'ADAMO Pauline"
   },
   {
     "id": 35,
-    "libelle": "DAVID Gilbert",
-    "nbDonnees": 0,
-    "autocompleteOption1": "DAVID Gilbert"
+    "libelle": "DAVID Gilbert"
   },
   {
     "id": 36,
-    "libelle": "DIDIER Michel",
-    "nbDonnees": 0,
-    "autocompleteOption1": "DIDIER Michel"
+    "libelle": "DIDIER Michel"
   },
   {
     "id": 37,
-    "libelle": "DUCHAMP Jacques",
-    "nbDonnees": 0,
-    "autocompleteOption1": "DUCHAMP Jacques"
+    "libelle": "DUCHAMP Jacques"
   },
   {
     "id": 38,
-    "libelle": "FAYOLAS Didier",
-    "nbDonnees": 0,
-    "autocompleteOption1": "FAYOLAS Didier"
+    "libelle": "FAYOLAS Didier"
   },
   {
     "id": 39,
-    "libelle": "FERRIERE Gérard",
-    "nbDonnees": 0,
-    "autocompleteOption1": "FERRIERE Gérard"
+    "libelle": "FERRIERE Gérard"
   },
   {
     "id": 40,
-    "libelle": "GUYON Katell",
-    "nbDonnees": 0,
-    "autocompleteOption1": "GUYON Katell"
+    "libelle": "GUYON Katell"
   },
   {
     "id": 41,
-    "libelle": "LANDEAU Rémi",
-    "nbDonnees": 0,
-    "autocompleteOption1": "LANDEAU Rémi"
+    "libelle": "LANDEAU Rémi"
   },
   {
     "id": 42,
-    "libelle": "OBOUSSIER Francis",
-    "nbDonnees": 0,
-    "autocompleteOption1": "OBOUSSIER Francis"
+    "libelle": "OBOUSSIER Francis"
   },
   {
     "id": 43,
-    "libelle": "PEYRARD Jean-Jacques",
-    "nbDonnees": 0,
-    "autocompleteOption1": "PEYRARD Jean-Jacques"
+    "libelle": "PEYRARD Jean-Jacques"
   },
   {
     "id": 44,
-    "libelle": "ROSSET Marie-Hélène",
-    "nbDonnees": 0,
-    "autocompleteOption1": "ROSSET Marie-Hélène"
+    "libelle": "ROSSET Marie-Hélène"
   },
   {
     "id": 45,
-    "libelle": "ROTSAERT Philippe",
-    "nbDonnees": 0,
-    "autocompleteOption1": "ROTSAERT Philippe"
+    "libelle": "ROTSAERT Philippe"
   },
   {
     "id": 46,
-    "libelle": "ROUSSEAU Cathy",
-    "nbDonnees": 0,
-    "autocompleteOption1": "ROUSSEAU Cathy"
+    "libelle": "ROUSSEAU Cathy"
   },
   {
     "id": 47,
-    "libelle": "ROUSSEAU Jonathan",
-    "nbDonnees": 0,
-    "autocompleteOption1": "ROUSSEAU Jonathan"
+    "libelle": "ROUSSEAU Jonathan"
   },
   {
     "id": 48,
-    "libelle": "TRAVERSAZ Aimée",
-    "nbDonnees": 0,
-    "autocompleteOption1": "TRAVERSAZ Aimée"
+    "libelle": "TRAVERSAZ Aimée"
   }
 ]

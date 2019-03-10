@@ -1,65 +1,74 @@
 [
-  { "id": 22, "libelle": "+1A", "nbDonnees": 0, "autocompleteOption1": "+1A" },
-  { "id": 23, "libelle": "+2A", "nbDonnees": 0, "autocompleteOption1": "+2A" },
-  { "id": 24, "libelle": "+3A", "nbDonnees": 0, "autocompleteOption1": "+3A" },
-  { "id": 25, "libelle": "+4A", "nbDonnees": 0, "autocompleteOption1": "+4A" },
-  { "id": 26, "libelle": "1A", "nbDonnees": 1, "autocompleteOption1": "1A" },
-  { "id": 27, "libelle": "2A", "nbDonnees": 0, "autocompleteOption1": "2A" },
-  { "id": 28, "libelle": "3A", "nbDonnees": 0, "autocompleteOption1": "3A" },
-  { "id": 29, "libelle": "4A", "nbDonnees": 0, "autocompleteOption1": "4A" },
-  { "id": 30, "libelle": "?", "nbDonnees": 3, "autocompleteOption1": "?" },
+  {
+    "id": 22,
+    "libelle": "+1A"
+  },
+  {
+    "id": 23,
+    "libelle": "+2A"
+  },
+  {
+    "id": 24,
+    "libelle": "+3A"
+  },
+  {
+    "id": 25,
+    "libelle": "+4A"
+  },
+  {
+    "id": 26,
+    "libelle": "1A"
+  },
+  {
+    "id": 27,
+    "libelle": "2A"
+  },
+  {
+    "id": 28,
+    "libelle": "3A"
+  },
+  {
+    "id": 29,
+    "libelle": "4A"
+  },
+  {
+    "id": 30,
+    "libelle": "?"
+  },
   {
     "id": 31,
-    "libelle": "Adulte",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Adulte"
+    "libelle": "Adulte"
   },
   {
     "id": 32,
-    "libelle": "Adulte nuptial",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Adulte nuptial"
+    "libelle": "Adulte nuptial"
   },
   {
     "id": 33,
-    "libelle": "Imago",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Imago"
+    "libelle": "Imago"
   },
   {
     "id": 34,
-    "libelle": "Immature",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Immature"
+    "libelle": "Immature"
   },
   {
     "id": 35,
-    "libelle": "Juvénile",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Juvénile"
+    "libelle": "Juvénile"
   },
   {
     "id": 36,
-    "libelle": "Larve",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Larve"
+    "libelle": "Larve"
   },
   {
     "id": 37,
-    "libelle": "Ponte",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Ponte"
+    "libelle": "Ponte"
   },
   {
     "id": 38,
-    "libelle": "Pulli",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Pulli"
+    "libelle": "Pulli"
   },
   {
     "id": 39,
-    "libelle": "Volant",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Volant"
+    "libelle": "Volant"
   }
 ]

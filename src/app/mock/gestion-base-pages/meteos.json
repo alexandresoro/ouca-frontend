@@ -1,32 +1,22 @@
 [
   {
     "id": 15,
-    "libelle": "Neige",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Neige"
+    "libelle": "Neige"
   },
   {
     "id": 16,
-    "libelle": "Nuages",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Nuages"
+    "libelle": "Nuages"
   },
   {
     "id": 17,
-    "libelle": "Soleil",
-    "nbDonnees": 1,
-    "autocompleteOption1": "Soleil"
+    "libelle": "Soleil"
   },
   {
     "id": 18,
-    "libelle": "Vent faible",
-    "nbDonnees": 0,
-    "autocompleteOption1": "Vent faible"
+    "libelle": "Vent faible"
   },
   {
     "id": 19,
-    "libelle": "Vent fort",
-    "nbDonnees": 1,
-    "autocompleteOption1": "Vent fort"
+    "libelle": "Vent fort"
   }
 ]
