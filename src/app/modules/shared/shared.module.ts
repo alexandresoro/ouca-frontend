@@ -26,8 +26,9 @@ import {
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { LcoEntiteSelectComponent } from "../../components/form/entite-select/lco-entite-select.component";
-import { LcoAutocompleteComponent } from "../../components/form/lco-autocomplete/lco-autocomplete.component";
+import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
+import { LcoEntiteSelectComponent } from "./components/entite-select/lco-entite-select.component";
+import { LcoAutocompleteComponent } from "./components/lco-autocomplete/lco-autocomplete.component";
 
 @NgModule({
   imports: [
@@ -58,8 +59,14 @@ import { LcoAutocompleteComponent } from "../../components/form/lco-autocomplete
     MatAutocompleteModule,
     MatTreeModule
   ],
-  declarations: [LcoAutocompleteComponent, LcoEntiteSelectComponent],
+  declarations: [
+    ConfirmationDialogComponent,
+    LcoAutocompleteComponent,
+    LcoEntiteSelectComponent
+  ],
+  entryComponents: [ConfirmationDialogComponent],
   exports: [
+    ConfirmationDialogComponent,
     CommonModule,
     BrowserModule,
     HttpModule,

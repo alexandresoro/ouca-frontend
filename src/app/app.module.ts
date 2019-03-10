@@ -14,7 +14,6 @@ import {
   MAT_DATE_LOCALE
 } from "@angular/material/core";
 import { RouterModule, Routes } from "@angular/router";
-import { ConfirmationDialogComponent } from "./components/dialog/confirmation-dialog.component";
 import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
 import { ApplicationManagementModule } from "./modules/application-management/application-management.module";
@@ -36,12 +35,11 @@ const routes: Routes = [];
   exports: [],
   declarations: [
     AppComponent,
-    ConfirmationDialogComponent,
     SearchByIdDialogComponent,
     LcoInputTextComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmationDialogComponent, SearchByIdDialogComponent],
+  entryComponents: [SearchByIdDialogComponent],
   providers: [
     BaseNaturalisteService,
     fakeBackendProvider,

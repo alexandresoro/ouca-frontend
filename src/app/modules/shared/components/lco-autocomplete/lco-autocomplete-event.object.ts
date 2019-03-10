@@ -1,4 +1,4 @@
-import { EntiteSimple } from "../../../model/entite-simple.object";
+import { EntiteSimple } from "../../../../model/entite-simple.object";
 
 export class LcoAutocompleteEventObject {
   public value: EntiteSimple;

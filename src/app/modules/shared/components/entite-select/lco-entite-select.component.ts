@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { EntiteSimple } from "../../../model/entite-simple.object";
+import { EntiteSimple } from "../../../../model/entite-simple.object";
 
 @Component({
   selector: "lco-entite-select",
