@@ -14,36 +14,34 @@ import { Observateur } from "./observateur.object";
 import { Sexe } from "./sexe.object";
 
 export interface CreationPage {
+  defaultDepartementId: number;
+  defaultObservateurId: number;
+  defaultEstimationNombreId: number;
+  defaultNombre: number;
+  defaultSexeId: number;
+  defaultAgeId: number;
 
-    defaultDate: Date;
-    defaultDepartement: Departement;
-    defaultObservateur: Observateur;
-    defaultEstimationNombre: EstimationNombre;
-    defaultNombre: number;
-    defaultSexe: Sexe;
-    defaultAge: Age;
+  areAssociesDisplayed: boolean;
+  isMeteoDisplayed: boolean;
+  isDistanceDisplayed: boolean;
+  isRegroupementDisplayed: boolean;
 
-    areAssociesDisplayed: boolean;
-    isMeteoDisplayed: boolean;
-    isDistanceDisplayed: boolean;
-    isRegroupementDisplayed: boolean;
+  lastDonnee: Donnee;
+  numberOfDonnees: number;
 
-    observateurs: Observateur[];
-    departements: Departement[];
-    communes: Commune[];
-    lieudits: Lieudit[];
-    meteos: Meteo[];
-    classes: Classe[];
-    especes: Espece[];
-    ages: Age[];
-    sexes: Sexe[];
-    estimationsNombre: EstimationNombre[];
-    estimationsDistance: EstimationDistance[];
-    comportements: Comportement[];
-    milieux: Milieu[];
+  nextRegroupement: number;
 
-    lastDonnee: Donnee;
-    numberOfDonnees: number;
-
-    nextRegroupement: number;
+  observateurs: Observateur[];
+  departements: Departement[];
+  communes: Commune[];
+  lieudits: Lieudit[];
+  meteos: Meteo[];
+  classes: Classe[];
+  especes: Espece[];
+  ages: Age[];
+  sexes: Sexe[];
+  estimationsNombre: EstimationNombre[];
+  estimationsDistance: EstimationDistance[];
+  comportements: Comportement[];
+  milieux: Milieu[];
 }
