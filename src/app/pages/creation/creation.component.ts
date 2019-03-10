@@ -201,22 +201,16 @@ export class CreationComponent extends PageComponent implements OnInit {
    */
   private initializeInventaireFormControls(): void {
     let defaultObservateur: Observateur = null;
-    if (
-      !!this.pageModel.defaultObservateur &&
-      !!this.pageModel.defaultObservateur.id
-    ) {
+    if (!!this.pageModel.defaultObservateurId) {
       defaultObservateur = this.pageModel.observateurs.find(
-        (observateur) => observateur.id === this.pageModel.defaultObservateur.id
+        (observateur) => observateur.id === this.pageModel.defaultObservateurId
       );
     }
 
     let defaultDepartement: Departement = null;
-    if (
-      !!this.pageModel.defaultDepartement &&
-      !!this.pageModel.defaultDepartement.id
-    ) {
+    if (!!this.pageModel.defaultDepartementId) {
       defaultDepartement = this.pageModel.departements.find(
-        (departement) => departement.id === this.pageModel.defaultDepartement.id
+        (departement) => departement.id === this.pageModel.defaultDepartementId
       );
     }
 
@@ -368,22 +362,19 @@ export class CreationComponent extends PageComponent implements OnInit {
    */
   private initializeDonneeFormControls(): void {
     let defaultAge: Age = null;
-    if (!!this.pageModel.defaultAge && !!this.pageModel.defaultAge.id) {
-      defaultAge = this.listHelper.getAgeById(this.pageModel.defaultAge.id);
+    if (!!this.pageModel.defaultAgeId) {
+      defaultAge = this.listHelper.getAgeById(this.pageModel.defaultAgeId);
     }
 
     let defaultSexe: Sexe = null;
-    if (!!this.pageModel.defaultSexe && !!this.pageModel.defaultSexe.id) {
-      defaultSexe = this.listHelper.getSexeById(this.pageModel.defaultSexe.id);
+    if (!!this.pageModel.defaultSexeId) {
+      defaultSexe = this.listHelper.getSexeById(this.pageModel.defaultSexeId);
     }
 
     let defaultEstimationNombre: EstimationNombre = null;
-    if (
-      !!this.pageModel.defaultEstimationNombre &&
-      !!this.pageModel.defaultEstimationNombre.id
-    ) {
+    if (!!this.pageModel.defaultEstimationNombreId) {
       defaultEstimationNombre = this.listHelper.getEstimationNombreById(
-        this.pageModel.defaultEstimationNombre.id
+        this.pageModel.defaultEstimationNombreId
       );
     }
 

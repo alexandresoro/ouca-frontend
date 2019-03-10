@@ -1,27 +1,17 @@
 {
-    "defaultObservateur": {
-        "id": 27,
-        "libelle": "CARRIER Laurent"
-    },
-    "defaultDate": 1551472077871,
-    "defaultDepartement": {
-        "id": 6,
-        "code": "26"
-    },
-    "defaultEstimationNombre": {
-        "id": 7,
-        "libelle": "Précis",
-        "nonCompte": false
-    },
+    "defaultObservateurId": 27,
+    "defaultDepartementId": 6,
+    "defaultEstimationNombreId": 7,
     "defaultNombre": 1,
-    "defaultSexe": {
-        "id": 10,
-        "libelle": "?"
-    },
-    "defaultAge": {
-        "id": 30,
-        "libelle": "?"
-    },
+    "defaultSexeId": 10,
+    "defaultAgeId": 30,
+    "areAssociesDisplayed": true,
+    "isMeteoDisplayed": true,
+    "isDistanceDisplayed": true,
+    "isRegroupementDisplayed": true,
+    "numberOfDonnees": 0,
+    "lastDonnee": null,
+    "nextRegroupement": 1,
     "observateurs": [
         {
             "id": 17,
@@ -53008,12 +52998,5 @@
             "libelle": "Villes",
             "code": "8610"
         }
-    ],
-    "areAssociesDisplayed": true,
-    "isMeteoDisplayed": true,
-    "isDistanceDisplayed": true,
-    "isRegroupementDisplayed": true,
-    "numberOfDonnees": 0,
-    "lastDonnee": null,
-    "nextRegroupement": 1
+    ]
 }
