@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { EntiteSimple } from "../../../../model/entite-simple.object";
-import { EntiteComponent } from "../../../../pages/entite.component";
+import { EntiteComponent } from "../entite.component";
 import { GestionMode, GestionModeHelper } from "../gestion-mode.enum";
 
 @Component({

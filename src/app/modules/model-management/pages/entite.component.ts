@@ -1,8 +1,5 @@
-import {
-  GestionMode,
-  GestionModeHelper
-} from "../modules/model-management/pages/gestion-mode.enum";
-import { PageComponent } from "../modules/shared/components/page.component";
+import { PageComponent } from "../../shared/components/page.component";
+import { GestionMode, GestionModeHelper } from "./gestion-mode.enum";
 
 export class EntiteComponent extends PageComponent {
   public mode: GestionMode;

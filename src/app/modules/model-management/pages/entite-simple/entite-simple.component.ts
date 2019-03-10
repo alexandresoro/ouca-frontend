@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Response } from "@angular/http";
 import { EntiteResult } from "../../../../model/entite-result.object";
 import { EntiteSimple } from "../../../../model/entite-simple.object";
-import { EntiteComponent } from "../../../../pages/entite.component";
+import { EntiteComponent } from "../entite.component";
 import { GestionMode } from "../gestion-mode.enum";
 import { GestionModeHelper } from "../gestion-mode.enum";
 import { EntiteSimpleService } from "./entite-simple.service";
