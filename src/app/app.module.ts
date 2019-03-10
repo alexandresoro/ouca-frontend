@@ -39,7 +39,6 @@ import { ObservateurTableComponent } from "./pages/entities/observateur/observat
 import { ObservateurComponent } from "./pages/entities/observateur/observateur.component";
 import { SexeTableComponent } from "./pages/entities/sexe/sexe-table.component";
 import { SexeComponent } from "./pages/entities/sexe/sexe.component";
-import { ViewComponent } from "./pages/vue/view.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material";
@@ -57,6 +56,7 @@ import { TableTopbarComponent } from "./components/entities/table-topbar/table-t
 import { LcoAutocompleteComponent } from "./components/form/lco-autocomplete/lco-autocomplete.component";
 import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
+import { DonneeViewModule } from "./modules/donnee-view/donnee-view.module";
 import { ManagementModule } from "./modules/management/management.module";
 import { SharedModule } from "./modules/shared/shared.module";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
@@ -86,7 +86,6 @@ import { EspeceComponent } from "./pages/entities/espece/espece.component";
 import { LieuditFormComponent } from "./pages/entities/lieudit/lieudit-form.component";
 import { LieuditTableComponent } from "./pages/entities/lieudit/lieudit-table.component";
 import { LieuditComponent } from "./pages/entities/lieudit/lieudit.component";
-import { SelectDialogComponent } from "./pages/vue/select-dialog/select-dialog.component";
 
 const baseNaturalisteRoutes: Routes = [
   {
@@ -96,10 +95,6 @@ const baseNaturalisteRoutes: Routes = [
   {
     path: "creation",
     component: CreationComponent
-  },
-  {
-    path: "vue",
-    component: ViewComponent
   },
   {
     path: "age",
@@ -159,6 +154,7 @@ const baseNaturalisteRoutes: Routes = [
   imports: [
     RouterModule.forRoot(baseNaturalisteRoutes),
     SharedModule,
+    DonneeViewModule,
     ManagementModule
   ],
   exports: [],
@@ -219,22 +215,16 @@ const baseNaturalisteRoutes: Routes = [
     ObservateurComponent,
     ObservateurTableComponent,
     SearchByIdDialogComponent,
-    SelectDialogComponent,
     SexeComponent,
     SexeTableComponent,
     TopButtonsComponent,
     TableButtonsComponent,
     TableTopbarComponent,
     LcoInputTextComponent,
-    EntityMessagesComponent,
-    ViewComponent
+    EntityMessagesComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents: [
-    ConfirmationDialogComponent,
-    SearchByIdDialogComponent,
-    SelectDialogComponent
-  ],
+  entryComponents: [ConfirmationDialogComponent, SearchByIdDialogComponent],
   providers: [
     BaseNaturalisteService,
     CreationModeHelper,

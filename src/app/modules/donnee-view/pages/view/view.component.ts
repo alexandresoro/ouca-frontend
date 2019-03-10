@@ -6,9 +6,9 @@ import {
   MatTreeNestedDataSource
 } from "@angular/material";
 import * as _ from "lodash";
+import { SelectDialogData } from "../../components/select-dialog/select-dialog-data.object";
+import { SelectDialogComponent } from "../../components/select-dialog/select-dialog.component";
 import columnsData from "./columns.json";
-import { SelectDialogData } from "./select-dialog/select-dialog-data.object";
-import { SelectDialogComponent } from "./select-dialog/select-dialog.component";
 
 interface TreeNode {
   key: string;
