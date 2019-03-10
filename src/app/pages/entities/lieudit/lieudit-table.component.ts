@@ -13,7 +13,9 @@ interface LieuditRow {
   altitude: number;
   longitude: number;
   latitude: number;
+  /*
   nbDonnees: number;
+  */
 }
 
 @Component({
@@ -29,8 +31,10 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "nom",
     "altitude",
     "longitude",
-    "latitude",
+    "latitude"
+    /*,
     "nbDonnees"
+    */
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,8 +58,10 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       nom: lieudit.nom,
       altitude: lieudit.altitude,
       longitude: lieudit.longitude,
-      latitude: lieudit.latitude,
+      latitude: lieudit.latitude
+      /*,
       nbDonnees: lieudit.nbDonnees
+      */
     };
   }
 

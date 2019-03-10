@@ -12,8 +12,6 @@ export class Espece extends EntiteAvecLibelle {
 
   public nomLatin: string;
 
-  public nbDonnees: number;
-
   constructor() {
     super();
   }

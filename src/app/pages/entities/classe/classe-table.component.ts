@@ -9,5 +9,7 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle/entite-a
 export class ClasseTableComponent extends EntiteAvecLibelleTableComponent<
   Classe
 > {
-  public displayedColumns: string[] = ["libelle", "nbEspeces", "nbDonnees"];
+  public displayedColumns: string[] = [
+    "libelle" /*, "nbEspeces", "nbDonnees"*/
+  ];
 }

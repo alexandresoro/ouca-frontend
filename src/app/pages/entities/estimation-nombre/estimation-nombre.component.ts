@@ -7,7 +7,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./estimation-nombre.tpl.html"
 })
 export class EstimationNombreComponent extends EntiteSimpleComponent<
-EstimationNombre
+  EstimationNombre
 > {
   getEntityName(): string {
     return "estimation-nombre";
@@ -28,10 +28,12 @@ EstimationNombre
       "Non Compté",
       this.currentObject.nonCompte ? "Oui" : "Non"
     );
+    /*
     detailsData[3] = new EntiteDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
+    */
     return detailsData;
   }
 }

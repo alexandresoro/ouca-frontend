@@ -8,8 +8,10 @@ interface CommunetRow {
   departement: string;
   code: string;
   nom: string;
+  /*
   nbLieuxdits: number;
   nbDonnees: number;
+  */
 }
 
 @Component({
@@ -20,9 +22,9 @@ export class CommuneTableComponent extends EntiteSimpleTableComponent<Commune> {
   public displayedColumns: string[] = [
     "departement",
     "code",
-    "nom",
+    "nom" /*,
     "nbLieuxdits",
-    "nbDonnees"
+    "nbDonnees"*/
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,9 +44,11 @@ export class CommuneTableComponent extends EntiteSimpleTableComponent<Commune> {
       id: commune.id,
       departement: commune.departement.code,
       code: commune.code,
-      nom: commune.nom,
+      nom: commune.nom
+      /*,
       nbLieuxdits: commune.nbLieuxdits,
       nbDonnees: commune.nbDonnees
+      */
     };
   }
 

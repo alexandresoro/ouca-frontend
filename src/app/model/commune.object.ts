@@ -10,10 +10,6 @@ export class Commune extends EntiteSimple {
 
   public nom: string;
 
-  public nbLieuxdits: number;
-
-  public nbDonnees: number;
-
   constructor() {
     super();
   }
