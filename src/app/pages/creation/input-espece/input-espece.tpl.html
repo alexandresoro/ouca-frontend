@@ -2,10 +2,9 @@
 <lco-autocomplete
   [attributesToFilter]="classeAutocompleteAttributes"
   type="Classe"
-  [values]="classes"
+  [values]="classes | async"
   [control]="controlGroup.controls['classe']"
   [displayFn]="displayClasseFormat"
-  (onValueChanged)="updateEspeces($event.value)"
 >
 </lco-autocomplete>
 
@@ -13,7 +12,7 @@
 <lco-autocomplete
   [attributesToFilter]="especeAutocompleteAttributes"
   type="Espèce"
-  [values]="filteredEspeces"
+  [values]="filteredEspeces$ | async"
   [control]="controlGroup.controls['espece']"
   [displayFn]="displayEspeceFormat"
 >

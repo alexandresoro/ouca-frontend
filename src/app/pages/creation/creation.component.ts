@@ -8,6 +8,7 @@ import { ConfirmationDialogData } from "../../components/dialog/confirmation-dia
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { Age } from "../../model/age.object";
+import { Classe } from "../../model/classe.object";
 import { Commune } from "../../model/commune.object";
 import { Comportement } from "../../model/comportement.object";
 import { CreationPage } from "../../model/creation-page.object";
@@ -15,6 +16,7 @@ import { Departement } from "../../model/departement.object";
 import { Donnee } from "../../model/donnee.object";
 import { EntiteAvecLibelleEtCode } from "../../model/entite-avec-libelle-et-code.object";
 import { EntiteResult } from "../../model/entite-result.object";
+import { Espece } from "../../model/espece.object";
 import { EstimationNombre } from "../../model/estimation-nombre.object";
 import { Inventaire } from "../../model/inventaire.object";
 import { Lieudit } from "../../model/lieudit.object";
@@ -51,6 +53,10 @@ export class CreationComponent extends PageComponent implements OnInit {
   public communes$: Subject<Commune[]>;
 
   public lieuxdits$: Subject<Lieudit[]>;
+
+  public classes$: Subject<Classe[]>;
+
+  public especes$: Subject<Espece[]>;
 
   public inventaireForm: FormGroup = new FormGroup({
     observateur: new FormControl("", Validators.required),
@@ -118,6 +124,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.departements$ = new Subject();
     this.communes$ = new Subject();
     this.lieuxdits$ = new Subject();
+    this.classes$ = new Subject();
+    this.especes$ = new Subject();
     this.initCreationPage();
   }
 
@@ -132,6 +140,8 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.communes$.next(creationPage ? creationPage.communes : []);
         this.departements$.next(creationPage ? creationPage.departements : []);
         this.lieuxdits$.next(creationPage ? creationPage.lieudits : []);
+        this.classes$.next(creationPage ? creationPage.classes : []);
+        this.especes$.next(creationPage ? creationPage.especes : []);
       },
       (error: any) => {
         this.onInitCreationPageError(error);

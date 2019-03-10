@@ -5,6 +5,7 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { combineLatest, Observable } from "rxjs";
 import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
 import { Classe } from "../../../model/classe.object";
 import { Espece } from "../../../model/espece.object";
@@ -15,13 +16,13 @@ import { Espece } from "../../../model/espece.object";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputEspeceComponent implements OnInit {
-  @Input() public classes: Classe[];
-
-  @Input() public especes: Espece[];
-
   @Input() public controlGroup: FormGroup;
 
-  public filteredEspeces: Espece[];
+  @Input() public classes: Observable<Classe[]>;
+
+  @Input() public especes: Observable<Espece[]>;
+
+  public filteredEspeces$: Observable<Espece[]>;
 
   public classeAutocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -49,29 +50,43 @@ export class InputEspeceComponent implements OnInit {
   ];
 
   public ngOnInit(): void {
-    this.filteredEspeces = this.especes;
+    const classeControl = this.controlGroup.get("classe");
+
+    classeControl.valueChanges.subscribe((selectedClasse: Classe) => {
+      this.resetSelectedEspece();
+    });
+
+    this.filteredEspeces$ = combineLatest(
+      classeControl.valueChanges as Observable<Classe>,
+      this.especes,
+      (selectedClasse, especes) => {
+        if (especes) {
+          if (!!selectedClasse && !!selectedClasse.id) {
+            return especes.filter((espece) => {
+              return espece.classeId === selectedClasse.id;
+            });
+          } else {
+            return especes;
+          }
+        } else {
+          return [];
+        }
+      }
+    );
   }
 
   /**
    * When selecting a classe, filter the list of especes
    */
-  public updateEspeces(selectedClasse: Classe): void {
-    if (!!selectedClasse && !!selectedClasse.id) {
-      this.controlGroup.controls.espece.setValue(null);
-      this.filteredEspeces = this.especes.filter(
-        (espece) => espece.classeId === selectedClasse.id
-      );
-    } else {
-      // If "Toutes" we display all the especes
-      this.filteredEspeces = this.especes;
-    }
+  public resetSelectedEspece(): void {
+    this.controlGroup.controls.espece.setValue(null);
   }
 
-  private displayClasseFormat = (classe: Classe): string => {
+  public displayClasseFormat = (classe: Classe): string => {
     return !!classe ? classe.libelle : "";
   }
 
-  private displayEspeceFormat = (espece: Espece): string => {
+  public displayEspeceFormat = (espece: Espece): string => {
     return !!espece
       ? espece.code + " - " + espece.nomFrancais + " - " + espece.nomLatin
       : "";
