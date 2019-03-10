@@ -6,10 +6,10 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { combineLatest, Observable } from "rxjs";
-import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
-import { Commune } from "../../../model/commune.object";
-import { Departement } from "../../../model/departement.object";
-import { Lieudit } from "../../../model/lieudit.object";
+import { AutocompleteAttribute } from "../../../../components/form/lco-autocomplete/autocomplete-attribute.object";
+import { Commune } from "../../../../model/commune.object";
+import { Departement } from "../../../../model/departement.object";
+import { Lieudit } from "../../../../model/lieudit.object";
 
 @Component({
   selector: "input-lieudit",

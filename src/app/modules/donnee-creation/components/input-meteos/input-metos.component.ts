@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { FormControl } from "@angular/forms";
-import { Meteo } from "../../../model/meteo.object";
+import { Meteo } from "../../../../model/meteo.object";
 
 @Component({
   selector: "input-meteos",

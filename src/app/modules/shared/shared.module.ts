@@ -27,6 +27,7 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { LcoEntiteSelectComponent } from "../../components/form/entite-select/lco-entite-select.component";
+import { LcoAutocompleteComponent } from "../../components/form/lco-autocomplete/lco-autocomplete.component";
 
 @NgModule({
   imports: [
@@ -57,7 +58,7 @@ import { LcoEntiteSelectComponent } from "../../components/form/entite-select/lc
     MatAutocompleteModule,
     MatTreeModule
   ],
-  declarations: [LcoEntiteSelectComponent],
+  declarations: [LcoAutocompleteComponent, LcoEntiteSelectComponent],
   exports: [
     CommonModule,
     BrowserModule,
@@ -66,6 +67,7 @@ import { LcoEntiteSelectComponent } from "../../components/form/entite-select/lc
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    LcoAutocompleteComponent,
     LcoEntiteSelectComponent,
     MatButtonModule,
     MatMenuModule,

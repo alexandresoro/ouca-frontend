@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Subscription } from "rxjs";
-import { Donnee } from "../../model/donnee.object";
-import { Inventaire } from "../../model/inventaire.object";
+import { Donnee } from "../../../../model/donnee.object";
+import { Inventaire } from "../../../../model/inventaire.object";
 import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
 

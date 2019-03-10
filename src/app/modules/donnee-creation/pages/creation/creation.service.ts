@@ -1,12 +1,12 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Comportement } from "../../model/comportement.object";
-import { CreationPage } from "../../model/creation-page.object";
-import { Donnee } from "../../model/donnee.object";
-import { EntiteResult } from "../../model/entite-result.object";
-import { Lieudit } from "../../model/lieudit.object";
-import { BaseNaturalisteService } from "../../services/base-naturaliste.service";
+import { Comportement } from "../../../../model/comportement.object";
+import { CreationPage } from "../../../../model/creation-page.object";
+import { Donnee } from "../../../../model/donnee.object";
+import { EntiteResult } from "../../../../model/entite-result.object";
+import { Lieudit } from "../../../../model/lieudit.object";
+import { BaseNaturalisteService } from "../../../../services/base-naturaliste.service";
 
 @Injectable()
 export class CreationService extends BaseNaturalisteService {

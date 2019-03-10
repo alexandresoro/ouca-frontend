@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { AutocompleteAttribute } from "../../../components/form/lco-autocomplete/autocomplete-attribute.object";
-import { Milieu } from "../../../model/milieu.object";
+import { AutocompleteAttribute } from "../../../../components/form/lco-autocomplete/autocomplete-attribute.object";
+import { Milieu } from "../../../../model/milieu.object";
 
 @Component({
   selector: "input-milieux",
