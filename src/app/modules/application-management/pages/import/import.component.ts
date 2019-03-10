@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { PageComponent } from "../../../../pages/page.component";
+import { PageComponent } from "../../../shared/components/page.component";
 import { ImportService } from "./import.service";
 
 @Component({

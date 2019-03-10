@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { EntiteSimple } from "../../../../model/entite-simple.object";
-import { BaseNaturalisteService } from "../../../../services/base-naturaliste.service";
+import { BaseNaturalisteService } from "../../../shared/services/base-naturaliste.service";
 
 @Injectable()
 export class EntiteSimpleService<

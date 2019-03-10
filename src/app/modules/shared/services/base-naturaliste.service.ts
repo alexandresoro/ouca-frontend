@@ -1,11 +1,6 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Http, Response } from "@angular/http";
 import { Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
-import {
-  HttpClient,
-  HttpResponse
-} from "../../../node_modules/@angular/common/http";
 
 @Injectable()
 export class BaseNaturalisteService {

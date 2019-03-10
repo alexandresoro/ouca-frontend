@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { AppConfiguration } from "../../../../model/app-configuration.object";
 import { ConfigurationPage } from "../../../../model/configuration-page.object";
 import { EntiteResult } from "../../../../model/entite-result.object";
-import { BaseNaturalisteService } from "../../../../services/base-naturaliste.service";
+import { BaseNaturalisteService } from "../../../shared/services/base-naturaliste.service";
 
 @Injectable()
 export class ConfigurationService extends BaseNaturalisteService {

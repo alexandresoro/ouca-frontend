@@ -1,15 +1,15 @@
-import { Age } from "../model/age.object";
-import { Classe } from "../model/classe.object";
-import { Commune } from "../model/commune.object";
-import { Comportement } from "../model/comportement.object";
-import { Departement } from "../model/departement.object";
-import { EstimationDistance } from "../model/estimation-distance.object";
-import { EstimationNombre } from "../model/estimation-nombre.object";
-import { Lieudit } from "../model/lieudit.object";
-import { Meteo } from "../model/meteo.object";
-import { Milieu } from "../model/milieu.object";
-import { Observateur } from "../model/observateur.object";
-import { Sexe } from "../model/sexe.object";
+import { Age } from "../../../model/age.object";
+import { Classe } from "../../../model/classe.object";
+import { Commune } from "../../../model/commune.object";
+import { Comportement } from "../../../model/comportement.object";
+import { Departement } from "../../../model/departement.object";
+import { EstimationDistance } from "../../../model/estimation-distance.object";
+import { EstimationNombre } from "../../../model/estimation-nombre.object";
+import { Lieudit } from "../../../model/lieudit.object";
+import { Meteo } from "../../../model/meteo.object";
+import { Milieu } from "../../../model/milieu.object";
+import { Observateur } from "../../../model/observateur.object";
+import { Sexe } from "../../../model/sexe.object";
 
 export class ListHelper {
   private ages: Age[];
