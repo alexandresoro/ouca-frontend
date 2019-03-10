@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import moment from "moment";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConfirmationDialogData } from "../../components/dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../components/dialog/confirmation-dialog.component";
@@ -46,11 +46,11 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private listHelper: ListHelper;
 
-  public departements$: Observable<Departement[]>;
+  public departements$: Subject<Departement[]>;
 
-  public communes$: Observable<Commune[]>;
+  public communes$: Subject<Commune[]>;
 
-  public lieuxdits$: Observable<Lieudit[]>;
+  public lieuxdits$: Subject<Lieudit[]>;
 
   public inventaireForm: FormGroup = new FormGroup({
     observateur: new FormControl("", Validators.required),
@@ -115,6 +115,9 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.departements$ = new Subject();
+    this.communes$ = new Subject();
+    this.lieuxdits$ = new Subject();
     this.initCreationPage();
   }
 
@@ -126,25 +129,14 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.creationService.getInitialPageModel().subscribe(
       (creationPage: CreationPage) => {
         this.onInitCreationPageSucces(creationPage);
+        this.communes$.next(creationPage ? creationPage.communes : []);
+        this.departements$.next(creationPage ? creationPage.departements : []);
+        this.lieuxdits$.next(creationPage ? creationPage.lieudits : []);
       },
       (error: any) => {
         this.onInitCreationPageError(error);
       }
     );
-
-    this.communes$ = this.creationService
-      .getInitialPageModel()
-      .pipe(map((creationPage) => (creationPage ? creationPage.communes : [])));
-
-    this.departements$ = this.creationService
-      .getInitialPageModel()
-      .pipe(
-        map((creationPage) => (creationPage ? creationPage.departements : []))
-      );
-
-    this.lieuxdits$ = this.creationService
-      .getInitialPageModel()
-      .pipe(map((creationPage) => (creationPage ? creationPage.lieudits : [])));
   }
 
   private onInitCreationPageError(error: any): void {
