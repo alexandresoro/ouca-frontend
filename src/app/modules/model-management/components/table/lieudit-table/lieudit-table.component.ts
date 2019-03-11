@@ -1,8 +1,8 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
-import { Lieudit } from "../../../../model/lieudit.object";
-import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table.component";
+import { Lieudit } from "../../../../../model/lieudit.object";
+import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface LieuditRow {
   id: number;

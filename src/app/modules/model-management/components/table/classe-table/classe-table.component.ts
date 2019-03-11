@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { Classe } from "../../../../model/classe.object";
-import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle/entite-avec-libelle-table.component";
+import { Classe } from "../../../../../model/classe.object";
+import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
 
 @Component({
   selector: "classe-table",

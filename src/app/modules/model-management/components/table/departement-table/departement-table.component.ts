@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { Departement } from "../../../../model/departement.object";
-import { EntiteSimpleTableComponent } from "../entite-simple/entite-simple-table.component";
+import { Departement } from "../../../../../model/departement.object";
+import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 @Component({
   selector: "departement-table",

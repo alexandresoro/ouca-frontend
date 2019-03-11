@@ -8,7 +8,7 @@ import {
   ViewChild
 } from "@angular/core";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
-import { EntiteSimple } from "../../../../model/entite-simple.object";
+import { EntiteSimple } from "../../../../../model/entite-simple.object";
 
 @Component({
   template: ""
