@@ -1,11 +1,11 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
-import { Classe } from "../../../../model/classe.object";
-import { Espece } from "../../../../model/espece.object";
-import { EntiteSimpleFormComponent } from "../entite-simple/entite-simple-form.component";
-import { EntiteSimpleService } from "../entite-simple/entite-simple.service";
-import { GestionModeHelper } from "../gestion-mode.enum";
+import { Classe } from "../../../../../model/classe.object";
+import { Espece } from "../../../../../model/espece.object";
+import { EntiteSimpleService } from "../../../pages/entite-simple/entite-simple.service";
+import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
+import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
 
 @Component({
   selector: "espece-form",

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { EstimationNombre } from "../../../../model/estimation-nombre.object";
-import { EntiteAvecLibelleFormComponent } from "../entite-avec-libelle/entite-avec-libelle-form.component";
+import { EstimationNombre } from "../../../../../model/estimation-nombre.object";
+import { EntiteAvecLibelleFormComponent } from "../entite-avec-libelle-form/entite-avec-libelle-form.component";
 
 @Component({
   selector: "estimation-nombre-form",

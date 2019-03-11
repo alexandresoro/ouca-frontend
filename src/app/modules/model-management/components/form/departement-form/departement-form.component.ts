@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { Departement } from "../../../../model/departement.object";
-import { EntiteSimpleFormComponent } from "../entite-simple/entite-simple-form.component";
+import { Departement } from "../../../../../model/departement.object";
+import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
 
 @Component({
   selector: "departement-form",

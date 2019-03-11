@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { EntiteAvecLibelle } from "../../../../model/entite-avec-libelle.object";
-import { EntiteSimpleFormComponent } from "../entite-simple/entite-simple-form.component";
-import { GestionModeHelper } from "../gestion-mode.enum";
+import { EntiteAvecLibelle } from "../../../../../model/entite-avec-libelle.object";
+import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
+import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
 
 @Component({
   selector: "entite-avec-libelle-form",

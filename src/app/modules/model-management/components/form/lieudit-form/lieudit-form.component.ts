@@ -1,12 +1,12 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
-import { Commune } from "../../../../model/commune.object";
-import { Departement } from "../../../../model/departement.object";
-import { Lieudit } from "../../../../model/lieudit.object";
-import { EntiteSimpleFormComponent } from "../entite-simple/entite-simple-form.component";
-import { EntiteSimpleService } from "../entite-simple/entite-simple.service";
-import { GestionModeHelper } from "../gestion-mode.enum";
+import { Commune } from "../../../../../model/commune.object";
+import { Departement } from "../../../../../model/departement.object";
+import { Lieudit } from "../../../../../model/lieudit.object";
+import { EntiteSimpleService } from "../../../pages/entite-simple/entite-simple.service";
+import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
+import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
 
 @Component({
   selector: "lieudit-form",
