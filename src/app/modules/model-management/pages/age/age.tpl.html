@@ -32,11 +32,11 @@
         (confirm)="confirmObjectRemoval($event)">
     </entite-delete-confirmation>
 
-    <entite-details *ngIf="isViewOneMode() || isRemoveMode()"
+    <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
         [detailsData]="getDetailsData()"
         detailsTitle="Détails de l'âge"
         [isBackButtonDisplayed]="isViewOneMode()"
         (back)="viewAll()">
-    </entite-details>
+    </entity-details>
 
 </div>

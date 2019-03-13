@@ -3,10 +3,10 @@ import { EntiteDetailsData } from "../../../../model/entite-details-data.objects
 import { EntiteSimple } from "../../../../model/entite-simple.object";
 
 @Component({
-  selector: "entite-details",
-  templateUrl: "./entite-simple-details.tpl.html"
+  selector: "entity-details",
+  templateUrl: "./entity-details.tpl.html"
 })
-export class EntiteSimpleDetailsComponent<T extends EntiteSimple> {
+export class EntityDetailsComponent<T extends EntiteSimple> {
   @Input() detailsData: EntiteDetailsData[];
 
   @Input() objectToView: T;

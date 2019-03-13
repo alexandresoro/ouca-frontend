@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "../shared/shared.module";
+import { EntityDetailsComponent } from "./components/entity-details/entity-details.component";
 import { CommuneFormComponent } from "./components/form/commune-form/commune-form.component";
 import { DepartementFormComponent } from "./components/form/departement-form/departement-form.component";
 import { EntiteAvecLibelleEtCodeFormComponent } from "./components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
@@ -37,7 +38,6 @@ import { DepartementComponent } from "./pages/departement/departement.component"
 import { EntiteAvecLibelleEtCodeComponent } from "./pages/entite-avec-libelle-et-code/entite-avec-libelle-et-code.component";
 import { EntiteAvecLibelleComponent } from "./pages/entite-avec-libelle/entite-avec-libelle.component";
 import { EntiteSimpleRemovalConfirmationComponent } from "./pages/entite-simple/entite-simple-delete-confirmation.component";
-import { EntiteSimpleDetailsComponent } from "./pages/entite-simple/entite-simple-details.component";
 import { EntiteSimpleComponent } from "./pages/entite-simple/entite-simple.component";
 import { EntiteSimpleService } from "./pages/entite-simple/entite-simple.service";
 import { EspeceComponent } from "./pages/espece/espece.component";
@@ -72,7 +72,7 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     EntiteAvecLibelleEtCodeFormComponent,
     EntiteAvecLibelleEtCodeTableComponent,
     EntiteSimpleComponent,
-    EntiteSimpleDetailsComponent,
+    EntityDetailsComponent,
     EntiteSimpleFormComponent,
     EntiteSimpleRemovalConfirmationComponent,
     EntiteSimpleTableComponent,
