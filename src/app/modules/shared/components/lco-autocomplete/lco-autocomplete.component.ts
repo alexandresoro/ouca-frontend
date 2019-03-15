@@ -25,7 +25,7 @@ import * as _ from "lodash";
 import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 
 @Component({
-  selector: "lco-autocomplete",
+  selector: "autocomplete",
   templateUrl: "./lco-autocomplete.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })

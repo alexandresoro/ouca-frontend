@@ -13,7 +13,7 @@
 </mat-form-field>
 
 <!-- ESTIMATION NOMBRE -->
-<lco-autocomplete
+<autocomplete
   [type]="'Estimation du nombre'"
   [values]="estimationsNombre"
   [control]="controlGroup.controls['estimationNombre']"
@@ -21,4 +21,4 @@
   [displayFn]="displayEstimationNombreFormat"
   (onValueChanged)="onEstimationNombreChanged($event.value)"
 >
-</lco-autocomplete>
+</autocomplete>

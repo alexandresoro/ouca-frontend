@@ -1,19 +1,19 @@
 <!-- CLASSE -->
-<lco-autocomplete
+<autocomplete
   [attributesToFilter]="classeAutocompleteAttributes"
   type="Classe"
   [values]="classes | async"
   [control]="controlGroup.controls['classe']"
   [displayFn]="displayClasseFormat"
 >
-</lco-autocomplete>
+</autocomplete>
 
 <!-- ESPECE -->
-<lco-autocomplete
+<autocomplete
   [attributesToFilter]="especeAutocompleteAttributes"
   type="Espèce"
   [values]="filteredEspeces$ | async"
   [control]="controlGroup.controls['espece']"
   [displayFn]="displayEspeceFormat"
 >
-</lco-autocomplete>
+</autocomplete>

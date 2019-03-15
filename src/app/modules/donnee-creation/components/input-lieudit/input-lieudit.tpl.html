@@ -1,7 +1,7 @@
 <div>
   <div class="full-width-container">
     <!-- DEPARTEMENT -->
-    <lco-autocomplete
+    <autocomplete
       [attributesToFilter]="departementAutocompleteAttributes"
       [startWithMode]="true"
       type="Département"
@@ -9,31 +9,31 @@
       [control]="controlGroup.controls['departement']"
       [displayFn]="displayDepartementFormat"
     >
-    </lco-autocomplete>
+    </autocomplete>
   </div>
 
   <div class="full-width-container">
     <!-- COMMUNE -->
-    <lco-autocomplete
+    <autocomplete
       [type]="'Commune'"
       [values]="filteredCommunes$ | async"
       [control]="controlGroup.controls['commune']"
       [attributesToFilter]="communeAutocompleteAttributes"
       [displayFn]="displayCommuneFormat"
     >
-    </lco-autocomplete>
+    </autocomplete>
   </div>
 
   <div class="full-width-container">
     <!-- LIEU-DIT -->
-    <lco-autocomplete
+    <autocomplete
       [type]="'Lieu-dit'"
       [values]="filteredLieuxdits$ | async"
       [control]="controlGroup.controls['lieudit']"
       [attributesToFilter]="lieuditAutocompleteAttributes"
       [displayFn]="displayLieuDitFormat"
     >
-    </lco-autocomplete>
+    </autocomplete>
   </div>
 
   <div class="coordonnees-form">
