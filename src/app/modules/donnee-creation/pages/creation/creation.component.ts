@@ -27,7 +27,6 @@ import { ListHelper } from "../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
-import { CreationService } from "./creation.service";
 import { NavigationService } from "./navigation.service";
 
 @Component({
@@ -110,7 +109,6 @@ export class CreationComponent extends PageComponent implements OnInit {
   constructor(
     private backendApiService: BackendApiService,
     public modeHelper: CreationModeHelper,
-    private creationService: CreationService,
     public dialog: MatDialog,
     public navigationService: NavigationService
   ) {

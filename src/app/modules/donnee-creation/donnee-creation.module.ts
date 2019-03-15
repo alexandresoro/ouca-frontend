@@ -20,7 +20,6 @@ import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/sear
 import { DonneeCreationRoutingModule } from "./donnee-creation-routing.module";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationComponent } from "./pages/creation/creation.component";
-import { CreationService } from "./pages/creation/creation.service";
 import { NavigationService } from "./pages/creation/navigation.service";
 
 @NgModule({
@@ -47,6 +46,6 @@ import { NavigationService } from "./pages/creation/navigation.service";
   ],
   entryComponents: [SearchByIdDialogComponent],
   exports: [],
-  providers: [CreationModeHelper, CreationService, NavigationService]
+  providers: [CreationModeHelper, NavigationService]
 })
 export class DonneeCreationModule {}
