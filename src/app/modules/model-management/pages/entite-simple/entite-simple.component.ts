@@ -1,11 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { Response } from "@angular/http";
 import { EntiteResult } from "../../../../model/entite-result.object";
 import { EntiteSimple } from "../../../../model/entite-simple.object";
+import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntiteComponent } from "../entite.component";
 import { GestionMode } from "../gestion-mode.enum";
 import { GestionModeHelper } from "../gestion-mode.enum";
-import { EntiteSimpleService } from "./entite-simple.service";
 
 @Component({
   template: ""
@@ -26,7 +25,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
   public mode: GestionMode;
 
   constructor(
-    private entiteSimpleService: EntiteSimpleService<T>,
+    private backendApiService: BackendApiService,
     modeHelper: GestionModeHelper
   ) {
     super(modeHelper);
@@ -41,7 +40,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
 
   public getAll(): void {
     this.clearMessages();
-    this.entiteSimpleService.getAllObjects(this.getEntityName()).subscribe(
+    this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
       (result: T[]) => {
         this.objects = result;
       },
@@ -73,8 +72,8 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
 
   public confirmObjectRemoval(isConfirmed: boolean): void {
     if (!!isConfirmed && !!this.objectToRemove) {
-      this.entiteSimpleService
-        .httpGet(this.getEntityName() + "/delete/" + this.objectToRemove.id)
+      this.backendApiService
+        .deleteEntity(this.getEntityName(), this.objectToRemove.id)
         .subscribe(
           (result: EntiteResult<T>) => {
             this.updatePageStatus(result.status, result.messages);
@@ -114,33 +113,28 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
   }
 
   public saveObject(): void {
-    let action: string = this.getEntityName() + "/create";
-    if (this.isEditionMode()) {
-      action = this.getEntityName() + "/update";
-    }
-
-    console.log("Start saving " + this.getEntityName(), this.objectToSave);
-
-    this.entiteSimpleService.httpPost(action, this.objectToSave).subscribe(
-      (result: EntiteResult<T>) => {
-        this.updatePageStatus(result.status, result.messages);
-        if (this.isSuccess()) {
-          if (this.isCreationMode()) {
-            // Add the new entity in the list
-            this.objects[this.objects.length] = result.object;
+    this.backendApiService
+      .saveEntity(this.getEntityName(), this.objectToSave, this.isEditionMode())
+      .subscribe(
+        (result: EntiteResult<T>) => {
+          this.updatePageStatus(result.status, result.messages);
+          if (this.isSuccess()) {
+            if (this.isCreationMode()) {
+              // Add the new entity in the list
+              this.objects[this.objects.length] = result.object;
+            }
+            this.switchToViewAllMode();
           }
-          this.switchToViewAllMode();
+        },
+        (error: Response) => {
+          console.error(
+            "ERREUR: lors de la sauvegarde de l'objet de type " +
+              this.getEntityName(),
+            this.objectToSave,
+            error
+          );
         }
-      },
-      (error: Response) => {
-        console.error(
-          "ERREUR: lors de la sauvegarde de l'objet de type " +
-            this.getEntityName(),
-          this.objectToSave,
-          error
-        );
-      }
-    );
+      );
   }
 
   public cancelEdition(): void {

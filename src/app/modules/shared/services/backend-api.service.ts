@@ -6,6 +6,7 @@ import { ConfigurationPage } from "../../../model/configuration-page.object";
 import { CreationPage } from "../../../model/creation-page.object";
 import { Donnee } from "../../../model/donnee.object";
 import { EntiteResult } from "../../../model/entite-result.object";
+import { EntiteSimple } from "../../../model/entite-simple.object";
 import { Inventaire } from "../../../model/inventaire.object";
 import { Lieudit } from "../../../model/lieudit.object";
 
@@ -92,10 +93,22 @@ export class BackendApiService {
     return this.httpGet(entityName + "/" + this.INIT);
   }
 
+  public saveEntity<T extends EntiteSimple>(
+    entityName: string,
+    entityToSave: T,
+    isUpdate: boolean = false
+  ) {
+    if (!!!isUpdate) {
+      return this.httpPost(entityName + "/" + this.CREATE, entityToSave);
+    } else {
+      return this.httpPost(entityName + "/" + this.UPDATE, entityToSave);
+    }
+  }
+
   public deleteEntity(
     entityName: string,
     id: number
-  ): Observable<EntiteResult<Donnee>> {
+  ): Observable<EntiteResult<EntiteSimple>> {
     return this.httpGet(entityName + "/" + this.DELETE + id);
   }
 
