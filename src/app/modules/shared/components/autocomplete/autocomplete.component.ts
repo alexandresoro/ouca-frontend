@@ -19,18 +19,17 @@ import * as diacritics from "diacritics";
 import { Observable, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import { EntiteSimple } from "../../../../model/entite-simple.object";
-import { LcoAutocompleteEventObject } from "./lco-autocomplete-event.object";
+import { AutocompleteEventObject } from "./autocomplete-event.object";
 
 import * as _ from "lodash";
 import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 
 @Component({
   selector: "autocomplete",
-  templateUrl: "./lco-autocomplete.tpl.html",
+  templateUrl: "./autocomplete.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LcoAutocompleteComponent
-  implements OnInit, AfterViewInit, OnDestroy {
+export class AutocompleteComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() public type: string;
 
   @Input() public values: EntiteSimple[];
@@ -46,8 +45,8 @@ export class LcoAutocompleteComponent
   @Input() public displayFn: ((value: any) => string) | null;
 
   @Output() public onValueChanged: EventEmitter<
-    LcoAutocompleteEventObject
-  > = new EventEmitter<LcoAutocompleteEventObject>();
+    AutocompleteEventObject
+  > = new EventEmitter<AutocompleteEventObject>();
 
   @ViewChild(MatAutocompleteTrigger)
   trigger: MatAutocompleteTrigger;
@@ -189,7 +188,7 @@ export class LcoAutocompleteComponent
   private updateSelectionWithOption(option: MatOption): void {
     const newSelectedValue: EntiteSimple = option ? option.value : null;
 
-    const event: LcoAutocompleteEventObject = new LcoAutocompleteEventObject(
+    const event: AutocompleteEventObject = new AutocompleteEventObject(
       newSelectedValue
     );
     this.onValueChanged.emit(event);

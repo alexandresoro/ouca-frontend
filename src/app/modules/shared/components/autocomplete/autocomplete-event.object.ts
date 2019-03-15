@@ -1,6 +1,6 @@
 import { EntiteSimple } from "../../../../model/entite-simple.object";
 
-export class LcoAutocompleteEventObject {
+export class AutocompleteEventObject {
   public value: EntiteSimple;
 
   constructor(value: EntiteSimple) {

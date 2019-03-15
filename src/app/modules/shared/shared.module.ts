@@ -34,9 +34,9 @@ import {
 } from "@angular/material-moment-adapter";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { LcoEntiteSelectComponent } from "./components/entite-select/lco-entite-select.component";
-import { LcoAutocompleteComponent } from "./components/lco-autocomplete/lco-autocomplete.component";
 import { BaseNaturalisteService } from "./services/base-naturaliste.service";
 
 @NgModule({
@@ -70,7 +70,7 @@ import { BaseNaturalisteService } from "./services/base-naturaliste.service";
   ],
   declarations: [
     ConfirmationDialogComponent,
-    LcoAutocompleteComponent,
+    AutocompleteComponent,
     LcoEntiteSelectComponent
   ],
   entryComponents: [ConfirmationDialogComponent],
@@ -83,7 +83,7 @@ import { BaseNaturalisteService } from "./services/base-naturaliste.service";
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    LcoAutocompleteComponent,
+    AutocompleteComponent,
     LcoEntiteSelectComponent,
     MatButtonModule,
     MatMenuModule,
