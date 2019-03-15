@@ -1,43 +1,50 @@
 <div class="lco-entity-page lco-classe-page">
-  <top-buttons title="Classes"
+  <top-buttons
+    title="Classes"
     createButtonLibelle="Créer une classe"
     exportButtonLibelle="Exporter les classes"
     [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
-    (onClickRefresh)="getAll()"></top-buttons>
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-  <entity-messages [messages]="messages"
-    [status]="status"></entity-messages>
+  <entity-messages [messages]="messages" [status]="status"></entity-messages>
 
-  <classe-table *ngIf="isViewAllMode()"
+  <classe-table
+    *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"></classe-table>
+    (view)="viewObject($event)"
+  ></classe-table>
 
-  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form
+    *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     creationTitle="Création d'une classe"
     editionTitle="Édition d'une classe"
     (confirm)="saveObject()"
-    (back)="cancelEdition()"></entite-avec-libelle-form>
+    (back)="cancelEdition()"
+  ></entite-avec-libelle-form>
 
-  <entite-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la classe ?"
-    details="Toutes les espèces ({{currentObject.nbEspeces}}) et toutes les données ({{currentObject.nbDonnees}}) avec cette classe seront supprimées."
-
+    details="Toutes les espèces et toutes les données avec cette classe seront supprimées."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer la classe"
-    (confirm)="confirmObjectRemoval($event)">
-  </entite-delete-confirmation>
+    (confirm)="confirmObjectRemoval($event)"
+  >
+  </entity-delete-confirmation>
 
-  <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de la classe"
     [isBackButtonDisplayed]="isViewOneMode()"
-    (back)="viewAll()">
+    (back)="viewAll()"
+  >
   </entity-details>
-
 </div>

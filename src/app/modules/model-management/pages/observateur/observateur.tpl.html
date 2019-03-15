@@ -1,45 +1,52 @@
 <div class="lco-entity-page">
-  <top-buttons title="Observateurs"
+  <top-buttons
+    title="Observateurs"
     createButtonLibelle="Créer un observateur"
     exportButtonLibelle="Exporter les observateurs"
     [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
-    (onClickRefresh)="getAll()"></top-buttons>
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-  <entity-messages [messages]="messages"
-    [status]="status"></entity-messages>
+  <entity-messages [messages]="messages" [status]="status"></entity-messages>
 
-  <observateur-table *ngIf="isViewAllMode()"
+  <observateur-table
+    *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)">
+    (view)="viewObject($event)"
+  >
   </observateur-table>
 
-  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form
+    *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     creationTitle="Création d'un observateur"
     editionTitle="Édition d'un observateur"
     (confirm)="saveObject()"
-    (back)="cancelEdition()">
+    (back)="cancelEdition()"
+  >
   </entite-avec-libelle-form>
 
-  <entite-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'observateur ?"
-    details="Toutes les données ({{currentObject.nbDonnees}}) avec cet observateur seront supprimées."
-
+    details="Toutes les données avec cet observateur seront supprimées."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer l'observateur"
-    (confirm)="confirmObjectRemoval($event)">
-  </entite-delete-confirmation>
+    (confirm)="confirmObjectRemoval($event)"
+  >
+  </entity-delete-confirmation>
 
-  <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de l'observateur"
     [isBackButtonDisplayed]="isViewOneMode()"
-    (back)="viewAll()">
+    (back)="viewAll()"
+  >
   </entity-details>
-
 </div>

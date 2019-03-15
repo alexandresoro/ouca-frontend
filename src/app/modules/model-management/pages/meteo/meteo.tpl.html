@@ -26,13 +26,13 @@
     (back)="cancelEdition()">
   </entite-avec-libelle-form>
 
-  <entite-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la météo ?"
     details="{{currentObject.nbDonnees}} données ont cette météo."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer la météo"
     (confirm)="confirmObjectRemoval($event)">
-  </entite-delete-confirmation>
+  </entity-delete-confirmation>
 
   <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"

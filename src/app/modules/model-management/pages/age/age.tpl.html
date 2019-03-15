@@ -1,42 +1,50 @@
 <div class="lco-entity-page">
-    <top-buttons title="Âges"
-        createButtonLibelle="Créer un âge"
-        exportButtonLibelle="Exporter les âges"
-        [areButtonsDisplayed]="isViewAllMode()"
-        (onClickNewObject)="newObject()"
-        (onClickExportObjects)="exportObjects()"
-        (onClickRefresh)="getAll()"></top-buttons>
+  <top-buttons
+    title="Âges"
+    createButtonLibelle="Créer un âge"
+    exportButtonLibelle="Exporter les âges"
+    [areButtonsDisplayed]="isViewAllMode()"
+    (onClickNewObject)="newObject()"
+    (onClickExportObjects)="exportObjects()"
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-    <entity-messages [messages]="messages"
-        [status]="status"></entity-messages>
+  <entity-messages [messages]="messages" [status]="status"></entity-messages>
 
-    <age-table *ngIf="isViewAllMode()"
-        [objects]="objects"
-        (delete)="deleteObject($event)"
-        (edit)="editObject($event)"
-        (view)="viewObject($event)"></age-table>
+  <age-table
+    *ngIf="isViewAllMode()"
+    [objects]="objects"
+    (delete)="deleteObject($event)"
+    (edit)="editObject($event)"
+    (view)="viewObject($event)"
+  ></age-table>
 
-    <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
-        [object]="objectToSave"
-        [mode]="mode"
-        creationTitle="Création d'un âge"
-        editionTitle="Edition de l'âge"
-        (confirm)="saveObject()"
-        (back)="cancelEdition()"></entite-avec-libelle-form>
+  <entite-avec-libelle-form
+    *ngIf="isCreationMode() || isEditionMode()"
+    [object]="objectToSave"
+    [mode]="mode"
+    creationTitle="Création d'un âge"
+    editionTitle="Edition de l'âge"
+    (confirm)="saveObject()"
+    (back)="cancelEdition()"
+  ></entite-avec-libelle-form>
 
-    <entite-delete-confirmation *ngIf="isRemoveMode()"
-        question="Êtes-vous certain de vouloir supprimer l'âge ?"
-        details="Toutes les données ({{currentObject.nbDonnees}}) avec cet âge seront supprimées."
-        cancellationLabel="Non, annuler la suppression"
-        confirmationLabel="Oui, supprimer l'âge"
-        (confirm)="confirmObjectRemoval($event)">
-    </entite-delete-confirmation>
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
+    question="Êtes-vous certain de vouloir supprimer l'âge ?"
+    details="Toutes les données avec cet âge seront supprimées."
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer l'âge"
+    (confirm)="confirmObjectRemoval($event)"
+  >
+  </entity-delete-confirmation>
 
-    <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
-        [detailsData]="getDetailsData()"
-        detailsTitle="Détails de l'âge"
-        [isBackButtonDisplayed]="isViewOneMode()"
-        (back)="viewAll()">
-    </entity-details>
-
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails de l'âge"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()"
+  >
+  </entity-details>
 </div>

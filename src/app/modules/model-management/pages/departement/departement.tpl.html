@@ -1,43 +1,50 @@
 <div class="lco-entity-page">
-    <top-buttons title="Départements"
-        createButtonLibelle="Créer un département"
-        exportButtonLibelle="Exporter les départements"
-        [areButtonsDisplayed]="isViewAllMode()"
-        (onClickNewObject)="newObject()"
-        (onClickExportObjects)="exportObjects()"
-        (onClickRefresh)="getAll()"></top-buttons>
+  <top-buttons
+    title="Départements"
+    createButtonLibelle="Créer un département"
+    exportButtonLibelle="Exporter les départements"
+    [areButtonsDisplayed]="isViewAllMode()"
+    (onClickNewObject)="newObject()"
+    (onClickExportObjects)="exportObjects()"
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-    <entity-messages [messages]="messages"
-        [status]="status"></entity-messages>
+  <entity-messages [messages]="messages" [status]="status"></entity-messages>
 
-    <departement-table *ngIf="isViewAllMode()"
-        [objects]="objects"
-        (delete)="deleteObject($event)"
-        (edit)="editObject($event)"
-        (view)="viewObject($event)">
-    </departement-table>
+  <departement-table
+    *ngIf="isViewAllMode()"
+    [objects]="objects"
+    (delete)="deleteObject($event)"
+    (edit)="editObject($event)"
+    (view)="viewObject($event)"
+  >
+  </departement-table>
 
-    <departement-form *ngIf="isCreationMode() || isEditionMode()"
-        [object]="objectToSave"
-        [mode]="mode"
-        (confirm)="saveObject()"
-        (back)="cancelEdition()">
-    </departement-form>
+  <departement-form
+    *ngIf="isCreationMode() || isEditionMode()"
+    [object]="objectToSave"
+    [mode]="mode"
+    (confirm)="saveObject()"
+    (back)="cancelEdition()"
+  >
+  </departement-form>
 
-    <entite-delete-confirmation *ngIf="isRemoveMode()"
-        question="Êtes-vous certain de vouloir supprimer le département ?"
-        details="Toutes les communes ({{currentObject.nbCommunes}}), tous les lieux-dits ({{currentObject.nbLieuxdits}}) et toutes les données ({{currentObject.nbDonnees}}) avec ce département seront supprimés."
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
+    question="Êtes-vous certain de vouloir supprimer le département ?"
+    details="Toutes les communes, tous les lieux-dits et toutes les données avec ce département seront supprimés."
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer le département"
+    (confirm)="confirmObjectRemoval($event)"
+  >
+  </entity-delete-confirmation>
 
-        cancellationLabel="Non, annuler la suppression"
-        confirmationLabel="Oui, supprimer le département"
-        (confirm)="confirmObjectRemoval($event)">
-    </entite-delete-confirmation>
-
-    <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
-        [detailsData]="getDetailsData()"
-        detailsTitle="Détails du département"
-        [isBackButtonDisplayed]="isViewOneMode()"
-        (back)="viewAll()">
-    </entity-details>
-
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails du département"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()"
+  >
+  </entity-details>
 </div>

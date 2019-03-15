@@ -1,17 +1,14 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
-  selector: "entite-delete-confirmation",
-  templateUrl: "./entite-simple-delete-confirmation.tpl.html"
+  selector: "entity-delete-confirmation",
+  templateUrl: "./entity-delete-confirmation.tpl.html"
 })
-export class EntiteSimpleRemovalConfirmationComponent {
+export class EntityDeleteConfirmationComponent {
   @Input() question: string;
   @Input() details: string;
   @Input() confirmationLabel: string;
   @Input() cancellationLabel: string;
-
-  // TODO remove
-  @Input("objectToRemove") public object: any;
 
   @Output() public confirm: EventEmitter<boolean> = new EventEmitter();
 

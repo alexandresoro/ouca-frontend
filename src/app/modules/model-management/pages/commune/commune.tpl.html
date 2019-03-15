@@ -1,43 +1,50 @@
 <div class="lco-entity-page lco-commune-page">
-    <top-buttons title="Communes"
-        createButtonLibelle="Créer une commune"
-        exportButtonLibelle="Exporter les communes"
-        [areButtonsDisplayed]="isViewAllMode()"
-        (onClickNewObject)="newObject()"
-        (onClickExportObjects)="exportObjects()"
-        (onClickRefresh)="getAll()"></top-buttons>
+  <top-buttons
+    title="Communes"
+    createButtonLibelle="Créer une commune"
+    exportButtonLibelle="Exporter les communes"
+    [areButtonsDisplayed]="isViewAllMode()"
+    (onClickNewObject)="newObject()"
+    (onClickExportObjects)="exportObjects()"
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-    <entity-messages [messages]="messages"
-        [status]="status"></entity-messages>
+  <entity-messages [messages]="messages" [status]="status"></entity-messages>
 
-    <commune-table *ngIf="isViewAllMode()"
-        [objects]="objects"
-        (delete)="deleteObject($event)"
-        (edit)="editObject($event)"
-        (view)="viewObject($event)">
-    </commune-table>
+  <commune-table
+    *ngIf="isViewAllMode()"
+    [objects]="objects"
+    (delete)="deleteObject($event)"
+    (edit)="editObject($event)"
+    (view)="viewObject($event)"
+  >
+  </commune-table>
 
-    <commune-form *ngIf="isCreationMode() || isEditionMode()"
-        [object]="objectToSave"
-        [mode]="mode"
-        (confirm)="saveObject()"
-        (back)="cancelEdition()">
-    </commune-form>
+  <commune-form
+    *ngIf="isCreationMode() || isEditionMode()"
+    [object]="objectToSave"
+    [mode]="mode"
+    (confirm)="saveObject()"
+    (back)="cancelEdition()"
+  >
+  </commune-form>
 
-    <entite-delete-confirmation *ngIf="isRemoveMode()"
-        question="Êtes-vous certain de vouloir supprimer la commune ?"
-        details="Tous les lieux-dits ({{currentObject.nbLieuxdits}}) et toutes les données ({{currentObject.nbDonnees}}) avec cette communes seront supprimés."
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
+    question="Êtes-vous certain de vouloir supprimer la commune ?"
+    details="Tous les lieux-dits et toutes les données avec cette communes seront supprimés."
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer la commune"
+    (confirm)="confirmObjectRemoval($event)"
+  >
+  </entity-delete-confirmation>
 
-        cancellationLabel="Non, annuler la suppression"
-        confirmationLabel="Oui, supprimer la commune"
-        (confirm)="confirmObjectRemoval($event)">
-    </entite-delete-confirmation>
-
-    <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
-        [detailsData]="getDetailsData()"
-        detailsTitle="Détails de la commune"
-        [isBackButtonDisplayed]="isViewOneMode()"
-        (back)="viewAll()">
-    </entity-details>
-
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails de la commune"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()"
+  >
+  </entity-details>
 </div>

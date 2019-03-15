@@ -1,40 +1,48 @@
 <div class="lco-entity-page">
-    <top-buttons title="Espèces"
-        createButtonLibelle="Créer une espèce"
-        exportButtonLibelle="Exporter les espèces"
-        [areButtonsDisplayed]="isViewAllMode()"
-        (onClickNewObject)="newObject()"
-        (onClickExportObjects)="exportObjects()"
-        (onClickRefresh)="getAll()"></top-buttons>
+  <top-buttons
+    title="Espèces"
+    createButtonLibelle="Créer une espèce"
+    exportButtonLibelle="Exporter les espèces"
+    [areButtonsDisplayed]="isViewAllMode()"
+    (onClickNewObject)="newObject()"
+    (onClickExportObjects)="exportObjects()"
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-    <entity-messages [messages]="messages"
-        [status]="status"></entity-messages>
+  <entity-messages [messages]="messages" [status]="status"></entity-messages>
 
-    <espece-table *ngIf="isViewAllMode()"
-        [objects]="objects"
-        (delete)="deleteObject($event)"
-        (edit)="editObject($event)"
-        (view)="viewObject($event)"></espece-table>
+  <espece-table
+    *ngIf="isViewAllMode()"
+    [objects]="objects"
+    (delete)="deleteObject($event)"
+    (edit)="editObject($event)"
+    (view)="viewObject($event)"
+  ></espece-table>
 
-    <espece-form *ngIf="isCreationMode() || isEditionMode()"
-        [object]="objectToSave"
-        [mode]="mode"
-        (confirm)="saveObject()"
-        (back)="cancelEdition()"></espece-form>
+  <espece-form
+    *ngIf="isCreationMode() || isEditionMode()"
+    [object]="objectToSave"
+    [mode]="mode"
+    (confirm)="saveObject()"
+    (back)="cancelEdition()"
+  ></espece-form>
 
-    <entite-delete-confirmation *ngIf="isRemoveMode()"
-        question="Êtes-vous certain de vouloir supprimer l'espèce ?"
-        details="Toutes les données ({{currentObject.nbDonnees}}) avec cette espèce seront supprimées."
-        cancellationLabel="Non, annuler la suppression"
-        confirmationLabel="Oui, supprimer l'espèce"
-        (confirm)="confirmObjectRemoval($event)">
-    </entite-delete-confirmation>
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
+    question="Êtes-vous certain de vouloir supprimer l'espèce ?"
+    details="Toutes les données avec cette espèce seront supprimées."
+    cancellationLabel="Non, annuler la suppression"
+    confirmationLabel="Oui, supprimer l'espèce"
+    (confirm)="confirmObjectRemoval($event)"
+  >
+  </entity-delete-confirmation>
 
-    <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
-        [detailsData]="getDetailsData()"
-        detailsTitle="Détails de l'espèce"
-        [isBackButtonDisplayed]="isViewOneMode()"
-        (back)="viewAll()">
-    </entity-details>
-
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
+    [detailsData]="getDetailsData()"
+    detailsTitle="Détails de l'espèce"
+    [isBackButtonDisplayed]="isViewOneMode()"
+    (back)="viewAll()"
+  >
+  </entity-details>
 </div>

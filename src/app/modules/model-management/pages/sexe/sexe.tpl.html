@@ -1,44 +1,52 @@
 <div class="lco-entity-page">
-  <top-buttons title="Sexes"
+  <top-buttons
+    title="Sexes"
     createButtonLibelle="Créer un sexe"
     exportButtonLibelle="Exporter les sexes"
     [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
-    (onClickRefresh)="getAll()"></top-buttons>
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-  <entity-messages [messages]="messages"
-    [status]="status"></entity-messages>
+  <entity-messages [messages]="messages" [status]="status"></entity-messages>
 
-  <sexe-table *ngIf="isViewAllMode()"
+  <sexe-table
+    *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)">
+    (view)="viewObject($event)"
+  >
   </sexe-table>
 
-  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form
+    *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     creationTitle="Création d'un sexe"
     editionTitle="Édition d'un sexe"
     (confirm)="saveObject()"
-    (back)="cancelEdition()">
+    (back)="cancelEdition()"
+  >
   </entite-avec-libelle-form>
 
-  <entite-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le sexe ?"
-    details="Toutes les données ({{currentObject.nbDonnees}}) avec ce sexe seront supprimées."
+    details="Toutes les données avec ce sexe seront supprimées."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer le sexe"
-    (confirm)="confirmObjectRemoval($event)">
-  </entite-delete-confirmation>
+    (confirm)="confirmObjectRemoval($event)"
+  >
+  </entity-delete-confirmation>
 
-  <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails du sexe"
     [isBackButtonDisplayed]="isViewOneMode()"
-    (back)="viewAll()">
+    (back)="viewAll()"
+  >
   </entity-details>
-
 </div>

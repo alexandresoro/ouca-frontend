@@ -26,13 +26,13 @@
     (back)="cancelEdition()">
   </entite-avec-libelle-et-code-form>
 
-  <entite-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le milieu ?"
     details="{{currentObject.nbDonnees}} données ont ce milieu."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer le milieu"
     (confirm)="confirmObjectRemoval($event)">
-  </entite-delete-confirmation>
+  </entity-delete-confirmation>
 
   <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"

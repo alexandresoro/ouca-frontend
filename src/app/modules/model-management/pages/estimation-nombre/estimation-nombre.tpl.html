@@ -1,43 +1,50 @@
 <div class="lco-entity-page">
-  <top-buttons title="Estimations du nombre"
+  <top-buttons
+    title="Estimations du nombre"
     createButtonLibelle="Créer une estimation"
     exportButtonLibelle="Exporter les estimations"
     [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
-    (onClickRefresh)="getAll()"></top-buttons>
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-  <entity-messages [messages]="messages"
-    [status]="status"></entity-messages>
+  <entity-messages [messages]="messages" [status]="status"></entity-messages>
 
-  <estimation-nombre-table *ngIf="isViewAllMode()"
+  <estimation-nombre-table
+    *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)">
+    (view)="viewObject($event)"
+  >
   </estimation-nombre-table>
 
-  <estimation-nombre-form *ngIf="isCreationMode() || isEditionMode()"
+  <estimation-nombre-form
+    *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     (confirm)="saveObject()"
-    (back)="cancelEdition()">
+    (back)="cancelEdition()"
+  >
   </estimation-nombre-form>
 
-  <entite-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'estimation du nombre ?"
-    details="Toutes les données ({{currentObject.nbDonnees}}) avec cette estimation du nombre seront supprimées."
-
+    details="Toutes les données avec cette estimation du nombre seront supprimées."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer l'estimation du nombre"
-    (confirm)="confirmObjectRemoval($event)">
-  </entite-delete-confirmation>
+    (confirm)="confirmObjectRemoval($event)"
+  >
+  </entity-delete-confirmation>
 
-  <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de l'estimation du nombre"
     [isBackButtonDisplayed]="isViewOneMode()"
-    (back)="viewAll()">
+    (back)="viewAll()"
+  >
   </entity-details>
-
 </div>
