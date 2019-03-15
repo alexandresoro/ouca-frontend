@@ -9,6 +9,7 @@ import {
   GestionModeHelper
 } from "../../../model-management/pages/gestion-mode.enum";
 import { PageComponent } from "../../../shared/components/page.component";
+import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { ConfigurationService } from "./configuration.service";
 
 export interface IdPropriete {
@@ -54,7 +55,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   public dataSource: MatTableDataSource<ProprieteValeur>;
 
   constructor(
-    private configurationService: ConfigurationService,
+    private backendApiService: BackendApiService,
     public modeHelper: GestionModeHelper
   ) {
     super();
@@ -160,7 +161,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   public saveAppConfiguration(): void {
     console.log("App Configuration à sauvegarder", this.configurationToSave);
 
-    this.configurationService
+    this.backendApiService
       .saveAppConfiguration(this.configurationToSave)
       .subscribe(
         (result: EntiteResult<AppConfiguration>) => {
@@ -182,7 +183,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   ////// END FROM UI //////
 
   private getCurrentConfigurations(): void {
-    this.configurationService.getInitialPageModel().subscribe(
+    this.backendApiService.getConfigurationInitialPageModel().subscribe(
       (configurationPage: ConfigurationPage) => {
         this.onInitConfigurationPageSuccess(configurationPage);
       },
