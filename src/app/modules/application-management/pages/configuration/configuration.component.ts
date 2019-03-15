@@ -10,7 +10,6 @@ import {
 } from "../../../model-management/pages/gestion-mode.enum";
 import { PageComponent } from "../../../shared/components/page.component";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { ConfigurationService } from "./configuration.service";
 
 export interface IdPropriete {
   id: number;
