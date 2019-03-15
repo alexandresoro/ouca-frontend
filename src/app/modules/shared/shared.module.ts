@@ -37,7 +37,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { LcoEntiteSelectComponent } from "./components/entite-select/lco-entite-select.component";
-import { BaseNaturalisteService } from "./services/base-naturaliste.service";
+import { BackendApiService } from "./services/backend-api.service";
 
 @NgModule({
   imports: [
@@ -114,7 +114,7 @@ import { BaseNaturalisteService } from "./services/base-naturaliste.service";
     },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    BaseNaturalisteService
+    BackendApiService
   ]
 })
 export class SharedModule {}

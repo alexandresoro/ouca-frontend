@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Donnee } from "../../../../model/donnee.object";
 import { Inventaire } from "../../../../model/inventaire.object";
+import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
-import { CreationService } from "./creation.service";
 
 @Injectable()
 export class NavigationService {
@@ -19,7 +19,7 @@ export class NavigationService {
   private inventaireToBeUpdated: Inventaire;
 
   constructor(
-    public creationService: CreationService,
+    public backendApiService: BackendApiService,
     public modeHelper: CreationModeHelper
   ) {}
 
@@ -82,7 +82,7 @@ export class NavigationService {
       // We need to get the new previous donnee from the backend
       const hasPreviousDonnee: boolean = this.currentDonneeIndex > 1;
       if (hasPreviousDonnee) {
-        this.creationService.getPreviousDonnee(newCurrentDonnee.id).subscribe(
+        this.backendApiService.getPreviousDonnee(newCurrentDonnee.id).subscribe(
           (previousDonnee: Donnee) => {
             this.setPreviousAndNextDonnees(previousDonnee, newNextDonnee);
           },
@@ -101,7 +101,7 @@ export class NavigationService {
         !!this.currentDonneeIndex &&
         this.currentDonneeIndex < this.numberOfDonnees
       ) {
-        this.creationService.getNextDonnee(newCurrentDonnee.id).subscribe(
+        this.backendApiService.getNextDonnee(newCurrentDonnee.id).subscribe(
           (nextDonnee: Donnee) => {
             this.setPreviousAndNextDonnees(newPreviousDonnee, nextDonnee);
           },
@@ -144,7 +144,7 @@ export class NavigationService {
   }
 
   private populatePreviousDonnee(id: number): void {
-    this.creationService.getPreviousDonnee(id).subscribe(
+    this.backendApiService.getPreviousDonnee(id).subscribe(
       (previousDonnee: Donnee) => {
         this.previousDonnee = previousDonnee;
         console.log("La donnée précédente est", this.previousDonnee);
@@ -177,7 +177,7 @@ export class NavigationService {
 
   public populateNextDonnee(id: number): void {
     if (!this.isLastDonneeCurrentlyDisplayed()) {
-      this.creationService.getNextDonnee(id).subscribe(
+      this.backendApiService.getNextDonnee(id).subscribe(
         (nextDonnee: Donnee) => {
           this.nextDonnee = nextDonnee;
         },

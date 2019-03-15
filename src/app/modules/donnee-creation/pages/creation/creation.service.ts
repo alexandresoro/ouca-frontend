@@ -1,44 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
 import { Comportement } from "../../../../model/comportement.object";
-import { CreationPage } from "../../../../model/creation-page.object";
 import { Donnee } from "../../../../model/donnee.object";
-import { EntiteResult } from "../../../../model/entite-result.object";
-import { Lieudit } from "../../../../model/lieudit.object";
-import { BaseNaturalisteService } from "../../../shared/services/base-naturaliste.service";
-
 @Injectable()
-export class CreationService extends BaseNaturalisteService {
-  private ENTITY_NAME: string = "creation";
-
-  constructor(public http: HttpClient) {
-    super(http);
-  }
-
-  public getInitialPageModel(): Observable<CreationPage> {
-    return this.httpGet(this.ENTITY_NAME + "/init");
-  }
-
-  public getNextDonnee(id: number): Observable<Donnee> {
-    return this.httpGet(this.ENTITY_NAME + "/next_donnee/" + id);
-  }
-
-  public getPreviousDonnee(id: number): Observable<Donnee> {
-    return this.httpGet(this.ENTITY_NAME + "/previous_donnee/" + id);
-  }
-
-  public deleteDonnee(id: number): Observable<EntiteResult<Donnee>> {
-    return this.httpGet(this.ENTITY_NAME + "/donnee/delete/" + id);
-  }
-
-  public getNextRegroupement(): Observable<number> {
-    return this.httpGet(this.ENTITY_NAME + "/next_regroupement");
-  }
-
-  public getLieuxditsByCommuneId(idCommune: number): Observable<Lieudit[]> {
-    return this.httpGet("lieudit/search_by_commune/" + idCommune);
-  }
+export class CreationService {
+  constructor(public http: HttpClient) {}
 
   /**
    * Update nombre when estimation nombre has changed

@@ -3,7 +3,7 @@ import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Commune } from "../../../../../model/commune.object";
 import { Departement } from "../../../../../model/departement.object";
-import { EntiteSimpleService } from "../../../pages/entite-simple/entite-simple.service";
+import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
 import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
 
@@ -18,7 +18,7 @@ export class CommuneFormComponent extends EntiteSimpleFormComponent<Commune> {
   public nomFormControl = new FormControl("", [Validators.required]);
 
   constructor(
-    private entiteSimpleService: EntiteSimpleService<Commune>,
+    private backendApiService: BackendApiService,
     modeHelper: GestionModeHelper
   ) {
     super(modeHelper);
@@ -26,7 +26,7 @@ export class CommuneFormComponent extends EntiteSimpleFormComponent<Commune> {
 
   ngOnInit() {
     // Get all departements
-    this.entiteSimpleService.getAllObjects("departement").subscribe(
+    this.backendApiService.getAllEntities("departement").subscribe(
       (result: Departement[]) => {
         this.departements = result;
       },

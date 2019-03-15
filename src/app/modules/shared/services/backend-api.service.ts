@@ -17,6 +17,7 @@ export class BackendApiService {
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
   private CREATE: string = "create";
+  private CREATION: string = "creation";
   private DELETE: string = "delete/";
   private DONNEE = "donnee/";
   private EXPORT = "export";
@@ -55,6 +56,10 @@ export class BackendApiService {
 
   public importData(fileName: string, dataType: string): Observable<string> {
     return this.httpPost(this.IMPORT + dataType, fileName);
+  }
+
+  public getCreationInitialPageModel(): Observable<CreationPage> {
+    return this.httpGet(this.CREATION + this.INIT);
   }
 
   public getNextDonnee(id: number): Observable<Donnee> {

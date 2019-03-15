@@ -4,7 +4,7 @@ import { Response } from "@angular/http";
 import { Commune } from "../../../../../model/commune.object";
 import { Departement } from "../../../../../model/departement.object";
 import { Lieudit } from "../../../../../model/lieudit.object";
-import { EntiteSimpleService } from "../../../pages/entite-simple/entite-simple.service";
+import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
 import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
 
@@ -27,7 +27,7 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
   public nomLieuDitFormControl = new FormControl("", [Validators.required]);
 
   constructor(
-    private entiteSimpleService: EntiteSimpleService<Lieudit>,
+    private backendApiService: BackendApiService,
     modeHelper: GestionModeHelper
   ) {
     super(modeHelper);
@@ -35,7 +35,7 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
 
   ngOnInit(): void {
     // Get all departements
-    this.entiteSimpleService.getAllObjects("departement").subscribe(
+    this.backendApiService.getAllEntities("departement").subscribe(
       (result: Departement[]) => {
         this.departements = result;
       },
@@ -45,7 +45,7 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
     );
 
     // Get all communes
-    this.entiteSimpleService.getAllObjects("commune").subscribe(
+    this.backendApiService.getAllEntities("commune").subscribe(
       (result: Commune[]) => {
         this.communes = result;
         this.filteredCommunes = [];

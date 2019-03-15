@@ -24,11 +24,10 @@ import { ConfirmationDialogData } from "../../../shared/components/confirmation-
 import { ConfirmationDialogComponent } from "../../../shared/components/confirmation-dialog/confirmation-dialog.component";
 import { PageComponent } from "../../../shared/components/page.component";
 import { ListHelper } from "../../../shared/helpers/list-helper";
+import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
 import { CreationService } from "./creation.service";
-import { DonneeService } from "./donnee.service";
-import { InventaireService } from "./inventaire.service";
 import { NavigationService } from "./navigation.service";
 
 @Component({
@@ -109,10 +108,9 @@ export class CreationComponent extends PageComponent implements OnInit {
   });
 
   constructor(
+    private backendApiService: BackendApiService,
     public modeHelper: CreationModeHelper,
     private creationService: CreationService,
-    private donneeService: DonneeService,
-    private inventaireService: InventaireService,
     public dialog: MatDialog,
     public navigationService: NavigationService
   ) {
@@ -133,7 +131,7 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Call the back-end to get the initial creation page model
    */
   private initCreationPage(): void {
-    this.creationService.getInitialPageModel().subscribe(
+    this.backendApiService.getCreationInitialPageModel().subscribe(
       (creationPage: CreationPage) => {
         this.onInitCreationPageSucces(creationPage);
         this.communes$.next(creationPage ? creationPage.communes : []);
@@ -646,7 +644,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   public saveInventaire(): void {
     const inventaireToBeSaved: Inventaire = this.getInventaireFromInventaireFormControls();
 
-    this.inventaireService.saveInventaire(inventaireToBeSaved).subscribe(
+    this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
       (result: EntiteResult<Inventaire>) => {
         this.updatePageStatus(result.status, result.messages);
 
@@ -679,7 +677,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   public saveDonnee(): void {
     const donneeToBeSaved: Donnee = this.getDonneeFromDonneeFormControls();
 
-    this.donneeService.saveDonnee(donneeToBeSaved).subscribe(
+    this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
       (result: EntiteResult<Donnee>) => {
         this.updatePageStatus(result.status, result.messages);
 
@@ -712,7 +710,7 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when a donnee is saved to get the next regroupement number
    */
   private updateNextRegroupement(): void {
-    this.creationService.getNextRegroupement().subscribe(
+    this.backendApiService.getNextRegroupement().subscribe(
       (regroupement: number) => {
         this.nextRegroupement = regroupement;
       },
@@ -856,7 +854,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public deleteDonnee(donneeId: number): void {
-    this.creationService.deleteDonnee(donneeId).subscribe(
+    this.backendApiService.deleteDonnee(donneeId).subscribe(
       (result: EntiteResult<Donnee>) => {
         this.onDeleteSuccess(result);
       },
@@ -1013,7 +1011,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
       console.log("L'inventaire à créer est", inventaireToBeSaved);
 
-      this.inventaireService.saveInventaire(inventaireToBeSaved).subscribe(
+      this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
         (result: EntiteResult<Inventaire>) => {
           if (this.isSuccessStatus(result.status)) {
             const savedInventaire: Inventaire = result.object;
@@ -1034,7 +1032,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private updateDonnee(): void {
     const donneeToBeSaved: Donnee = this.getDonneeFromDonneeFormControls();
-    this.donneeService.saveDonnee(donneeToBeSaved).subscribe(
+    this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
       (result: EntiteResult<Donnee>) => {
         this.updatePageStatus(result.status, result.messages);
 

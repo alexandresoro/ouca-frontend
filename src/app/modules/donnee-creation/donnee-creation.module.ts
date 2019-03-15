@@ -21,8 +21,6 @@ import { DonneeCreationRoutingModule } from "./donnee-creation-routing.module";
 import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationComponent } from "./pages/creation/creation.component";
 import { CreationService } from "./pages/creation/creation.service";
-import { DonneeService } from "./pages/creation/donnee.service";
-import { InventaireService } from "./pages/creation/inventaire.service";
 import { NavigationService } from "./pages/creation/navigation.service";
 
 @NgModule({
@@ -49,12 +47,6 @@ import { NavigationService } from "./pages/creation/navigation.service";
   ],
   entryComponents: [SearchByIdDialogComponent],
   exports: [],
-  providers: [
-    CreationModeHelper,
-    CreationService,
-    DonneeService,
-    InventaireService,
-    NavigationService
-  ]
+  providers: [CreationModeHelper, CreationService, NavigationService]
 })
 export class DonneeCreationModule {}

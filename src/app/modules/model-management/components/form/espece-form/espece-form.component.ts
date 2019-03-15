@@ -3,7 +3,7 @@ import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Classe } from "../../../../../model/classe.object";
 import { Espece } from "../../../../../model/espece.object";
-import { EntiteSimpleService } from "../../../pages/entite-simple/entite-simple.service";
+import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
 import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
 
@@ -19,7 +19,7 @@ export class EspeceFormComponent extends EntiteSimpleFormComponent<Espece> {
   public nomLatinFormControl = new FormControl("", [Validators.required]);
 
   constructor(
-    private entiteSimpleService: EntiteSimpleService<Espece>,
+    private backendApiService: BackendApiService,
     modeHelper: GestionModeHelper
   ) {
     super(modeHelper);
@@ -27,7 +27,7 @@ export class EspeceFormComponent extends EntiteSimpleFormComponent<Espece> {
 
   ngOnInit(): void {
     // Get all communes
-    this.entiteSimpleService.getAllObjects("classe").subscribe(
+    this.backendApiService.getAllEntities("classe").subscribe(
       (result: Classe[]) => {
         this.classes = result;
       },
