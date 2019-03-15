@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { PageComponent } from "../../../shared/components/page.component";
-import { ImportService } from "./import.service";
+import { BackendApiService } from "../../../shared/services/backend-api.service";
 
 @Component({
   templateUrl: "./import.tpl.html"
@@ -10,7 +10,7 @@ export class ImportComponent extends PageComponent {
 
   public isWaitPanelDisplayed: boolean = false;
 
-  constructor(private importService: ImportService) {
+  constructor(private backendApiService: BackendApiService) {
     super();
   }
 
@@ -29,7 +29,7 @@ export class ImportComponent extends PageComponent {
     this.displayWaitPanel();
 
     // Call back-end
-    this.importService.importData(this.fileName, dataType).subscribe(
+    this.backendApiService.importData(this.fileName, dataType).subscribe(
       (result: string) => {
         this.setInfoMessage(result);
         this.hideWaitPanel();
