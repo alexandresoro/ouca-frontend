@@ -17,7 +17,7 @@ export class BackendApiService {
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
   private CREATE: string = "create";
-  private CREATION: string = "creation";
+  private CREATION: string = "creation/";
   private DELETE: string = "delete/";
   private DONNEE = "donnee/";
   private EXPORT = "export";
