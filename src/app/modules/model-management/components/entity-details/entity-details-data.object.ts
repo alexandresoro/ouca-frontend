@@ -1,4 +1,4 @@
-export class EntiteDetailsData {
+export class EntityDetailsData {
   key: string;
   value: string | number;
 

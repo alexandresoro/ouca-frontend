@@ -9,7 +9,7 @@ import { combineLatest, Observable } from "rxjs";
 import { Commune } from "../../../../model/commune.object";
 import { Departement } from "../../../../model/departement.object";
 import { Lieudit } from "../../../../model/lieudit.object";
-import { AutocompleteAttribute } from "../../../shared/components/lco-autocomplete/autocomplete-attribute.object";
+import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
   selector: "input-lieudit",

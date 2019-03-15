@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { EstimationNombre } from "../../../../model/estimation-nombre.object";
-import { AutocompleteAttribute } from "../../../shared/components/lco-autocomplete/autocomplete-attribute.object";
+import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
   selector: "input-nombre",

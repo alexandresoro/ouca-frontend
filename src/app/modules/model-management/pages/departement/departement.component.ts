@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { Departement } from "../../../../model/departement.object";
-import { EntiteDetailsData } from "../../../../model/entite-details-data.objects";
+import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
@@ -15,20 +15,20 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     return new Departement();
   }
 
-  public getDetailsData(): EntiteDetailsData[] {
-    const detailsData: EntiteDetailsData[] = [];
-    detailsData[0] = new EntiteDetailsData("ID", this.currentObject.id);
-    detailsData[1] = new EntiteDetailsData("Code", this.currentObject.code);
+  public getDetailsData(): EntityDetailsData[] {
+    const detailsData: EntityDetailsData[] = [];
+    detailsData[0] = new EntityDetailsData("ID", this.currentObject.id);
+    detailsData[1] = new EntityDetailsData("Code", this.currentObject.code);
     /*
-    detailsData[2] = new EntiteDetailsData(
+    detailsData[2] = new EntityDetailsData(
       "Nombre de communes",
       this.currentObject.nbCommunes
     );
-    detailsData[3] = new EntiteDetailsData(
+    detailsData[3] = new EntityDetailsData(
       "Nombre de lieux-dits",
       this.currentObject.nbLieuxdits
     );
-    detailsData[4] = new EntiteDetailsData(
+    detailsData[4] = new EntityDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );

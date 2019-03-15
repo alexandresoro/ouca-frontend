@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { EntiteDetailsData } from "../../../../model/entite-details-data.objects";
 import { EntiteSimple } from "../../../../model/entite-simple.object";
+import { EntityDetailsData } from "./entity-details-data.object";
 
 @Component({
   selector: "entity-details",
   templateUrl: "./entity-details.tpl.html"
 })
 export class EntityDetailsComponent<T extends EntiteSimple> {
-  @Input() detailsData: EntiteDetailsData[];
+  @Input() detailsData: EntityDetailsData[];
 
   @Input() objectToView: T;
   @Input() public isBackButtonDisplayed: boolean = true;

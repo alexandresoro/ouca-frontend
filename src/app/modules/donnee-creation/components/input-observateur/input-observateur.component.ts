@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { FormControl } from "@angular/forms";
 import { Observateur } from "../../../../model/observateur.object";
-import { AutocompleteAttribute } from "../../../shared/components/lco-autocomplete/autocomplete-attribute.object";
+import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
   selector: "input-observateur",

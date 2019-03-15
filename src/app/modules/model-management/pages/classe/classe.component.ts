@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { Classe } from "../../../../model/classe.object";
-import { EntiteDetailsData } from "../../../../model/entite-details-data.objects";
+import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
@@ -15,20 +15,20 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
     return new Classe();
   }
 
-  public getDetailsData(): EntiteDetailsData[] {
-    const detailsData: EntiteDetailsData[] = [];
-    detailsData[0] = new EntiteDetailsData("ID", this.currentObject.id);
-    detailsData[1] = new EntiteDetailsData(
+  public getDetailsData(): EntityDetailsData[] {
+    const detailsData: EntityDetailsData[] = [];
+    detailsData[0] = new EntityDetailsData("ID", this.currentObject.id);
+    detailsData[1] = new EntityDetailsData(
       "Libellé",
       this.currentObject.libelle
     );
     /*
-    detailsData[2] = new EntiteDetailsData(
+    detailsData[2] = new EntityDetailsData(
       "Nombre d'espèces",
       null
       // this.currentObject.nbEspeces
     );
-    detailsData[3] = new EntiteDetailsData(
+    detailsData[3] = new EntityDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );

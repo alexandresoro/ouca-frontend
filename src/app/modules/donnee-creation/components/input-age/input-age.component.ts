@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Age } from "../../../../model/age.object";
-import { AutocompleteAttribute } from "../../../shared/components/lco-autocomplete/autocomplete-attribute.object";
+import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
   selector: "input-age",
