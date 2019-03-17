@@ -146,12 +146,12 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onInitCreationPageError(error: any): void {
     this.setErrorMessage(
-      "Impossible de charger la page de création.\nErreur: " + error
+      "Impossible de charger la page de création.\nErreur: " +
+        JSON.stringify(error)
     );
     console.error(
-      "Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: " +
-        error +
-        ")"
+      "Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: ",
+      error
     );
   }
 
