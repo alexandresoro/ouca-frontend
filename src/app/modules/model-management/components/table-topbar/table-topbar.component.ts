@@ -5,7 +5,7 @@ import {
   Output,
   SimpleChanges
 } from "@angular/core";
-import { EntiteSimple } from "../../../../model/entite-simple.object";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 
 @Component({
   selector: "table-topbar",

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Milieu } from "../../../../model/milieu.object";
+import { Milieu } from "basenaturaliste-model/milieu.object";
 import { EntiteAvecLibelleEtCodeComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code.component";
 
 @Component({
@@ -11,6 +11,6 @@ export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
   }
 
   getNewObject(): Milieu {
-    return new Milieu();
+    return {} as Milieu;
   }
 }

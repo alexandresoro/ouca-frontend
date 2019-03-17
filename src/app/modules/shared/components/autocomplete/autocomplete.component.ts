@@ -15,10 +15,10 @@ import {
   MatAutocompleteTrigger
 } from "@angular/material/autocomplete";
 import { MatOption } from "@angular/material/typings";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import * as diacritics from "diacritics";
 import { Observable, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
-import { EntiteSimple } from "../../../../model/entite-simple.object";
 import { AutocompleteEventObject } from "./autocomplete-event.object";
 
 import * as _ from "lodash";

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Donnee } from "../../../../model/donnee.object";
-import { Inventaire } from "../../../../model/inventaire.object";
+import { Donnee } from "basenaturaliste-model/donnee.object";
+import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
 
@@ -28,8 +28,8 @@ export class NavigationService {
     this.nextDonnee = null;
     this.currentDonneeIndex = null;
     this.numberOfDonnees = numberOfDonnees;
-    this.savedDonnee = new Donnee();
-    this.savedInventaire = new Inventaire();
+    this.savedDonnee = {} as Donnee;
+    this.savedInventaire = {} as Inventaire;
     this.savedMode = null;
   }
   public saveCurrentContext(
@@ -37,8 +37,8 @@ export class NavigationService {
     inventaireToSave: Inventaire,
     donneeToSave: Donnee
   ): void {
-    this.savedDonnee = new Donnee();
-    this.savedInventaire = new Inventaire();
+    this.savedDonnee = {} as Donnee;
+    this.savedInventaire = {} as Inventaire;
 
     this.savedMode = modeToSave;
 
@@ -242,17 +242,18 @@ export class NavigationService {
   }
 
   public saveInventaireToBeUpdated(inventaire: Inventaire) {
-    this.inventaireToBeUpdated = new Inventaire();
-    this.inventaireToBeUpdated.observateur = inventaire.observateur;
-    this.inventaireToBeUpdated.date = inventaire.date;
-    this.inventaireToBeUpdated.heure = inventaire.heure;
-    this.inventaireToBeUpdated.duree = inventaire.duree;
-    this.inventaireToBeUpdated.lieudit = inventaire.lieudit;
-    this.inventaireToBeUpdated.altitude = inventaire.altitude;
-    this.inventaireToBeUpdated.longitude = inventaire.longitude;
-    this.inventaireToBeUpdated.latitude = inventaire.latitude;
-    this.inventaireToBeUpdated.temperature = inventaire.temperature;
-    this.inventaireToBeUpdated.meteos = inventaire.meteos;
+    this.inventaireToBeUpdated = {
+      observateur: inventaire.observateur,
+      date: inventaire.date,
+      heure: inventaire.heure,
+      duree: inventaire.duree,
+      lieudit: inventaire.lieudit,
+      altitude: inventaire.altitude,
+      longitude: inventaire.longitude,
+      latitude: inventaire.latitude,
+      temperature: inventaire.temperature,
+      meteos: inventaire.meteos
+    } as Inventaire;
   }
 
   public isInventaireUpdated(inventaire: Inventaire) {

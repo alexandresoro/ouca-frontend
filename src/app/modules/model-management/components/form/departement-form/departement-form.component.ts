@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { Departement } from "../../../../../model/departement.object";
+import { Departement } from "basenaturaliste-model/departement.object";
 import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
 
 @Component({
@@ -13,6 +13,6 @@ export class DepartementFormComponent extends EntiteSimpleFormComponent<
   public codeFormControl = new FormControl("", [Validators.required]);
 
   getNewObject(): Departement {
-    return new Departement();
+    return {} as Departement;
   }
 }

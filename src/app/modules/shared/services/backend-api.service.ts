@@ -1,14 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
+import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
+import { CreationPage } from "basenaturaliste-model/creation-page.object";
+import { Donnee } from "basenaturaliste-model/donnee.object";
+import { EntiteResult } from "basenaturaliste-model/entite-result.object";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { Inventaire } from "basenaturaliste-model/inventaire.object";
+import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { Observable } from "rxjs";
-import { AppConfiguration } from "../../../model/app-configuration.object";
-import { ConfigurationPage } from "../../../model/configuration-page.object";
-import { CreationPage } from "../../../model/creation-page.object";
-import { Donnee } from "../../../model/donnee.object";
-import { EntiteResult } from "../../../model/entite-result.object";
-import { EntiteSimple } from "../../../model/entite-simple.object";
-import { Inventaire } from "../../../model/inventaire.object";
-import { Lieudit } from "../../../model/lieudit.object";
 
 @Injectable()
 export class BackendApiService {

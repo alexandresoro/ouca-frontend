@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { EstimationDistance } from "../../../../model/estimation-distance.object";
+import { EstimationDistance } from "basenaturaliste-model/estimation-distance.object";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
@@ -13,6 +13,6 @@ export class EstimationDistanceComponent extends EntiteAvecLibelleComponent<
   }
 
   getNewObject(): EstimationDistance {
-    return new EstimationDistance();
+    return {} as EstimationDistance;
   }
 }

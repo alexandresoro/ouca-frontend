@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Sexe } from "../../../../model/sexe.object";
+import { Sexe } from "basenaturaliste-model/sexe.object";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
@@ -11,6 +11,6 @@ export class SexeComponent extends EntiteAvecLibelleComponent<Sexe> {
   }
 
   getNewObject(): Sexe {
-    return new Sexe();
+    return {} as Sexe;
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { EntiteAvecLibelle } from "../../../../model/entite-avec-libelle.object";
+import { EntiteAvecLibelle } from "basenaturaliste-model/entite-avec-libelle.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 

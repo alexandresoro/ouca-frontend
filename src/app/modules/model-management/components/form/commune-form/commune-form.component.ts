@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
-import { Commune } from "../../../../../model/commune.object";
-import { Departement } from "../../../../../model/departement.object";
+import { Commune } from "basenaturaliste-model/commune.object";
+import { Departement } from "basenaturaliste-model/departement.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
 import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
@@ -37,6 +37,6 @@ export class CommuneFormComponent extends EntiteSimpleFormComponent<Commune> {
   }
 
   getNewObject(): Commune {
-    return new Commune();
+    return {} as Commune;
   }
 }

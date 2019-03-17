@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Classe } from "../../../../model/classe.object";
+import { Classe } from "basenaturaliste-model/classe.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
@@ -12,7 +12,7 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
   }
 
   public getNewObject(): Classe {
-    return new Classe();
+    return {} as Classe;
   }
 
   public getDetailsData(): EntityDetailsData[] {

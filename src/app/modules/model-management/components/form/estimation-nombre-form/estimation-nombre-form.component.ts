@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { EstimationNombre } from "../../../../../model/estimation-nombre.object";
+import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { EntiteAvecLibelleFormComponent } from "../entite-avec-libelle-form/entite-avec-libelle-form.component";
 
 @Component({
@@ -10,6 +10,6 @@ export class EstimationNombreFormComponent extends EntiteAvecLibelleFormComponen
   EstimationNombre
 > {
   getNewObject(): EstimationNombre {
-    return new EstimationNombre();
+    return {} as EstimationNombre;
   }
 }

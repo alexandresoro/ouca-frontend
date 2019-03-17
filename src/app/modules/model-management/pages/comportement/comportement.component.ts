@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Comportement } from "../../../../model/comportement.object";
+import { Comportement } from "basenaturaliste-model/comportement.object";
 import { EntiteAvecLibelleEtCodeComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code.component";
 @Component({
   templateUrl: "./comportement.tpl.html"
@@ -12,6 +12,6 @@ export class ComportementComponent extends EntiteAvecLibelleEtCodeComponent<
   }
 
   getNewObject(): Comportement {
-    return new Comportement();
+    return {} as Comportement;
   }
 }

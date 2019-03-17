@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
-import { Classe } from "../../../../../model/classe.object";
-import { Espece } from "../../../../../model/espece.object";
+import { Classe } from "basenaturaliste-model/classe.object";
+import { Espece } from "basenaturaliste-model/espece.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
 import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
@@ -38,6 +38,6 @@ export class EspeceFormComponent extends EntiteSimpleFormComponent<Espece> {
   }
 
   getNewObject(): Espece {
-    return new Espece();
+    return {} as Espece;
   }
 }

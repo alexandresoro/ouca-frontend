@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { EstimationNombre } from "../../../../model/estimation-nombre.object";
+import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
@@ -14,7 +14,7 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
   }
 
   getNewObject(): EstimationNombre {
-    return new EstimationNombre();
+    return {} as EstimationNombre;
   }
 
   public getDetailsData(): EntityDetailsData[] {

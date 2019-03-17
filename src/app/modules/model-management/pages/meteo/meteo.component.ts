@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Meteo } from "../../../../model/meteo.object";
+import { Meteo } from "basenaturaliste-model/meteo.object";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
@@ -11,6 +11,6 @@ export class MeteoComponent extends EntiteAvecLibelleComponent<Meteo> {
   }
 
   getNewObject(): Meteo {
-    return new Meteo();
+    return {} as Meteo;
   }
 }

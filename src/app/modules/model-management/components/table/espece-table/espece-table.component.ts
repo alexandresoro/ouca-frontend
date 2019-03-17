@@ -1,7 +1,7 @@
 import { Component, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
+import { Espece } from "basenaturaliste-model/espece.object";
 import * as _ from "lodash";
-import { Espece } from "../../../../../model/espece.object";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface EspeceRow {
@@ -57,9 +57,7 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
     if (!!this.selectedObject && this.selectedObject.id === id) {
       this.selectedObject = undefined;
     } else {
-      this.selectedObject = this.objects.filter(
-        (espece) => espece.id === id
-      )[0];
+      this.selectedObject = this.objects.filter((espece) => espece.id === id)[0];
     }
   }
 }

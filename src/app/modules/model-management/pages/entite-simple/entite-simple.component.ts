@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { EntiteResult } from "../../../../model/entite-result.object";
-import { EntiteSimple } from "../../../../model/entite-simple.object";
+import { EntiteResult } from "basenaturaliste-model/entite-result.object";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntiteComponent } from "../entite.component";
 import { GestionMode } from "../gestion-mode.enum";

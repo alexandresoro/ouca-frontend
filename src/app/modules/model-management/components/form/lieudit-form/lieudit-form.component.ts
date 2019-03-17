@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
-import { Commune } from "../../../../../model/commune.object";
-import { Departement } from "../../../../../model/departement.object";
-import { Lieudit } from "../../../../../model/lieudit.object";
+import { Commune } from "basenaturaliste-model/commune.object";
+import { Departement } from "basenaturaliste-model/departement.object";
+import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
 import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
@@ -62,7 +62,7 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
   }
 
   getNewObject(): Lieudit {
-    return new Lieudit();
+    return {} as Lieudit;
   }
 
   private updateCommunes(): void {

@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "./app.component";
-import { fakeBackendProvider } from "./mock/fake-backend-interceptor";
 import { ApplicationManagementModule } from "./modules/application-management/application-management.module";
 import { DonneeCreationModule } from "./modules/donnee-creation/donnee-creation.module";
 import { DonneeViewModule } from "./modules/donnee-view/donnee-view.module";
@@ -22,6 +21,6 @@ const routes: Routes = [];
   declarations: [AppComponent],
   bootstrap: [AppComponent],
   entryComponents: [],
-  providers: [fakeBackendProvider]
+  providers: []
 })
 export class AppModule {}

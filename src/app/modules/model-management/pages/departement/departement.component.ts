@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Departement } from "../../../../model/departement.object";
+import { Departement } from "basenaturaliste-model/departement.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
@@ -12,7 +12,7 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
   }
 
   getNewObject(): Departement {
-    return new Departement();
+    return {} as Departement;
   }
 
   public getDetailsData(): EntityDetailsData[] {

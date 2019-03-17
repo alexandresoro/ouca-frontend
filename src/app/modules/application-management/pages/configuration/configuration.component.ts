@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
+import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
+import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
+import { EntiteResult } from "basenaturaliste-model/entite-result.object";
 import * as _ from "lodash";
-import { AppConfiguration } from "../../../../model/app-configuration.object";
-import { ConfigurationPage } from "../../../../model/configuration-page.object";
-import { EntiteResult } from "../../../../model/entite-result.object";
 import {
   GestionMode,
   GestionModeHelper

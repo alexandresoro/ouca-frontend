@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Observateur } from "../../../../model/observateur.object";
+import { Observateur } from "basenaturaliste-model/observateur.object";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
@@ -13,6 +13,6 @@ export class ObservateurComponent extends EntiteAvecLibelleComponent<
   }
 
   getNewObject(): Observateur {
-    return new Observateur();
+    return {} as Observateur;
   }
 }

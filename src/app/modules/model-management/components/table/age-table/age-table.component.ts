@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Age } from "../../../../../model/age.object";
+import { Age } from "basenaturaliste-model/age.object";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
 
 @Component({

@@ -38,6 +38,7 @@
     "@types/node": "10",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "5",
+    "basenaturaliste-model": "file:./../basenaturaliste-model",
     "clean-webpack-plugin": "*",
     "css-loader": "*",
     "favicons-webpack-plugin": "^0.0.9",
