@@ -33,12 +33,16 @@ export class BackendApiService {
 
   constructor(public http: HttpClient) {}
 
-  private httpGet<T>(path: string): Observable<T> {
-    return this.http.get<T>(this.API_URL + path);
+  private httpGet<T>(relativePath: string): Observable<T> {
+    const requestPath: string = this.API_URL + relativePath;
+    console.log("GET " + requestPath);
+    return this.http.get<T>(requestPath);
   }
 
   private httpPost<T>(relativePath: string, objectToPost: any): Observable<T> {
-    return this.http.post<T>(this.API_URL + relativePath, objectToPost);
+    const requestPath: string = this.API_URL + relativePath;
+    console.log("POST " + requestPath + objectToPost);
+    return this.http.post<T>(requestPath, objectToPost);
   }
 
   public getConfigurationInitialPageModel(): Observable<ConfigurationPage> {
