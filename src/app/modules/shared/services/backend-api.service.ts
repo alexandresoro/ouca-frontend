@@ -25,9 +25,9 @@ export class BackendApiService {
   private INIT: string = "init";
   private INVENTAIRE: string = "inventaire/";
   private LIEUDIT: string = "lieudit/";
-  private NEXT_DONNEE = "next_donnee/";
+  private NEXT_DONNEE = "next_donnee";
   private NEXT_REGROUPEMENT = "next_regroupement";
-  private PREVIOUS_DONNEE = "previous_donnee/";
+  private PREVIOUS_DONNEE = "previous_donnee";
   private UPDATE: string = "update";
   private SEARCH_BY_COMMUNE = "search_by_commune/";
 
@@ -67,11 +67,11 @@ export class BackendApiService {
   }
 
   public getNextDonnee(id: number): Observable<Donnee> {
-    return this.httpGet(this.DONNEE + this.NEXT_DONNEE + id);
+    return this.httpGet(this.DONNEE + this.NEXT_DONNEE + "?id=" + id);
   }
 
   public getPreviousDonnee(id: number): Observable<Donnee> {
-    return this.httpGet(this.DONNEE + this.PREVIOUS_DONNEE + id);
+    return this.httpGet(this.DONNEE + this.PREVIOUS_DONNEE + "?id=" + id);
   }
 
   public deleteDonnee(id: number): Observable<EntiteResult<Donnee>> {
