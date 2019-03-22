@@ -32,7 +32,11 @@
   <entity-delete-confirmation
     *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la classe ?"
-    details="Toutes les espèces et toutes les données avec cette classe seront supprimées."
+    details="Toutes les espèces ({{
+      currentObject.nbEspeces
+    }}) et toutes les données ({{
+      currentObject.nbDonnees
+    }}) avec cette classe seront supprimées."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer la classe"
     (confirm)="confirmObjectRemoval($event)"

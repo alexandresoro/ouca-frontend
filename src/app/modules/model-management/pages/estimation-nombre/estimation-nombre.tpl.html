@@ -32,7 +32,9 @@
   <entity-delete-confirmation
     *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'estimation du nombre ?"
-    details="Toutes les données avec cette estimation du nombre seront supprimées."
+    details="Toutes les données ({{
+      currentObject.nbDonnees
+    }}) avec cette estimation du nombre seront supprimées."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer l'estimation du nombre"
     (confirm)="confirmObjectRemoval($event)"

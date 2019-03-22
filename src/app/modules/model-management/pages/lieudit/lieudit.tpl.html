@@ -33,7 +33,9 @@
   <entity-delete-confirmation
     *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le lieu-dit ?"
-    details="Toutes les données avec ce lieu-dit seront supprimées."
+    details="Toutes les données ({{
+      currentObject.nbDonnees
+    }}) avec ce lieu-dit seront supprimées."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer le lieu-dit"
     (confirm)="confirmObjectRemoval($event)"

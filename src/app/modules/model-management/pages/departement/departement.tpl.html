@@ -32,7 +32,13 @@
   <entity-delete-confirmation
     *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le département ?"
-    details="Toutes les communes, tous les lieux-dits et toutes les données avec ce département seront supprimés."
+    details="Toutes les communes ({{
+      currentObject.nbCommunes
+    }}), tous les lieux-dits ({{
+      currentObject.nbLieuxdits
+    }}) et toutes les données ({{
+      currentObject.nbDonnees
+    }}) avec ce département seront supprimés."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer le département"
     (confirm)="confirmObjectRemoval($event)"

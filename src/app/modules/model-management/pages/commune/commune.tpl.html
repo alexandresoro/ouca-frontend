@@ -32,7 +32,11 @@
   <entity-delete-confirmation
     *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la commune ?"
-    details="Tous les lieux-dits et toutes les données avec cette communes seront supprimés."
+    details="Tous les lieux-dits ({{
+      currentObject.nbLieuxdits
+    }}) et toutes les données ({{
+      currentObject.nbDonnees
+    }}) avec cette communes seront supprimés."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer la commune"
     (confirm)="confirmObjectRemoval($event)"
