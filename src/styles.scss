@@ -117,7 +117,7 @@ mat-toolbar.base-naturaliste-header {
   }
 
   .lco-creation-form {
-    background-color: mat-color($mat-brown, 100);
+    background-color: mat-color($mat-grey, 300);
     padding-left: 50px;
     padding-right: 50px;
     padding-top: 10px;
@@ -248,7 +248,7 @@ div.lco-creation-buttons {
   padding-right: 50px;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: mat-color($mat-brown, 200);
+  background-color: mat-color($mat-grey, 400);
   min-height: 30px;
 }
 
@@ -357,7 +357,7 @@ button mat-icon:first-child {
   }
 
   .mat-row-selected {
-    background: mat-color($mat-brown, 100);
+    background: mat-color($mat-grey, 300);
   }
 
   .cancel-submit-buttons {
