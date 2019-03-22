@@ -19,7 +19,6 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     const detailsData: EntityDetailsData[] = [];
     detailsData[0] = new EntityDetailsData("ID", this.currentObject.id);
     detailsData[1] = new EntityDetailsData("Code", this.currentObject.code);
-    /*
     detailsData[2] = new EntityDetailsData(
       "Nombre de communes",
       this.currentObject.nbCommunes
@@ -32,7 +31,6 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
-    */
     return detailsData;
   }
 }

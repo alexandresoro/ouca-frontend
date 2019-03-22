@@ -31,12 +31,10 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
       "Nom latin",
       this.currentObject.nomLatin
     );
-    /*
     detailsData[5] = new EntityDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
-    */
     return detailsData;
   }
 }

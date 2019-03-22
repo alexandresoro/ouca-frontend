@@ -22,17 +22,15 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
       "Libellé",
       this.currentObject.libelle
     );
-    /*
     detailsData[2] = new EntityDetailsData(
       "Nombre d'espèces",
-      null
-      // this.currentObject.nbEspeces
+      this.currentObject.nbEspeces
     );
     detailsData[3] = new EntityDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
-    */
+
     return detailsData;
   }
 }

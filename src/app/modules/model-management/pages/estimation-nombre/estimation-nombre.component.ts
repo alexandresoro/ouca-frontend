@@ -28,12 +28,10 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
       "Non Compté",
       this.currentObject.nonCompte ? "Oui" : "Non"
     );
-    /*
     detailsData[3] = new EntityDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
-    */
     return detailsData;
   }
 }

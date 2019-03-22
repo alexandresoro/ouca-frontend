@@ -10,9 +10,7 @@ interface EspeceRow {
   code: string;
   nomFrancais: string;
   nomLatin: string;
-  /*
   nbDonnees: number;
-  */
 }
 
 @Component({
@@ -24,8 +22,8 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
     "classe",
     "code",
     "nomFrancais",
-    "nomLatin" /*,
-    "nbDonnees"*/
+    "nomLatin",
+    "nbDonnees"
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -46,10 +44,8 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
       classe: espece.classe.libelle,
       code: espece.code,
       nomFrancais: espece.nomFrancais,
-      nomLatin: espece.nomLatin
-      /*,
+      nomLatin: espece.nomLatin,
       nbDonnees: espece.nbDonnees
-      */
     };
   }
 
@@ -57,7 +53,9 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
     if (!!this.selectedObject && this.selectedObject.id === id) {
       this.selectedObject = undefined;
     } else {
-      this.selectedObject = this.objects.filter((espece) => espece.id === id)[0];
+      this.selectedObject = this.objects.filter(
+        (espece) => espece.id === id
+      )[0];
     }
   }
 }

@@ -17,12 +17,11 @@ export class EntiteAvecLibelleEtCodeComponent<
       "Libellé",
       this.currentObject.libelle
     );
-    /*
     detailsData[3] = new EntityDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
-    */
+
     return detailsData;
   }
 }

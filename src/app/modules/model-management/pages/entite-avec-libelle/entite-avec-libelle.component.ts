@@ -16,12 +16,10 @@ export class EntiteAvecLibelleComponent<
       "Libellé",
       this.currentObject.libelle
     );
-    /*
     detailsData[2] = new EntityDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );
-    */
 
     return detailsData;
   }

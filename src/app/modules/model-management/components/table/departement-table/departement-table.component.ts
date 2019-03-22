@@ -10,9 +10,9 @@ export class DepartementTableComponent extends EntiteSimpleTableComponent<
   Departement
 > {
   public displayedColumns: string[] = [
-    "code" /*,
+    "code",
     "nbCommunes",
     "nbLieuxdits",
-    "nbDonnees"*/
+    "nbDonnees"
   ];
 }

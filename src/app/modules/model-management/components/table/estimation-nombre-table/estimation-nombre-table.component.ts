@@ -8,9 +8,7 @@ interface EstimationNombreRow {
   id: number;
   libelle: string;
   nonCompte: string;
-  /*
   nbDonnees: number;
-  */
 }
 
 @Component({
@@ -20,10 +18,7 @@ interface EstimationNombreRow {
 export class EstimationNombreTableComponent extends EntiteSimpleTableComponent<
   EstimationNombre
 > {
-  public displayedColumns: string[] = [
-    "libelle",
-    "nonCompte" /*, "nbDonnees"*/
-  ];
+  public displayedColumns: string[] = ["libelle", "nonCompte", "nbDonnees"];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.objects && !!changes.objects.currentValue) {
@@ -43,10 +38,8 @@ export class EstimationNombreTableComponent extends EntiteSimpleTableComponent<
     return {
       id: estimation.id,
       libelle: estimation.libelle,
-      nonCompte: estimation.nonCompte ? "Oui" : "Non"
-      /*,
+      nonCompte: estimation.nonCompte ? "Oui" : "Non",
       nbDonnees: estimation.nbDonnees
-      */
     };
   }
 
