@@ -30,7 +30,8 @@ module.exports = (env, argv) => {
 
     devServer: {
       port: 3000,
-      open: true
+      open: true,
+      historyApiFallback: true
     },
 
     // Add the loader for .ts files.

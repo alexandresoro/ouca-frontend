@@ -258,7 +258,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
       .controls;
 
-    const inventaire: Inventaire = {
+    const inventaire: any = {
       id: this.displayedInventaireId,
       observateur: inventaireFormControls.observateur.value,
       associes: inventaireFormControls.observateursAssocies.value,
@@ -482,7 +482,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.addMilieu(milieux, milieuxFormControls.milieu3.value);
     this.addMilieu(milieux, milieuxFormControls.milieu4.value);
 
-    const donnee: Donnee = {
+    const donnee: any = {
       id: this.displayedDonneeId,
       inventaireId: this.displayedInventaireId,
       espece: especeFormControls.espece.value,
