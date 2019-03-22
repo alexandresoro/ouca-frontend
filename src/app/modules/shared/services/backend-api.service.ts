@@ -18,7 +18,7 @@ export class BackendApiService {
   private CONFIGURATION: string = "configuration/";
   private CREATE: string = "create";
   private CREATION: string = "creation/";
-  private DELETE: string = "delete/";
+  private DELETE: string = "delete";
   private DONNEE = "donnee/";
   private EXPORT = "export";
   private IMPORT = "import";
@@ -29,19 +29,20 @@ export class BackendApiService {
   private NEXT_REGROUPEMENT = "next_regroupement";
   private PREVIOUS_DONNEE = "previous_donnee";
   private UPDATE: string = "update";
+  private SAVE: string = "save";
   private SEARCH_BY_COMMUNE = "search_by_commune/";
 
   constructor(public http: HttpClient) {}
 
   private httpGet<T>(relativePath: string): Observable<T> {
     const requestPath: string = this.API_URL + relativePath;
-    console.log("GET " + requestPath);
+    console.log("GET ", requestPath);
     return this.http.get<T>(requestPath);
   }
 
   private httpPost<T>(relativePath: string, objectToPost: any): Observable<T> {
     const requestPath: string = this.API_URL + relativePath;
-    console.log("POST " + requestPath + objectToPost);
+    console.log("POST", requestPath, objectToPost);
     return this.http.post<T>(requestPath, objectToPost);
   }
 
@@ -75,7 +76,7 @@ export class BackendApiService {
   }
 
   public deleteDonnee(id: number): Observable<EntiteResult<Donnee>> {
-    return this.httpGet(this.DONNEE + this.DELETE + id);
+    return this.httpGet(this.DONNEE + this.DELETE + "?id=" + id);
   }
 
   public getNextRegroupement(): Observable<number> {
@@ -107,18 +108,14 @@ export class BackendApiService {
     entityToSave: T,
     isUpdate: boolean = false
   ) {
-    if (!!!isUpdate) {
-      return this.httpPost(entityName + "/" + this.CREATE, entityToSave);
-    } else {
-      return this.httpPost(entityName + "/" + this.UPDATE, entityToSave);
-    }
+    return this.httpPost(entityName + "/" + this.SAVE, entityToSave);
   }
 
   public deleteEntity(
     entityName: string,
     id: number
   ): Observable<EntiteResult<EntiteSimple>> {
-    return this.httpGet(entityName + "/" + this.DELETE + id);
+    return this.httpGet(entityName + "/" + this.DELETE + "?id=" + id);
   }
 
   public getAllEntities(entityName: string): Observable<any[]> {
