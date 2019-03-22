@@ -23,7 +23,7 @@
 
   <lieudit-form
     *ngIf="isCreationMode() || isEditionMode()"
-    [object]="currentObject"
+    [object]="objectToSave"
     [mode]="mode"
     (confirm)="saveObject()"
     (back)="cancelEdition()"
