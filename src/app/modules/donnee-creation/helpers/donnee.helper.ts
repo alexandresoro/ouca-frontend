@@ -22,6 +22,8 @@ export class DonneeHelper {
   }
 
   public static createDonneeForm() {
+    this.displayedDonneeId = null;
+
     return new FormGroup({
       especeGroup: new FormGroup({
         classe: new FormControl(""),

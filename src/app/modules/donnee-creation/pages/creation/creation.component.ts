@@ -52,27 +52,19 @@ export class CreationComponent extends PageComponent implements OnInit {
     public navigationService: NavigationService
   ) {
     super();
-    this.inventaireForm = InventaireHelper.createInventaireForm();
-    this.donneeForm = DonneeHelper.createDonneeForm();
   }
 
   public ngOnInit(): void {
+    this.inventaireForm = InventaireHelper.createInventaireForm();
+    this.donneeForm = DonneeHelper.createDonneeForm();
+
     this.departements$ = new Subject();
     this.communes$ = new Subject();
     this.lieuxdits$ = new Subject();
     this.classes$ = new Subject();
     this.especes$ = new Subject();
-    this.initCreationPage();
-  }
 
-  public observateurValidator(
-    control: AbstractControl
-  ): { [key: string]: boolean } | null {
-    console.log(control.value);
-    if (!!control.value && !!control.value.id) {
-      return { isObservateurValid: true };
-    }
-    return null;
+    this.initCreationPage();
   }
 
   /**
@@ -83,11 +75,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.backendApiService.getCreationInitialPageModel().subscribe(
       (creationPage: CreationPage) => {
         this.onInitCreationPageSucces(creationPage);
-        this.communes$.next(creationPage ? creationPage.communes : []);
-        this.departements$.next(creationPage ? creationPage.departements : []);
-        this.lieuxdits$.next(creationPage ? creationPage.lieudits : []);
-        this.classes$.next(creationPage ? creationPage.classes : []);
-        this.especes$.next(creationPage ? creationPage.especes : []);
       },
       (error: any) => {
         this.onInitCreationPageError(error);
@@ -113,7 +100,13 @@ export class CreationComponent extends PageComponent implements OnInit {
   private onInitCreationPageSucces(creationPage: CreationPage): void {
     this.pageModel = creationPage;
 
-    console.log("Modèle de la page de Création", this.pageModel);
+    console.log("Modèle de la page de création", this.pageModel);
+
+    this.communes$.next(this.pageModel ? this.pageModel.communes : []);
+    this.departements$.next(this.pageModel ? this.pageModel.departements : []);
+    this.lieuxdits$.next(this.pageModel ? this.pageModel.lieudits : []);
+    this.classes$.next(this.pageModel ? this.pageModel.classes : []);
+    this.especes$.next(this.pageModel ? this.pageModel.especes : []);
 
     this.nextRegroupement = this.pageModel.nextRegroupement;
 

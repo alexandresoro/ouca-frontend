@@ -26,6 +26,8 @@ export class InventaireHelper {
   }
 
   public static createInventaireForm() {
+    this.displayedInventaireId = null;
+
     return new FormGroup({
       observateur: new FormControl("", [Validators.required]),
       observateursAssocies: new FormControl(""),
