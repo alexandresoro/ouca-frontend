@@ -1,31 +1,23 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material";
-import { Age } from "basenaturaliste-model/age.object";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
-import { Comportement } from "basenaturaliste-model/comportement.object";
 import { CreationPage } from "basenaturaliste-model/creation-page.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
-import { EntiteAvecLibelleEtCode } from "basenaturaliste-model/entite-avec-libelle-et-code.object";
 import { EntiteResult } from "basenaturaliste-model/entite-result.object";
 import { Espece } from "basenaturaliste-model/espece.object";
-import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
-import { Meteo } from "basenaturaliste-model/meteo.object";
-import { Milieu } from "basenaturaliste-model/milieu.object";
-import { Observateur } from "basenaturaliste-model/observateur.object";
-import { Sexe } from "basenaturaliste-model/sexe.object";
-import moment from "moment";
 import { Subject } from "rxjs";
 import { ConfirmationDialogData } from "../../../shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../../shared/components/confirmation-dialog/confirmation-dialog.component";
 import { PageComponent } from "../../../shared/components/page.component";
-import { ListHelper } from "../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
+import { DonneeHelper } from "../../helpers/donnee.helper";
+import { InventaireHelper } from "../../helpers/inventaire.helper";
 import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
 import { NavigationService } from "./navigation.service";
 
@@ -37,13 +29,9 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public mode: CreationModeEnum;
 
-  public displayedInventaireId: number = null;
-
   public displayedDonneeId: number = null;
 
   public nextRegroupement: number;
-
-  private listHelper: ListHelper;
 
   public departements$: Subject<Departement[]>;
 
@@ -55,56 +43,9 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public especes$: Subject<Espece[]>;
 
-  public inventaireForm: FormGroup = new FormGroup({
-    observateur: new FormControl("", Validators.required),
-    observateursAssocies: new FormControl(""),
-    date: new FormControl("", Validators.required),
-    heure: new FormControl(""),
-    duree: new FormControl(""),
-    lieu: new FormGroup({
-      departement: new FormControl("", Validators.required),
-      commune: new FormControl("", Validators.required),
-      lieudit: new FormControl("", Validators.required),
-      altitude: new FormControl("", Validators.required),
-      longitude: new FormControl("", Validators.required),
-      latitude: new FormControl("", Validators.required)
-    }),
-    temperature: new FormControl(""),
-    meteos: new FormControl("")
-  });
+  public inventaireForm: FormGroup;
 
-  public donneeForm: FormGroup = new FormGroup({
-    especeGroup: new FormGroup({
-      classe: new FormControl(""),
-      espece: new FormControl("", Validators.required)
-    }),
-    nombreGroup: new FormGroup({
-      nombre: new FormControl("", Validators.required),
-      estimationNombre: new FormControl("", Validators.required)
-    }),
-    sexe: new FormControl("", Validators.required),
-    age: new FormControl("", Validators.required),
-    distanceGroup: new FormGroup({
-      distance: new FormControl(""),
-      estimationDistance: new FormControl("")
-    }),
-    regroupement: new FormControl(""),
-    comportementsGroup: new FormGroup({
-      comportement1: new FormControl(""),
-      comportement2: new FormControl(""),
-      comportement3: new FormControl(""),
-      comportement4: new FormControl(""),
-      comportement5: new FormControl(""),
-      comportement6: new FormControl("")
-    }),
-    milieuxGroup: new FormGroup({
-      milieu1: new FormControl(""),
-      milieu2: new FormControl(""),
-      milieu3: new FormControl(""),
-      milieu4: new FormControl("")
-    }),
-    commentaire: new FormControl("")
-  });
+  public donneeForm: FormGroup;
 
   constructor(
     private backendApiService: BackendApiService,
@@ -113,6 +54,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     public navigationService: NavigationService
   ) {
     super();
+    this.inventaireForm = InventaireHelper.createInventaireForm();
+    this.donneeForm = DonneeHelper.createDonneeForm();
   }
 
   public ngOnInit(): void {
@@ -122,6 +65,16 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.classes$ = new Subject();
     this.especes$ = new Subject();
     this.initCreationPage();
+  }
+
+  public observateurValidator(
+    control: AbstractControl
+  ): { [key: string]: boolean } | null {
+    console.log(control.value);
+    if (!!control.value && !!control.value.id) {
+      return { isObservateurValid: true };
+    }
+    return null;
   }
 
   /**
@@ -171,21 +124,6 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.pageModel.numberOfDonnees
     );
 
-    this.listHelper = new ListHelper(
-      this.pageModel.ages,
-      this.pageModel.classes,
-      this.pageModel.communes,
-      this.pageModel.comportements,
-      this.pageModel.departements,
-      this.pageModel.estimationsDistance,
-      this.pageModel.estimationsNombre,
-      this.pageModel.lieudits,
-      this.pageModel.meteos,
-      this.pageModel.milieux,
-      this.pageModel.observateurs,
-      this.pageModel.sexes
-    );
-
     // Page model is ready, initalize the page to create a first inventaire
     this.switchToNewInventaireMode();
   }
@@ -194,453 +132,22 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Initialize the page to be ready to create an inventaire
    */
   private switchToNewInventaireMode(): void {
-    this.initializeInventaireFormControls();
-    this.initializeDonneeFormControls();
+    InventaireHelper.initializeInventaireForm(
+      this.inventaireForm,
+      this.pageModel
+    );
+    DonneeHelper.initializeDonneeFormControls(this.donneeForm, this.pageModel);
 
     this.switchToInventaireMode();
-  }
-
-  /**
-   * Initialize the inventaire form
-   * Reset the form and set defaults values if any
-   */
-  private initializeInventaireFormControls(): void {
-    let defaultObservateur: Observateur = null;
-    if (!!this.pageModel.defaultObservateurId) {
-      defaultObservateur = this.pageModel.observateurs.find(
-        (observateur) => observateur.id === this.pageModel.defaultObservateurId
-      );
-    }
-
-    let defaultDepartement: Departement = null;
-    if (!!this.pageModel.defaultDepartementId) {
-      defaultDepartement = this.pageModel.departements.find(
-        (departement) => departement.id === this.pageModel.defaultDepartementId
-      );
-    }
-
-    this.displayedInventaireId = null;
-
-    const inventaireFormControls = this.inventaireForm.controls;
-    const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
-      .controls;
-
-    inventaireFormControls.observateur.setValue(defaultObservateur);
-    inventaireFormControls.observateursAssocies.setValue(
-      new Array<Observateur>()
-    );
-    inventaireFormControls.date.setValue(
-      moment()
-        .milliseconds(0)
-        .seconds(0)
-        .minutes(0)
-        .hours(0)
-    );
-    inventaireFormControls.heure.setValue(null);
-    inventaireFormControls.duree.setValue(null);
-    lieuditFormControls.departement.setValue(defaultDepartement);
-    lieuditFormControls.commune.setValue(null);
-    lieuditFormControls.lieudit.setValue(null);
-    lieuditFormControls.altitude.setValue(null);
-    lieuditFormControls.longitude.setValue(null);
-    lieuditFormControls.latitude.setValue(null);
-    inventaireFormControls.temperature.setValue(null);
-    inventaireFormControls.meteos.setValue(new Array<Meteo>());
-
-    this.inventaireForm.markAsUntouched();
-  }
-
-  /**
-   * Returns an inventaire object from the values filled in the inventaire form
-   */
-  private getInventaireFromInventaireFormControls(): Inventaire {
-    const inventaireFormControls = this.inventaireForm.controls;
-    const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
-      .controls;
-
-    const inventaire: any = {
-      id: this.displayedInventaireId,
-      observateur: inventaireFormControls.observateur.value,
-      associes: inventaireFormControls.observateursAssocies.value,
-      date: inventaireFormControls.date.value.toDate(),
-      heure: inventaireFormControls.heure.value,
-      duree: inventaireFormControls.duree.value,
-      lieudit: lieuditFormControls.lieudit.value,
-      altitude: lieuditFormControls.altitude.value,
-      longitude: lieuditFormControls.longitude.value,
-      latitude: lieuditFormControls.latitude.value,
-      temperature: inventaireFormControls.temperature.value,
-      meteos: inventaireFormControls.meteos.value
-    };
-
-    if (
-      !this.areCoordinatesCustomized(
-        inventaire.lieudit,
-        inventaire.altitude,
-        inventaire.longitude,
-        inventaire.latitude
-      )
-    ) {
-      inventaire.altitude = null;
-      inventaire.longitude = null;
-      inventaire.latitude = null;
-    }
-
-    console.log("Inventaire généré depuis le formulaire:", inventaire);
-
-    return inventaire;
-  }
-
-  /**
-   * Check if at least one of the coordinates has been modified by the user
-   * @param lieudit selected lieu-dit
-   * @param altitude current value of altitude
-   * @param longitude current value of longitude
-   * @param latitude current value of latitude
-   */
-  private areCoordinatesCustomized(
-    lieudit: Lieudit,
-    altitude: number,
-    longitude: number,
-    latitude: number
-  ): boolean {
-    return (
-      altitude !== lieudit.altitude ||
-      longitude !== lieudit.longitude ||
-      latitude !== lieudit.latitude
-    );
-  }
-
-  /**
-   * Fill the inventaire form with the values from an existing inventaire
-   * @param inventaire Inventaire
-   */
-  private setInventaireFormControlsFromInventaire(
-    inventaire: Inventaire
-  ): void {
-    console.log("Inventaire à afficher dans le formulaire:", inventaire);
-
-    let commune: Commune = null;
-    if (!!inventaire.lieudit && !!inventaire.lieudit.communeId) {
-      commune = this.listHelper.getCommuneById(inventaire.lieudit.communeId);
-    }
-
-    let departement: Departement = null;
-    if (!!commune && !!commune.departementId) {
-      departement = this.listHelper.getDepartementById(commune.departementId);
-    }
-
-    this.displayedInventaireId = inventaire.id;
-
-    const inventaireFormControls = this.inventaireForm.controls;
-    const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
-      .controls;
-
-    inventaireFormControls.observateur.setValue(inventaire.observateur);
-    inventaireFormControls.observateursAssocies.setValue(inventaire.associes);
-    inventaireFormControls.date.setValue(inventaire.date);
-    inventaireFormControls.heure.setValue(inventaire.heure);
-    inventaireFormControls.duree.setValue(inventaire.duree);
-    lieuditFormControls.departement.setValue(departement);
-    lieuditFormControls.commune.setValue(commune);
-    lieuditFormControls.lieudit.setValue(inventaire.lieudit);
-    if (
-      !!inventaire.altitude &&
-      !!inventaire.longitude &&
-      !!inventaire.latitude
-    ) {
-      lieuditFormControls.altitude.setValue(inventaire.altitude);
-      lieuditFormControls.longitude.setValue(inventaire.longitude);
-      lieuditFormControls.latitude.setValue(inventaire.latitude);
-    } else {
-      lieuditFormControls.altitude.setValue(inventaire.lieudit.altitude);
-      lieuditFormControls.longitude.setValue(inventaire.lieudit.longitude);
-      lieuditFormControls.latitude.setValue(inventaire.lieudit.latitude);
-    }
-    inventaireFormControls.temperature.setValue(inventaire.temperature);
-    inventaireFormControls.meteos.setValue(inventaire.meteos);
-  }
-
-  /**
-   * Initialize the donnee form
-   * Reset the form and set defaults values if any
-   */
-  private initializeDonneeFormControls(): void {
-    let defaultAge: Age = null;
-    if (!!this.pageModel.defaultAgeId) {
-      defaultAge = this.listHelper.getAgeById(this.pageModel.defaultAgeId);
-    }
-
-    let defaultSexe: Sexe = null;
-    if (!!this.pageModel.defaultSexeId) {
-      defaultSexe = this.listHelper.getSexeById(this.pageModel.defaultSexeId);
-    }
-
-    let defaultEstimationNombre: EstimationNombre = null;
-    if (!!this.pageModel.defaultEstimationNombreId) {
-      defaultEstimationNombre = this.listHelper.getEstimationNombreById(
-        this.pageModel.defaultEstimationNombreId
-      );
-    }
-
-    let defaultNombre: number = null;
-    if (
-      !!this.pageModel.defaultNombre &&
-      (!!!defaultEstimationNombre ||
-        (!!defaultEstimationNombre && !defaultEstimationNombre.nonCompte))
-    ) {
-      defaultNombre = this.pageModel.defaultNombre;
-    }
-
-    this.displayedDonneeId = null;
-
-    const donneeFormControls = this.donneeForm.controls;
-    const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
-      .controls;
-    const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
-      .controls;
-    const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
-      .controls;
-    const comportementsFormControls = (donneeFormControls.comportementsGroup as FormGroup)
-      .controls;
-    const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
-      .controls;
-
-    especeFormControls.classe.setValue(null);
-    especeFormControls.espece.setValue(null);
-    nombreFormControls.nombre.setValue(defaultNombre);
-    nombreFormControls.estimationNombre.setValue(defaultEstimationNombre);
-    if (!!defaultEstimationNombre && !!defaultEstimationNombre.nonCompte) {
-      nombreFormControls.nombre.disable();
-    }
-    donneeFormControls.sexe.setValue(defaultSexe);
-    donneeFormControls.age.setValue(defaultAge);
-    distanceFormControls.distance.setValue(null);
-    distanceFormControls.estimationDistance.setValue(null);
-    donneeFormControls.regroupement.setValue(null);
-    comportementsFormControls.comportement1.setValue(null);
-    comportementsFormControls.comportement2.setValue(null);
-    comportementsFormControls.comportement3.setValue(null);
-    comportementsFormControls.comportement4.setValue(null);
-    comportementsFormControls.comportement5.setValue(null);
-    comportementsFormControls.comportement6.setValue(null);
-    milieuxFormControls.milieu1.setValue(null);
-    milieuxFormControls.milieu2.setValue(null);
-    milieuxFormControls.milieu3.setValue(null);
-    milieuxFormControls.milieu4.setValue(null);
-    donneeFormControls.commentaire.setValue(null);
-
-    this.donneeForm.markAsUntouched();
-    document.getElementById("input-Espèce").focus();
-  }
-
-  /**
-   * Returns a donnee object from the values filled in donnee form
-   */
-  private getDonneeFromDonneeFormControls(): Donnee {
-    const donneeFormControls = this.donneeForm.controls;
-    const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
-      .controls;
-    const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
-      .controls;
-    const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
-      .controls;
-    const comportementsFormControls = (donneeFormControls.comportementsGroup as FormGroup)
-      .controls;
-    const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
-      .controls;
-
-    const comportements: Comportement[] = [];
-    this.addComportement(
-      comportements,
-      comportementsFormControls.comportement1.value
-    );
-    this.addComportement(
-      comportements,
-      comportementsFormControls.comportement2.value
-    );
-    this.addComportement(
-      comportements,
-      comportementsFormControls.comportement3.value
-    );
-    this.addComportement(
-      comportements,
-      comportementsFormControls.comportement4.value
-    );
-    this.addComportement(
-      comportements,
-      comportementsFormControls.comportement5.value
-    );
-    this.addComportement(
-      comportements,
-      comportementsFormControls.comportement6.value
-    );
-
-    const milieux: Milieu[] = [];
-    this.addMilieu(milieux, milieuxFormControls.milieu1.value);
-    this.addMilieu(milieux, milieuxFormControls.milieu2.value);
-    this.addMilieu(milieux, milieuxFormControls.milieu3.value);
-    this.addMilieu(milieux, milieuxFormControls.milieu4.value);
-
-    const donnee: any = {
-      id: this.displayedDonneeId,
-      inventaireId: this.displayedInventaireId,
-      espece: especeFormControls.espece.value,
-      nombre: nombreFormControls.nombre.value,
-      estimationNombre: nombreFormControls.estimationNombre.value,
-      sexe: donneeFormControls.sexe.value,
-      age: donneeFormControls.age.value,
-      distance: distanceFormControls.distance.value,
-      estimationDistance: distanceFormControls.estimationDistance.value,
-      regroupement: donneeFormControls.regroupement.value,
-      comportements,
-      milieux,
-      commentaire: donneeFormControls.commentaire.value
-    };
-
-    console.log("Donnée générée depuis le formulaire:", donnee);
-
-    return donnee;
-  }
-
-  /**
-   * Fill the donnee form with the values of an existing donnee
-   */
-  private setDonneeFormControlsFromDonnee(donnee: Donnee): void {
-    console.log("Donnée à afficher dans le formulaire:", donnee);
-
-    this.displayedDonneeId = donnee.id;
-
-    const donneeFormControls = this.donneeForm.controls;
-    const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
-      .controls;
-    const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
-      .controls;
-    const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
-      .controls;
-    const comportementsFormControls = (donneeFormControls.comportementsGroup as FormGroup)
-      .controls;
-    const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
-      .controls;
-
-    especeFormControls.classe.setValue(
-      this.listHelper.getClasseById(donnee.espece.classeId)
-    );
-    especeFormControls.espece.setValue(donnee.espece);
-    nombreFormControls.nombre.setValue(donnee.nombre);
-    nombreFormControls.estimationNombre.setValue(donnee.estimationNombre);
-    if (!!donnee.estimationNombre && !!donnee.estimationNombre.nonCompte) {
-      nombreFormControls.nombre.disable();
-    }
-    donneeFormControls.sexe.setValue(donnee.sexe);
-    donneeFormControls.age.setValue(donnee.age);
-    distanceFormControls.distance.setValue(donnee.distance);
-    distanceFormControls.estimationDistance.setValue(donnee.estimationDistance);
-    donneeFormControls.regroupement.setValue(donnee.regroupement);
-    comportementsFormControls.comportement1.setValue(
-      this.getComportement(donnee.comportements, 1)
-    );
-    comportementsFormControls.comportement2.setValue(
-      this.getComportement(donnee.comportements, 2)
-    );
-    comportementsFormControls.comportement3.setValue(
-      this.getComportement(donnee.comportements, 3)
-    );
-    comportementsFormControls.comportement4.setValue(
-      this.getComportement(donnee.comportements, 4)
-    );
-    comportementsFormControls.comportement5.setValue(
-      this.getComportement(donnee.comportements, 5)
-    );
-    comportementsFormControls.comportement6.setValue(
-      this.getComportement(donnee.comportements, 6)
-    );
-    milieuxFormControls.milieu1.setValue(this.getMilieu(donnee.milieux, 1));
-    milieuxFormControls.milieu2.setValue(this.getMilieu(donnee.milieux, 2));
-    milieuxFormControls.milieu3.setValue(this.getMilieu(donnee.milieux, 3));
-    milieuxFormControls.milieu4.setValue(this.getMilieu(donnee.milieux, 4));
-    donneeFormControls.commentaire.setValue(donnee.commentaire);
-  }
-
-  /**
-   * Add the entity to the list of entities if this entity is not already part of the list
-   * @param entitesCodeEtLibelle list to complete
-   * @param entiteCodeEtLibelle entity to add
-   */
-  private addEntiteCodeEtLibelle(
-    entitesCodeEtLibelle: EntiteAvecLibelleEtCode[],
-    entiteCodeEtLibelle: EntiteAvecLibelleEtCode
-  ): void {
-    if (
-      !!entiteCodeEtLibelle &&
-      entitesCodeEtLibelle.indexOf(entiteCodeEtLibelle) < 0
-    ) {
-      entitesCodeEtLibelle.push(entiteCodeEtLibelle);
-    }
-  }
-
-  /**
-   * Get the entity stored at index of a list if it exists
-   * @param entitesCodeEtLibelle list of entities
-   * @param index index of the entity to return
-   */
-  private getEntiteCodeEtLibelle(
-    entitesCodeEtLibelle: EntiteAvecLibelleEtCode[],
-    index: number
-  ): EntiteAvecLibelleEtCode {
-    return entitesCodeEtLibelle.length >= index &&
-      !!entitesCodeEtLibelle[index - 1]
-      ? entitesCodeEtLibelle[index - 1]
-      : null;
-  }
-
-  /**
-   * Returns the comportement at specified index if it exists
-   * @param comportements list of comportements
-   * @param index index of the comportement to return
-   */
-  private getComportement(
-    comportements: Comportement[],
-    index: number
-  ): Comportement {
-    return this.getEntiteCodeEtLibelle(comportements, index);
-  }
-
-  /**
-   * Add a comportement to the list of comportements if not already in the list
-   * @param comportements list of comportements
-   * @param comportement comportement to add in the list
-   */
-  private addComportement(
-    comportements: Comportement[],
-    comportement: Comportement
-  ): void {
-    this.addEntiteCodeEtLibelle(comportements, comportement);
-  }
-
-  /**
-   * Returns the milieu at specified index if it exists
-   * @param milieux list of milieux
-   * @param index index of the milieu to return
-   */
-  private getMilieu(milieux: Milieu[], index: number): Milieu {
-    return this.getEntiteCodeEtLibelle(milieux, index);
-  }
-
-  /**
-   * Add a milieu to the list of milieux if not already in the list
-   * @param milieux list of milieux
-   * @param milieu milieu to add in the list
-   */
-  private addMilieu(milieux: Milieu[], milieu: Milieu): void {
-    this.addEntiteCodeEtLibelle(milieux, milieu);
   }
 
   /**
    * Called when clicking on Save Inventaire button
    */
   public saveInventaire(): void {
-    const inventaireToBeSaved: Inventaire = this.getInventaireFromInventaireFormControls();
+    const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireFormGroup(
+      this.inventaireForm
+    );
 
     this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
       (result: EntiteResult<Inventaire>) => {
@@ -665,7 +172,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onSaveInventaireSuccess(savedInventaire: Inventaire): void {
     // this.setInventaireFormControlsFromInventaire(savedInventaire);
-    this.displayedInventaireId = savedInventaire.id;
+    InventaireHelper.setDisplayedInventaireId(savedInventaire.id);
     this.switchToEditionDonneeMode();
   }
 
@@ -673,7 +180,9 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on Save Donnee button
    */
   public saveDonnee(): void {
-    const donneeToBeSaved: Donnee = this.getDonneeFromDonneeFormControls();
+    const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
+      this.donneeForm
+    );
 
     this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
       (result: EntiteResult<Donnee>) => {
@@ -701,7 +210,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     this.updateNextRegroupement();
 
-    this.initializeDonneeFormControls();
+    DonneeHelper.initializeDonneeFormControls(this.donneeForm, this.pageModel);
   }
 
   /**
@@ -760,8 +269,12 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on "Donnee precedente" button
    */
   public onPreviousDonneeBtnClicked(): void {
-    const currentInventaire: Inventaire = this.getInventaireFromInventaireFormControls();
-    const currentDonnee: Donnee = this.getDonneeFromDonneeFormControls();
+    const currentInventaire: Inventaire = InventaireHelper.getInventaireFromInventaireFormGroup(
+      this.inventaireForm
+    );
+    const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
+      this.donneeForm
+    );
 
     // Save the current donnee, inventaire and mode
     if (!this.modeHelper.isUpdateMode(this.mode)) {
@@ -781,8 +294,16 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     // Set the current donnee to display
     const newCurrentDonnee: Donnee = this.navigationService.previousDonnee;
-    this.setDonneeFormControlsFromDonnee(newCurrentDonnee);
-    this.setInventaireFormControlsFromInventaire(newCurrentDonnee.inventaire);
+    DonneeHelper.setDonneeFormControlsFromDonnee(
+      this.donneeForm,
+      newCurrentDonnee,
+      this.pageModel
+    );
+    InventaireHelper.setInventaireFormControlsFromInventaire(
+      this.inventaireForm,
+      newCurrentDonnee.inventaire,
+      this.pageModel
+    );
     this.navigationService.decreaseIndexOfCurrentDonnee();
 
     // Disable the navigation buttons
@@ -797,7 +318,9 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onNextDonneeBtnClicked(): void {
-    const currentDonnee: Donnee = this.getDonneeFromDonneeFormControls();
+    const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
+      this.donneeForm
+    );
 
     this.mode = this.navigationService.getNextMode();
     if (this.modeHelper.isInventaireMode(this.mode)) {
@@ -809,8 +332,16 @@ export class CreationComponent extends PageComponent implements OnInit {
     const newPreviousDonnee: Donnee = currentDonnee;
 
     const newCurrentDonnee: Donnee = this.navigationService.nextDonnee;
-    this.setInventaireFormControlsFromInventaire(newCurrentDonnee.inventaire);
-    this.setDonneeFormControlsFromDonnee(newCurrentDonnee);
+    InventaireHelper.setInventaireFormControlsFromInventaire(
+      this.inventaireForm,
+      newCurrentDonnee.inventaire,
+      this.pageModel
+    );
+    DonneeHelper.setDonneeFormControlsFromDonnee(
+      this.donneeForm,
+      newCurrentDonnee,
+      this.pageModel
+    );
     this.navigationService.increaseIndexOfCurrentDonnee();
 
     // Disable the navigation buttons
@@ -840,11 +371,17 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.switchToEditionDonneeMode();
     }
 
-    this.setInventaireFormControlsFromInventaire(
-      this.navigationService.getNextInventaire()
+    InventaireHelper.setInventaireFormControlsFromInventaire(
+      this.inventaireForm,
+      this.navigationService.getNextInventaire(),
+      this.pageModel
     );
     const newCurrentDonnee: Donnee = this.navigationService.getNextDonnee();
-    this.setDonneeFormControlsFromDonnee(newCurrentDonnee);
+    DonneeHelper.setDonneeFormControlsFromDonnee(
+      this.donneeForm,
+      newCurrentDonnee,
+      this.pageModel
+    );
   }
 
   private setNewNextDonnee(currentDonnee: Donnee) {
@@ -933,16 +470,24 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.mode = this.navigationService.savedMode;
     if (this.modeHelper.isInventaireMode(this.mode)) {
       this.switchToInventaireMode();
-      this.setInventaireFormControlsFromInventaire(
-        this.navigationService.savedInventaire
+      InventaireHelper.setInventaireFormControlsFromInventaire(
+        this.inventaireForm,
+        this.navigationService.savedInventaire,
+        this.pageModel
       );
       this.displayedDonneeId = null;
     } else if (this.modeHelper.isDonneeMode(this.mode)) {
       this.switchToEditionDonneeMode();
-      this.setInventaireFormControlsFromInventaire(
-        this.navigationService.savedInventaire
+      InventaireHelper.setInventaireFormControlsFromInventaire(
+        this.inventaireForm,
+        this.navigationService.savedInventaire,
+        this.pageModel
       );
-      this.setDonneeFormControlsFromDonnee(this.navigationService.savedDonnee);
+      DonneeHelper.setDonneeFormControlsFromDonnee(
+        this.donneeForm,
+        this.navigationService.savedDonnee,
+        this.pageModel
+      );
     }
   }
 
@@ -1002,7 +547,9 @@ export class CreationComponent extends PageComponent implements OnInit {
    * @param createNewInventaire If we should create a new inventaire for the donnee or just update it
    */
   private updateInventaireAndDonnee(createNewInventaire: boolean): void {
-    const inventaireToBeSaved: Inventaire = this.getInventaireFromInventaireFormControls();
+    const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireFormGroup(
+      this.inventaireForm
+    );
 
     if (!!createNewInventaire) {
       inventaireToBeSaved.id = null;
@@ -1013,7 +560,11 @@ export class CreationComponent extends PageComponent implements OnInit {
         (result: EntiteResult<Inventaire>) => {
           if (this.isSuccessStatus(result.status)) {
             const savedInventaire: Inventaire = result.object;
-            this.setInventaireFormControlsFromInventaire(savedInventaire);
+            InventaireHelper.setInventaireFormControlsFromInventaire(
+              this.inventaireForm,
+              savedInventaire,
+              this.pageModel
+            );
             this.updateDonnee();
           } else {
             this.updatePageStatus(result.status, result.messages);
@@ -1029,13 +580,19 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private updateDonnee(): void {
-    const donneeToBeSaved: Donnee = this.getDonneeFromDonneeFormControls();
+    const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
+      this.donneeForm
+    );
     this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
       (result: EntiteResult<Donnee>) => {
         this.updatePageStatus(result.status, result.messages);
 
         if (this.isSuccess()) {
-          this.setDonneeFormControlsFromDonnee(result.object);
+          DonneeHelper.setDonneeFormControlsFromDonnee(
+            this.donneeForm,
+            result.object,
+            this.pageModel
+          );
         }
       },
       (error: any) => {
