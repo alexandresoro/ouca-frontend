@@ -29,8 +29,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public mode: CreationModeEnum;
 
-  public displayedDonneeId: number = null;
-
   public nextRegroupement: number;
 
   public departements$: Subject<Departement[]>;
@@ -463,7 +461,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onDeleteConfirmButtonClicked(): void {
-    this.deleteDonnee(this.displayedDonneeId);
+    this.deleteDonnee(DonneeHelper.getDisplayedDonneeId());
   }
 
   private redisplayCurrentInventaireAndDonnee(): void {
@@ -475,7 +473,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.navigationService.savedInventaire,
         this.pageModel
       );
-      this.displayedDonneeId = null;
+      DonneeHelper.setDisplayedDonneeId(null);
     } else if (this.modeHelper.isDonneeMode(this.mode)) {
       this.switchToEditionDonneeMode();
       InventaireHelper.setInventaireFormControlsFromInventaire(
