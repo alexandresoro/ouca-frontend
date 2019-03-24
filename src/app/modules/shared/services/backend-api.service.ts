@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
 import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
 import { CreationPage } from "basenaturaliste-model/creation-page.object";
@@ -32,7 +33,7 @@ export class BackendApiService {
   private SAVE: string = "save";
   private SEARCH_BY_COMMUNE = "search_by_commune/";
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient, private router: Router) {}
 
   private httpGet<T>(relativePath: string): Observable<T> {
     const requestPath: string = this.API_URL + relativePath;
