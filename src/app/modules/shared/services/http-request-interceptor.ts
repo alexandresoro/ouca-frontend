@@ -27,7 +27,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
           const errorPageParams: NavigationExtras = {
             state: {
               error: JSON.stringify(err)
-            }
+            },
+            skipLocationChange: true
           };
           this.router.navigate(["/error"], errorPageParams);
         }
