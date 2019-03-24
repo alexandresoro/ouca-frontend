@@ -145,8 +145,7 @@ export class InventaireHelper {
       longitude,
       latitude,
       temperature,
-      meteos,
-      dateCreation: moment().toDate()
+      meteos
     };
 
     if (
