@@ -1,9 +1,12 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Age } from "basenaturaliste-model/age.object";
+import { Classe } from "basenaturaliste-model/classe.object";
 import { Comportement } from "basenaturaliste-model/comportement.object";
 import { CreationPage } from "basenaturaliste-model/creation-page.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
 import { EntiteAvecLibelleEtCode } from "basenaturaliste-model/entite-avec-libelle-et-code.object";
+import { Espece } from "basenaturaliste-model/espece.object";
+import { EstimationDistance } from "basenaturaliste-model/estimation-distance.object";
 import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { Milieu } from "basenaturaliste-model/milieu.object";
 import { Sexe } from "basenaturaliste-model/sexe.object";
@@ -194,18 +197,23 @@ export class DonneeHelper {
     this.addMilieu(milieuxIds, milieuxFormControls.milieu3.value);
     this.addMilieu(milieuxIds, milieuxFormControls.milieu4.value);
 
+    const espece: Espece = especeFormControls.espece.value;
+    const estimationNombre: EstimationNombre =
+      nombreFormControls.estimationNombre.value;
+    const sexe: Sexe = donneeFormControls.sexe.value;
+    const age: Age = donneeFormControls.age.value;
+    const estimationDistance = distanceFormControls.estimationDistance.value;
+
     const donnee: any = {
       id: this.displayedDonneeId,
       inventaireId: InventaireHelper.getDisplayedInventaireId(),
-      especeId: especeFormControls.espece.value.id,
+      especeId: !!espece ? espece.id : null,
       nombre: nombreFormControls.nombre.value,
-      estimationNombreId: nombreFormControls.estimationNombre.value.id,
-      sexeId: donneeFormControls.sexe.value.id,
-      ageId: donneeFormControls.age.value.id,
+      estimationNombreId: !!estimationNombre ? estimationNombre.id : null,
+      sexeId: !!sexe ? sexe.id : null,
+      ageId: !!age ? age.id : null,
       distance: distanceFormControls.distance.value,
-      estimationDistanceId: !!distanceFormControls.estimationDistance.value
-        ? distanceFormControls.estimationDistance.value.id
-        : null,
+      estimationDistanceId: !!estimationDistance ? estimationDistance.id : null,
       regroupement: donneeFormControls.regroupement.value,
       comportementsIds,
       milieuxIds,
@@ -241,42 +249,79 @@ export class DonneeHelper {
     const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
       .controls;
 
-    especeFormControls.classe.setValue(
-      ListHelper.getFromList(pageModel.classes, "id", donnee.espece.classeId)
+    const espece: Espece = ListHelper.getFromList(
+      pageModel.especes,
+      "id",
+      donnee.especeId
     );
-    especeFormControls.espece.setValue(donnee.espece);
+
+    const classe: Classe =
+      !!espece && !!espece.classeId
+        ? ListHelper.getFromList(pageModel.classes, "id", espece.classeId)
+        : null;
+
+    const estimationNombre: EstimationNombre = ListHelper.getFromList(
+      pageModel.estimationsNombre,
+      "id",
+      donnee.estimationNombreId
+    );
+
+    const estimationDistance: EstimationDistance = ListHelper.getFromList(
+      pageModel.estimationsDistance,
+      "id",
+      donnee.estimationDistanceId
+    );
+
+    const sexe: Sexe = ListHelper.getFromList(
+      pageModel.sexes,
+      "id",
+      donnee.sexeId
+    );
+
+    const age: EstimationDistance = ListHelper.getFromList(
+      pageModel.ages,
+      "id",
+      donnee.ageId
+    );
+
+    especeFormControls.classe.setValue(classe);
+    especeFormControls.espece.setValue(espece);
     nombreFormControls.nombre.setValue(donnee.nombre);
-    nombreFormControls.estimationNombre.setValue(donnee.estimationNombre);
-    if (!!donnee.estimationNombre && !!donnee.estimationNombre.nonCompte) {
+    nombreFormControls.estimationNombre.setValue(estimationNombre);
+    if (!!estimationNombre && !!estimationNombre.nonCompte) {
       nombreFormControls.nombre.disable();
     }
-    donneeFormControls.sexe.setValue(donnee.sexe);
-    donneeFormControls.age.setValue(donnee.age);
+    donneeFormControls.sexe.setValue(sexe);
+    donneeFormControls.age.setValue(age);
     distanceFormControls.distance.setValue(donnee.distance);
-    distanceFormControls.estimationDistance.setValue(donnee.estimationDistance);
+    distanceFormControls.estimationDistance.setValue(estimationDistance);
     donneeFormControls.regroupement.setValue(donnee.regroupement);
-    comportementsFormControls.comportement1.setValue(
-      this.getComportement(donnee.comportements, 1)
-    );
-    comportementsFormControls.comportement2.setValue(
-      this.getComportement(donnee.comportements, 2)
-    );
-    comportementsFormControls.comportement3.setValue(
-      this.getComportement(donnee.comportements, 3)
-    );
-    comportementsFormControls.comportement4.setValue(
-      this.getComportement(donnee.comportements, 4)
-    );
-    comportementsFormControls.comportement5.setValue(
-      this.getComportement(donnee.comportements, 5)
-    );
-    comportementsFormControls.comportement6.setValue(
-      this.getComportement(donnee.comportements, 6)
-    );
-    milieuxFormControls.milieu1.setValue(this.getMilieu(donnee.milieux, 1));
-    milieuxFormControls.milieu2.setValue(this.getMilieu(donnee.milieux, 2));
-    milieuxFormControls.milieu3.setValue(this.getMilieu(donnee.milieux, 3));
-    milieuxFormControls.milieu4.setValue(this.getMilieu(donnee.milieux, 4));
+    if (!!donnee.comportements) {
+      comportementsFormControls.comportement1.setValue(
+        this.getComportement(donnee.comportements, 1)
+      );
+      comportementsFormControls.comportement2.setValue(
+        this.getComportement(donnee.comportements, 2)
+      );
+      comportementsFormControls.comportement3.setValue(
+        this.getComportement(donnee.comportements, 3)
+      );
+      comportementsFormControls.comportement4.setValue(
+        this.getComportement(donnee.comportements, 4)
+      );
+      comportementsFormControls.comportement5.setValue(
+        this.getComportement(donnee.comportements, 5)
+      );
+      comportementsFormControls.comportement6.setValue(
+        this.getComportement(donnee.comportements, 6)
+      );
+    }
+    if (!!donnee.milieux) {
+      milieuxFormControls.milieu1.setValue(this.getMilieu(donnee.milieux, 1));
+      milieuxFormControls.milieu2.setValue(this.getMilieu(donnee.milieux, 2));
+      milieuxFormControls.milieu3.setValue(this.getMilieu(donnee.milieux, 3));
+      milieuxFormControls.milieu4.setValue(this.getMilieu(donnee.milieux, 4));
+    }
     donneeFormControls.commentaire.setValue(donnee.commentaire);
   }
 

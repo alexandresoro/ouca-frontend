@@ -145,12 +145,12 @@ export class InventaireHelper {
 
     const inventaire: Inventaire = {
       id: this.displayedInventaireId,
-      observateurId: observateur.id,
+      observateurId: !!observateur ? observateur.id : null,
       associesIds,
       date,
       heure,
       duree,
-      lieuditId: lieudit.id,
+      lieuditId: !!lieudit ? lieudit.id : null,
       altitude,
       longitude,
       latitude,
@@ -243,9 +243,10 @@ export class InventaireHelper {
     latitude: number
   ): boolean {
     return (
-      altitude !== lieudit.altitude ||
-      longitude !== lieudit.longitude ||
-      latitude !== lieudit.latitude
+      !!lieudit &&
+      (altitude !== lieudit.altitude ||
+        longitude !== lieudit.longitude ||
+        latitude !== lieudit.latitude)
     );
   }
 
