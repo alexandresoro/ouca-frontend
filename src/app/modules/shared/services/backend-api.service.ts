@@ -88,13 +88,13 @@ export class BackendApiService {
   }
 
   public saveDonnee(donneeToSave: Donnee): Observable<EntiteResult<Donnee>> {
-    return this.httpPost(this.DONNEE + this.CREATE, donneeToSave);
+    return this.httpPost(this.DONNEE + this.SAVE, donneeToSave);
   }
 
   public saveInventaire(
     inventaireToSave: Inventaire
   ): Observable<EntiteResult<Inventaire>> {
-    return this.httpPost(this.INVENTAIRE + this.CREATE, inventaireToSave);
+    return this.httpPost(this.INVENTAIRE + this.SAVE, inventaireToSave);
   }
 
   public getEntityInitialPageModel(

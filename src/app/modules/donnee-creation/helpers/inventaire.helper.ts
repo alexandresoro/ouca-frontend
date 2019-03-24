@@ -100,7 +100,7 @@ export class InventaireHelper {
     inventaireForm.markAsUntouched();
   }
 
-  public static getInventaireFromInventaireFormGroup(
+  public static getInventaireFromInventaireForm(
     inventaireForm: FormGroup
   ): Inventaire {
     const inventaireFormControls = inventaireForm.controls;
@@ -141,16 +141,17 @@ export class InventaireHelper {
       heure,
       duree,
       lieuditId: lieudit.id,
-      altitude: lieuditFormControls.altitude.value,
-      longitude: lieuditFormControls.longitude.value,
-      latitude: lieuditFormControls.latitude.value,
-      temperature: inventaireFormControls.temperature.value,
-      meteos: inventaireFormControls.meteos.value
+      altitude,
+      longitude,
+      latitude,
+      temperature,
+      meteos,
+      dateCreation: moment().toDate()
     };
 
     if (
       !this.areCoordinatesCustomized(
-        inventaire.lieudit,
+        lieudit,
         inventaire.altitude,
         inventaire.longitude,
         inventaire.latitude
@@ -170,7 +171,7 @@ export class InventaireHelper {
    * Fill the inventaire form with the values from an existing inventaire
    * @param inventaire Inventaire
    */
-  public static setInventaireFormControlsFromInventaire(
+  public static setInventaireFormFromInventaire(
     inventaireForm: FormGroup,
     inventaire: Inventaire,
     pageModel: CreationPage

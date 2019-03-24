@@ -136,17 +136,26 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on Save Inventaire button
    */
   public saveInventaire(): void {
-    const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireFormGroup(
+    const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
 
     this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
-      (result: EntiteResult<Inventaire>) => {
-        this.updatePageStatus(result.status, result.messages);
+      (result: any) => {
+        console.log(result);
+        if (!!result && !!result.insertId) {
+          inventaireToBeSaved.id = result.insertId;
+          this.onSaveInventaireSuccess(inventaireToBeSaved);
+        } else {
+          // ERROR ?
+        }
+
+        /*this.updatePageStatus(result.status, result.messages);
 
         if (this.isSuccess()) {
           this.onSaveInventaireSuccess(result.object);
         }
+        */
       },
       (error: any) => {
         this.onSaveInventaireError(error);
@@ -156,9 +165,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onSaveInventaireError(error: any): void {
     this.setErrorMessage("L'inventaire n'a pas pu êtr créé/modifié.");
-    console.error(
-      "Impossible de créer l'inventaire.\nDétails de l'erreur:" + error
-    );
+    console.error("Impossible de créer l'inventaire.\nErreur:", error);
   }
 
   private onSaveInventaireSuccess(savedInventaire: Inventaire): void {
@@ -260,7 +267,7 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on "Donnee precedente" button
    */
   public onPreviousDonneeBtnClicked(): void {
-    const currentInventaire: Inventaire = InventaireHelper.getInventaireFromInventaireFormGroup(
+    const currentInventaire: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
     const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
@@ -290,7 +297,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       newCurrentDonnee,
       this.pageModel
     );
-    InventaireHelper.setInventaireFormControlsFromInventaire(
+    InventaireHelper.setInventaireFormFromInventaire(
       this.inventaireForm,
       newCurrentDonnee.inventaire,
       this.pageModel
@@ -323,7 +330,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     const newPreviousDonnee: Donnee = currentDonnee;
 
     const newCurrentDonnee: Donnee = this.navigationService.nextDonnee;
-    InventaireHelper.setInventaireFormControlsFromInventaire(
+    InventaireHelper.setInventaireFormFromInventaire(
       this.inventaireForm,
       newCurrentDonnee.inventaire,
       this.pageModel
@@ -362,7 +369,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.switchToEditionDonneeMode();
     }
 
-    InventaireHelper.setInventaireFormControlsFromInventaire(
+    InventaireHelper.setInventaireFormFromInventaire(
       this.inventaireForm,
       this.navigationService.getNextInventaire(),
       this.pageModel
@@ -461,7 +468,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.mode = this.navigationService.savedMode;
     if (this.modeHelper.isInventaireMode(this.mode)) {
       this.switchToInventaireMode();
-      InventaireHelper.setInventaireFormControlsFromInventaire(
+      InventaireHelper.setInventaireFormFromInventaire(
         this.inventaireForm,
         this.navigationService.savedInventaire,
         this.pageModel
@@ -469,7 +476,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       DonneeHelper.setDisplayedDonneeId(null);
     } else if (this.modeHelper.isDonneeMode(this.mode)) {
       this.switchToEditionDonneeMode();
-      InventaireHelper.setInventaireFormControlsFromInventaire(
+      InventaireHelper.setInventaireFormFromInventaire(
         this.inventaireForm,
         this.navigationService.savedInventaire,
         this.pageModel
@@ -538,7 +545,7 @@ export class CreationComponent extends PageComponent implements OnInit {
    * @param createNewInventaire If we should create a new inventaire for the donnee or just update it
    */
   private updateInventaireAndDonnee(createNewInventaire: boolean): void {
-    const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireFormGroup(
+    const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
 
@@ -551,7 +558,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         (result: EntiteResult<Inventaire>) => {
           if (this.isSuccessStatus(result.status)) {
             const savedInventaire: Inventaire = result.object;
-            InventaireHelper.setInventaireFormControlsFromInventaire(
+            InventaireHelper.setInventaireFormFromInventaire(
               this.inventaireForm,
               savedInventaire,
               this.pageModel
