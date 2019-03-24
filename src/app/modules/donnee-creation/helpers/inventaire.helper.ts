@@ -187,12 +187,24 @@ export class InventaireHelper {
   ): void {
     console.log("Inventaire à afficher dans le formulaire:", inventaire);
 
+    const observateur: Observateur = ListHelper.getFromList(
+      pageModel.observateurs,
+      "id",
+      inventaire.observateurId
+    );
+
+    const lieudit: Lieudit = ListHelper.getFromList(
+      pageModel.lieudits,
+      "id",
+      inventaire.lieuditId
+    );
+
     let commune: Commune = null;
-    if (!!inventaire.lieudit && !!inventaire.lieudit.communeId) {
+    if (!!lieudit && !!lieudit.communeId) {
       commune = ListHelper.getFromList(
         pageModel.communes,
         "id",
-        inventaire.lieudit.communeId
+        lieudit.communeId
       );
     }
 
@@ -211,14 +223,14 @@ export class InventaireHelper {
     const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
       .controls;
 
-    inventaireFormControls.observateur.setValue(inventaire.observateur);
+    inventaireFormControls.observateur.setValue(observateur);
     inventaireFormControls.observateursAssocies.setValue(inventaire.associes);
     inventaireFormControls.date.setValue(inventaire.date);
     inventaireFormControls.heure.setValue(inventaire.heure);
     inventaireFormControls.duree.setValue(inventaire.duree);
     lieuditFormControls.departement.setValue(departement);
     lieuditFormControls.commune.setValue(commune);
-    lieuditFormControls.lieudit.setValue(inventaire.lieudit);
+    lieuditFormControls.lieudit.setValue(lieudit);
     if (
       !!inventaire.altitude &&
       !!inventaire.longitude &&
@@ -228,9 +240,15 @@ export class InventaireHelper {
       lieuditFormControls.longitude.setValue(inventaire.longitude);
       lieuditFormControls.latitude.setValue(inventaire.latitude);
     } else {
-      lieuditFormControls.altitude.setValue(inventaire.lieudit.altitude);
-      lieuditFormControls.longitude.setValue(inventaire.lieudit.longitude);
-      lieuditFormControls.latitude.setValue(inventaire.lieudit.latitude);
+      lieuditFormControls.altitude.setValue(
+        !!lieudit ? lieudit.altitude : null
+      );
+      lieuditFormControls.longitude.setValue(
+        !!lieudit ? lieudit.longitude : null
+      );
+      lieuditFormControls.latitude.setValue(
+        !!lieudit ? lieudit.latitude : null
+      );
     }
     inventaireFormControls.temperature.setValue(inventaire.temperature);
     inventaireFormControls.meteos.setValue(inventaire.meteos);
