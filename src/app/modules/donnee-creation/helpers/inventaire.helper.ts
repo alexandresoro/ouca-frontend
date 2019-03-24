@@ -11,6 +11,7 @@ import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { Meteo } from "basenaturaliste-model/meteo.object";
 import { Observateur } from "basenaturaliste-model/observateur.object";
+import * as _ from "lodash";
 import moment = require("moment");
 import { ListHelper } from "../../shared/helpers/list-helper";
 
@@ -112,8 +113,12 @@ export class InventaireHelper {
       return null;
     }
 
-    const associes: Observateur[] =
-      inventaireFormControls.observateursAssocies.value;
+    const associesIds: number[] = _.map(
+      inventaireFormControls.observateursAssocies.value,
+      (associe: Observateur) => {
+        return associe.id;
+      }
+    );
 
     const date: Date = inventaireFormControls.date.value.toDate();
 
@@ -131,12 +136,17 @@ export class InventaireHelper {
 
     const temperature: number = inventaireFormControls.temperature.value;
 
-    const meteos: Meteo[] = inventaireFormControls.meteos.value;
+    const meteosIds: number[] = _.map(
+      inventaireFormControls.meteos.value,
+      (meteo) => {
+        return meteo.id;
+      }
+    );
 
     const inventaire: Inventaire = {
       id: this.displayedInventaireId,
       observateurId: observateur.id,
-      associes,
+      associesIds,
       date,
       heure,
       duree,
@@ -145,7 +155,7 @@ export class InventaireHelper {
       longitude,
       latitude,
       temperature,
-      meteos
+      meteosIds
     };
 
     if (
