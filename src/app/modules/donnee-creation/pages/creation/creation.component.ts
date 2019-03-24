@@ -608,4 +608,8 @@ export class CreationComponent extends PageComponent implements OnInit {
       "Impossible de mettre à jour la fiche inventaire et la fiche espèce affichées."
     );
   }
+
+  public getDisplayedDonneeId(): number {
+    return DonneeHelper.getDisplayedDonneeId();
+  }
 }

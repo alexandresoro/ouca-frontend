@@ -210,7 +210,7 @@
         Fiche espèce
         <span *ngIf="navigationService.currentDonneeIndex"
           >n°{{ navigationService.currentDonneeIndex }} (ID={{
-            donneeToSave.id
+            getDisplayedDonneeId()
           }})</span
         >
       </h2>
