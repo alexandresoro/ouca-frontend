@@ -127,7 +127,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.inventaireForm,
       this.pageModel
     );
-    DonneeHelper.initializeDonneeFormControls(this.donneeForm, this.pageModel);
+    DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
 
     this.switchToInventaireMode();
   }
@@ -178,7 +178,7 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on Save Donnee button
    */
   public saveDonnee(): void {
-    const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
+    const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
 
@@ -208,7 +208,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     this.updateNextRegroupement();
 
-    DonneeHelper.initializeDonneeFormControls(this.donneeForm, this.pageModel);
+    DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
   }
 
   /**
@@ -270,7 +270,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     const currentInventaire: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
-    const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
+    const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
 
@@ -292,7 +292,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     // Set the current donnee to display
     const newCurrentDonnee: Donnee = this.navigationService.previousDonnee;
-    DonneeHelper.setDonneeFormControlsFromDonnee(
+    DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
       newCurrentDonnee,
       this.pageModel
@@ -316,7 +316,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onNextDonneeBtnClicked(): void {
-    const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
+    const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
 
@@ -335,7 +335,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       newCurrentDonnee.inventaire,
       this.pageModel
     );
-    DonneeHelper.setDonneeFormControlsFromDonnee(
+    DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
       newCurrentDonnee,
       this.pageModel
@@ -375,7 +375,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.pageModel
     );
     const newCurrentDonnee: Donnee = this.navigationService.getNextDonnee();
-    DonneeHelper.setDonneeFormControlsFromDonnee(
+    DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
       newCurrentDonnee,
       this.pageModel
@@ -481,7 +481,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.navigationService.savedInventaire,
         this.pageModel
       );
-      DonneeHelper.setDonneeFormControlsFromDonnee(
+      DonneeHelper.setDonneeFormFromDonnee(
         this.donneeForm,
         this.navigationService.savedDonnee,
         this.pageModel
@@ -578,7 +578,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private updateDonnee(): void {
-    const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeFormControls(
+    const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
     this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
@@ -586,7 +586,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.updatePageStatus(result.status, result.messages);
 
         if (this.isSuccess()) {
-          DonneeHelper.setDonneeFormControlsFromDonnee(
+          DonneeHelper.setDonneeFormFromDonnee(
             this.donneeForm,
             result.object,
             this.pageModel

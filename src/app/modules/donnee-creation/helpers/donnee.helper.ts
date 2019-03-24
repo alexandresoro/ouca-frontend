@@ -62,7 +62,7 @@ export class DonneeHelper {
    * Initialize the donnee form
    * Reset the form and set defaults values if any
    */
-  public static initializeDonneeFormControls(
+  public static initializeDonneeForm(
     donneeForm: FormGroup,
     pageModel: CreationPage
   ): void {
@@ -147,7 +147,7 @@ export class DonneeHelper {
   /**
    * Returns a donnee object from the values filled in donnee form
    */
-  public static getDonneeFromDonneeFormControls(donneeForm: FormGroup): Donnee {
+  public static getDonneeFromDonneeForm(donneeForm: FormGroup): Donnee {
     const donneeFormControls = donneeForm.controls;
     const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
       .controls;
@@ -160,37 +160,39 @@ export class DonneeHelper {
     const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
       .controls;
 
-    const comportements: Comportement[] = [];
+    console.log(comportementsFormControls);
+
+    const comportementsIds: number[] = [];
     this.addComportement(
-      comportements,
+      comportementsIds,
       comportementsFormControls.comportement1.value
     );
     this.addComportement(
-      comportements,
+      comportementsIds,
       comportementsFormControls.comportement2.value
     );
     this.addComportement(
-      comportements,
+      comportementsIds,
       comportementsFormControls.comportement3.value
     );
     this.addComportement(
-      comportements,
+      comportementsIds,
       comportementsFormControls.comportement4.value
     );
     this.addComportement(
-      comportements,
+      comportementsIds,
       comportementsFormControls.comportement5.value
     );
     this.addComportement(
-      comportements,
+      comportementsIds,
       comportementsFormControls.comportement6.value
     );
 
-    const milieux: Milieu[] = [];
-    this.addMilieu(milieux, milieuxFormControls.milieu1.value);
-    this.addMilieu(milieux, milieuxFormControls.milieu2.value);
-    this.addMilieu(milieux, milieuxFormControls.milieu3.value);
-    this.addMilieu(milieux, milieuxFormControls.milieu4.value);
+    const milieuxIds: number[] = [];
+    this.addMilieu(milieuxIds, milieuxFormControls.milieu1.value);
+    this.addMilieu(milieuxIds, milieuxFormControls.milieu2.value);
+    this.addMilieu(milieuxIds, milieuxFormControls.milieu3.value);
+    this.addMilieu(milieuxIds, milieuxFormControls.milieu4.value);
 
     const donnee: any = {
       id: this.displayedDonneeId,
@@ -201,10 +203,12 @@ export class DonneeHelper {
       sexeId: donneeFormControls.sexe.value.id,
       ageId: donneeFormControls.age.value.id,
       distance: distanceFormControls.distance.value,
-      estimationDistanceId: distanceFormControls.estimationDistance.value.id,
+      estimationDistanceId: !!distanceFormControls.estimationDistance.value
+        ? distanceFormControls.estimationDistance.value.id
+        : null,
       regroupement: donneeFormControls.regroupement.value,
-      comportements,
-      milieux,
+      comportementsIds,
+      milieuxIds,
       commentaire: donneeFormControls.commentaire.value
     };
 
@@ -216,7 +220,7 @@ export class DonneeHelper {
   /**
    * Fill the donnee form with the values of an existing donnee
    */
-  public static setDonneeFormControlsFromDonnee(
+  public static setDonneeFormFromDonnee(
     donneeForm: FormGroup,
     donnee: Donnee,
     pageModel: CreationPage
@@ -277,19 +281,13 @@ export class DonneeHelper {
   }
 
   /**
-   * Add the entity to the list of entities if this entity is not already part of the list
-   * @param entitesCodeEtLibelle list to complete
-   * @param entiteCodeEtLibelle entity to add
+   * Add the id to the list of ids if this id is not already part of the list
+   * @param ids list to complete
+   * @param id id to add
    */
-  private static addEntiteCodeEtLibelle(
-    entitesCodeEtLibelle: EntiteAvecLibelleEtCode[],
-    entiteCodeEtLibelle: EntiteAvecLibelleEtCode
-  ): void {
-    if (
-      !!entiteCodeEtLibelle &&
-      entitesCodeEtLibelle.indexOf(entiteCodeEtLibelle) < 0
-    ) {
-      entitesCodeEtLibelle.push(entiteCodeEtLibelle);
+  private static addId(ids: number[], id: number): void {
+    if (!!id && ids.indexOf(id) < 0) {
+      ids.push(id);
     }
   }
 
@@ -326,10 +324,12 @@ export class DonneeHelper {
    * @param comportement comportement to add in the list
    */
   private static addComportement(
-    comportements: Comportement[],
+    comportementsIds: number[],
     comportement: Comportement
   ): void {
-    this.addEntiteCodeEtLibelle(comportements, comportement);
+    if (!!comportement && !!comportement.id) {
+      this.addId(comportementsIds, comportement.id);
+    }
   }
 
   /**
@@ -346,7 +346,9 @@ export class DonneeHelper {
    * @param milieux list of milieux
    * @param milieu milieu to add in the list
    */
-  private static addMilieu(milieux: Milieu[], milieu: Milieu): void {
-    this.addEntiteCodeEtLibelle(milieux, milieu);
+  private static addMilieu(milieuxIds: number[], milieu: Milieu): void {
+    if (!!milieu && !!milieu.id) {
+      this.addId(milieuxIds, milieu.id);
+    }
   }
 }
