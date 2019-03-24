@@ -165,9 +165,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
       .subscribe(
         (result: EntiteResult<AppConfiguration>) => {
           this.updatePageStatus(result.status, result.messages);
-          if (this.isSuccess()) {
-            this.onSaveAppConfigurationSuccess(result.object);
-          }
+          this.onSaveAppConfigurationSuccess(result.object);
         },
         (error: any) => {
           this.onSaveAppConfigurationError(error);
@@ -208,8 +206,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   private onSaveAppConfigurationSuccess(
     appConfiguration: AppConfiguration
   ): void {
-    this.configurationToSave = appConfiguration;
-    this.buildDataSource();
+    this.getCurrentConfigurations();
     this.switchToViewAllMode();
   }
 
