@@ -225,7 +225,7 @@ export class InventaireHelper {
 
     inventaireFormControls.observateur.setValue(observateur);
     inventaireFormControls.observateursAssocies.setValue(inventaire.associes);
-    inventaireFormControls.date.setValue(inventaire.date);
+    inventaireFormControls.date.setValue(moment(inventaire.date));
     inventaireFormControls.heure.setValue(inventaire.heure);
     inventaireFormControls.duree.setValue(inventaire.duree);
     lieuditFormControls.departement.setValue(departement);
