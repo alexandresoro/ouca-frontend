@@ -273,6 +273,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
+    currentDonnee.inventaire = currentInventaire;
 
     // Save the current donnee, inventaire and mode
     if (!this.modeHelper.isUpdateMode(this.mode)) {
@@ -318,6 +319,9 @@ export class CreationComponent extends PageComponent implements OnInit {
   public onNextDonneeBtnClicked(): void {
     const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
+    );
+    currentDonnee.inventaire = InventaireHelper.getInventaireFromInventaireForm(
+      this.inventaireForm
     );
 
     this.mode = this.navigationService.getNextMode();
