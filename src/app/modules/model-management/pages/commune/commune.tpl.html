@@ -9,7 +9,7 @@
     (onClickRefresh)="getAll()"
   ></top-buttons>
 
-  <entity-messages [messages]="messages" [status]="status"></entity-messages>
+  <entity-messages></entity-messages>
 
   <commune-table
     *ngIf="isViewAllMode()"

@@ -9,6 +9,7 @@ import {
   GestionModeHelper
 } from "../../../model-management/pages/gestion-mode.enum";
 import { PageComponent } from "../../../shared/components/page.component";
+import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 
 export interface IdPropriete {
@@ -164,7 +165,9 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
       .saveAppConfiguration(this.configurationToSave)
       .subscribe(
         (result: EntiteResult<AppConfiguration>) => {
-          this.updatePageStatus(result.status, result.messages);
+          PageStatusHelper.setSuccessStatus(
+            "La sauvegarde des congurations de l'application a été faite avec succès."
+          );
           this.onSaveAppConfigurationSuccess(result.object);
         },
         (error: any) => {
@@ -174,7 +177,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   }
 
   public cancelEdition(): void {
-    this.clearMessages();
+    PageStatusHelper.resetPageStatus();
     this.switchToViewAllMode();
   }
   ////// END FROM UI //////
@@ -199,8 +202,10 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   }
 
   private onInitConfigurationPageError(error: any): void {
-    console.log("Impossible de charger la page de configuration.", error);
-    this.setErrorMessage("Impossible de charger la page de configuration.");
+    PageStatusHelper.setErrorStatus(
+      "Impossible de charger la page de configuration.",
+      error
+    );
   }
 
   private onSaveAppConfigurationSuccess(
@@ -211,17 +216,14 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   }
 
   private onSaveAppConfigurationError(error: any): void {
-    console.log(
+    PageStatusHelper.setErrorStatus(
       "Impossible de sauvegarder la configuration de l'application.",
       error
-    );
-    this.setErrorMessage(
-      "Impossible de sauvegarder la configuration de l'application."
     );
   }
 
   private switchToEditionMode(): void {
-    this.clearMessages();
+    PageStatusHelper.resetPageStatus();
     this.mode = GestionMode.EDITION;
   }
 

@@ -1,13 +1,15 @@
-import {Component, Input} from "@angular/core";
+import { Component } from "@angular/core";
+import {
+  PageStatus,
+  PageStatusHelper
+} from "../../../shared/helpers/page-status.helper";
 
 @Component({
-    selector: "entity-messages",
-    templateUrl: "./messages.tpl.html"
+  selector: "entity-messages",
+  templateUrl: "./messages.tpl.html"
 })
 export class EntityMessagesComponent {
+  public pageStatusHelper = PageStatusHelper;
 
-    @Input() status: string;
-
-    @Input() messages: any[];
-
+  public pageStatusEnum = PageStatus;
 }

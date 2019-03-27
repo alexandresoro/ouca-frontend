@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { EntiteResult } from "basenaturaliste-model/entite-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntiteComponent } from "../entite.component";
 import { GestionMode } from "../gestion-mode.enum";
@@ -39,13 +40,16 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
   }
 
   public getAll(): void {
-    this.clearMessages();
+    PageStatusHelper.resetPageStatus();
     this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
       (result: T[]) => {
         this.objects = result;
       },
       (error: Response) => {
-        this.setErrorMessage("Impossible de trouver les objets.");
+        PageStatusHelper.setErrorStatus(
+          "Impossible de trouver les objets.",
+          error
+        );
       }
     );
   }
@@ -76,21 +80,20 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
         .deleteEntity(this.getEntityName(), this.objectToRemove.id)
         .subscribe(
           (result: EntiteResult<T>) => {
-            this.updatePageStatus(result.status, result.messages);
-            if (this.isSuccess()) {
-              const index = this.objects.indexOf(this.objectToRemove);
-              if (index > -1) {
-                this.objects.splice(index, 1);
-              }
-              this.switchToViewAllMode();
+            PageStatusHelper.setSuccessStatus(
+              "L'entité a été supprimée avec succès"
+            );
+
+            const index = this.objects.indexOf(this.objectToRemove);
+            if (index > -1) {
+              this.objects.splice(index, 1);
             }
+            this.switchToViewAllMode();
           },
           (error: Response) => {
-            // tslint:disable-next-line:max-line-length
-            console.error(
-              "ERREUR lors de la suppression de l'objet de type " +
+            PageStatusHelper.setErrorStatus(
+              "Echec de la suppression de l'entité de type " +
                 this.getEntityName(),
-              this.objectToRemove,
               error
             );
           }
@@ -117,20 +120,20 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
       .saveEntity(this.getEntityName(), this.objectToSave, this.isEditionMode())
       .subscribe(
         (result: EntiteResult<T>) => {
-          this.updatePageStatus(result.status, result.messages);
-          if (this.isSuccess()) {
-            if (this.isCreationMode()) {
-              // Add the new entity in the list
-              this.objects[this.objects.length] = result.object;
-            }
-            this.switchToViewAllMode();
+          PageStatusHelper.setSuccessStatus(
+            "L'entité a été sauvegardée avec succès"
+          );
+
+          if (this.isCreationMode()) {
+            // Add the new entity in the list
+            this.objects[this.objects.length] = result.object;
           }
+          this.switchToViewAllMode();
         },
         (error: Response) => {
-          console.error(
-            "ERREUR: lors de la sauvegarde de l'objet de type " +
+          PageStatusHelper.setErrorStatus(
+            "Impossible de sauvegarder l'entité de type " +
               this.getEntityName(),
-            this.objectToSave,
             error
           );
         }
@@ -138,19 +141,19 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
   }
 
   public cancelEdition(): void {
-    this.clearMessages();
+    PageStatusHelper.resetPageStatus();
     this.switchToViewAllMode();
   }
 
   private switchToCreationMode(): void {
-    this.clearMessages();
+    PageStatusHelper.resetPageStatus();
     this.objectToSave = this.getNewObject();
     this.currentObject = this.getNewObject();
     this.mode = GestionMode.CREATION;
   }
 
   private switchToEditionMode(object: T): void {
-    this.clearMessages();
+    PageStatusHelper.resetPageStatus();
     this.objectToSave = object;
     this.currentObject = object;
     this.mode = GestionMode.EDITION;
@@ -163,14 +166,14 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
   }
 
   private switchToViewOneMode(object: T): void {
-    this.clearMessages();
+    PageStatusHelper.resetPageStatus();
     this.objectToView = object;
     this.currentObject = object;
     this.mode = GestionMode.VIEW_ONE;
   }
 
   private switchToRemoveMode(object: T): void {
-    this.clearMessages();
+    PageStatusHelper.resetPageStatus();
     this.objectToRemove = object;
     this.currentObject = object;
     this.mode = GestionMode.REMOVE;

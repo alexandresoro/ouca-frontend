@@ -1,44 +1,52 @@
 <div class="lco-entity-page">
-  <top-buttons title="Météos"
+  <top-buttons
+    title="Météos"
     createButtonLibelle="Créer une météo"
     exportButtonLibelle="Exporter les météos"
     [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
-    (onClickRefresh)="getAll()"></top-buttons>
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-  <entity-messages [messages]="messages"
-    [status]="status"></entity-messages>
+  <entity-messages></entity-messages>
 
-  <meteo-table *ngIf="isViewAllMode()"
+  <meteo-table
+    *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)">
+    (view)="viewObject($event)"
+  >
   </meteo-table>
 
-  <entite-avec-libelle-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-form
+    *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     creationTitle="Création d'une météo"
     editionTitle="Édition d'une météo"
     (confirm)="saveObject()"
-    (back)="cancelEdition()">
+    (back)="cancelEdition()"
+  >
   </entite-avec-libelle-form>
 
-  <entity-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la météo ?"
-    details="{{currentObject.nbDonnees}} données ont cette météo."
+    details="{{ currentObject.nbDonnees }} données ont cette météo."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer la météo"
-    (confirm)="confirmObjectRemoval($event)">
+    (confirm)="confirmObjectRemoval($event)"
+  >
   </entity-delete-confirmation>
 
-  <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de la météo"
     [isBackButtonDisplayed]="isViewOneMode()"
-    (back)="viewAll()">
+    (back)="viewAll()"
+  >
   </entity-details>
-
 </div>

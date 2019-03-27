@@ -1,44 +1,52 @@
 <div class="lco-entity-page">
-  <top-buttons title="Comportements"
+  <top-buttons
+    title="Comportements"
     createButtonLibelle="Créer un comportement"
     exportButtonLibelle="Exporter les comportements"
     [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
-    (onClickRefresh)="getAll()"></top-buttons>
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-  <entity-messages [messages]="messages"
-    [status]="status"></entity-messages>
+  <entity-messages></entity-messages>
 
-  <comportement-table *ngIf="isViewAllMode()"
+  <comportement-table
+    *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)">
+    (view)="viewObject($event)"
+  >
   </comportement-table>
 
-  <entite-avec-libelle-et-code-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-et-code-form
+    *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     creationTitle="Création d'un comportement"
     editionTitle="Édition d'un comportement"
     (confirm)="saveObject()"
-    (back)="cancelEdition()">
+    (back)="cancelEdition()"
+  >
   </entite-avec-libelle-et-code-form>
 
-  <entity-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le comportement ?"
-    details="{{currentObject.nbDonnees}} données ont ce comportement."
+    details="{{ currentObject.nbDonnees }} données ont ce comportement."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer le comportement"
-    (confirm)="confirmObjectRemoval($event)">
+    (confirm)="confirmObjectRemoval($event)"
+  >
   </entity-delete-confirmation>
 
-  <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails du comportement"
     [isBackButtonDisplayed]="isViewOneMode()"
-    (back)="viewAll()">
+    (back)="viewAll()"
+  >
   </entity-details>
-
 </div>

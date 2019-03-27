@@ -1,11 +1,14 @@
-<div *ngIf="messages && messages.length > 0" class="lco-messages">
-  <div class="alert"
-       [class.alert-success]="status === 'SUCCESS'"
-       [class.alert-danger]="status === 'ERROR'"
-       [class.alert-info]="status === 'INFO'">
+<div *ngIf="!!pageStatusHelper.getMessage()" class="lco-messages">
+  <div
+    class="alert"
+    [class.alert-success]="
+      pageStatusHelper.getStatus() === pageStatusEnum.SUCCESS
+    "
+    [class.alert-danger]="pageStatusHelper.getStatus() === pageStatusEnum.ERROR"
+  >
     <strong>Messages:</strong>
-    <br>
-    <span *ngFor="let message of messages">{{message?.value}}</span>
-    <br>
+    <br />
+    <span>{{ pageStatusHelper.getMessage() }}</span>
+    <br />
   </div>
 </div>

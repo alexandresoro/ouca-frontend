@@ -1,44 +1,52 @@
 <div class="lco-entity-page lco-comportement-page">
-  <top-buttons title="Milieux"
+  <top-buttons
+    title="Milieux"
     createButtonLibelle="Créer un milieu"
     exportButtonLibelle="Exporter les milieux"
     [areButtonsDisplayed]="isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
-    (onClickRefresh)="getAll()"></top-buttons>
+    (onClickRefresh)="getAll()"
+  ></top-buttons>
 
-  <entity-messages [messages]="messages"
-    [status]="status"></entity-messages>
+  <entity-messages></entity-messages>
 
-  <milieu-table *ngIf="isViewAllMode()"
+  <milieu-table
+    *ngIf="isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)">
+    (view)="viewObject($event)"
+  >
   </milieu-table>
 
-  <entite-avec-libelle-et-code-form *ngIf="isCreationMode() || isEditionMode()"
+  <entite-avec-libelle-et-code-form
+    *ngIf="isCreationMode() || isEditionMode()"
     [object]="objectToSave"
     [mode]="mode"
     creationTitle="Création d'un milieu"
     editionTitle="Édition d'un milieu"
     (confirm)="saveObject()"
-    (back)="cancelEdition()">
+    (back)="cancelEdition()"
+  >
   </entite-avec-libelle-et-code-form>
 
-  <entity-delete-confirmation *ngIf="isRemoveMode()"
+  <entity-delete-confirmation
+    *ngIf="isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le milieu ?"
-    details="{{currentObject.nbDonnees}} données ont ce milieu."
+    details="{{ currentObject.nbDonnees }} données ont ce milieu."
     cancellationLabel="Non, annuler la suppression"
     confirmationLabel="Oui, supprimer le milieu"
-    (confirm)="confirmObjectRemoval($event)">
+    (confirm)="confirmObjectRemoval($event)"
+  >
   </entity-delete-confirmation>
 
-  <entity-details *ngIf="isViewOneMode() || isRemoveMode()"
+  <entity-details
+    *ngIf="isViewOneMode() || isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails du milieu"
     [isBackButtonDisplayed]="isViewOneMode()"
-    (back)="viewAll()">
+    (back)="viewAll()"
+  >
   </entity-details>
-
 </div>

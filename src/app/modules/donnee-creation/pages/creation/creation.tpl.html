@@ -3,17 +3,9 @@
 <div class="lco-creation-body">
   <!-- Bar containing the messages -->
   <div class="lco-creation-messages">
-    <div [ngSwitch]="status">
-      <div *ngSwitchCase="'ERROR'">
-        <ul>
-          <li *ngFor="let message of messages">{{ message?.value }}</li>
-        </ul>
-      </div>
-      <div *ngSwitchCase="'SUCCESS'">
-        <ul>
-          <li *ngFor="let message of messages">{{ message?.value }}</li>
-        </ul>
-      </div>
+    <div [ngSwitch]="getPageStatus()">
+      <div *ngSwitchCase="pageStatusEnum.ERROR">{{ getMessage() }}</div>
+      <div *ngSwitchCase="pageStatusEnum.SUCCESS">{{ getMessage() }}</div>
       <div *ngSwitchDefault>
         <strong>Aucun message</strong>
       </div>

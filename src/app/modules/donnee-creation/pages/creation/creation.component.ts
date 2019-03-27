@@ -14,6 +14,10 @@ import { Subject } from "rxjs";
 import { ConfirmationDialogData } from "../../../shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../../shared/components/confirmation-dialog/confirmation-dialog.component";
 import { PageComponent } from "../../../shared/components/page.component";
+import {
+  PageStatus,
+  PageStatusHelper
+} from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { DonneeHelper } from "../../helpers/donnee.helper";
@@ -26,6 +30,8 @@ import { NavigationService } from "./navigation.service";
 })
 export class CreationComponent extends PageComponent implements OnInit {
   public pageModel: CreationPage = {} as CreationPage;
+
+  public pageStatusEnum = PageStatus;
 
   public mode: CreationModeEnum;
 
@@ -83,12 +89,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onInitCreationPageError(error: any): void {
-    this.setErrorMessage(
-      "Impossible de charger la page de création.\nErreur: " +
-        JSON.stringify(error)
-    );
-    console.error(
-      "Impossible de récupérer le modèle pour la page de création.\n Détails de l'erreur: ",
+    PageStatusHelper.setErrorStatus(
+      "Impossible de charger la page de création.",
       error
     );
   }
@@ -141,36 +143,30 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
 
     this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
-      (result: any) => {
-        console.log(result);
-        if (!!result && !!result.insertId) {
-          inventaireToBeSaved.id = result.insertId;
-          this.onSaveInventaireSuccess(inventaireToBeSaved);
-        } else {
-          // ERROR ?
-        }
-
-        /*this.updatePageStatus(result.status, result.messages);
-
-        if (this.isSuccess()) {
-          this.onSaveInventaireSuccess(result.object);
-        }
-        */
+      (saveInventaireResult: any) => {
+        this.onCreateInventaireSuccess(saveInventaireResult);
       },
       (error: any) => {
-        this.onSaveInventaireError(error);
+        this.onCreateInventaireError(error);
       }
     );
   }
 
-  private onSaveInventaireError(error: any): void {
-    this.setErrorMessage("L'inventaire n'a pas pu êtr créé/modifié.");
-    console.error("Impossible de créer l'inventaire.\nErreur:", error);
+  private onCreateInventaireError(error: any): void {
+    PageStatusHelper.setErrorStatus(
+      "Echec de la création de l'inventaire.",
+      error
+    );
   }
 
-  private onSaveInventaireSuccess(savedInventaire: Inventaire): void {
-    // this.setInventaireFormControlsFromInventaire(savedInventaire);
-    InventaireHelper.setDisplayedInventaireId(savedInventaire.id);
+  private onCreateInventaireSuccess(saveInventaireResult: any): void {
+    if (!!saveInventaireResult && !!saveInventaireResult.insertId) {
+      PageStatusHelper.setSuccessStatus("L'inventaire a été créé avec succès.");
+      InventaireHelper.setDisplayedInventaireId(saveInventaireResult.insertId);
+    } else {
+      this.onCreateInventaireError(saveInventaireResult);
+    }
+
     this.switchToEditionDonneeMode();
   }
 
@@ -183,23 +179,19 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
 
     this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
-      (result: EntiteResult<Donnee>) => {
-        this.updatePageStatus(result.status, result.messages);
-
-        if (this.isSuccess()) {
-          this.onSaveDonneeSuccess(result.object);
-        }
+      (saveResult: any) => {
+        this.onSaveDonneeSuccess(saveResult);
       },
-      (error: any) => {
-        this.onSaveDonneeError(error);
+      (saveError: any) => {
+        this.onSaveDonneeError(saveError);
       }
     );
   }
 
-  private onSaveDonneeError(error: any) {
-    this.setErrorMessage("La donnée n'a pas pu être créée ou modifiée.");
-    console.error(
-      "Impossible de créer la donnée.\nDétails de l'erreur:" + error
+  private onSaveDonneeError(saveError: any) {
+    PageStatusHelper.setErrorStatus(
+      "La donnée n'a pas pu être créée ou modifiée.",
+      saveError
     );
   }
 
@@ -392,34 +384,34 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public deleteDonnee(donneeId: number): void {
     this.backendApiService.deleteDonnee(donneeId).subscribe(
-      (result: EntiteResult<Donnee>) => {
-        this.onDeleteSuccess(result);
+      (deleteResult: any) => {
+        this.onDeleteDonneeSuccess(deleteResult);
       },
-      (error: any) => {
-        this.onDeleteError(error);
+      (deleteError: any) => {
+        this.onDeleteDonneeError(deleteError);
       }
     );
   }
 
-  private onDeleteSuccess(result: EntiteResult<Donnee>): void {
-    this.updatePageStatus(result.status, result.messages);
+  private onDeleteDonneeSuccess(deleteResult: any): void {
+    if (deleteResult.affectedRows > 0) {
+      PageStatusHelper.setSuccessStatus(
+        "La donnée a été supprimée avec succès."
+      );
 
-    if (this.isSuccess()) {
       this.setCurrentDonneeToTheNextDonnee(true);
       this.navigationService.numberOfDonnees--;
-      this.setNewNextDonnee(result.object);
-
-      // TODO remove the donnee from the list of donnee
-      // let index = this._objects.indexOf(object);
-      // if (index > -1) {
-      //     this._objects.splice(index, 1);
-      // }
-      // this.switchToViewAllMode();
+      this.setNewNextDonnee(null);
+    } else {
+      this.onDeleteDonneeError(deleteResult);
     }
   }
 
-  private onDeleteError(error: any): void {
-    console.error("Echec lors de la suppression de la donnée (" + error + ")");
+  private onDeleteDonneeError(error: any): void {
+    PageStatusHelper.setErrorStatus(
+      "Echec de la suppression de la donnée.",
+      error
+    );
   }
 
   public isNewDonneeBtnDisplayed(): boolean {
@@ -549,71 +541,80 @@ export class CreationComponent extends PageComponent implements OnInit {
    * @param createNewInventaire If we should create a new inventaire for the donnee or just update it
    */
   private updateInventaireAndDonnee(createNewInventaire: boolean): void {
-    const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
+    const inventaireToSave: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
-
     if (!!createNewInventaire) {
-      inventaireToBeSaved.id = null;
-
-      console.log("L'inventaire à créer est", inventaireToBeSaved);
-
-      this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
-        (result: EntiteResult<Inventaire>) => {
-          if (this.isSuccessStatus(result.status)) {
-            const savedInventaire: Inventaire = result.object;
-            InventaireHelper.setInventaireFormFromInventaire(
-              this.inventaireForm,
-              savedInventaire,
-              this.pageModel
-            );
-            this.updateDonnee();
-          } else {
-            this.updatePageStatus(result.status, result.messages);
-          }
-        },
-        (error: any) => {
-          this.onUpdateDonneeAndInventaireError(error);
-        }
-      );
-    } else {
-      this.updateDonnee();
+      inventaireToSave.id = null;
     }
-  }
 
-  private updateDonnee(): void {
-    const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeForm(
+    const donneeToSave: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
-    this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
-      (result: EntiteResult<Donnee>) => {
-        this.updatePageStatus(result.status, result.messages);
+    donneeToSave.inventaireId = inventaireToSave.id;
 
-        if (this.isSuccess()) {
-          DonneeHelper.setDonneeFormFromDonnee(
-            this.donneeForm,
-            result.object,
-            this.pageModel
+    this.backendApiService.saveInventaire(inventaireToSave).subscribe(
+      (saveInventaireResult: any) => {
+        if (
+          !!saveInventaireResult &&
+          (saveInventaireResult.affectedRows > 0 ||
+            saveInventaireResult.insertId > 0)
+        ) {
+          if (!!createNewInventaire) {
+            donneeToSave.inventaireId = saveInventaireResult.insertId;
+          }
+
+          this.backendApiService.saveDonnee(donneeToSave).subscribe(
+            (saveDonneeResult: any) => {
+              this.onUpdateDonneeAndInventaireSuccess(
+                saveInventaireResult,
+                saveDonneeResult
+              );
+            },
+            (saveDonneeError: any) => {
+              this.onUpdateDonneeError(saveDonneeError);
+            }
           );
+        } else {
+          this.onUpdateInventaireError(saveInventaireResult);
         }
       },
-      (error: any) => {
-        this.onUpdateDonneeAndInventaireError(error);
+      (saveInventaireError: any) => {
+        this.onUpdateInventaireError(saveInventaireError);
       }
     );
   }
 
-  private onUpdateDonneeAndInventaireError(error: any): void {
-    console.log(
+  private onUpdateInventaireError(error: any): void {
+    PageStatusHelper.setErrorStatus(
       "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
       error
     );
-    this.setErrorMessage(
-      "Impossible de mettre à jour la fiche inventaire et la fiche espèce affichées."
+  }
+
+  private onUpdateDonneeError(error: any): void {
+    PageStatusHelper.setErrorStatus(
+      "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
+      error
     );
+  }
+
+  private onUpdateDonneeAndInventaireSuccess(
+    saveInventaireResult: any,
+    saveDonneeResult: any
+  ) {
+    // TODO
   }
 
   public getDisplayedDonneeId(): number {
     return DonneeHelper.getDisplayedDonneeId();
+  }
+
+  public getPageStatus(): PageStatus {
+    return PageStatusHelper.getStatus();
+  }
+
+  public getMessage(): string {
+    return PageStatusHelper.getMessage();
   }
 }

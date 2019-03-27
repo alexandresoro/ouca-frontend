@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { PageComponent } from "../../../shared/components/page.component";
+import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 
 @Component({
@@ -31,12 +32,14 @@ export class ImportComponent extends PageComponent {
     // Call back-end
     this.backendApiService.importData(this.fileName, dataType).subscribe(
       (result: string) => {
-        this.setInfoMessage(result);
+        PageStatusHelper.setSuccessStatus(result);
         this.hideWaitPanel();
       },
       (error: any) => {
-        console.error("Impossible d'importer le fichier", error);
-        this.setErrorMessage("Impossible d'importer le fichier.");
+        PageStatusHelper.setErrorStatus(
+          "Impossible d'importer le fichier",
+          error
+        );
         this.hideWaitPanel();
       }
     );
