@@ -1,4 +1,7 @@
 import { Injectable } from "@angular/core";
+import { Classe } from "basenaturaliste-model/classe.object";
+import { Commune } from "basenaturaliste-model/commune.object";
+import { Departement } from "basenaturaliste-model/departement.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { BackendApiService } from "../../shared/services/backend-api.service";
@@ -10,38 +13,42 @@ export class NavigationService {
   public previousDonnee: Donnee;
   public nextDonnee: Donnee;
   public currentDonneeIndex: number;
-
+  private lastDonnee: Donnee;
   public numberOfDonnees: number;
 
   public savedDonnee: Donnee;
   public savedInventaire: Inventaire;
   public savedMode: CreationModeEnum;
-
-  private inventaireToBeUpdated: Inventaire;
+  public savedDepartement: Departement;
+  public savedCommune: Commune;
+  public savedClasse: Classe;
 
   constructor(public backendApiService: BackendApiService) {}
 
   public init(lastDonnee: Donnee, numberOfDonnees: number): void {
-    this.previousDonnee = lastDonnee;
-    this.nextDonnee = null;
-    this.currentDonneeIndex = null;
+    this.lastDonnee = lastDonnee;
     this.numberOfDonnees = numberOfDonnees;
-    this.savedDonnee = {} as Donnee;
-    this.savedInventaire = {} as Inventaire;
-    this.savedMode = null;
+    this.resetPreviousAndNextDonnee();
   }
   public saveCurrentContext(
     inventaireToSave: Inventaire,
-    donneeToSave: Donnee
+    donneeToSave: Donnee,
+    currentDepartement: Departement,
+    currentCommune: Commune,
+    currentClasse: Classe
   ): void {
     this.savedInventaire = inventaireToSave;
     this.savedDonnee = donneeToSave;
     this.savedMode = CreationModeHelper.getCreationMode();
+    this.savedDepartement = currentDepartement;
+    this.savedCommune = currentCommune;
+    this.savedClasse = currentClasse;
   }
 
   public updateNavigationAfterADonneeWasSaved(savedDonnee: Donnee) {
     this.numberOfDonnees++;
     this.previousDonnee = savedDonnee;
+    this.lastDonnee = savedDonnee;
   }
 
   public decreaseIndexOfCurrentDonnee(): void {
@@ -228,20 +235,12 @@ export class NavigationService {
     return !!this.nextDonnee;
   }
 
-  public saveInventaireToBeUpdated(inventaire: Inventaire) {
-    this.inventaireToBeUpdated = {
-      id: inventaire.id,
-      observateurId: inventaire.observateurId,
-      associesIds: inventaire.associesIds,
-      date: inventaire.date,
-      heure: inventaire.heure,
-      duree: inventaire.duree,
-      lieuditId: inventaire.lieuditId,
-      altitude: inventaire.altitude,
-      longitude: inventaire.longitude,
-      latitude: inventaire.latitude,
-      temperature: inventaire.temperature,
-      meteosIds: inventaire.meteosIds
-    };
+  public resetPreviousAndNextDonnee(): void {
+    this.previousDonnee = this.lastDonnee;
+    this.nextDonnee = null;
+    this.currentDonneeIndex = null;
+    this.savedDonnee = {} as Donnee;
+    this.savedInventaire = {} as Inventaire;
+    this.savedMode = null;
   }
 }

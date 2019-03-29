@@ -129,6 +129,7 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Initialize the page to be ready to create an inventaire
    */
   private switchToNewInventaireMode(): void {
+    this.navigationService.resetPreviousAndNextDonnee();
     InventaireHelper.initializeInventaireForm(
       this.inventaireForm,
       this.pageModel
@@ -238,6 +239,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onSaveDonneeSuccess(savedDonnee: Donnee) {
     if (!!savedDonnee && !!savedDonnee.id) {
+      PageStatusHelper.setSuccessStatus("La donnée a été créée avec succès.");
       this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
 
       this.updateNextRegroupement();
@@ -331,11 +333,8 @@ export class CreationComponent extends PageComponent implements OnInit {
           }
 
           this.backendApiService.saveDonnee(donneeToSave).subscribe(
-            (saveDonneeResult: DbUpdateResult) => {
-              this.onUpdateDonneeAndInventaireSuccess(
-                saveDonneeResult,
-                donneeToSave
-              );
+            (saveDonneeResult: Donnee) => {
+              this.onUpdateDonneeAndInventaireSuccess(saveDonneeResult);
             },
             (saveDonneeError: any) => {
               this.onUpdateDonneeError(saveDonneeError);
@@ -365,17 +364,14 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onUpdateDonneeAndInventaireSuccess(
-    saveDonneeResult: DbUpdateResult,
-    savedDonnee: Donnee
-  ) {
-    if (!!saveDonneeResult && saveDonneeResult.affectedRows > 0) {
+  private onUpdateDonneeAndInventaireSuccess(savedDonnee: Donnee): void {
+    if (!!savedDonnee && !!savedDonnee.id) {
       PageStatusHelper.setSuccessStatus(
         "La fiche espèce et sa fiche inventaire ont été mises-à-jour avec succès."
       );
       InventaireHelper.setDisplayedInventaireId(savedDonnee.inventaireId);
     } else {
-      this.onUpdateDonneeError(saveDonneeResult);
+      this.onUpdateDonneeError(savedDonnee);
     }
   }
 
@@ -395,7 +391,12 @@ export class CreationComponent extends PageComponent implements OnInit {
     if (!CreationModeHelper.isUpdateMode()) {
       this.navigationService.saveCurrentContext(
         currentInventaire,
-        currentDonnee
+        currentDonnee,
+        (this.inventaireForm.controls.lieu as FormGroup).controls.departement
+          .value,
+        (this.inventaireForm.controls.lieu as FormGroup).controls.commune.value,
+        (this.donneeForm.controls.especeGroup as FormGroup).controls.classe
+          .value
       );
       this.switchToUpdateMode();
     }
@@ -452,12 +453,15 @@ export class CreationComponent extends PageComponent implements OnInit {
     InventaireHelper.setInventaireFormFromInventaire(
       this.inventaireForm,
       newCurrentDonnee.inventaire,
-      this.pageModel
+      this.pageModel,
+      this.navigationService.savedDepartement,
+      this.navigationService.savedCommune
     );
     DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
       newCurrentDonnee,
-      this.pageModel
+      this.pageModel,
+      this.navigationService.savedClasse
     );
     this.navigationService.increaseIndexOfCurrentDonnee();
 

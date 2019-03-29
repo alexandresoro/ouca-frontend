@@ -178,7 +178,9 @@ export class InventaireHelper {
   public static setInventaireFormFromInventaire(
     inventaireForm: FormGroup,
     inventaire: Inventaire,
-    pageModel: CreationPage
+    pageModel: CreationPage,
+    departementToDisplay?: Departement,
+    communeToDisplay?: Commune
   ): void {
     console.log("Inventaire à afficher dans le formulaire:", inventaire);
 
@@ -201,6 +203,8 @@ export class InventaireHelper {
         "id",
         lieudit.communeId
       );
+    } else if (!!communeToDisplay) {
+      commune = communeToDisplay;
     }
 
     let departement: Departement = null;
@@ -210,6 +214,8 @@ export class InventaireHelper {
         "id",
         commune.departementId
       );
+    } else if (!!departementToDisplay) {
+      departement = departementToDisplay;
     }
 
     const associes: Observateur[] = ListHelper.mapIdsToEntities(

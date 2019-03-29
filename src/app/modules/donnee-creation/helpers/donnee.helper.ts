@@ -229,7 +229,8 @@ export class DonneeHelper {
   public static setDonneeFormFromDonnee(
     donneeForm: FormGroup,
     donnee: Donnee,
-    pageModel: CreationPage
+    pageModel: CreationPage,
+    classeToDisplay?: Classe
   ): void {
     console.log("Donnée à afficher dans le formulaire:", donnee);
 
@@ -256,6 +257,8 @@ export class DonneeHelper {
     const classe: Classe =
       !!espece && !!espece.classeId
         ? ListHelper.getFromList(pageModel.classes, "id", espece.classeId)
+        : !!classeToDisplay
+        ? classeToDisplay
         : null;
 
     const estimationNombre: EstimationNombre = ListHelper.getFromList(
