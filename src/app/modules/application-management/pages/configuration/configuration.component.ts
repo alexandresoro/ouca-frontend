@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
 import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
 import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
-import { EntiteResult } from "basenaturaliste-model/entite-result.object";
+import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import * as _ from "lodash";
 import {
   GestionMode,
@@ -62,6 +62,10 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.initConfigurationPage();
+  }
+
+  private initConfigurationPage(): void {
     this.switchToViewAllMode();
     this.getCurrentConfigurations();
   }
@@ -151,7 +155,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   ////// CALLED FROM UI //////
   public refresh(): void {
-    this.ngOnInit();
+    this.initConfigurationPage();
   }
 
   public editConfigurations(): void {
@@ -164,11 +168,8 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     this.backendApiService
       .saveAppConfiguration(this.configurationToSave)
       .subscribe(
-        (result: EntiteResult<AppConfiguration>) => {
-          PageStatusHelper.setSuccessStatus(
-            "La sauvegarde des congurations de l'application a été faite avec succès."
-          );
-          this.onSaveAppConfigurationSuccess(result.object);
+        (result: DbUpdateResult) => {
+          this.onSaveAppConfigurationSuccess(result);
         },
         (error: any) => {
           this.onSaveAppConfigurationError(error);
@@ -208,9 +209,10 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onSaveAppConfigurationSuccess(
-    appConfiguration: AppConfiguration
-  ): void {
+  private onSaveAppConfigurationSuccess(saveResult: DbUpdateResult): void {
+    PageStatusHelper.setSuccessStatus(
+      "La sauvegarde des congurations de l'application a été faite avec succès."
+    );
     this.getCurrentConfigurations();
     this.switchToViewAllMode();
   }

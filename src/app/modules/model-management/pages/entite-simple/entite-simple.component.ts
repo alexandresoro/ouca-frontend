@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { EntiteResult } from "basenaturaliste-model/entite-result.object";
+import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
@@ -79,7 +79,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
       this.backendApiService
         .deleteEntity(this.getEntityName(), this.objectToRemove.id)
         .subscribe(
-          (result: EntiteResult<T>) => {
+          (result: DbUpdateResult) => {
             PageStatusHelper.setSuccessStatus(
               "L'entité a été supprimée avec succès"
             );
@@ -119,14 +119,14 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
     this.backendApiService
       .saveEntity(this.getEntityName(), this.objectToSave, this.isEditionMode())
       .subscribe(
-        (result: EntiteResult<T>) => {
+        (result: DbUpdateResult) => {
           PageStatusHelper.setSuccessStatus(
             "L'entité a été sauvegardée avec succès"
           );
 
           if (this.isCreationMode()) {
             // Add the new entity in the list
-            this.objects[this.objects.length] = result.object;
+            this.objects[this.objects.length] = this.objectToSave;
           }
           this.switchToViewAllMode();
         },

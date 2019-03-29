@@ -4,8 +4,8 @@ import { Router } from "@angular/router";
 import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
 import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
 import { CreationPage } from "basenaturaliste-model/creation-page.object";
+import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
-import { EntiteResult } from "basenaturaliste-model/entite-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
@@ -53,7 +53,7 @@ export class BackendApiService {
 
   public saveAppConfiguration(
     appConfigurationToSave: AppConfiguration
-  ): Observable<EntiteResult<AppConfiguration>> {
+  ): Observable<DbUpdateResult> {
     return this.httpPost(
       this.CONFIGURATION + this.UPDATE,
       appConfigurationToSave
@@ -76,7 +76,7 @@ export class BackendApiService {
     return this.httpGet(this.DONNEE + this.PREVIOUS_DONNEE + "?id=" + id);
   }
 
-  public deleteDonnee(id: number): Observable<EntiteResult<Donnee>> {
+  public deleteDonnee(id: number): Observable<DbUpdateResult> {
     return this.httpGet(this.DONNEE + this.DELETE + "?id=" + id);
   }
 
@@ -88,13 +88,13 @@ export class BackendApiService {
     return this.httpGet(this.LIEUDIT + this.SEARCH_BY_COMMUNE + idCommune);
   }
 
-  public saveDonnee(donneeToSave: Donnee): Observable<EntiteResult<Donnee>> {
+  public saveDonnee(donneeToSave: Donnee): Observable<DbUpdateResult> {
     return this.httpPost(this.DONNEE + this.SAVE, donneeToSave);
   }
 
   public saveInventaire(
     inventaireToSave: Inventaire
-  ): Observable<EntiteResult<Inventaire>> {
+  ): Observable<DbUpdateResult> {
     return this.httpPost(this.INVENTAIRE + this.SAVE, inventaireToSave);
   }
 
@@ -115,7 +115,7 @@ export class BackendApiService {
   public deleteEntity(
     entityName: string,
     id: number
-  ): Observable<EntiteResult<EntiteSimple>> {
+  ): Observable<DbUpdateResult> {
     return this.httpGet(entityName + "/" + this.DELETE + "?id=" + id);
   }
 
