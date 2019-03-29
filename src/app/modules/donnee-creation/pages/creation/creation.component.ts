@@ -389,7 +389,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     currentDonnee.inventaire = currentInventaire;
 
     // Save the current donnee, inventaire and mode
-    if (!CreationModeHelper.isUpdateMode) {
+    if (!CreationModeHelper.isUpdateMode()) {
       this.navigationService.saveCurrentContext(
         currentInventaire,
         currentDonnee
@@ -638,6 +638,10 @@ export class CreationComponent extends PageComponent implements OnInit {
     } else {
       this.donneeForm.disable();
     }
+  }
+
+  public getDisplayedInventaireId(): number {
+    return InventaireHelper.getDisplayedInventaireId();
   }
 
   public getDisplayedDonneeId(): number {

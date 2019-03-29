@@ -97,7 +97,12 @@
   <div class="lco-creation-form">
     <div>
       <div class="creation-inventaire-titre flex-container">
-        <h2>Fiche Inventaire</h2>
+        <h2>
+          Fiche Inventaire
+          <span *ngIf="getDisplayedInventaireId()"
+            >(ID={{ getDisplayedInventaireId() }})</span
+          >
+        </h2>
         <span class="flex-spacer"></span>
         <button
           mat-button
