@@ -17,11 +17,11 @@ export class BackendApiService {
 
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
-  private CREATE: string = "create";
   private CREATION: string = "creation/";
   private DELETE: string = "delete";
   private DONNEE = "donnee/";
   private EXPORT = "export";
+  private FIND_WITH_CONTEXT = "find_with_context";
   private IMPORT = "import";
   private INIT: string = "init";
   private INVENTAIRE: string = "inventaire/";
@@ -78,6 +78,10 @@ export class BackendApiService {
 
   public deleteDonnee(id: number): Observable<DbUpdateResult> {
     return this.httpGet(this.DONNEE + this.DELETE + "?id=" + id);
+  }
+
+  public getDonneeByIdWithContext(id: number): Observable<any> {
+    return this.httpGet(this.DONNEE + this.FIND_WITH_CONTEXT + "?id=" + id);
   }
 
   public getNextRegroupement(): Observable<number> {

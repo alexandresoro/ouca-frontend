@@ -617,10 +617,39 @@ export class CreationComponent extends PageComponent implements OnInit {
       width: "450px"
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!!result) {
-        // TODO search donnée par ID
-        alert("Fonctionnalitée non supportée");
+    dialogRef.afterClosed().subscribe((idToFind: number) => {
+      if (!!idToFind) {
+        this.backendApiService.getDonneeByIdWithContext(idToFind).subscribe(
+          (result: any) => {
+            if (!!result && !!result.donnee) {
+              InventaireHelper.setInventaireFormFromInventaire(
+                this.inventaireForm,
+                (result.donnee as Donnee).inventaire as Inventaire,
+                this.pageModel
+              );
+              DonneeHelper.setDonneeFormFromDonnee(
+                this.donneeForm,
+                result.donnee as Donnee,
+                this.pageModel
+              );
+              this.navigationService.currentDonneeIndex = +result.indexDonnee;
+              this.navigationService.previousDonnee = result.previousDonnee;
+              this.navigationService.nextDonnee = result.nextDonnee;
+            } else {
+              PageStatusHelper.setErrorStatus(
+                "Aucune fiche espèce trouvée avec l'ID " + idToFind + "."
+              );
+            }
+          },
+          (error: any) => {
+            PageStatusHelper.setErrorStatus(
+              "Echec de la récupération de la fiche espèce avec l'ID " +
+                idToFind +
+                ".",
+              error
+            );
+          }
+        );
       }
     });
   }

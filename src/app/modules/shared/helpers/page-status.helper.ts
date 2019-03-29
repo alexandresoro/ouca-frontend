@@ -24,10 +24,10 @@ export class PageStatusHelper {
     console.log(message);
   }
 
-  public static setErrorStatus(message: string, error: any) {
+  public static setErrorStatus(message: string, error?: any) {
     this.setPageStatus(
       PageStatus.ERROR,
-      message + "<br>Détails de l'erreur: " + JSON.stringify(error)
+      message + (!!error ? "Détails de l'erreur: " + JSON.stringify(error) : "")
     );
     console.error(message, JSON.stringify(error));
   }
