@@ -20,10 +20,11 @@ import {
 } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
+import { CreationModeEnum } from "../../helpers/creation-mode.enum";
+import { CreationModeHelper } from "../../helpers/creation-mode.helper";
 import { DonneeHelper } from "../../helpers/donnee.helper";
 import { InventaireHelper } from "../../helpers/inventaire.helper";
-import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
-import { NavigationService } from "./navigation.service";
+import { NavigationService } from "../../services/navigation.service";
 
 @Component({
   templateUrl: "./creation.tpl.html"
@@ -32,8 +33,6 @@ export class CreationComponent extends PageComponent implements OnInit {
   public pageModel: CreationPage = {} as CreationPage;
 
   public pageStatusEnum = PageStatus;
-
-  public mode: CreationModeEnum;
 
   public nextRegroupement: number;
 
@@ -53,7 +52,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   constructor(
     private backendApiService: BackendApiService,
-    public modeHelper: CreationModeHelper,
     public dialog: MatDialog,
     public navigationService: NavigationService
   ) {
@@ -145,7 +143,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public isDeleteDonneeBtnDisplayed(): boolean {
-    return this.modeHelper.isUpdateMode(this.mode);
+    return CreationModeHelper.isUpdateMode();
   }
 
   public isPreviousDonneeBtnDisplayed(): boolean {
@@ -372,9 +370,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     currentDonnee.inventaire = currentInventaire;
 
     // Save the current donnee, inventaire and mode
-    if (!this.modeHelper.isUpdateMode(this.mode)) {
+    if (!CreationModeHelper.isUpdateMode) {
       this.navigationService.saveCurrentContext(
-        this.mode,
         currentInventaire,
         currentDonnee
       );
@@ -420,10 +417,10 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.inventaireForm
     );
 
-    this.mode = this.navigationService.getNextMode();
-    if (this.modeHelper.isInventaireMode(this.mode)) {
+    CreationModeHelper.updateCreationMode(this.navigationService.getNextMode());
+    if (CreationModeHelper.isInventaireMode()) {
       this.switchToInventaireMode();
-    } else if (this.modeHelper.isDonneeMode(this.mode)) {
+    } else if (CreationModeHelper.isDonneeMode()) {
       this.switchToEditionDonneeMode();
     }
 
@@ -509,10 +506,10 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private setCurrentDonneeToTheNextDonnee(afterDelete: boolean = false): void {
-    this.mode = this.navigationService.getNextMode();
-    if (this.modeHelper.isInventaireMode(this.mode)) {
+    CreationModeHelper.updateCreationMode(this.navigationService.getNextMode());
+    if (CreationModeHelper.isInventaireMode()) {
       this.switchToInventaireMode();
-    } else if (this.modeHelper.isDonneeMode(this.mode)) {
+    } else if (CreationModeHelper.isDonneeMode()) {
       this.switchToEditionDonneeMode();
     }
 
@@ -546,8 +543,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private redisplayCurrentInventaireAndDonnee(): void {
-    this.mode = this.navigationService.savedMode;
-    if (this.modeHelper.isInventaireMode(this.mode)) {
+    CreationModeHelper.updateCreationMode(this.navigationService.savedMode);
+    if (CreationModeHelper.isInventaireMode()) {
       this.switchToInventaireMode();
       InventaireHelper.setInventaireFormFromInventaire(
         this.inventaireForm,
@@ -555,7 +552,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.pageModel
       );
       DonneeHelper.setDisplayedDonneeId(null);
-    } else if (this.modeHelper.isDonneeMode(this.mode)) {
+    } else if (CreationModeHelper.isDonneeMode()) {
       this.switchToEditionDonneeMode();
       InventaireHelper.setInventaireFormFromInventaire(
         this.inventaireForm,
@@ -588,21 +585,21 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private switchToInventaireMode(): void {
-    this.mode = CreationModeEnum.NEW_INVENTAIRE;
+    CreationModeHelper.updateCreationMode(CreationModeEnum.NEW_INVENTAIRE);
     this.handleInventaireFormState(true);
     this.handleDonneeFormState(false);
     document.getElementById("input-Observateur").focus();
   }
 
   private switchToEditionDonneeMode(): void {
-    this.mode = CreationModeEnum.NEW_DONNEE;
+    CreationModeHelper.updateCreationMode(CreationModeEnum.NEW_DONNEE);
     this.handleInventaireFormState(false);
     this.handleDonneeFormState(true);
     document.getElementById("input-Espèce").focus();
   }
 
   private switchToUpdateMode(): void {
-    this.mode = CreationModeEnum.UPDATE;
+    CreationModeHelper.updateCreationMode(CreationModeEnum.UPDATE);
     this.handleInventaireFormState(true);
     this.handleDonneeFormState(true);
     document.getElementById("input-Observateur").focus();

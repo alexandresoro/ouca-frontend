@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Donnee } from "basenaturaliste-model/donnee.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
-import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { CreationModeEnum, CreationModeHelper } from "./creation-mode.enum";
+import { BackendApiService } from "../../shared/services/backend-api.service";
+import { CreationModeEnum } from "../helpers/creation-mode.enum";
+import { CreationModeHelper } from "../helpers/creation-mode.helper";
 
 @Injectable()
 export class NavigationService {
@@ -18,10 +19,7 @@ export class NavigationService {
 
   private inventaireToBeUpdated: Inventaire;
 
-  constructor(
-    public backendApiService: BackendApiService,
-    public modeHelper: CreationModeHelper
-  ) {}
+  constructor(public backendApiService: BackendApiService) {}
 
   public init(lastDonnee: Donnee, numberOfDonnees: number): void {
     this.previousDonnee = lastDonnee;
@@ -33,24 +31,19 @@ export class NavigationService {
     this.savedMode = null;
   }
   public saveCurrentContext(
-    modeToSave: CreationModeEnum,
     inventaireToSave: Inventaire,
     donneeToSave: Donnee
   ): void {
     this.savedDonnee = {} as Donnee;
     this.savedInventaire = {} as Inventaire;
 
-    this.savedMode = modeToSave;
-
-    if (this.modeHelper.isInventaireMode(this.savedMode)) {
+    if (CreationModeHelper.isInventaireMode()) {
       this.savedDonnee.inventaire = inventaireToSave;
-    }
-
-    if (this.modeHelper.isDonneeMode(this.savedMode)) {
+      this.savedMode = CreationModeEnum.NEW_INVENTAIRE;
+    } else if (CreationModeHelper.isDonneeMode()) {
       this.savedDonnee = donneeToSave;
+      this.savedMode = CreationModeEnum.NEW_DONNEE;
     }
-
-    console.log("Sauvegarde de la donnée courante", this.savedDonnee);
   }
 
   public updateNavigationAfterADonneeWasSaved(savedDonnee: Donnee) {

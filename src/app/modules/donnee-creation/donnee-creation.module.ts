@@ -18,9 +18,8 @@ import { InputTemperatureComponent } from "./components/input-temperature/input-
 import { InputTimeComponent } from "./components/input-time/input-time.component";
 import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { DonneeCreationRoutingModule } from "./donnee-creation-routing.module";
-import { CreationModeHelper } from "./pages/creation/creation-mode.enum";
 import { CreationComponent } from "./pages/creation/creation.component";
-import { NavigationService } from "./pages/creation/navigation.service";
+import { NavigationService } from "./services/navigation.service";
 
 @NgModule({
   imports: [SharedModule, DonneeCreationRoutingModule],
@@ -46,6 +45,6 @@ import { NavigationService } from "./pages/creation/navigation.service";
   ],
   entryComponents: [SearchByIdDialogComponent],
   exports: [],
-  providers: [CreationModeHelper, NavigationService]
+  providers: [NavigationService]
 })
 export class DonneeCreationModule {}
