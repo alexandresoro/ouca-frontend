@@ -236,26 +236,18 @@ export class NavigationService {
 
   public saveInventaireToBeUpdated(inventaire: Inventaire) {
     this.inventaireToBeUpdated = {
-      observateur: inventaire.observateur,
+      id: inventaire.id,
+      observateurId: inventaire.observateurId,
+      associesIds: inventaire.associesIds,
       date: inventaire.date,
       heure: inventaire.heure,
       duree: inventaire.duree,
-      lieudit: inventaire.lieudit,
+      lieuditId: inventaire.lieuditId,
       altitude: inventaire.altitude,
       longitude: inventaire.longitude,
       latitude: inventaire.latitude,
       temperature: inventaire.temperature,
-      meteos: inventaire.meteos
-    } as Inventaire;
-  }
-
-  public isInventaireUpdated(inventaire: Inventaire) {
-    if (inventaire.observateur !== this.inventaireToBeUpdated.observateur) {
-      return true;
-    }
-
-    // TODO continue
-
-    return false;
+      meteosIds: inventaire.meteosIds
+    };
   }
 }

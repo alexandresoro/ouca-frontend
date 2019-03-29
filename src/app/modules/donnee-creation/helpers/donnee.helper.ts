@@ -163,8 +163,6 @@ export class DonneeHelper {
     const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
       .controls;
 
-    console.log(comportementsFormControls);
-
     const comportementsIds: number[] = [];
     this.addComportement(
       comportementsIds,
@@ -296,31 +294,63 @@ export class DonneeHelper {
     distanceFormControls.distance.setValue(donnee.distance);
     distanceFormControls.estimationDistance.setValue(estimationDistance);
     donneeFormControls.regroupement.setValue(donnee.regroupement);
-    if (!!donnee.comportements) {
+    if (!!donnee.comportementsIds) {
       comportementsFormControls.comportement1.setValue(
-        this.getComportement(donnee.comportements, 1)
+        this.getComportement(
+          pageModel.comportements,
+          donnee.comportementsIds,
+          1
+        )
       );
       comportementsFormControls.comportement2.setValue(
-        this.getComportement(donnee.comportements, 2)
+        this.getComportement(
+          pageModel.comportements,
+          donnee.comportementsIds,
+          2
+        )
       );
       comportementsFormControls.comportement3.setValue(
-        this.getComportement(donnee.comportements, 3)
+        this.getComportement(
+          pageModel.comportements,
+          donnee.comportementsIds,
+          3
+        )
       );
       comportementsFormControls.comportement4.setValue(
-        this.getComportement(donnee.comportements, 4)
+        this.getComportement(
+          pageModel.comportements,
+          donnee.comportementsIds,
+          4
+        )
       );
       comportementsFormControls.comportement5.setValue(
-        this.getComportement(donnee.comportements, 5)
+        this.getComportement(
+          pageModel.comportements,
+          donnee.comportementsIds,
+          5
+        )
       );
       comportementsFormControls.comportement6.setValue(
-        this.getComportement(donnee.comportements, 6)
+        this.getComportement(
+          pageModel.comportements,
+          donnee.comportementsIds,
+          6
+        )
       );
     }
-    if (!!donnee.milieux) {
-      milieuxFormControls.milieu1.setValue(this.getMilieu(donnee.milieux, 1));
-      milieuxFormControls.milieu2.setValue(this.getMilieu(donnee.milieux, 2));
-      milieuxFormControls.milieu3.setValue(this.getMilieu(donnee.milieux, 3));
-      milieuxFormControls.milieu4.setValue(this.getMilieu(donnee.milieux, 4));
+    if (!!donnee.milieuxIds) {
+      milieuxFormControls.milieu1.setValue(
+        this.getMilieu(pageModel.milieux, donnee.milieuxIds, 1)
+      );
+      milieuxFormControls.milieu2.setValue(
+        this.getMilieu(pageModel.milieux, donnee.milieuxIds, 2)
+      );
+      milieuxFormControls.milieu3.setValue(
+        this.getMilieu(pageModel.milieux, donnee.milieuxIds, 3)
+      );
+      milieuxFormControls.milieu4.setValue(
+        this.getMilieu(pageModel.milieux, donnee.milieuxIds, 4)
+      );
     }
     donneeFormControls.commentaire.setValue(donnee.commentaire);
   }
@@ -342,13 +372,14 @@ export class DonneeHelper {
    * @param index index of the entity to return
    */
   private static getEntiteCodeEtLibelle(
-    entitesCodeEtLibelle: EntiteAvecLibelleEtCode[],
+    list: any[],
+    ids: number[],
     index: number
   ): EntiteAvecLibelleEtCode {
-    return entitesCodeEtLibelle.length >= index &&
-      !!entitesCodeEtLibelle[index - 1]
-      ? entitesCodeEtLibelle[index - 1]
-      : null;
+    const id: number =
+      ids.length >= index && !!ids[index - 1] ? ids[index - 1] : null;
+
+    return ListHelper.getFromList(list, "id", id);
   }
 
   /**
@@ -357,10 +388,15 @@ export class DonneeHelper {
    * @param index index of the comportement to return
    */
   private static getComportement(
-    comportements: Comportement[],
+    allComportements: Comportement[],
+    comportementsIds: number[],
     index: number
   ): Comportement {
-    return this.getEntiteCodeEtLibelle(comportements, index);
+    return this.getEntiteCodeEtLibelle(
+      allComportements,
+      comportementsIds,
+      index
+    );
   }
 
   /**
@@ -382,8 +418,12 @@ export class DonneeHelper {
    * @param milieux list of milieux
    * @param index index of the milieu to return
    */
-  private static getMilieu(milieux: Milieu[], index: number): Milieu {
-    return this.getEntiteCodeEtLibelle(milieux, index);
+  private static getMilieu(
+    allMilieux: Milieu[],
+    milieuxIds: number[],
+    index: number
+  ): Milieu {
+    return this.getEntiteCodeEtLibelle(allMilieux, milieuxIds, index);
   }
 
   /**
