@@ -59,7 +59,7 @@
       <button
         mat-raised-button
         color="primary"
-        *ngIf="modeHelper.isInventaireMode(mode)"
+        *ngIf="isSaveInventaireBtnDisplayed()"
         [disabled]="!inventaireForm.valid"
         (click)="saveInventaire()"
       >
@@ -68,14 +68,14 @@
       <button
         mat-raised-button
         color="primary"
-        *ngIf="modeHelper.isDonneeMode(mode)"
+        *ngIf="isSaveDonneeBtnDisplayed()"
         [disabled]="!donneeForm.valid"
         (click)="saveDonnee()"
       >
         Enregistrer la donnée
       </button>
       <button
-        *ngIf="modeHelper.isUpdateMode(mode)"
+        *ngIf="isUpdateDonneeBtnDisplayed()"
         mat-raised-button
         color="primary"
         (click)="saveInventaireAndDonnee()"
@@ -102,7 +102,7 @@
         <button
           mat-button
           color="primary"
-          *ngIf="modeHelper.isDonneeMode(mode)"
+          *ngIf="isNewInventaireBtnDisplayed()"
           (click)="onNewInventaireBtnClicked()"
         >
           Nouvel inventaire
@@ -110,7 +110,7 @@
         <button
           mat-button
           color="primary"
-          *ngIf="modeHelper.isDonneeMode(mode)"
+          *ngIf="isUpdateInventaireBtnDisplayed()"
           (click)="onEditInventaireBtnClicked()"
         >
           Modifier l'inventaire
@@ -321,7 +321,7 @@
     <button
       mat-raised-button
       color="primary"
-      *ngIf="modeHelper.isInventaireMode(mode)"
+      *ngIf="isSaveInventaireBtnDisplayed()"
       [disabled]="!inventaireForm.valid"
       (click)="saveInventaire()"
     >
@@ -330,7 +330,7 @@
     <button
       mat-raised-button
       color="primary"
-      *ngIf="modeHelper.isDonneeMode(mode)"
+      *ngIf="isSaveDonneeBtnDisplayed()"
       [disabled]="!donneeForm.valid"
       (click)="saveDonnee()"
     >
@@ -339,7 +339,7 @@
     <button
       mat-raised-button
       color="primary"
-      *ngIf="modeHelper.isUpdateMode(mode)"
+      *ngIf="isUpdateDonneeBtnDisplayed()"
       (click)="saveInventaireAndDonnee()"
     >
       Mettre à jour la donnée

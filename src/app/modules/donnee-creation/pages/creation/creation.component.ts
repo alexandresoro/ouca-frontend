@@ -138,6 +138,25 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.switchToInventaireMode();
   }
 
+  public isNewInventaireBtnDisplayed(): boolean {
+    return CreationModeHelper.isDonneeMode();
+  }
+
+  public isUpdateInventaireBtnDisplayed(): boolean {
+    return CreationModeHelper.isDonneeMode();
+  }
+
+  public isSaveInventaireBtnDisplayed(): boolean {
+    return CreationModeHelper.isInventaireMode();
+  }
+
+  public isUpdateDonneeBtnDisplayed(): boolean {
+    return CreationModeHelper.isUpdateMode();
+  }
+  public isSaveDonneeBtnDisplayed(): boolean {
+    return CreationModeHelper.isDonneeMode();
+  }
+
   public isNewDonneeBtnDisplayed(): boolean {
     return false; // TODO
   }
