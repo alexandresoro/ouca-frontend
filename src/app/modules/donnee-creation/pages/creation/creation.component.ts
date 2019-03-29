@@ -194,7 +194,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onCreateInventaireError(error: any): void {
     PageStatusHelper.setErrorStatus(
-      "Echec de la création de l'inventaire.",
+      "Echec de la création de la fiche inventaire.",
       error
     );
   }
@@ -202,14 +202,26 @@ export class CreationComponent extends PageComponent implements OnInit {
   private onCreateInventaireSuccess(
     saveInventaireResult: DbUpdateResult
   ): void {
-    if (!!saveInventaireResult && !!saveInventaireResult.insertId) {
-      PageStatusHelper.setSuccessStatus("L'inventaire a été créé avec succès.");
-      InventaireHelper.setDisplayedInventaireId(saveInventaireResult.insertId);
+    if (
+      !!saveInventaireResult &&
+      (!!saveInventaireResult.insertId || !!saveInventaireResult.affectedRows)
+    ) {
+      if (!!saveInventaireResult.insertId) {
+        PageStatusHelper.setSuccessStatus(
+          "La fiche inventaire a été créée avec succès."
+        );
+        InventaireHelper.setDisplayedInventaireId(
+          saveInventaireResult.insertId
+        );
+      } else {
+        PageStatusHelper.setSuccessStatus(
+          "La fiche inventaire a été mise-à-jour avec succès."
+        );
+      }
+      this.switchToEditionDonneeMode();
     } else {
       this.onCreateInventaireError(saveInventaireResult);
     }
-
-    this.switchToEditionDonneeMode();
   }
 
   /**
@@ -232,14 +244,16 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onSaveDonneeError(saveError: any) {
     PageStatusHelper.setErrorStatus(
-      "Echec de la création de la donnée.",
+      "Echec de la création de la fiche espèce.",
       saveError
     );
   }
 
   private onSaveDonneeSuccess(savedDonnee: Donnee) {
     if (!!savedDonnee && !!savedDonnee.id) {
-      PageStatusHelper.setSuccessStatus("La donnée a été créée avec succès.");
+      PageStatusHelper.setSuccessStatus(
+        "La fiche espèce a été créée avec succès."
+      );
       this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
 
       this.updateNextRegroupement();
@@ -260,7 +274,8 @@ export class CreationComponent extends PageComponent implements OnInit {
       },
       (error: any) => {
         PageStatusHelper.setErrorStatus(
-          "La donnée a été créée mais échec lors de la récupération du prochain numéro de regroupement utilisable.",
+          "La fiche espèce a été créée" +
+            " mais échec lors de la récupération du prochain numéro de regroupement utilisable.",
           error
         );
       }
@@ -513,7 +528,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   private onDeleteDonneeSuccess(deleteResult: any): void {
     if (deleteResult.affectedRows > 0) {
       PageStatusHelper.setSuccessStatus(
-        "La donnée a été supprimée avec succès."
+        "La fiche espèce a été supprimée avec succès."
       );
 
       this.setCurrentDonneeToTheNextDonnee(true);
@@ -526,7 +541,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onDeleteDonneeError(error: any): void {
     PageStatusHelper.setErrorStatus(
-      "Echec de la suppression de la donnée.",
+      "Echec de la suppression de la fiche espèce.",
       error
     );
   }
