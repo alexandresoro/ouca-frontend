@@ -4,9 +4,9 @@ import { MatDialog } from "@angular/material";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { CreationPage } from "basenaturaliste-model/creation-page.object";
+import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
-import { EntiteResult } from "basenaturaliste-model/entite-result.object";
 import { Espece } from "basenaturaliste-model/espece.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
@@ -100,25 +100,31 @@ export class CreationComponent extends PageComponent implements OnInit {
    * @param creationPage: CreationPage
    */
   private onInitCreationPageSucces(creationPage: CreationPage): void {
-    this.pageModel = creationPage;
+    if (!!creationPage && !!creationPage.observateurs) {
+      this.pageModel = creationPage;
 
-    console.log("Modèle de la page de création", this.pageModel);
+      console.log("Modèle de la page de création", this.pageModel);
 
-    this.communes$.next(this.pageModel ? this.pageModel.communes : []);
-    this.departements$.next(this.pageModel ? this.pageModel.departements : []);
-    this.lieuxdits$.next(this.pageModel ? this.pageModel.lieudits : []);
-    this.classes$.next(this.pageModel ? this.pageModel.classes : []);
-    this.especes$.next(this.pageModel ? this.pageModel.especes : []);
+      this.communes$.next(this.pageModel ? this.pageModel.communes : []);
+      this.departements$.next(
+        this.pageModel ? this.pageModel.departements : []
+      );
+      this.lieuxdits$.next(this.pageModel ? this.pageModel.lieudits : []);
+      this.classes$.next(this.pageModel ? this.pageModel.classes : []);
+      this.especes$.next(this.pageModel ? this.pageModel.especes : []);
 
-    this.nextRegroupement = this.pageModel.nextRegroupement;
+      this.nextRegroupement = this.pageModel.nextRegroupement;
 
-    this.navigationService.init(
-      this.pageModel.lastDonnee,
-      this.pageModel.numberOfDonnees
-    );
+      this.navigationService.init(
+        this.pageModel.lastDonnee,
+        this.pageModel.numberOfDonnees
+      );
 
-    // Page model is ready, initalize the page to create a first inventaire
-    this.switchToNewInventaireMode();
+      // Page model is ready, initalize the page to create a first inventaire
+      this.switchToNewInventaireMode();
+    } else {
+      this.onInitCreationPageError(creationPage);
+    }
   }
 
   /**
@@ -134,6 +140,22 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.switchToInventaireMode();
   }
 
+  public isNewDonneeBtnDisplayed(): boolean {
+    return false; // TODO
+  }
+
+  public isDeleteDonneeBtnDisplayed(): boolean {
+    return this.modeHelper.isUpdateMode(this.mode);
+  }
+
+  public isPreviousDonneeBtnDisplayed(): boolean {
+    return this.navigationService.hasPreviousDonnee();
+  }
+
+  public isNextDonneeBtnDisplayed(): boolean {
+    return this.navigationService.hasNextDonnee();
+  }
+
   /**
    * Called when clicking on Save Inventaire button
    */
@@ -143,7 +165,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
 
     this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
-      (saveInventaireResult: any) => {
+      (saveInventaireResult: DbUpdateResult) => {
         this.onCreateInventaireSuccess(saveInventaireResult);
       },
       (error: any) => {
@@ -159,7 +181,9 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onCreateInventaireSuccess(saveInventaireResult: any): void {
+  private onCreateInventaireSuccess(
+    saveInventaireResult: DbUpdateResult
+  ): void {
     if (!!saveInventaireResult && !!saveInventaireResult.insertId) {
       PageStatusHelper.setSuccessStatus("L'inventaire a été créé avec succès.");
       InventaireHelper.setDisplayedInventaireId(saveInventaireResult.insertId);
@@ -179,8 +203,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
 
     this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
-      (saveResult: any) => {
-        this.onSaveDonneeSuccess(saveResult);
+      (saveResult: DbUpdateResult) => {
+        this.onSaveDonneeSuccess(saveResult, donneeToBeSaved);
       },
       (saveError: any) => {
         this.onSaveDonneeError(saveError);
@@ -190,17 +214,25 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onSaveDonneeError(saveError: any) {
     PageStatusHelper.setErrorStatus(
-      "La donnée n'a pas pu être créée ou modifiée.",
+      "Echec de la création de la donnée.",
       saveError
     );
   }
 
-  private onSaveDonneeSuccess(savedDonnee: Donnee) {
-    this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
+  private onSaveDonneeSuccess(
+    saveDonneeResult: DbUpdateResult,
+    savedDonnee: Donnee
+  ) {
+    if (!!saveDonneeResult && !!saveDonneeResult.insertId) {
+      savedDonnee.id = saveDonneeResult.insertId;
+      this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
 
-    this.updateNextRegroupement();
+      this.updateNextRegroupement();
 
-    DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
+      DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
+    } else {
+      this.onSaveDonneeError(saveDonneeResult);
+    }
   }
 
   /**
@@ -212,8 +244,9 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.nextRegroupement = regroupement;
       },
       (error: any) => {
-        console.error(
-          "Impossible de récupérer le prochain regroupement (" + error + ")"
+        PageStatusHelper.setErrorStatus(
+          "La donnée a été créée mais échec lors de la récupération du prochain numéro de regroupement utilisable.",
+          error
         );
       }
     );
@@ -222,7 +255,6 @@ export class CreationComponent extends PageComponent implements OnInit {
   /**
    * Called when clicking on save donnee when in update mode
    */
-  // TODO
   public saveInventaireAndDonnee(): void {
     const isInventaireUpdated: boolean = true; // TODO
 
@@ -231,6 +263,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
   }
 
+  // TODO create a dialog with also a cancel option
   private displayInventaireDialog(): void {
     const updateInventaireDialogData = new ConfirmationDialogData(
       "Confirmation de mise-à-jour",
@@ -246,13 +279,84 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (!!result) {
-        // We just update the inventaire
+        // We just update the existing inventaire
         this.updateInventaireAndDonnee(false);
       } else {
         // We create a new inventaire for this donnee
         this.updateInventaireAndDonnee(true);
       }
     });
+  }
+
+  /**
+   * Call the backend to update the fiche inventaire and fiche espece
+   * If the user wants to update the fiche inventaire only for this fiche espece then we create a new inventaire
+   * @param createNewInventaire If we should create a new inventaire for the donnee or just update it
+   */
+  private updateInventaireAndDonnee(createNewInventaire: boolean): void {
+    const inventaireToSave: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
+      this.inventaireForm
+    );
+    if (!!createNewInventaire) {
+      inventaireToSave.id = null;
+    }
+
+    const donneeToSave: Donnee = DonneeHelper.getDonneeFromDonneeForm(
+      this.donneeForm
+    );
+    donneeToSave.inventaireId = inventaireToSave.id;
+
+    this.backendApiService.saveInventaire(inventaireToSave).subscribe(
+      (saveInventaireResult: DbUpdateResult) => {
+        if (
+          !!saveInventaireResult &&
+          (saveInventaireResult.affectedRows > 0 ||
+            saveInventaireResult.insertId > 0)
+        ) {
+          if (!!createNewInventaire) {
+            donneeToSave.inventaireId = saveInventaireResult.insertId;
+          }
+
+          this.backendApiService.saveDonnee(donneeToSave).subscribe(
+            (saveDonneeResult: DbUpdateResult) => {
+              this.onUpdateDonneeAndInventaireSuccess(saveDonneeResult);
+            },
+            (saveDonneeError: any) => {
+              this.onUpdateDonneeError(saveDonneeError);
+            }
+          );
+        } else {
+          this.onUpdateInventaireError(saveInventaireResult);
+        }
+      },
+      (saveInventaireError: any) => {
+        this.onUpdateInventaireError(saveInventaireError);
+      }
+    );
+  }
+
+  private onUpdateInventaireError(error: any): void {
+    PageStatusHelper.setErrorStatus(
+      "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
+      error
+    );
+  }
+
+  private onUpdateDonneeError(error: any): void {
+    PageStatusHelper.setErrorStatus(
+      "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
+      error
+    );
+  }
+
+  private onUpdateDonneeAndInventaireSuccess(saveDonneeResult: DbUpdateResult) {
+    if (!!saveDonneeResult && !!saveDonneeResult.affectedRows > 0) {
+      PageStatusHelper.setSuccessStatus(
+        "La fiche espèce et sa fiche inventaire ont été mises-à-jour avec succès."
+      );
+    } else {
+      this.onUpdateDonneeError(saveDonneeResult);
+    }
   }
 
   /**
@@ -349,42 +453,32 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  public onNewInventaireBtnClicked(): void {
-    this.switchToNewInventaireMode();
-  }
-
-  public onEditInventaireBtnClicked(): void {
-    this.switchToInventaireMode();
-  }
-
-  private setCurrentDonneeToTheNextDonnee(afterDelete: boolean = false): void {
-    this.mode = this.navigationService.getNextMode();
-    if (this.modeHelper.isInventaireMode(this.mode)) {
-      this.switchToInventaireMode();
-    } else if (this.modeHelper.isDonneeMode(this.mode)) {
-      this.switchToEditionDonneeMode();
-    }
-
-    InventaireHelper.setInventaireFormFromInventaire(
-      this.inventaireForm,
-      this.navigationService.getNextInventaire(),
-      this.pageModel
+  public onDeleteDonneeBtnClicked(): void {
+    const deleteDialogData = new ConfirmationDialogData(
+      "Confirmation de suppression",
+      "Êtes-vous certain de vouloir supprimer cette fiche espèce ?",
+      "Oui, supprimer",
+      "Non, annuler"
     );
-    const newCurrentDonnee: Donnee = this.navigationService.getNextDonnee();
-    DonneeHelper.setDonneeFormFromDonnee(
-      this.donneeForm,
-      newCurrentDonnee,
-      this.pageModel
-    );
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: "450px",
+      data: deleteDialogData
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!!result) {
+        this.onDeleteConfirmButtonClicked();
+      }
+    });
   }
 
-  private setNewNextDonnee(currentDonnee: Donnee) {
-    this.navigationService.updateNextDonnee(currentDonnee);
+  public onDeleteConfirmButtonClicked(): void {
+    this.deleteDonnee(DonneeHelper.getDisplayedDonneeId());
   }
 
   public deleteDonnee(donneeId: number): void {
     this.backendApiService.deleteDonnee(donneeId).subscribe(
-      (deleteResult: any) => {
+      (deleteResult: DbUpdateResult) => {
         this.onDeleteDonneeSuccess(deleteResult);
       },
       (deleteError: any) => {
@@ -414,50 +508,41 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  public isNewDonneeBtnDisplayed(): boolean {
-    return false; // TODO
+  private setCurrentDonneeToTheNextDonnee(afterDelete: boolean = false): void {
+    this.mode = this.navigationService.getNextMode();
+    if (this.modeHelper.isInventaireMode(this.mode)) {
+      this.switchToInventaireMode();
+    } else if (this.modeHelper.isDonneeMode(this.mode)) {
+      this.switchToEditionDonneeMode();
+    }
+
+    InventaireHelper.setInventaireFormFromInventaire(
+      this.inventaireForm,
+      this.navigationService.getNextInventaire(),
+      this.pageModel
+    );
+    const newCurrentDonnee: Donnee = this.navigationService.getNextDonnee();
+    DonneeHelper.setDonneeFormFromDonnee(
+      this.donneeForm,
+      newCurrentDonnee,
+      this.pageModel
+    );
   }
 
-  public isDeleteDonneeBtnDisplayed(): boolean {
-    return this.modeHelper.isUpdateMode(this.mode);
+  private setNewNextDonnee(currentDonnee: Donnee) {
+    this.navigationService.updateNextDonnee(currentDonnee);
   }
 
-  public isPreviousDonneeBtnDisplayed(): boolean {
-    return this.navigationService.hasPreviousDonnee();
+  public onNewInventaireBtnClicked(): void {
+    this.switchToNewInventaireMode();
   }
 
-  public isNextDonneeBtnDisplayed(): boolean {
-    return this.navigationService.hasNextDonnee();
+  public onEditInventaireBtnClicked(): void {
+    this.switchToInventaireMode();
   }
 
   public onBackToCreationDonneeBtnClicked(): void {
     this.redisplayCurrentInventaireAndDonnee();
-  }
-  public onNewDonneeBtnClicked(): void {
-    this.switchToNewInventaireMode();
-  }
-
-  public onDeleteDonneeBtnClicked(): void {
-    const deleteDialogData = new ConfirmationDialogData(
-      "Confirmation de suppression",
-      "Êtes-vous certain de vouloir supprimer cette fiche espèce ?",
-      "Oui, supprimer",
-      "Non, annuler"
-    );
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: "450px",
-      data: deleteDialogData
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!!result) {
-        this.onDeleteConfirmButtonClicked();
-      }
-    });
-  }
-
-  public onDeleteConfirmButtonClicked(): void {
-    this.deleteDonnee(DonneeHelper.getDisplayedDonneeId());
   }
 
   private redisplayCurrentInventaireAndDonnee(): void {
@@ -483,6 +568,23 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.pageModel
       );
     }
+  }
+
+  public onNewDonneeBtnClicked(): void {
+    this.switchToNewInventaireMode();
+  }
+
+  public onSearchByIdBtnClicked(): void {
+    const dialogRef = this.dialog.open(SearchByIdDialogComponent, {
+      width: "450px"
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!!result) {
+        // TODO search donnée par ID
+        alert("Fonctionnalitée non supportée");
+      }
+    });
   }
 
   private switchToInventaireMode(): void {
@@ -520,90 +622,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     } else {
       this.donneeForm.disable();
     }
-  }
-
-  public onSearchByIdBtnClicked(): void {
-    const dialogRef = this.dialog.open(SearchByIdDialogComponent, {
-      width: "450px"
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!!result) {
-        // TODO search donnée par ID
-        alert("Fonctionnalitée non supportée");
-      }
-    });
-  }
-
-  /**
-   * Call the backend to update the fiche inventaire and fiche espece
-   * If the user wants to update the fiche inventaire only for this fiche espece then we create a new inventaire
-   * @param createNewInventaire If we should create a new inventaire for the donnee or just update it
-   */
-  private updateInventaireAndDonnee(createNewInventaire: boolean): void {
-    const inventaireToSave: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
-      this.inventaireForm
-    );
-    if (!!createNewInventaire) {
-      inventaireToSave.id = null;
-    }
-
-    const donneeToSave: Donnee = DonneeHelper.getDonneeFromDonneeForm(
-      this.donneeForm
-    );
-    donneeToSave.inventaireId = inventaireToSave.id;
-
-    this.backendApiService.saveInventaire(inventaireToSave).subscribe(
-      (saveInventaireResult: any) => {
-        if (
-          !!saveInventaireResult &&
-          (saveInventaireResult.affectedRows > 0 ||
-            saveInventaireResult.insertId > 0)
-        ) {
-          if (!!createNewInventaire) {
-            donneeToSave.inventaireId = saveInventaireResult.insertId;
-          }
-
-          this.backendApiService.saveDonnee(donneeToSave).subscribe(
-            (saveDonneeResult: any) => {
-              this.onUpdateDonneeAndInventaireSuccess(
-                saveInventaireResult,
-                saveDonneeResult
-              );
-            },
-            (saveDonneeError: any) => {
-              this.onUpdateDonneeError(saveDonneeError);
-            }
-          );
-        } else {
-          this.onUpdateInventaireError(saveInventaireResult);
-        }
-      },
-      (saveInventaireError: any) => {
-        this.onUpdateInventaireError(saveInventaireError);
-      }
-    );
-  }
-
-  private onUpdateInventaireError(error: any): void {
-    PageStatusHelper.setErrorStatus(
-      "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
-      error
-    );
-  }
-
-  private onUpdateDonneeError(error: any): void {
-    PageStatusHelper.setErrorStatus(
-      "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
-      error
-    );
-  }
-
-  private onUpdateDonneeAndInventaireSuccess(
-    saveInventaireResult: any,
-    saveDonneeResult: any
-  ) {
-    // TODO
   }
 
   public getDisplayedDonneeId(): number {
