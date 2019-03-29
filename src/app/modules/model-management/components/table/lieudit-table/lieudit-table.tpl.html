@@ -1,109 +1,108 @@
-<table-topbar [selectedObject]="selectedObject"
+<table-topbar
+  [selectedObject]="selectedObject"
   (onClickViewObject)="viewObject(selectedObject)"
   (onClickEditObject)="editObject(selectedObject)"
   (onClickDeleteObject)="deleteObject(selectedObject)"
-  (onFilterChange)="applyFilter($event)">
+  (onFilterChange)="applyFilter($event)"
+>
 </table-topbar>
 
 <div class="mat-elevation-z8">
-  <table class="lieudit-table"
-    mat-table
-    [dataSource]="dataSource"
-    matSort>
-
+  <table class="lieudit-table" mat-table [dataSource]="dataSource" matSort>
     <!-- Département -->
     <ng-container matColumnDef="departement">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="departement"> Département </th>
-      <td mat-cell
-        *matCellDef="let row"> {{row.departement}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="departement">
+        Département
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.departement }}</td>
     </ng-container>
 
     <!-- Code commune -->
     <ng-container matColumnDef="codeCommune">
-      <th mat-header-cell
+      <th
+        mat-header-cell
         *matHeaderCellDef
         mat-sort-header
-        class="code-commune"> Code commune </th>
-      <td mat-cell
-        *matCellDef="let row"> {{row.codeCommune}} </td>
+        class="code-commune"
+      >
+        Code commune
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.codeCommune }}</td>
     </ng-container>
 
     <!-- Nom commune -->
     <ng-container matColumnDef="nomCommune">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="nom-commune"> Nom commune </th>
-      <td mat-cell
-        *matCellDef="let row"> {{row.nomCommune}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="nom-commune">
+        Nom commune
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.nomCommune }}</td>
     </ng-container>
 
     <!-- Nom lieu dit -->
     <ng-container matColumnDef="nom">
-      <th mat-header-cell
+      <th
+        mat-header-cell
         *matHeaderCellDef
         mat-sort-header
-        class="nom-lieu-dit"> Nom </th>
-      <td mat-cell
-        *matCellDef="let row"
-        [style.color]="row.color"> {{row.nom}} </td>
+        class="nom-lieu-dit"
+      >
+        Nom
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.nom }}
+      </td>
     </ng-container>
 
     <!-- Altitude -->
     <ng-container matColumnDef="altitude">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="altitude"> Altitude </th>
-      <td mat-cell
-        *matCellDef="let row"
-        [style.color]="row.color"> {{row.altitude}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="altitude">
+        Altitude
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.altitude }}
+      </td>
     </ng-container>
 
     <!-- Longitude -->
     <ng-container matColumnDef="longitude">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="longitude"> Longitude </th>
-      <td mat-cell
-        *matCellDef="let row"
-        [style.color]="row.color"> {{row.longitude}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="longitude">
+        Longitude
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.longitude }}
+      </td>
     </ng-container>
 
     <!-- Latitude -->
     <ng-container matColumnDef="latitude">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="latitude"> Latitude </th>
-      <td mat-cell
-        *matCellDef="let row"
-        [style.color]="row.color"> {{row.latitude}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="latitude">
+        Latitude
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.latitude }}
+      </td>
     </ng-container>
 
     <!-- Nombre de fiches espèces -->
     <ng-container matColumnDef="nbDonnees">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="nb-donnees"> Nombre de fiches espèces </th>
-      <td mat-cell
-        *matCellDef="let row"
-        [style.color]="row.color"> {{row.nbDonnees}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="nb-donnees">
+        Nombre de fiches espèces
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.nbDonnees }}
+      </td>
     </ng-container>
 
-    <tr mat-header-row
-      *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row
-      *matRowDef="let row; columns: displayedColumns;"
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
       (click)="onRowLieuditClicked(row.id)"
-      [ngClass]="{'mat-row-selected': (!!selectedObject && (selectedObject.id == row.id))}">
-    </tr>
+      [ngClass]="{
+        'mat-row-selected': !!selectedObject && selectedObject.id == row.id
+      }"
+    ></tr>
   </table>
 
-  <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[50, 100, 150]"></mat-paginator>
 </div>

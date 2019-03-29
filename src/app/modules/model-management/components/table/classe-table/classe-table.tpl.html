@@ -1,56 +1,52 @@
-<table-topbar [selectedObject]="selectedObject"
+<table-topbar
+  [selectedObject]="selectedObject"
   (onClickViewObject)="viewObject(selectedObject)"
   (onClickEditObject)="editObject(selectedObject)"
   (onClickDeleteObject)="deleteObject(selectedObject)"
-  (onFilterChange)="applyFilter($event)">
+  (onFilterChange)="applyFilter($event)"
+>
 </table-topbar>
 
 <div class="mat-elevation-z8">
-  <table class="classe-table"
-    mat-table
-    [dataSource]="dataSource"
-    matSort>
-
+  <table class="classe-table" mat-table [dataSource]="dataSource" matSort>
     <!-- Libellé -->
     <ng-container matColumnDef="libelle">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="libelle">Libellé</th>
-      <td mat-cell
-        *matCellDef="let row">{{row.libelle}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="libelle">
+        Libellé
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.libelle }}</td>
     </ng-container>
 
     <!-- Nb especes -->
     <ng-container matColumnDef="nbEspeces">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="nb-especes"> Nombre d'espèces </th>
-      <td mat-cell
-        *matCellDef="let row"
-        [style.color]="row.color"> {{row.nbEspeces}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="nb-especes">
+        Nombre d'espèces
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.nbEspeces }}
+      </td>
     </ng-container>
 
     <!-- Nb donnees -->
     <ng-container matColumnDef="nbDonnees">
-      <th mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="nb-donnees"> Nombre de fiches espèces </th>
-      <td mat-cell
-        *matCellDef="let row"
-        [style.color]="row.color"> {{row.nbDonnees}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="nb-donnees">
+        Nombre de fiches espèces
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.nbDonnees }}
+      </td>
     </ng-container>
 
-    <tr mat-header-row
-      *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row
-      *matRowDef="let row; columns: displayedColumns;"
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
       (click)="onRowClicked(row)"
-      [ngClass]="{'mat-row-selected': (!!selectedObject && (selectedObject.id == row.id))}">
-    </tr>
+      [ngClass]="{
+        'mat-row-selected': !!selectedObject && selectedObject.id == row.id
+      }"
+    ></tr>
   </table>
 
-  <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[50, 100, 150]"></mat-paginator>
 </div>
