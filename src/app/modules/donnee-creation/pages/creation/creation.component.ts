@@ -336,7 +336,10 @@ export class CreationComponent extends PageComponent implements OnInit {
 
           this.backendApiService.saveDonnee(donneeToSave).subscribe(
             (saveDonneeResult: DbUpdateResult) => {
-              this.onUpdateDonneeAndInventaireSuccess(saveDonneeResult);
+              this.onUpdateDonneeAndInventaireSuccess(
+                saveDonneeResult,
+                donneeToSave
+              );
             },
             (saveDonneeError: any) => {
               this.onUpdateDonneeError(saveDonneeError);
@@ -366,11 +369,15 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onUpdateDonneeAndInventaireSuccess(saveDonneeResult: DbUpdateResult) {
-    if (!!saveDonneeResult && !!saveDonneeResult.affectedRows > 0) {
+  private onUpdateDonneeAndInventaireSuccess(
+    saveDonneeResult: DbUpdateResult,
+    savedDonnee: Donnee
+  ) {
+    if (!!saveDonneeResult && saveDonneeResult.affectedRows > 0) {
       PageStatusHelper.setSuccessStatus(
         "La fiche espèce et sa fiche inventaire ont été mises-à-jour avec succès."
       );
+      InventaireHelper.setDisplayedInventaireId(savedDonnee.inventaireId);
     } else {
       this.onUpdateDonneeError(saveDonneeResult);
     }
