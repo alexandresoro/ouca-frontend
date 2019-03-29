@@ -220,8 +220,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
 
     this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
-      (saveResult: DbUpdateResult) => {
-        this.onSaveDonneeSuccess(saveResult, donneeToBeSaved);
+      (saveResult: Donnee) => {
+        this.onSaveDonneeSuccess(saveResult);
       },
       (saveError: any) => {
         this.onSaveDonneeError(saveError);
@@ -236,19 +236,15 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onSaveDonneeSuccess(
-    saveDonneeResult: DbUpdateResult,
-    savedDonnee: Donnee
-  ) {
-    if (!!saveDonneeResult && !!saveDonneeResult.insertId) {
-      savedDonnee.id = saveDonneeResult.insertId;
+  private onSaveDonneeSuccess(savedDonnee: Donnee) {
+    if (!!savedDonnee && !!savedDonnee.id) {
       this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
 
       this.updateNextRegroupement();
 
       DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
     } else {
-      this.onSaveDonneeError(saveDonneeResult);
+      this.onSaveDonneeError(savedDonnee);
     }
   }
 

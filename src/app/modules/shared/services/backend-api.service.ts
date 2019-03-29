@@ -88,7 +88,7 @@ export class BackendApiService {
     return this.httpGet(this.LIEUDIT + this.SEARCH_BY_COMMUNE + idCommune);
   }
 
-  public saveDonnee(donneeToSave: Donnee): Observable<DbUpdateResult> {
+  public saveDonnee(donneeToSave: Donnee): Observable<Donnee> {
     return this.httpPost(this.DONNEE + this.SAVE, donneeToSave);
   }
 
