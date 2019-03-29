@@ -294,6 +294,7 @@ export class DonneeHelper {
     distanceFormControls.distance.setValue(donnee.distance);
     distanceFormControls.estimationDistance.setValue(estimationDistance);
     donneeFormControls.regroupement.setValue(donnee.regroupement);
+
     if (!!donnee.comportementsIds) {
       comportementsFormControls.comportement1.setValue(
         this.getComportement(

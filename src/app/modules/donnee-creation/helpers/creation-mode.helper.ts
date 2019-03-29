@@ -6,6 +6,11 @@ export class CreationModeHelper {
   public static updateCreationMode(mode: CreationModeEnum): void {
     this.mode = mode;
   }
+
+  public static getCreationMode(): CreationModeEnum {
+    return this.mode;
+  }
+
   public static isInventaireMode(): boolean {
     return CreationModeEnum.NEW_INVENTAIRE === this.mode;
   }

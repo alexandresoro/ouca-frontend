@@ -158,7 +158,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public isNewDonneeBtnDisplayed(): boolean {
-    return false; // TODO
+    return CreationModeHelper.isUpdateMode();
   }
 
   public isDeleteDonneeBtnDisplayed(): boolean {

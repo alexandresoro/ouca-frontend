@@ -34,22 +34,16 @@ export class NavigationService {
     inventaireToSave: Inventaire,
     donneeToSave: Donnee
   ): void {
-    this.savedDonnee = {} as Donnee;
-    this.savedInventaire = {} as Inventaire;
-
-    if (CreationModeHelper.isInventaireMode()) {
-      this.savedDonnee.inventaire = inventaireToSave;
-      this.savedMode = CreationModeEnum.NEW_INVENTAIRE;
-    } else if (CreationModeHelper.isDonneeMode()) {
-      this.savedDonnee = donneeToSave;
-      this.savedMode = CreationModeEnum.NEW_DONNEE;
-    }
+    this.savedInventaire = inventaireToSave;
+    this.savedDonnee = donneeToSave;
+    this.savedMode = CreationModeHelper.getCreationMode();
   }
 
   public updateNavigationAfterADonneeWasSaved(savedDonnee: Donnee) {
     this.numberOfDonnees++;
     this.previousDonnee = savedDonnee;
   }
+
   public decreaseIndexOfCurrentDonnee(): void {
     if (!!!this.currentDonneeIndex) {
       this.currentDonneeIndex = this.numberOfDonnees;

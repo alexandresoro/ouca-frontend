@@ -19,15 +19,6 @@
       <button
         mat-raised-button
         color="primary"
-        *ngIf="isNewDonneeBtnDisplayed()"
-        (click)="onNewDonneeBtnClicked()"
-      >
-        Nouvelle donnée
-      </button>
-
-      <button
-        mat-raised-button
-        color="primary"
         [disabled]="!isPreviousDonneeBtnDisplayed()"
         (click)="onPreviousDonneeBtnClicked()"
       >
@@ -50,6 +41,15 @@
       >
         Recherche par ID
       </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="isNewDonneeBtnDisplayed()"
+        (click)="onNewDonneeBtnClicked()"
+      >
+        Nouvelle donnée
+      </button>
     </span>
 
     <span class="flex-spacer"></span>
@@ -63,7 +63,7 @@
         [disabled]="!inventaireForm.valid"
         (click)="saveInventaire()"
       >
-        Enregistrer l'inventaire
+        Enregistrer la fiche inventaire
       </button>
       <button
         mat-raised-button
@@ -72,7 +72,7 @@
         [disabled]="!donneeForm.valid"
         (click)="saveDonnee()"
       >
-        Enregistrer la donnée
+        Enregistrer la fiche espèce
       </button>
       <button
         *ngIf="isUpdateDonneeBtnDisplayed()"
@@ -80,7 +80,7 @@
         color="primary"
         (click)="saveInventaireAndDonnee()"
       >
-        Mettre à jour la donnée
+        Mettre à jour les fiches inventaire et espèce
       </button>
       <button
         mat-raised-button
@@ -98,7 +98,7 @@
     <div>
       <div class="creation-inventaire-titre flex-container">
         <h2>
-          Fiche Inventaire
+          Fiche inventaire
           <span *ngIf="getDisplayedInventaireId()"
             >(ID={{ getDisplayedInventaireId() }})</span
           >
