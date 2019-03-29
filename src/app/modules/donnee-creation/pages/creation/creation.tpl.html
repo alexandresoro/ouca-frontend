@@ -320,34 +320,43 @@
   </div>
 
   <!-- BAR BOTTOM BUTTOM -->
-  <div class="creation-footer">
+  <div class="lco-creation-buttons">
     <span class="flex-spacer"></span>
-
-    <button
-      mat-raised-button
-      color="primary"
-      *ngIf="isSaveInventaireBtnDisplayed()"
-      [disabled]="!inventaireForm.valid"
-      (click)="saveInventaire()"
-    >
-      Enregistrer l'inventaire
-    </button>
-    <button
-      mat-raised-button
-      color="primary"
-      *ngIf="isSaveDonneeBtnDisplayed()"
-      [disabled]="!donneeForm.valid"
-      (click)="saveDonnee()"
-    >
-      Enregistrer la donnée
-    </button>
-    <button
-      mat-raised-button
-      color="primary"
-      *ngIf="isUpdateDonneeBtnDisplayed()"
-      (click)="saveInventaireAndDonnee()"
-    >
-      Mettre à jour la donnée
-    </button>
+    <span class="top-right-creation-buttons">
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="isSaveInventaireBtnDisplayed()"
+        [disabled]="!inventaireForm.valid"
+        (click)="saveInventaire()"
+      >
+        Enregistrer la fiche inventaire
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="isSaveDonneeBtnDisplayed()"
+        [disabled]="!donneeForm.valid"
+        (click)="saveDonnee()"
+      >
+        Enregistrer la fiche espèce
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="isUpdateDonneeBtnDisplayed()"
+        (click)="saveInventaireAndDonnee()"
+      >
+        Mettre à jour les fiches inventaire et espèce
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="isDeleteDonneeBtnDisplayed()"
+        (click)="onDeleteDonneeBtnClicked()"
+      >
+        Supprimer la donnée
+      </button>
+    </span>
   </div>
 </div>
