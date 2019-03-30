@@ -30,6 +30,18 @@ export class NavigationService {
     this.resetPreviousAndNextDonnee();
   }
 
+  public resetPreviousAndNextDonnee(): void {
+    this.previousDonnee = this.lastDonnee;
+    this.nextDonnee = null;
+    this.nextMode = null;
+    this.currentDonneeIndex = null;
+    this.savedDonnee = {} as Donnee;
+    this.savedMode = null;
+    this.savedClasse = null;
+    this.savedDepartement = null;
+    this.savedCommune = null;
+  }
+
   public saveCurrentContext(
     donneeToSave: Donnee,
     currentDepartement: Departement,
@@ -60,12 +72,14 @@ export class NavigationService {
 
     this.numberOfDonnees--;
 
-    if (!this.isLastDonneeCurrentlyDisplayed()) {
-      // We should find the new next donnee
-      this.populateNextDonnee(this.nextDonnee.id);
-    } else {
-      this.nextDonnee = this.savedDonnee;
-      this.nextMode = this.savedMode;
+    if (!!this.currentDonneeIndex) {
+      if (!this.isLastDonneeCurrentlyDisplayed()) {
+        // We should find the new next donnee
+        this.populateNextDonnee(this.nextDonnee.id);
+      } else {
+        this.nextDonnee = this.savedDonnee;
+        this.nextMode = this.savedMode;
+      }
     }
   }
 
@@ -79,13 +93,13 @@ export class NavigationService {
       this.currentDonneeIndex--;
       this.nextDonnee = newNextDonnee;
       this.nextMode = CreationModeEnum.UPDATE;
+    }
 
-      if (this.currentDonneeIndex === 1) {
-        // We are displaying the first donnee
-        this.previousDonnee = null;
-      } else {
-        this.populatePreviousDonnee(this.previousDonnee.id);
-      }
+    if (this.currentDonneeIndex === 1) {
+      // We are displaying the first donnee
+      this.previousDonnee = null;
+    } else {
+      this.populatePreviousDonnee(this.previousDonnee.id);
     }
   }
 
@@ -190,17 +204,5 @@ export class NavigationService {
 
   public hasNextDonnee(): boolean {
     return !!this.nextDonnee;
-  }
-
-  public resetPreviousAndNextDonnee(): void {
-    this.previousDonnee = this.lastDonnee;
-    this.nextDonnee = null;
-    this.nextMode = null;
-    this.currentDonneeIndex = null;
-    this.savedDonnee = {} as Donnee;
-    this.savedMode = null;
-    this.savedClasse = null;
-    this.savedDepartement = null;
-    this.savedCommune = null;
   }
 }

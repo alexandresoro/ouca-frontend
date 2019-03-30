@@ -442,10 +442,12 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
   public onNextDonneeBtnClicked(): void {
+    const currentDonnee: Donnee = this.getCurrentDonneeFromForm();
+
     this.displayNextDonnee();
 
     this.navigationService.updateNavigationAfterNextDonneeIsDisplayed(
-      this.getCurrentDonneeFromForm()
+      currentDonnee
     );
   }
 
