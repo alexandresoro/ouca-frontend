@@ -394,100 +394,58 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on "Donnee precedente" button
    */
   public onPreviousDonneeBtnClicked(): void {
-    const currentInventaire: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
-      this.inventaireForm
-    );
-    const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeForm(
-      this.donneeForm
-    );
-    currentDonnee.inventaire = currentInventaire;
+    const currentDonnee: Donnee = this.getCurrentDonneeFromForm();
 
     // Save the current donnee, inventaire and mode
     if (!CreationModeHelper.isUpdateMode()) {
-      this.navigationService.saveCurrentContext(
-        currentInventaire,
-        currentDonnee,
-        (this.inventaireForm.controls.lieu as FormGroup).controls.departement
-          .value,
-        (this.inventaireForm.controls.lieu as FormGroup).controls.commune.value,
-        (this.donneeForm.controls.especeGroup as FormGroup).controls.classe
-          .value
-      );
+      this.saveCurrentContext(currentDonnee);
       this.switchToUpdateMode();
     }
 
-    let newNextDonnee = currentDonnee;
-    if (!!!this.navigationService.currentDonneeIndex) {
-      // We are displaying the creation form so the next donnee is the saved donnee
-      newNextDonnee = this.navigationService.savedDonnee;
-    }
+    this.displayPreviousDonnne();
 
-    // Set the current donnee to display
-    const newCurrentDonnee: Donnee = this.navigationService.previousDonnee;
-    DonneeHelper.setDonneeFormFromDonnee(
-      this.donneeForm,
-      newCurrentDonnee,
-      this.pageModel
-    );
-    InventaireHelper.setInventaireFormFromInventaire(
-      this.inventaireForm,
-      newCurrentDonnee.inventaire,
-      this.pageModel
-    );
-    this.navigationService.decreaseIndexOfCurrentDonnee();
-
-    // Disable the navigation buttons
-    this.navigationService.setNextDonnee(null);
-    this.navigationService.setPreviousDonnee(null);
-
-    this.navigationService.updatePreviousAndNextDonnees(
-      newCurrentDonnee,
-      null,
-      newNextDonnee
+    this.navigationService.updateNavigationAfterPreviousDonneeIsDisplayed(
+      currentDonnee
     );
   }
 
-  public onNextDonneeBtnClicked(): void {
+  private getCurrentDonneeFromForm(): Donnee {
     const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
     currentDonnee.inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
+    return currentDonnee;
+  }
 
-    CreationModeHelper.updateCreationMode(this.navigationService.getNextMode());
-    if (CreationModeHelper.isInventaireMode()) {
-      this.switchToInventaireMode();
-    } else if (CreationModeHelper.isDonneeMode()) {
-      this.switchToEditionDonneeMode();
-    }
-
-    const newPreviousDonnee: Donnee = currentDonnee;
-
-    const newCurrentDonnee: Donnee = this.navigationService.nextDonnee;
-    InventaireHelper.setInventaireFormFromInventaire(
-      this.inventaireForm,
-      newCurrentDonnee.inventaire,
-      this.pageModel,
-      this.navigationService.savedDepartement,
-      this.navigationService.savedCommune
+  private saveCurrentContext(currentDonnee: Donnee): void {
+    this.navigationService.saveCurrentContext(
+      currentDonnee,
+      (this.inventaireForm.controls.lieu as FormGroup).controls.departement
+        .value,
+      (this.inventaireForm.controls.lieu as FormGroup).controls.commune.value,
+      (this.donneeForm.controls.especeGroup as FormGroup).controls.classe.value
     );
+  }
+
+  private displayPreviousDonnne() {
     DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
-      newCurrentDonnee,
-      this.pageModel,
-      this.navigationService.savedClasse
+      this.navigationService.getPreviousDonnee(),
+      this.pageModel
     );
-    this.navigationService.increaseIndexOfCurrentDonnee();
+    InventaireHelper.setInventaireFormFromInventaire(
+      this.inventaireForm,
+      this.navigationService.getPreviousDonnee().inventaire,
+      this.pageModel
+    );
+  }
+  public onNextDonneeBtnClicked(): void {
+    this.displayNextDonnee();
 
-    // Disable the navigation buttons
-    this.navigationService.setNextDonnee(null);
-    this.navigationService.setPreviousDonnee(null);
-
-    this.navigationService.updatePreviousAndNextDonnees(
-      newCurrentDonnee,
-      newPreviousDonnee,
-      null
+    this.navigationService.updateNavigationAfterNextDonneeIsDisplayed(
+      this.getCurrentDonneeFromForm()
     );
   }
 
@@ -525,20 +483,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onDeleteDonneeSuccess(deleteResult: any): void {
-    if (deleteResult.affectedRows > 0) {
-      PageStatusHelper.setSuccessStatus(
-        "La fiche espèce a été supprimée avec succès."
-      );
-
-      this.setCurrentDonneeToTheNextDonnee(true);
-      this.navigationService.numberOfDonnees--;
-      this.setNewNextDonnee(null);
-    } else {
-      this.onDeleteDonneeError(deleteResult);
-    }
-  }
-
   private onDeleteDonneeError(error: any): void {
     PageStatusHelper.setErrorStatus(
       "Echec de la suppression de la fiche espèce.",
@@ -546,7 +490,20 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private setCurrentDonneeToTheNextDonnee(afterDelete: boolean = false): void {
+  private onDeleteDonneeSuccess(deleteResult: any): void {
+    if (!!deleteResult && !!deleteResult.affectedRows) {
+      PageStatusHelper.setSuccessStatus(
+        "La fiche espèce a été supprimée avec succès."
+      );
+
+      this.displayNextDonnee();
+      this.navigationService.updateNavigationAfterADonneeWasDeleted();
+    } else {
+      this.onDeleteDonneeError(deleteResult);
+    }
+  }
+
+  private displayNextDonnee(): void {
     CreationModeHelper.updateCreationMode(this.navigationService.getNextMode());
     if (CreationModeHelper.isInventaireMode()) {
       this.switchToInventaireMode();
@@ -556,19 +513,17 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     InventaireHelper.setInventaireFormFromInventaire(
       this.inventaireForm,
-      this.navigationService.getNextInventaire(),
-      this.pageModel
+      this.navigationService.getNextDonnee().inventaire,
+      this.pageModel,
+      this.navigationService.getSavedDepartement(),
+      this.navigationService.getSavedCommune()
     );
-    const newCurrentDonnee: Donnee = this.navigationService.getNextDonnee();
     DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
-      newCurrentDonnee,
-      this.pageModel
+      this.navigationService.getNextDonnee(),
+      this.pageModel,
+      this.navigationService.getSavedClasse()
     );
-  }
-
-  private setNewNextDonnee(currentDonnee: Donnee) {
-    this.navigationService.updateNextDonnee(currentDonnee);
   }
 
   public onNewInventaireBtnClicked(): void {
@@ -577,35 +532,6 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public onEditInventaireBtnClicked(): void {
     this.switchToInventaireMode();
-  }
-
-  public onBackToCreationDonneeBtnClicked(): void {
-    this.redisplayCurrentInventaireAndDonnee();
-  }
-
-  private redisplayCurrentInventaireAndDonnee(): void {
-    CreationModeHelper.updateCreationMode(this.navigationService.savedMode);
-    if (CreationModeHelper.isInventaireMode()) {
-      this.switchToInventaireMode();
-      InventaireHelper.setInventaireFormFromInventaire(
-        this.inventaireForm,
-        this.navigationService.savedInventaire,
-        this.pageModel
-      );
-      DonneeHelper.setDisplayedDonneeId(null);
-    } else if (CreationModeHelper.isDonneeMode()) {
-      this.switchToEditionDonneeMode();
-      InventaireHelper.setInventaireFormFromInventaire(
-        this.inventaireForm,
-        this.navigationService.savedInventaire,
-        this.pageModel
-      );
-      DonneeHelper.setDonneeFormFromDonnee(
-        this.donneeForm,
-        this.navigationService.savedDonnee,
-        this.pageModel
-      );
-    }
   }
 
   public onNewDonneeBtnClicked(): void {
@@ -619,6 +545,11 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((idToFind: number) => {
       if (!!idToFind) {
+        // Save the current donnee, inventaire and mode
+        if (!CreationModeHelper.isUpdateMode()) {
+          this.saveCurrentContext(this.getCurrentDonneeFromForm());
+        }
+
         this.backendApiService.getDonneeByIdWithContext(idToFind).subscribe(
           (result: any) => {
             if (!!result && !!result.donnee) {
@@ -632,9 +563,12 @@ export class CreationComponent extends PageComponent implements OnInit {
                 result.donnee as Donnee,
                 this.pageModel
               );
-              this.navigationService.currentDonneeIndex = +result.indexDonnee;
-              this.navigationService.previousDonnee = result.previousDonnee;
-              this.navigationService.nextDonnee = result.nextDonnee;
+              this.switchToUpdateMode();
+              this.navigationService.updateNavigationAfterSearchDonneeById(
+                +result.indexDonnee,
+                result.previousDonnee,
+                result.nextDonnee
+              );
             } else {
               PageStatusHelper.setErrorStatus(
                 "Aucune fiche espèce trouvée avec l'ID " + idToFind + "."
