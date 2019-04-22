@@ -2,6 +2,7 @@ import {
   AbstractControl,
   FormControl,
   FormGroup,
+  ValidatorFn,
   Validators
 } from "@angular/forms";
 import { Commune } from "basenaturaliste-model/commune.object";
@@ -30,21 +31,42 @@ export class InventaireHelper {
     this.displayedInventaireId = null;
 
     return new FormGroup({
-      observateur: new FormControl("", [Validators.required]),
-      observateursAssocies: new FormControl(""),
-      date: new FormControl("", Validators.required),
-      heure: new FormControl(""),
-      duree: new FormControl(""),
+      observateur: new FormControl("", [
+        Validators.required,
+        this.observateurValidator()
+      ]),
+      observateursAssocies: new FormControl("", [this.associesValidator()]),
+      date: new FormControl("", [Validators.required, this.dateValidator()]),
+      heure: new FormControl("", [this.heureValidator()]),
+      duree: new FormControl("", [this.dureeValidator()]),
       lieu: new FormGroup({
-        departement: new FormControl("", Validators.required),
-        commune: new FormControl("", Validators.required),
-        lieudit: new FormControl("", Validators.required),
-        altitude: new FormControl("", Validators.required),
-        longitude: new FormControl("", Validators.required),
-        latitude: new FormControl("", Validators.required)
+        departement: new FormControl("", [
+          Validators.required,
+          this.departementValidator()
+        ]),
+        commune: new FormControl("", [
+          Validators.required,
+          this.communeValidator()
+        ]),
+        lieudit: new FormControl("", [
+          Validators.required,
+          this.lieuditValidator()
+        ]),
+        altitude: new FormControl("", [
+          Validators.required,
+          this.altitudeValidator()
+        ]),
+        longitude: new FormControl("", [
+          Validators.required,
+          this.longitudeValidator()
+        ]),
+        latitude: new FormControl("", [
+          Validators.required,
+          this.latitudeValidator()
+        ])
       }),
-      temperature: new FormControl(""),
-      meteos: new FormControl("")
+      temperature: new FormControl("", [this.temperatureValidator()]),
+      meteos: new FormControl("", [this.meteosValidator()])
     });
   }
 
@@ -120,9 +142,13 @@ export class InventaireHelper {
 
     const date: Date = inventaireFormControls.date.value.toDate();
 
-    const heure: string = inventaireFormControls.heure.value;
+    const heure: string = this.getFormattedTime(
+      inventaireFormControls.heure.value
+    );
 
-    const duree: string = inventaireFormControls.duree.value;
+    const duree: string = this.getFormattedTime(
+      inventaireFormControls.duree.value
+    );
 
     const lieudit: Lieudit = lieuditFormControls.lieudit.value;
 
@@ -169,6 +195,33 @@ export class InventaireHelper {
     console.log("Inventaire généré depuis le formulaire:", inventaire);
 
     return inventaire;
+  }
+
+  private static getFormattedTime(timeStr: string): string {
+    if (!!timeStr) {
+      let value = timeStr;
+      const dateRegExp1: RegExp = new RegExp("[0-9][0-9][0-9][0-9]");
+      if (dateRegExp1.test(value)) {
+        value =
+          value.charAt(0) +
+          value.charAt(1) +
+          ":" +
+          value.charAt(2) +
+          value.charAt(3);
+      }
+
+      const dateRegExp2: RegExp = new RegExp("[0-9][0-9][h][0-9][0-9]");
+      if (dateRegExp2.test(value)) {
+        value = value.replace("h", ":");
+      }
+
+      const dateRegExp3: RegExp = new RegExp("[0-9][0-9][H][0-9][0-9]");
+      if (dateRegExp3.test(value)) {
+        value = value.replace("H", ":");
+      }
+      return value;
+    }
+    return null;
   }
 
   /**
@@ -279,56 +332,175 @@ export class InventaireHelper {
     );
   }
 
-  public observateurValidator(
-    control: AbstractControl
-  ): { [key: string]: boolean } | null {
-    if (!!control.value && !!control.value.id) {
-      return { isObservateurValid: true };
-    }
-    return null;
+  /**
+   * The observateur should be filled and should exist
+   */
+  private static observateurValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const valueIsNotAnExistingObservateur: boolean =
+        !control.value || (!!control.value && !control.value.id);
+      return valueIsNotAnExistingObservateur
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
   }
 
-  private static isObservateurValid(observateur: Observateur) {
-    return !!observateur && !!observateur.id;
+  /**
+   * The selected associes should exist
+   */
+  private static associesValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      let oneOfTheValueIsNotAnExistingObservateur: boolean = false;
+      for (const value of control.value) {
+        if (!!value && !value.id) {
+          oneOfTheValueIsNotAnExistingObservateur = true;
+        }
+      }
+      return oneOfTheValueIsNotAnExistingObservateur
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
   }
 
-  private areAssociesValid(associes: Observateur[]) {
-    return true;
+  /**
+   * The date should be filled and follow the format DD/MM/YYYY
+   */
+  private static dateValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      return null;
+    };
   }
 
-  private isDateValid(date: Date) {
-    return true;
+  /**
+   * The heure should be empty or filled and following the format HH:MM or HHhMM
+   */
+  private static heureValidator(): ValidatorFn {
+    return this.timeValidator();
   }
 
-  private isHeureValid(heure: string) {
-    return true;
+  /**
+   * The durée should be empty or filled and following the format HH:MM or HHhMM
+   */
+  private static dureeValidator(): ValidatorFn {
+    return this.timeValidator();
   }
 
-  private isDureeValid(duree: string) {
-    return true;
+  /**
+   * The tile should be empty or filled and following the format HH:MM or HHhMM
+   */
+  private static timeValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = this.getFormattedTime(control.value);
+
+      const finalDateRegExp: RegExp = new RegExp("^[0-9][0-9][:][0-9][0-9]$");
+      const isNotMatchingRegExp: boolean =
+        !!value && !finalDateRegExp.test(value);
+
+      return isNotMatchingRegExp
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
   }
 
-  isLieuditValid(lieudit: Lieudit) {
-    return true;
+  /**
+   * The departement should be filled and should exist
+   */
+  private static departementValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const valueIsNotAnExistingDepartement: boolean =
+        !control.value || (!!control.value && !control.value.id);
+      return valueIsNotAnExistingDepartement
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
   }
 
-  isAltitudeValid(altitude: number) {
-    return true;
+  /**
+   * The commune should be filled and should exist
+   */
+  private static communeValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const valueIsNotAnExistingCommune: boolean =
+        !control.value || (!!control.value && !control.value.id);
+      return valueIsNotAnExistingCommune
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
   }
 
-  isLongitudeValid(longitude: number) {
-    return true;
+  /**
+   * The lieudit should be filled and should exists
+   */
+  private static lieuditValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const valueIsNotAnExistingLieudit: boolean =
+        !control.value || (!!control.value && !control.value.id);
+      return valueIsNotAnExistingLieudit
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
   }
 
-  isLatitudeValid(latitude: number) {
-    return true;
+  /**
+   * The altitude should be filled and should be an integer
+   */
+  private static altitudeValidator(): ValidatorFn {
+    return this.coordinatesValidator();
   }
 
-  isTemperatureValid(temperature: number) {
-    return true;
+  /**
+   * The longitude should be filled and should be an integer
+   */
+  private static longitudeValidator(): ValidatorFn {
+    return this.coordinatesValidator();
   }
 
-  areMeteosValid(meteos: Meteo[]) {
-    return true;
+  /**
+   * The latitude should be filled and should be an integer
+   */
+  private static latitudeValidator(): ValidatorFn {
+    return this.coordinatesValidator();
+  }
+
+  /**
+   * The coordinates should be integer
+   */
+  private static coordinatesValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const valueIsNotAnInteger: boolean = !Number.isInteger(control.value);
+      return valueIsNotAnInteger
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
+  }
+
+  /**
+   * The temperature should be empty or filled and an integer
+   */
+  private static temperatureValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const valueIsNotAnInteger: boolean =
+        !!control.value && !Number.isInteger(control.value);
+      return valueIsNotAnInteger
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
+  }
+
+  /**
+   * The selected meteos should exist
+   */
+  private static meteosValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      let oneOfTheValueIsNotAnExistingMeteo: boolean = false;
+      for (const value of control.value) {
+        if (!!value && !value.id) {
+          oneOfTheValueIsNotAnExistingMeteo = true;
+        }
+      }
+      return oneOfTheValueIsNotAnExistingMeteo
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
   }
 }
