@@ -3,6 +3,7 @@ import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
+import { PageStatusHelper } from "../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../shared/services/backend-api.service";
 import { CreationModeEnum } from "../helpers/creation-mode.enum";
 import { CreationModeHelper } from "../helpers/creation-mode.helper";
@@ -145,28 +146,56 @@ export class NavigationService {
   private populatePreviousDonnee(id: number): void {
     this.backendApiService.getPreviousDonnee(id).subscribe(
       (previousDonnee: Donnee) => {
-        this.previousDonnee = previousDonnee;
-        console.log("La donnée précédente est", this.previousDonnee);
+        if (!!previousDonnee && !!previousDonnee.id) {
+          this.previousDonnee = previousDonnee;
+          PageStatusHelper.setInfoStatus(
+            "ID de la donnée précédente: " + previousDonnee.id,
+            previousDonnee
+          );
+        } else {
+          this.onPopulatePreviousDonneeError(previousDonnee);
+        }
       },
       (error: any) => {
-        console.error(
-          "Impossible de trouver la donnée précédente (" + error + ")"
-        );
+        this.onPopulatePreviousDonneeError(error);
       }
+    );
+  }
+
+  private onPopulatePreviousDonneeError(error: any): void {
+    this.previousDonnee = null;
+    PageStatusHelper.setWarningStatus(
+      "Impossible de récupérer la donnée précédente",
+      error
     );
   }
 
   public populateNextDonnee(id: number): void {
     this.backendApiService.getNextDonnee(id).subscribe(
       (nextDonnee: Donnee) => {
-        this.nextDonnee = nextDonnee;
-        this.nextMode = CreationModeEnum.UPDATE;
+        if (!!nextDonnee && !!nextDonnee.id) {
+          this.nextDonnee = nextDonnee;
+          this.nextMode = CreationModeEnum.UPDATE;
+          PageStatusHelper.setInfoStatus(
+            "ID de la donnée suivante: " + nextDonnee.id,
+            nextDonnee
+          );
+        } else {
+          this.onPopulateNextDonneeError(nextDonnee);
+        }
       },
       (error: any) => {
-        console.error(
-          "Impossible de trouver la donnée suivante (" + error + ")"
-        );
+        this.onPopulateNextDonneeError(error);
       }
+    );
+  }
+
+  private onPopulateNextDonneeError(error: any): void {
+    this.nextDonnee = null;
+    this.nextMode = null;
+    PageStatusHelper.setWarningStatus(
+      "Impossible de récupérer la donnée suivante",
+      error
     );
   }
 

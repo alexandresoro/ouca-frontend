@@ -1,6 +1,8 @@
 export enum PageStatus {
   ERROR,
-  SUCCESS
+  INFO,
+  SUCCESS,
+  WARNING
 }
 export class PageStatusHelper {
   private static message: string;
@@ -24,12 +26,25 @@ export class PageStatusHelper {
     console.log(message);
   }
 
+  public static setInfoStatus(message: string, object?: any) {
+    this.setPageStatus(PageStatus.INFO, message);
+    console.info(message, !!object ? JSON.stringify(object) : null);
+  }
+
   public static setErrorStatus(message: string, error?: any) {
     this.setPageStatus(
       PageStatus.ERROR,
       message + (!!error ? "Détails de l'erreur: " + JSON.stringify(error) : "")
     );
     console.error(message, JSON.stringify(error));
+  }
+
+  public static setWarningStatus(message: string, error?: any) {
+    this.setPageStatus(
+      PageStatus.WARNING,
+      message + (!!error ? "Détails de l'erreur: " + JSON.stringify(error) : "")
+    );
+    console.warn(message, JSON.stringify(error));
   }
 
   public static resetPageStatus() {
