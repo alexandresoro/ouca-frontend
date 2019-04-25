@@ -1,11 +1,14 @@
 import { NestedTreeControl } from "@angular/cdk/tree";
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import {
   MatDialog,
+  MatPaginator,
+  MatSort,
   MatTableDataSource,
   MatTreeNestedDataSource
 } from "@angular/material";
 import * as _ from "lodash";
+import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SelectDialogData } from "../../components/select-dialog/select-dialog-data.object";
 import { SelectDialogComponent } from "../../components/select-dialog/select-dialog.component";
 import columnsData from "./columns.json";
@@ -153,7 +156,48 @@ export class ViewComponent {
 
   public columns: any;
 
-  constructor(public dialog: MatDialog) {
+  public displayedColumns: string[] = [
+    "id",
+    "observateur",
+    "associes",
+    "date",
+    "heure",
+    "duree",
+    "departement",
+    "code_commune",
+    "nom_commune",
+    "lieudit",
+    "altitude",
+    "altitude",
+    "longitude",
+    "latitude",
+    "temperature",
+    "meteos",
+    "classe",
+    "code_espece",
+    "nom_francais",
+    "nom_latin",
+    "nombre",
+    "estimation_nombre",
+    "sexe",
+    "age",
+    "estimation_distance",
+    "distance",
+    "regroupement",
+    "code_comportement_1",
+    "libelle_comportement_1",
+    "commentaire"
+  ];
+  public dataSource: MatTableDataSource<any>;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(
+    private backendApiService: BackendApiService,
+    public dialog: MatDialog
+  ) {
     this.treeData.data = COLUMNS_TREE_DATA;
     this.treeSelection = [];
     this.selectOptions = [];
@@ -171,6 +215,18 @@ export class ViewComponent {
   public onSearchButtonClicked(): void {
     console.log("SELECT", this.selectOptions);
     console.log("WHERE", this.whereOptions);
+    this.backendApiService.getAllDonnees().subscribe(
+      (results: any) => {
+        console.log(results);
+        // this.dataSource = results;
+        this.dataSource = new MatTableDataSource(results);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
   }
 
   public onTreeCheckboxClicked(isSelected: boolean, key: string): void {

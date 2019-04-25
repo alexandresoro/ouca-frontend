@@ -130,4 +130,8 @@ export class BackendApiService {
   public exportAllEntities(entityName: string): Observable<any[]> {
     return this.httpGet(entityName + "/" + this.EXPORT);
   }
+
+  public getAllDonnees(): Observable<any[]> {
+    return this.httpGet(this.DONNEE + this.ALL);
+  }
 }
