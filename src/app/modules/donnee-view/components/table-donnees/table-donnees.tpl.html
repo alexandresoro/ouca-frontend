@@ -1,0 +1,362 @@
+<div>
+  <div *ngIf="filteringOnGoing">Veuillez patienter...</div>
+
+  <div *ngIf="!filteringOnGoing">
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        placeholder="Filtre"
+        id="input-filtre"
+        name="filtre"
+        [(ngModel)]="filterValue"
+      />
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="applyFilter()">
+      Appliquer le filtre
+    </button>
+  </div>
+
+  <mat-paginator [pageSizeOptions]="[1000, 2500, 5000]"></mat-paginator>
+
+  <table mat-table matSort [dataSource]="dataSource" class="bn-table-view">
+    <ng-container matColumnDef="id">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="bn-table-view-id"
+      >
+        ID
+      </th>
+      <td mat-cell *matCellDef="let element" class="bn-table-view-id">
+        {{ element.id }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="observateur">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-observateur"
+      >
+        Observateur
+      </th>
+      <td mat-cell *matCellDef="let element" class="bn-table-view-observateur">
+        {{ element.observateur }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="associes">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-associes"
+      >
+        Observateurs associés
+      </th>
+      <td mat-cell *matCellDef="let element" class="bn-table-view-associes">
+        {{ element.associes }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-date"
+      >
+        Date
+      </th>
+      <td mat-cell *matCellDef="let element" class="bn-table-view-date">
+        {{ element.date }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="heure">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-heure"
+      >
+        Heure
+      </th>
+      <td mat-cell *matCellDef="let element" class="bn-table-view-heure">
+        {{ element.heure }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duree">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-duree"
+      >
+        Durée
+      </th>
+      <td mat-cell *matCellDef="let element" class="bn-table-view-duree">
+        {{ element.duree }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="departement">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Département
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.departement }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="code_commune">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Code commune
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.codeCommune }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nom_commune">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Nom commune
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.nomCommune }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lieudit">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Lieu-dit
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.lieudit }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="altitude">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Altitude
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.altitude }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="longitude">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Longitude
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{
+          !!element.customizedLongitude
+            ? element.customizedLongitude
+            : element.longitude
+        }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="latitude">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Latitude
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.latitude }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="temperature">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Température
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.temperature }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="meteos">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Météos
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.meteos }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="classe">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Classe espèce
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.classe }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="code_espece">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Code espèce
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.codeEspece }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nom_francais">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Nom français
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.nomFrancais }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nom_latin">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Nom latin
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.nomLatin }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Nombre
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.nombre }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="estimation_nombre">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Estimation du nombre
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.estimationNombre }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sexe">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Sexe
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.sexe }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="age">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Âge
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.age }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="estimation_distance">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Estimation de la distance
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.estimationDistance }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="distance">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Distance (m)
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.distance }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="regroupement">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Regroupement
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.regroupement }}
+      </td>
+    </ng-container>
+
+    <ng-container *ngFor="let index of COMPORTEMENTS_INDEXES">
+      <ng-container matColumnDef="code_comportement_{{ index }}">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+          Code comportement {{ index }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{
+            element.comportements.length >= index
+              ? element.comportements[index - 1].code
+              : ""
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="libelle_comportement_{{ index }}">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+          Libellé comportement {{ index }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{
+            element.comportements.length >= index
+              ? element.comportements[index - 1].libelle
+              : ""
+          }}
+        </td>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngFor="let index of MILIEUX_INDEXES">
+      <ng-container matColumnDef="code_milieu_{{ index }}">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+          Code milieu {{ index }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{
+            element.milieux.length >= index
+              ? element.milieux[index - 1].code
+              : ""
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="libelle_milieu_{{ index }}">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+          Libellé milieu {{ index }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{
+            element.milieux.length >= index
+              ? element.milieux[index - 1].libelle
+              : ""
+          }}
+        </td>
+      </ng-container>
+    </ng-container>
+
+    <ng-container matColumnDef="commentaire">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Commentaires
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.commentaire }}
+      </td>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[1000, 2500, 5000]"></mat-paginator>
+</div>

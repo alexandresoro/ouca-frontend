@@ -8,6 +8,7 @@ import {
   MatTreeNestedDataSource
 } from "@angular/material";
 import * as _ from "lodash";
+import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SelectDialogData } from "../../components/select-dialog/select-dialog-data.object";
 import { SelectDialogComponent } from "../../components/select-dialog/select-dialog.component";
@@ -156,43 +157,9 @@ export class ViewComponent {
 
   public columns: any;
 
-  public displayedColumns: string[] = [
-    "id",
-    "observateur",
-    "associes",
-    "date",
-    "heure",
-    "duree",
-    "departement",
-    "code_commune",
-    "nom_commune",
-    "lieudit",
-    "altitude",
-    "altitude",
-    "longitude",
-    "latitude",
-    "temperature",
-    "meteos",
-    "classe",
-    "code_espece",
-    "nom_francais",
-    "nom_latin",
-    "nombre",
-    "estimation_nombre",
-    "sexe",
-    "age",
-    "estimation_distance",
-    "distance",
-    "regroupement",
-    "code_comportement_1",
-    "libelle_comportement_1",
-    "commentaire"
-  ];
-  public dataSource: MatTableDataSource<any>;
+  public displayWaitPanel: boolean = false;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  @ViewChild(MatSort) sort: MatSort;
+  public donneesToDisplay: any[] = [];
 
   constructor(
     private backendApiService: BackendApiService,
@@ -213,18 +180,21 @@ export class ViewComponent {
   }
 
   public onSearchButtonClicked(): void {
+    this.displayWaitPanel = true;
     console.log("SELECT", this.selectOptions);
     console.log("WHERE", this.whereOptions);
+
     this.backendApiService.getAllDonnees().subscribe(
       (results: any) => {
-        console.log(results);
-        // this.dataSource = results;
-        this.dataSource = new MatTableDataSource(results);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.displayWaitPanel = false;
+        this.donneesToDisplay = results;
       },
       (error: any) => {
-        console.error(error);
+        PageStatusHelper.setErrorStatus(
+          "Impossible de récupérer les fiches espèces.",
+          error
+        );
+        this.displayWaitPanel = false;
       }
     );
   }
