@@ -71,6 +71,8 @@ export class TableDonneesComponent {
 
   public filteringOnGoing: boolean = false;
 
+  public selectedDonnee: any;
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.donneesToDisplay && !!changes.donneesToDisplay.currentValue) {
       this.dataSource.data = changes.donneesToDisplay.currentValue;
@@ -89,5 +91,13 @@ export class TableDonneesComponent {
       }
     }
     this.filteringOnGoing = false;
+  }
+
+  public onRowClicked(object: any): void {
+    if (!!this.selectedDonnee && this.selectedDonnee.id === object.id) {
+      this.selectedDonnee = undefined;
+    } else {
+      this.selectedDonnee = object;
+    }
   }
 }

@@ -524,3 +524,131 @@ button mat-icon:first-child {
     list-style-type: none;
   }
 }
+
+table.bn-table-view {
+  table-layout: fixed;
+
+  th,
+  td {
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 1px solid mat-color($mat-grey, 500);
+  }
+
+  th.bn-table-view-id,
+  td.bn-table-view-id {
+    padding-left: 5px;
+  }
+
+  th.bn-table-view-id {
+    min-width: 50px;
+  }
+
+  th.bn-table-view-observateur {
+    min-width: 120px;
+  }
+
+  th.bn-table-view-associes {
+    min-width: 150px;
+  }
+
+  th.bn-table-view-date {
+    min-width: 82px;
+  }
+
+  th.bn-table-view-heure,
+  th.bn-table-view-duree {
+    min-width: 55px;
+  }
+
+  th.bn-table-view-departement {
+    min-width: 90px;
+  }
+
+  th.bn-table-view-code-commune {
+    min-width: 75px;
+  }
+
+  th.bn-table-view-nom-commune {
+    min-width: 200px;
+  }
+
+  th.bn-table-view-lieudit {
+    min-width: 200px;
+  }
+
+  th.bn-table-view-altitude,
+  th.bn-table-view-longitude,
+  th.bn-table-view-latitude {
+    min-width: 80px;
+  }
+
+  th.bn-table-view-temperature {
+    min-width: 90px;
+  }
+
+  th.bn-table-view-meteos {
+    min-width: 100px;
+  }
+
+  th.bn-table-view-classe {
+    min-width: 90px;
+  }
+
+  th.bn-table-view-code-espece {
+    min-width: 70px;
+  }
+
+  th.bn-table-view-nom-francais,
+  th.bn-table-view-nom-latin {
+    min-width: 200px;
+  }
+
+  th.bn-table-view-nombre {
+    min-width: 65px;
+  }
+
+  th.bn-table-view-estimation-nombre {
+    min-width: 80px;
+  }
+
+  th.bn-table-view-sexe {
+    min-width: 50px;
+  }
+
+  th.bn-table-view-age {
+    min-width: 50px;
+  }
+
+  th.bn-table-view-estimation-distance {
+    min-width: 80px;
+  }
+
+  th.bn-table-view-distance {
+    min-width: 70px;
+  }
+
+  th.bn-table-view-regroupement {
+    min-width: 100px;
+  }
+
+  th.bn-table-view-code-comportement {
+    min-width: 100px;
+  }
+
+  th.bn-table-view-libelle-comportement {
+    min-width: 200px;
+  }
+
+  th.bn-table-view-code-milieu {
+    min-width: 75px;
+  }
+
+  th.bn-table-view-libelle-milieu {
+    min-width: 200px;
+  }
+
+  th.bn-table-view-commentaire {
+    min-width: 200px;
+  }
+}
