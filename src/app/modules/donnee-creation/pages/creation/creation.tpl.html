@@ -1,4 +1,4 @@
-<h1 class="mat-display-1" style="display: none">Création des données</h1>
+<h1 class="mat-display-1" style="display: none">Saisie des données</h1>
 
 <div class="bn-creation-body">
   <!-- Bar containing the messages -->
@@ -22,7 +22,8 @@
         [disabled]="!isPreviousDonneeBtnDisplayed()"
         (click)="onPreviousDonneeBtnClicked()"
       >
-        Donnée précédente
+        <mat-icon>navigate_before</mat-icon>
+        <span>Donnée précédente</span>
       </button>
 
       <button
@@ -31,7 +32,8 @@
         [disabled]="!isNextDonneeBtnDisplayed()"
         (click)="onNextDonneeBtnClicked()"
       >
-        Donnée suivante
+        <span>Donnée suivante</span>
+        <mat-icon>navigate_next</mat-icon>
       </button>
 
       <button
@@ -39,7 +41,8 @@
         color="primary"
         (click)="onSearchByIdBtnClicked()"
       >
-        Recherche par ID
+        <mat-icon>search</mat-icon>
+        <span>Recherche par ID</span>
       </button>
 
       <button
@@ -48,7 +51,8 @@
         *ngIf="isNewDonneeBtnDisplayed()"
         (click)="onNewDonneeBtnClicked()"
       >
-        Nouvelle donnée
+        <mat-icon>add</mat-icon>
+        <span>Nouvelle donnée</span>
       </button>
     </span>
 
@@ -63,7 +67,8 @@
         [disabled]="!inventaireForm.valid"
         (click)="saveInventaire()"
       >
-        Enregistrer la fiche inventaire
+        <mat-icon>save</mat-icon>
+        <span>Enregistrer la fiche inventaire</span>
       </button>
       <button
         mat-raised-button
@@ -72,7 +77,8 @@
         [disabled]="!donneeForm.valid"
         (click)="saveDonnee()"
       >
-        Enregistrer la fiche espèce
+        <mat-icon>save</mat-icon>
+        <span>Enregistrer la fiche espèce</span>
       </button>
       <button
         *ngIf="isUpdateDonneeBtnDisplayed()"
@@ -80,7 +86,8 @@
         color="primary"
         (click)="saveInventaireAndDonnee()"
       >
-        Mettre à jour les fiches inventaire et espèce
+        <mat-icon>save</mat-icon>
+        <span>Mettre à jour les fiches inventaire et espèce</span>
       </button>
       <button
         mat-raised-button
@@ -88,7 +95,8 @@
         *ngIf="isDeleteDonneeBtnDisplayed()"
         (click)="onDeleteDonneeBtnClicked()"
       >
-        Supprimer la donnée
+        <mat-icon>delete</mat-icon>
+        <span>Supprimer la donnée</span>
       </button>
     </span>
   </div>
@@ -330,7 +338,8 @@
         [disabled]="!inventaireForm.valid"
         (click)="saveInventaire()"
       >
-        Enregistrer la fiche inventaire
+        <mat-icon>save</mat-icon>
+        <span>Enregistrer la fiche inventaire</span>
       </button>
       <button
         mat-raised-button
@@ -339,7 +348,8 @@
         [disabled]="!donneeForm.valid"
         (click)="saveDonnee()"
       >
-        Enregistrer la fiche espèce
+        <mat-icon>save</mat-icon>
+        <span>Enregistrer la fiche espèce</span>
       </button>
       <button
         mat-raised-button
@@ -347,7 +357,8 @@
         *ngIf="isUpdateDonneeBtnDisplayed()"
         (click)="saveInventaireAndDonnee()"
       >
-        Mettre à jour les fiches inventaire et espèce
+        <mat-icon>save</mat-icon>
+        <span>Mettre à jour les fiches inventaire et espèce</span>
       </button>
       <button
         mat-raised-button
@@ -355,7 +366,8 @@
         *ngIf="isDeleteDonneeBtnDisplayed()"
         (click)="onDeleteDonneeBtnClicked()"
       >
-        Supprimer la donnée
+        <mat-icon>delete</mat-icon>
+        <span>Supprimer la donnée</span>
       </button>
     </span>
   </div>
