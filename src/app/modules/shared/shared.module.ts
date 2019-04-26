@@ -37,6 +37,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { BnSelectComponent } from "./components/entite-select/bn-select.component";
+import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
 import { BackendApiService } from "./services/backend-api.service";
 
 @NgModule({
@@ -71,9 +72,13 @@ import { BackendApiService } from "./services/backend-api.service";
   declarations: [
     ConfirmationDialogComponent,
     AutocompleteComponent,
-    BnSelectComponent
+    BnSelectComponent,
+    MultipleOptionsDialogComponent
   ],
-  entryComponents: [ConfirmationDialogComponent],
+  entryComponents: [
+    ConfirmationDialogComponent,
+    MultipleOptionsDialogComponent
+  ],
   exports: [
     ConfirmationDialogComponent,
     CommonModule,
@@ -103,7 +108,8 @@ import { BackendApiService } from "./services/backend-api.service";
     MatDialogModule,
     MatFormFieldModule,
     MatAutocompleteModule,
-    MatTreeModule
+    MatTreeModule,
+    MultipleOptionsDialogComponent
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
