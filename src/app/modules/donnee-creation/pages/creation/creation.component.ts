@@ -13,6 +13,8 @@ import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { Subject } from "rxjs";
 import { ConfirmationDialogData } from "../../../shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../../shared/components/confirmation-dialog/confirmation-dialog.component";
+import { MultipleOptionsDialogData } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog-data.object";
+import { MultipleOptionsDialogComponent } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog.component";
 import { PageComponent } from "../../../shared/components/page.component";
 import {
   PageStatus,
@@ -293,25 +295,30 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
   }
 
-  // TODO create a dialog with also a cancel option
   private displayInventaireDialog(): void {
-    const updateInventaireDialogData = new ConfirmationDialogData(
+    const updateInventaireDialogData = new MultipleOptionsDialogData(
       "Confirmation de mise-à-jour",
       "Voulez-vous mettre à jour la fiche inventaire pour cette fiche espèce " +
         "seulement ou pour toutes les fiches espèces avec cette fiche inventaire ?",
-      "Pour toutes les fiches espèces de cette fiche inventaire",
-      "Pour cette fiche espèce seulement"
+      [
+        {
+          value: 1,
+          label: "Pour toutes les fiches espèces de cette fiche inventaire"
+        },
+        { value: 2, label: "Pour cette fiche espèce seulement" },
+        { value: 3, label: "Annuler" }
+      ]
     );
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: "700px",
+    const dialogRef = this.dialog.open(MultipleOptionsDialogComponent, {
+      width: "800px",
       data: updateInventaireDialogData
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (!!result) {
+      if (result === 1) {
         // We just update the existing inventaire
         this.updateInventaireAndDonnee(false);
-      } else {
+      } else if (result === 2) {
         // We create a new inventaire for this donnee
         this.updateInventaireAndDonnee(true);
       }
