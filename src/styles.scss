@@ -94,15 +94,15 @@ mat-toolbar.base-naturaliste-header {
   flex: 1 1 auto;
 }
 
-.lco-creation-body {
-  div.lco-creation-messages {
+.bn-creation-body {
+  div.bn-creation-messages {
     display: block;
     height: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
   }
 
-  div.lco-creation-buttons {
+  div.bn-creation-buttons {
     .top-left-creation-buttons {
       button {
         margin-right: 10px;
@@ -116,7 +116,7 @@ mat-toolbar.base-naturaliste-header {
     }
   }
 
-  .lco-creation-form {
+  .bn-creation-form {
     background-color: mat-color($mat-grey, 300);
     padding-left: 50px;
     padding-right: 50px;
@@ -139,7 +139,7 @@ mat-toolbar.base-naturaliste-header {
       }
     }
 
-    .lco-creation-date {
+    .bn-creation-date {
       display: flex;
       flex-wrap: wrap;
 
@@ -152,12 +152,12 @@ mat-toolbar.base-naturaliste-header {
       }
     }
 
-    .lco-creation-date > *:not(:last-child) {
+    .bn-creation-date > *:not(:last-child) {
       margin-right: $standardColumnGap;
     }
 
     .commune-container,
-    .lco-creation-meteo {
+    .bn-creation-meteo {
       display: flex;
       .code-commune,
       .temperature-container {
@@ -182,7 +182,7 @@ mat-toolbar.base-naturaliste-header {
       }
     }
 
-    .lco-creation-quoi {
+    .bn-creation-quoi {
       display: flex;
       flex-wrap: wrap;
 
@@ -240,7 +240,7 @@ mat-toolbar.base-naturaliste-header {
   }
 }
 
-div.lco-creation-buttons {
+div.bn-creation-buttons {
   display: flex;
   flex: 0 0 auto;
   padding-left: 50px;
@@ -281,7 +281,7 @@ div.lco-creation-buttons {
     height: 30px;
   }
 
-  .lco-creation-body .mat-raised-button {
+  .bn-creation-body .mat-raised-button {
     line-height: 30px;
     height: 30px;
   }
@@ -346,7 +346,7 @@ button mat-icon:first-child {
 }
 
 .base-naturaliste {
-  .lco-entity-page,
+  .bn-entity-page,
   .configuration-container,
   .import-page-container {
     padding-right: 50px;
@@ -381,12 +381,12 @@ button mat-icon:first-child {
     }
   }
 
-  .lco-creation-messages {
+  .bn-creation-messages {
     padding-right: 50px;
     padding-left: 50px;
   }
 
-  .lco-entity-page {
+  .bn-entity-page {
     .entite-simple-details {
       margin-top: 10px;
     }

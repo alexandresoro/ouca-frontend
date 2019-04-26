@@ -36,7 +36,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
-import { LcoEntiteSelectComponent } from "./components/entite-select/lco-entite-select.component";
+import { BnSelectComponent } from "./components/entite-select/bn-select.component";
 import { BackendApiService } from "./services/backend-api.service";
 
 @NgModule({
@@ -71,7 +71,7 @@ import { BackendApiService } from "./services/backend-api.service";
   declarations: [
     ConfirmationDialogComponent,
     AutocompleteComponent,
-    LcoEntiteSelectComponent
+    BnSelectComponent
   ],
   entryComponents: [ConfirmationDialogComponent],
   exports: [
@@ -84,7 +84,7 @@ import { BackendApiService } from "./services/backend-api.service";
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AutocompleteComponent,
-    LcoEntiteSelectComponent,
+    BnSelectComponent,
     MatButtonModule,
     MatMenuModule,
     MatToolbarModule,

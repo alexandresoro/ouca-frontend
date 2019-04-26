@@ -1,8 +1,8 @@
 <h1 class="mat-display-1" style="display: none">Création des données</h1>
 
-<div class="lco-creation-body">
+<div class="bn-creation-body">
   <!-- Bar containing the messages -->
-  <div class="lco-creation-messages">
+  <div class="bn-creation-messages">
     <div [ngSwitch]="getPageStatus()">
       <div *ngSwitchCase="pageStatusEnum.ERROR">{{ getMessage() }}</div>
       <div *ngSwitchCase="pageStatusEnum.SUCCESS">{{ getMessage() }}</div>
@@ -13,7 +13,7 @@
   </div>
 
   <!-- Bar containing the top buttons -->
-  <div class="lco-creation-buttons">
+  <div class="bn-creation-buttons">
     <!-- Top left buttons -->
     <span class="top-left-creation-buttons">
       <button
@@ -94,7 +94,7 @@
   </div>
 
   <!-- FORM TO CREATE DONNEES -->
-  <div class="lco-creation-form">
+  <div class="bn-creation-form">
     <div>
       <div class="creation-inventaire-titre flex-container">
         <h2>
@@ -144,7 +144,7 @@
           <!-- END CARD OBSERVATEUR + ASSOCIES -->
 
           <!-- CARD DATE + HEURE + DUREE -->
-          <mat-card class="mat-card-override lco-creation-date">
+          <mat-card class="mat-card-override bn-creation-date">
             <!-- DATE -->
             <input-date
               [control]="inventaireForm.controls['date']"
@@ -181,7 +181,7 @@
 
           <!-- CARD TEMPERATURE + METEO -->
           <mat-card
-            class="mat-card-override lco-creation-meteo"
+            class="mat-card-override bn-creation-meteo"
             *ngIf="pageModel.isMeteoDisplayed"
           >
             <!-- TEMPERATURE -->
@@ -215,7 +215,7 @@
       <div class="espece-form">
         <form [formGroup]="donneeForm">
           <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
-          <mat-card class="mat-card-override lco-creation-quoi">
+          <mat-card class="mat-card-override bn-creation-quoi">
             <input-espece
               formGroupName="especeGroup"
               [controlGroup]="donneeForm.controls['especeGroup']"
@@ -320,7 +320,7 @@
   </div>
 
   <!-- BAR BOTTOM BUTTOM -->
-  <div class="lco-creation-buttons">
+  <div class="bn-creation-buttons">
     <span class="flex-spacer"></span>
     <span class="top-right-creation-buttons">
       <button

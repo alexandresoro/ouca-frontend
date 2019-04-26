@@ -4,143 +4,178 @@
   </mat-card-title>
 
   <mat-card-content>
-    <form (ngSubmit)="save()"
+    <form
+      (ngSubmit)="save()"
       #entiteSimpleForm="ngForm"
-      class="configuration-form">
-
+      class="configuration-form"
+    >
       <!-- Nom du logiciel -->
       <mat-form-field>
-        <input matInput
+        <input
+          matInput
           type="text"
           placeholder="Nom de l'application"
           id="input-nom"
           name="input-nom"
-          [(ngModel)]="model.applicationName">
+          [(ngModel)]="model.applicationName"
+        />
       </mat-form-field>
 
       <!-- Observateur par défaut -->
-      <lco-entite-select [id]="'input-observateur'"
+      <bn-select
+        [id]="'input-observateur'"
         [placeholder]="'Observateur par défaut'"
         [fieldForDisplay]="'libelle'"
         [options]="observateurs"
-        [(model)]="model.defaultObservateur">
-      </lco-entite-select>
+        [(model)]="model.defaultObservateur"
+      >
+      </bn-select>
 
       <!-- Département par défaut -->
-      <lco-entite-select [id]="'input-departement'"
+      <bn-select
+        [id]="'input-departement'"
         [placeholder]="'Département par défaut'"
         [fieldForDisplay]="'code'"
         [options]="departements"
-        [(model)]="model.defaultDepartement">
-      </lco-entite-select>
+        [(model)]="model.defaultDepartement"
+      >
+      </bn-select>
 
       <!-- Estimation nombre par défaut -->
-      <lco-entite-select [id]="'input-estimation-nombre'"
+      <bn-select
+        [id]="'input-estimation-nombre'"
         [placeholder]="'Estimation du nombre par défaut'"
         [fieldForDisplay]="'libelle'"
         [options]="estimationsNombre"
-        [(model)]="model.defaultEstimationNombre">
-      </lco-entite-select>
+        [(model)]="model.defaultEstimationNombre"
+      >
+      </bn-select>
 
       <!-- Nombre par défaut -->
       <mat-form-field>
-        <input matInput
+        <input
+          matInput
           type="number"
           min="1"
           placeholder="Nombre par défaut"
           id="input-nombre"
           name="input-nombre"
-          [(ngModel)]="model.defaultNombre">
+          [(ngModel)]="model.defaultNombre"
+        />
       </mat-form-field>
 
       <!-- Sexe par défaut -->
-      <lco-entite-select [id]="'input-sexe'"
+      <bn-select
+        [id]="'input-sexe'"
         [placeholder]="'Sexe par défaut'"
         [fieldForDisplay]="'libelle'"
         [options]="sexes"
-        [(model)]="model.defaultSexe">
-      </lco-entite-select>
+        [(model)]="model.defaultSexe"
+      >
+      </bn-select>
 
       <!-- Age par défaut -->
-      <lco-entite-select [id]="'input-age'"
+      <bn-select
+        [id]="'input-age'"
         [placeholder]="'Âge par défaut'"
         [fieldForDisplay]="'libelle'"
         [options]="ages"
-        [(model)]="model.defaultAge">
-      </lco-entite-select>
+        [(model)]="model.defaultAge"
+      >
+      </bn-select>
 
       <!-- Afficher les observateurs associés -->
-      <mat-checkbox id="input-associes"
+      <mat-checkbox
+        id="input-associes"
         name="input-associes"
-        [(ngModel)]="model.areAssociesDisplayed">Afficher les observateurs associés</mat-checkbox>
+        [(ngModel)]="model.areAssociesDisplayed"
+        >Afficher les observateurs associés</mat-checkbox
+      >
 
       <!-- Afficher la meteo -->
-      <mat-checkbox id="input-meteo"
+      <mat-checkbox
+        id="input-meteo"
         name="input-meteo"
-        [(ngModel)]="model.isMeteoDisplayed">Afficher la météo</mat-checkbox>
+        [(ngModel)]="model.isMeteoDisplayed"
+        >Afficher la météo</mat-checkbox
+      >
 
       <!-- Afficher la distance -->
-      <mat-checkbox id="input-distance"
+      <mat-checkbox
+        id="input-distance"
         name="input-distance"
-        [(ngModel)]="model.isDistanceDisplayed">Afficher la distance</mat-checkbox>
+        [(ngModel)]="model.isDistanceDisplayed"
+        >Afficher la distance</mat-checkbox
+      >
 
       <!-- Afficher le regroupement -->
-      <mat-checkbox id="input-regroupement"
+      <mat-checkbox
+        id="input-regroupement"
         name="input-regroupement"
-        [(ngModel)]="model.isRegroupementDisplayed">Afficher le numéro de regroupement</mat-checkbox>
+        [(ngModel)]="model.isRegroupementDisplayed"
+        >Afficher le numéro de regroupement</mat-checkbox
+      >
 
       <!-- Path to mysql -->
       <mat-form-field>
-        <input matInput
+        <input
+          matInput
           type="text"
           placeholder="Chemin vers MySQL"
           id="input-mysql"
           name="input-mysql"
-          [(ngModel)]="model.mySqlPath">
+          [(ngModel)]="model.mySqlPath"
+        />
       </mat-form-field>
 
       <!-- Path to mysqldump -->
       <mat-form-field>
-        <input matInput
+        <input
+          matInput
           type="text"
           placeholder="Chemin vers MySQL dump"
           id="input-mysqldump"
           name="input-mysqldump"
-          [(ngModel)]="model.mySqlDumpPath">
+          [(ngModel)]="model.mySqlDumpPath"
+        />
       </mat-form-field>
 
       <!-- Path to import folder -->
       <mat-form-field>
-        <input matInput
+        <input
+          matInput
           type="text"
           placeholder="Chemin vers le dossier d'import"
           id="input-import-path"
           name="input-import-path"
-          [(ngModel)]="model.importFolderPath">
+          [(ngModel)]="model.importFolderPath"
+        />
       </mat-form-field>
 
       <!-- Path to export folder -->
       <mat-form-field>
-        <input matInput
+        <input
+          matInput
           type="text"
           placeholder="Chemin vers le dossier d'export"
           id="input-export-path"
           name="input-export-path"
-          [(ngModel)]="model.exportFolderPath">
+          [(ngModel)]="model.exportFolderPath"
+        />
       </mat-form-field>
 
       <div class="cancel-submit-buttons">
-        <button mat-raised-button
-          color="accent"
-          (click)="cancel()">
+        <button mat-raised-button color="accent" (click)="cancel()">
           <mat-icon>block</mat-icon>
           <span>Annuler</span>
         </button>
         <span class="button-spacer"></span>
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="!entiteSimpleForm.form.valid">
+          [disabled]="!entiteSimpleForm.form.valid"
+        >
           <mat-icon>save</mat-icon>
           <span>Enregistrer</span>
         </button>

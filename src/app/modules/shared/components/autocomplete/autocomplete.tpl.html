@@ -1,5 +1,5 @@
-<span class="lco-autocomplete-container">
-  <mat-form-field class="lco-autocomplete-form-field">
+<span class="bn-autocomplete-container">
+  <mat-form-field class="bn-autocomplete-form-field">
     <input
       type="text"
       matInput
@@ -15,10 +15,7 @@
       [displayWith]="displayFn"
       (optionSelected)="updateValue($event)"
     >
-      <mat-option
-        *ngFor="let value of (filteredValues | async)"
-        [value]="value"
-      >
+      <mat-option *ngFor="let value of filteredValues | async" [value]="value">
         {{ getDisplayedValue(value) }}
       </mat-option>
     </mat-autocomplete>

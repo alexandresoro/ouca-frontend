@@ -2,10 +2,10 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 
 @Component({
-  selector: "lco-entite-select",
-  templateUrl: "./lco-entite-select.tpl.html"
+  selector: "bn-select",
+  templateUrl: "./bn-select.tpl.html"
 })
-export class LcoEntiteSelectComponent {
+export class BnSelectComponent {
   @Input() public id: string;
 
   @Input() public placeholder: string;
