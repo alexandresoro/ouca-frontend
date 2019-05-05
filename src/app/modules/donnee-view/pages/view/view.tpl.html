@@ -3,7 +3,15 @@
     <h1>Consultation des données</h1>
   </div>
 
-  <div *ngIf="displayWaitPanel">Veuillez patienter...</div>
+  <div *ngIf="displayWaitPanel" style="text-align: center">
+    <img
+      src="../../../../../assets/img/birds.svg"
+      alt="Oiseaux"
+      height="870px"
+      width="870px"
+    />
+    <div>Veuillez patienter...</div>
+  </div>
 
   <div *ngIf="!displayWaitPanel">
     <button mat-raised-button color="primary" (click)="onSearchButtonClicked()">
