@@ -234,4 +234,8 @@ export class NavigationService {
   public hasNextDonnee(): boolean {
     return !!this.nextDonnee;
   }
+
+  public getCurrentDonneeIndex(): number {
+    return this.currentDonneeIndex;
+  }
 }

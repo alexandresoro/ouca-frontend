@@ -2,19 +2,14 @@
 <mat-form-field class="regroupement-container">
   <input
     matInput
-    placeholder="Regroupement"
+    placeholder="N° de regroupement"
     id="input-regroupement"
     name="regroupement"
     type="number"
     min="1"
     [formControl]="control"
   />
-  <button
-    matSuffix
-    mat-icon-button
-    [disabled]="isDonneeDisabled"
-    (click)="displayNextRegroupement()"
-  >
+  <button matSuffix mat-icon-button (click)="displayNextRegroupement()">
     <mat-icon>add_box</mat-icon>
   </button>
 </mat-form-field>

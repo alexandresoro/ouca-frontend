@@ -1,4 +1,4 @@
-<h1 class="mat-display-1" style="display: none">Saisie des données</h1>
+<h1 class="mat-display-1" style="display: none">Saisie des observations</h1>
 
 <div class="bn-creation-body">
   <!-- Bar containing the messages -->
@@ -213,8 +213,8 @@
     <div>
       <h2>
         Fiche espèce
-        <span *ngIf="navigationService.currentDonneeIndex"
-          >n°{{ navigationService.currentDonneeIndex }} (ID={{
+        <span *ngIf="getCurrentDonneeIndex()"
+          >n°{{ getCurrentDonneeIndex() }} (ID={{
             getDisplayedDonneeId()
           }})</span
         >

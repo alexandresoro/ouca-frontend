@@ -642,6 +642,10 @@ export class CreationComponent extends PageComponent implements OnInit {
     return DonneeHelper.getDisplayedDonneeId();
   }
 
+  public getCurrentDonneeIndex(): number {
+    return this.navigationService.getCurrentDonneeIndex();
+  }
+
   public getPageStatus(): PageStatus {
     return PageStatusHelper.getStatus();
   }
