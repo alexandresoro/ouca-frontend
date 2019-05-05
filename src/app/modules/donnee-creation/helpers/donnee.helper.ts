@@ -1,4 +1,9 @@
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import { Age } from "basenaturaliste-model/age.object";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Comportement } from "basenaturaliste-model/comportement.object";
@@ -10,6 +15,7 @@ import { EstimationDistance } from "basenaturaliste-model/estimation-distance.ob
 import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { Milieu } from "basenaturaliste-model/milieu.object";
 import { Sexe } from "basenaturaliste-model/sexe.object";
+import { FormValidatorHelper } from "../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../shared/helpers/list-helper";
 import { InventaireHelper } from "./inventaire.helper";
 
@@ -29,35 +35,46 @@ export class DonneeHelper {
 
     return new FormGroup({
       especeGroup: new FormGroup({
-        classe: new FormControl(""),
-        espece: new FormControl("", Validators.required)
+        classe: new FormControl("", [this.classeValidator()]),
+        espece: new FormControl("", [
+          Validators.required,
+          this.especeValidator()
+        ])
       }),
       nombreGroup: new FormGroup({
-        nombre: new FormControl("", Validators.required),
-        estimationNombre: new FormControl("", Validators.required)
+        nombre: new FormControl("", [
+          Validators.required,
+          this.nombreValidator()
+        ]),
+        estimationNombre: new FormControl("", [
+          Validators.required,
+          this.estimationNombreValidator()
+        ])
       }),
-      sexe: new FormControl("", Validators.required),
-      age: new FormControl("", Validators.required),
+      sexe: new FormControl("", [Validators.required, this.sexeValidator()]),
+      age: new FormControl("", [Validators.required, this.ageValidator()]),
       distanceGroup: new FormGroup({
-        distance: new FormControl(""),
-        estimationDistance: new FormControl("")
+        distance: new FormControl("", [this.distanceValidator()]),
+        estimationDistance: new FormControl("", [
+          this.estimationDistanceValidator()
+        ])
       }),
-      regroupement: new FormControl(""),
+      regroupement: new FormControl("", [this.regroupementValidator()]),
       comportementsGroup: new FormGroup({
-        comportement1: new FormControl(""),
-        comportement2: new FormControl(""),
-        comportement3: new FormControl(""),
-        comportement4: new FormControl(""),
-        comportement5: new FormControl(""),
-        comportement6: new FormControl("")
+        comportement1: new FormControl("", [this.comportementValidator()]),
+        comportement2: new FormControl("", [this.comportementValidator()]),
+        comportement3: new FormControl("", [this.comportementValidator()]),
+        comportement4: new FormControl("", [this.comportementValidator()]),
+        comportement5: new FormControl("", [this.comportementValidator()]),
+        comportement6: new FormControl("", [this.comportementValidator()])
       }),
       milieuxGroup: new FormGroup({
-        milieu1: new FormControl(""),
-        milieu2: new FormControl(""),
-        milieu3: new FormControl(""),
-        milieu4: new FormControl("")
+        milieu1: new FormControl("", [this.milieuValidator()]),
+        milieu2: new FormControl("", [this.milieuValidator()]),
+        milieu3: new FormControl("", [this.milieuValidator()]),
+        milieu4: new FormControl("", [this.milieuValidator()])
       }),
-      commentaire: new FormControl("")
+      commentaire: new FormControl("", [this.commentaireValidator()])
     });
   }
 
@@ -439,5 +456,53 @@ export class DonneeHelper {
     if (!!milieu && !!milieu.id) {
       this.addId(milieuxIds, milieu.id);
     }
+  }
+
+  private static classeValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static especeValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static nombreValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnIntegerValidator(true, true);
+  }
+
+  private static estimationNombreValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static sexeValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static ageValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static distanceValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnIntegerValidator(true);
+  }
+
+  private static estimationDistanceValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static regroupementValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static comportementValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static milieuValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnExistingEntityValidator();
+  }
+
+  private static commentaireValidator(): ValidatorFn {
+    return FormValidatorHelper.emptyValidator();
   }
 }
