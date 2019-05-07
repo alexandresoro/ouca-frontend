@@ -42,7 +42,7 @@ export class InputMilieuxComponent {
     }
   }
 
-  private displayMilieuFormat = (milieu: Milieu): string => {
+  public displayMilieuFormat = (milieu: Milieu): string => {
     return !!milieu ? milieu.code + " - " + milieu.libelle : null;
   }
 }

@@ -44,11 +44,11 @@ export class ImportComponent extends PageComponent {
       }
     );
   }
-  private displayWaitPanel(): void {
+  public displayWaitPanel(): void {
     this.isWaitPanelDisplayed = true;
   }
 
-  private hideWaitPanel(): void {
+  public hideWaitPanel(): void {
     this.isWaitPanelDisplayed = false;
   }
 }

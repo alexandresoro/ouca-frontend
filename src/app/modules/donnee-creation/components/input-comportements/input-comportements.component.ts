@@ -44,7 +44,7 @@ export class InputComportementsComponent {
     }
   }
 
-  private displayComportementFormat = (comportement: Comportement): string => {
+  public displayComportementFormat = (comportement: Comportement): string => {
     return !!comportement
       ? comportement.code + " - " + comportement.libelle
       : null;

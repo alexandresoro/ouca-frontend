@@ -22,7 +22,7 @@ export class InputObservateurComponent {
     }
   ];
 
-  private displayObservateurFormat = (observateur: Observateur): string => {
+  public displayObservateurFormat = (observateur: Observateur): string => {
     return !!observateur ? observateur.libelle : null;
   }
 }

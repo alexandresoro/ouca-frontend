@@ -37,7 +37,7 @@ export class InputNombreComponent {
     }
   }
 
-  private displayEstimationNombreFormat = (
+  public displayEstimationNombreFormat = (
     estimation: EstimationNombre
   ): string => {
     return !!estimation ? estimation.libelle : null;
