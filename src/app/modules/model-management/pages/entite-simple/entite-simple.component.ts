@@ -39,8 +39,10 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
     this.getAll();
   }
 
-  public getAll(): void {
-    PageStatusHelper.resetPageStatus();
+  public getAll(withoutResetPageStatus?: boolean): void {
+    if (!withoutResetPageStatus) {
+      PageStatusHelper.resetPageStatus();
+    }
     this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
       (result: T[]) => {
         this.objects = result;
@@ -84,10 +86,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
               "L'entité a été supprimée avec succès"
             );
 
-            const index = this.objects.indexOf(this.objectToRemove);
-            if (index > -1) {
-              this.objects.splice(index, 1);
-            }
+            this.getAll(true);
             this.switchToViewAllMode();
           },
           (error: Response) => {
@@ -115,19 +114,16 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
     this.switchToViewAllMode();
   }
 
-  public saveObject(): void {
+  public saveObject(objectToSave: T): void {
     this.backendApiService
-      .saveEntity(this.getEntityName(), this.objectToSave, this.isEditionMode())
+      .saveEntity(this.getEntityName(), objectToSave, this.isEditionMode())
       .subscribe(
         (result: DbUpdateResult) => {
           PageStatusHelper.setSuccessStatus(
             "L'entité a été sauvegardée avec succès"
           );
 
-          if (this.isCreationMode()) {
-            // Add the new entity in the list
-            this.objects[this.objects.length] = this.objectToSave;
-          }
+          this.getAll(true);
           this.switchToViewAllMode();
         },
         (error: Response) => {
