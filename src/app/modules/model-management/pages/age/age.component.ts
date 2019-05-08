@@ -10,6 +10,10 @@ export class AgeComponent extends EntiteAvecLibelleComponent<Age> {
     return "age";
   }
 
+  public getAnEntityLabel(): string {
+    return "un âge";
+  }
+
   public getNewObject(): Age {
     return {} as Age;
   }

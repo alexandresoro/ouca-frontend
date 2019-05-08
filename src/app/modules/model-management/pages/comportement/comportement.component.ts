@@ -11,6 +11,10 @@ export class ComportementComponent extends EntiteAvecLibelleEtCodeComponent<
     return "comportement";
   }
 
+  public getAnEntityLabel(): string {
+    return "un comportement";
+  }
+
   getNewObject(): Comportement {
     return {} as Comportement;
   }

@@ -11,6 +11,10 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
     return "classe";
   }
 
+  public getAnEntityLabel(): string {
+    return "une classe";
+  }
+
   public getNewObject(): Classe {
     return {} as Classe;
   }

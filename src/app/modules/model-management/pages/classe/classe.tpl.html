@@ -3,7 +3,7 @@
     title="Classes"
     createButtonLibelle="Créer une classe"
     exportButtonLibelle="Exporter les classes"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,25 +12,28 @@
   <entity-messages></entity-messages>
 
   <classe-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)"
   ></classe-table>
 
-  <entite-avec-libelle-form
-    *ngIf="isCreationMode() || isEditionMode()"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
+    creationTitle="Création d'une classe espèce"
+    editionTitle="Édition d'une classe espèce"
+    [entityForm]="form"
     [object]="objectToSave"
-    [mode]="mode"
-    creationTitle="Création d'une classe"
-    editionTitle="Édition d'une classe"
-    (confirm)="saveObject()"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  ></entite-avec-libelle-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la classe ?"
     details="Toutes les espèces ({{
       currentObject.nbEspeces
@@ -44,10 +47,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de la classe"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

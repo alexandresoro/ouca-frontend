@@ -10,6 +10,10 @@ export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
     return "milieu";
   }
 
+  public getAnEntityLabel(): string {
+    return "un milieu";
+  }
+
   getNewObject(): Milieu {
     return {} as Milieu;
   }

@@ -3,7 +3,7 @@
     title="Communes"
     createButtonLibelle="Créer une commune"
     exportButtonLibelle="Exporter les communes"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,7 +12,7 @@
   <entity-messages></entity-messages>
 
   <commune-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
@@ -20,17 +20,21 @@
   >
   </commune-table>
 
-  <commune-form
-    *ngIf="isCreationMode() || isEditionMode()"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
+    creationTitle="Création d'une commune"
+    editionTitle="Édition d'une commune"
+    [entityForm]="form"
     [object]="objectToSave"
-    [mode]="mode"
-    (confirm)="saveObject()"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  >
-  </commune-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la commune ?"
     details="Tous les lieux-dits ({{
       currentObject.nbLieuxdits
@@ -44,10 +48,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de la commune"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

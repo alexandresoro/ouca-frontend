@@ -1,18 +1,22 @@
 import { Component } from "@angular/core";
 import { Observateur } from "basenaturaliste-model/observateur.object";
+import { EntiteAvecLibelleFormComponent } from "../../components/form/entite-avec-libelle-form/entite-avec-libelle-form.component";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
-
 @Component({
   templateUrl: "./observateur.tpl.html"
 })
 export class ObservateurComponent extends EntiteAvecLibelleComponent<
   Observateur
 > {
-  getEntityName(): string {
+  public getEntityName(): string {
     return "observateur";
   }
 
-  getNewObject(): Observateur {
+  public getAnEntityLabel(): string {
+    return "un observateur";
+  }
+
+  public getNewObject(): Observateur {
     return {} as Observateur;
   }
 }

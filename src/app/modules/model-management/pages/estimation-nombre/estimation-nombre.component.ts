@@ -13,6 +13,10 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
     return "estimation-nombre";
   }
 
+  public getAnEntityLabel(): string {
+    return "une estimation du nombre";
+  }
+
   getNewObject(): EstimationNombre {
     return {} as EstimationNombre;
   }

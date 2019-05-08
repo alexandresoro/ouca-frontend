@@ -3,7 +3,7 @@
     title="Météos"
     createButtonLibelle="Créer une météo"
     exportButtonLibelle="Exporter les météos"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,7 +12,7 @@
   <entity-messages></entity-messages>
 
   <meteo-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
@@ -20,19 +20,21 @@
   >
   </meteo-table>
 
-  <entite-avec-libelle-form
-    *ngIf="isCreationMode() || isEditionMode()"
-    [object]="objectToSave"
-    [mode]="mode"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
     creationTitle="Création d'une météo"
     editionTitle="Édition d'une météo"
-    (confirm)="saveObject()"
+    [entityForm]="form"
+    [object]="objectToSave"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  >
-  </entite-avec-libelle-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer la météo ?"
     details="{{ currentObject.nbDonnees }} données ont cette météo."
     cancellationLabel="Non, annuler la suppression"
@@ -42,10 +44,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de la météo"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

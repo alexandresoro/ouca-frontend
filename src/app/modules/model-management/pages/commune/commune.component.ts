@@ -1,14 +1,21 @@
 import { Component } from "@angular/core";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
+import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
   templateUrl: "./commune.tpl.html"
 })
 export class CommuneComponent extends EntiteSimpleComponent<Commune> {
+  public formComponentType = CommuneFormComponent;
+
   getEntityName(): string {
     return "commune";
+  }
+
+  public getAnEntityLabel(): string {
+    return "une commune";
   }
 
   getNewObject(): Commune {

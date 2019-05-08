@@ -3,7 +3,7 @@
     title="Lieux-dits"
     createButtonLibelle="Créer un lieu-dit"
     exportButtonLibelle="Exporter les lieux-dits"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -13,7 +13,7 @@
   <entity-messages></entity-messages>
 
   <lieudit-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
@@ -21,17 +21,21 @@
   >
   </lieudit-table>
 
-  <lieudit-form
-    *ngIf="isCreationMode() || isEditionMode()"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
+    creationTitle="Création d'un lieu-dit"
+    editionTitle="Édition d'un lieu-dit"
+    [entityForm]="form"
     [object]="objectToSave"
-    [mode]="mode"
-    (confirm)="saveObject()"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  >
-  </lieudit-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le lieu-dit ?"
     details="Toutes les données ({{
       currentObject.nbDonnees
@@ -43,10 +47,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails du lieud-dit"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

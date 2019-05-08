@@ -3,7 +3,7 @@
     title="Sexes"
     createButtonLibelle="Créer un sexe"
     exportButtonLibelle="Exporter les sexes"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,7 +12,7 @@
   <entity-messages></entity-messages>
 
   <sexe-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
@@ -20,19 +20,21 @@
   >
   </sexe-table>
 
-  <entite-avec-libelle-form
-    *ngIf="isCreationMode() || isEditionMode()"
-    [object]="objectToSave"
-    [mode]="mode"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
     creationTitle="Création d'un sexe"
     editionTitle="Édition d'un sexe"
-    (confirm)="saveObject()"
+    [entityForm]="form"
+    [object]="objectToSave"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  >
-  </entite-avec-libelle-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le sexe ?"
     details="Toutes les données ({{
       currentObject.nbDonnees
@@ -44,10 +46,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails du sexe"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

@@ -12,6 +12,10 @@ export class EstimationDistanceComponent extends EntiteAvecLibelleComponent<
     return "estimation-distance";
   }
 
+  public getAnEntityLabel(): string {
+    return "une estimation de la distance";
+  }
+
   getNewObject(): EstimationDistance {
     return {} as EstimationDistance;
   }

@@ -1,18 +1,18 @@
 import { Component, OnInit } from "@angular/core";
+import { FormGroup } from "@angular/forms";
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { EntiteComponent } from "../entite.component";
-import { GestionMode } from "../gestion-mode.enum";
-import { GestionModeHelper } from "../gestion-mode.enum";
+import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
+import { EntityModeHelper } from "../../helpers/entity-mode.helper";
 
 @Component({
   template: ""
 })
-export class EntiteSimpleComponent<T extends EntiteSimple>
-  extends EntiteComponent
-  implements OnInit {
+export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
+  public formComponentType = EntitySubFormComponent;
+
   public objects: T[];
 
   public currentObject: T;
@@ -23,14 +23,11 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
 
   public objectToRemove: T;
 
-  public mode: GestionMode;
+  public form: FormGroup;
 
-  constructor(
-    private backendApiService: BackendApiService,
-    modeHelper: GestionModeHelper
-  ) {
-    super(modeHelper);
-  }
+  public entityModeHelper = EntityModeHelper;
+
+  constructor(private backendApiService: BackendApiService) {}
 
   public ngOnInit(): void {
     this.switchToViewAllMode();
@@ -58,6 +55,10 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
 
   public getEntityName(): string {
     return "";
+  }
+
+  public getAnEntityLabel(): string {
+    return "une entité";
   }
 
   public getNewObject(): T {
@@ -116,7 +117,11 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
 
   public saveObject(objectToSave: T): void {
     this.backendApiService
-      .saveEntity(this.getEntityName(), objectToSave, this.isEditionMode())
+      .saveEntity(
+        this.getEntityName(),
+        objectToSave,
+        EntityModeHelper.isEditionMode()
+      )
       .subscribe(
         (result: DbUpdateResult) => {
           PageStatusHelper.setSuccessStatus(
@@ -145,33 +150,33 @@ export class EntiteSimpleComponent<T extends EntiteSimple>
     PageStatusHelper.resetPageStatus();
     this.objectToSave = this.getNewObject();
     this.currentObject = this.getNewObject();
-    this.mode = GestionMode.CREATION;
+    EntityModeHelper.switchToCreationMode();
   }
 
   private switchToEditionMode(object: T): void {
     PageStatusHelper.resetPageStatus();
     this.objectToSave = object;
     this.currentObject = object;
-    this.mode = GestionMode.EDITION;
+    EntityModeHelper.switchToEditionMode();
   }
 
   private switchToViewAllMode(): void {
     this.objectToSave = this.getNewObject();
     this.currentObject = undefined;
-    this.mode = GestionMode.VIEW_ALL;
+    EntityModeHelper.switchToViewAllMode();
   }
 
   private switchToViewOneMode(object: T): void {
     PageStatusHelper.resetPageStatus();
     this.objectToView = object;
     this.currentObject = object;
-    this.mode = GestionMode.VIEW_ONE;
+    EntityModeHelper.switchToViewOneMode();
   }
 
   private switchToRemoveMode(object: T): void {
     PageStatusHelper.resetPageStatus();
     this.objectToRemove = object;
     this.currentObject = object;
-    this.mode = GestionMode.REMOVE;
+    EntityModeHelper.switchToRemoveMode();
   }
 }

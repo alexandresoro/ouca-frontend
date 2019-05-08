@@ -10,6 +10,9 @@ export class MeteoComponent extends EntiteAvecLibelleComponent<Meteo> {
     return "meteo";
   }
 
+  public getAnEntityLabel(): string {
+    return "une météo";
+  }
   getNewObject(): Meteo {
     return {} as Meteo;
   }

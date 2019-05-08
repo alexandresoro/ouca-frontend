@@ -6,7 +6,9 @@ import { CommuneFormComponent } from "./components/form/commune-form/commune-for
 import { DepartementFormComponent } from "./components/form/departement-form/departement-form.component";
 import { EntiteAvecLibelleEtCodeFormComponent } from "./components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
 import { EntiteAvecLibelleFormComponent } from "./components/form/entite-avec-libelle-form/entite-avec-libelle-form.component";
-import { EntiteSimpleFormComponent } from "./components/form/entite-simple-form/entite-simple-form.component";
+import { EntityFormComponent } from "./components/form/entite-simple-form/entity-form.component";
+import { EntitySubFormComponent } from "./components/form/entite-simple-form/entity-sub-form.component";
+import { EntitySubFormDirective } from "./components/form/entite-simple-form/entity-sub-form.directive";
 import { EspeceFormComponent } from "./components/form/espece-form/espece-form.component";
 import { EstimationNombreFormComponent } from "./components/form/estimation-nombre-form/estimation-nombre-form.component";
 import { LieuditFormComponent } from "./components/form/lieudit-form/lieudit-form.component";
@@ -42,7 +44,6 @@ import { EntiteSimpleComponent } from "./pages/entite-simple/entite-simple.compo
 import { EspeceComponent } from "./pages/espece/espece.component";
 import { EstimationDistanceComponent } from "./pages/estimation-distance/estimation-distance.component";
 import { EstimationNombreComponent } from "./pages/estimation-nombre/estimation-nombre.component";
-import { GestionModeHelper } from "./pages/gestion-mode.enum";
 import { LieuditComponent } from "./pages/lieudit/lieudit.component";
 import { MeteoComponent } from "./pages/meteo/meteo.component";
 import { MilieuComponent } from "./pages/milieu/milieu.component";
@@ -72,7 +73,9 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     EntiteAvecLibelleEtCodeTableComponent,
     EntiteSimpleComponent,
     EntityDetailsComponent,
-    EntiteSimpleFormComponent,
+    EntityFormComponent,
+    EntitySubFormDirective,
+    EntitySubFormComponent,
     EntityDeleteConfirmationComponent,
     EntiteSimpleTableComponent,
     EntityMessagesComponent,
@@ -99,8 +102,16 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     TableTopbarComponent,
     TopButtonsComponent
   ],
-  entryComponents: [],
+  entryComponents: [
+    CommuneFormComponent,
+    DepartementFormComponent,
+    EntiteAvecLibelleFormComponent,
+    EntiteAvecLibelleEtCodeFormComponent,
+    EspeceFormComponent,
+    EstimationNombreFormComponent,
+    LieuditFormComponent
+  ],
   exports: [],
-  providers: [GestionModeHelper]
+  providers: []
 })
 export class ModelManagementModule {}

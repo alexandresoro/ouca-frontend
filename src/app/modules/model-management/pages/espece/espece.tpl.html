@@ -3,7 +3,7 @@
     title="Espèces"
     createButtonLibelle="Créer une espèce"
     exportButtonLibelle="Exporter les espèces"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,23 +12,28 @@
   <entity-messages></entity-messages>
 
   <espece-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)"
   ></espece-table>
 
-  <espece-form
-    *ngIf="isCreationMode() || isEditionMode()"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
+    creationTitle="Création d'une espèce"
+    editionTitle="Édition d'une espèce"
+    [entityForm]="form"
     [object]="objectToSave"
-    [mode]="mode"
-    (confirm)="saveObject()"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  ></espece-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'espèce ?"
     details="Toutes les données ({{
       currentObject.nbDonnees
@@ -40,10 +45,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de l'espèce"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

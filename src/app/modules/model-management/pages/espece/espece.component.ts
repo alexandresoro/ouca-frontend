@@ -11,6 +11,10 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     return "espece";
   }
 
+  public getAnEntityLabel(): string {
+    return "une espèce";
+  }
+
   getNewObject(): Espece {
     return {} as Espece;
   }

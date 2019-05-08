@@ -3,7 +3,7 @@
     title="Estimations du nombre"
     createButtonLibelle="Créer une estimation"
     exportButtonLibelle="Exporter les estimations"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,7 +12,7 @@
   <entity-messages></entity-messages>
 
   <estimation-nombre-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
@@ -20,17 +20,21 @@
   >
   </estimation-nombre-table>
 
-  <estimation-nombre-form
-    *ngIf="isCreationMode() || isEditionMode()"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
+    creationTitle="Création d'une estimation du nombre"
+    editionTitle="Édition d'une estimation du nombre"
+    [entityForm]="form"
     [object]="objectToSave"
-    [mode]="mode"
-    (confirm)="saveObject()"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  >
-  </estimation-nombre-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'estimation du nombre ?"
     details="Toutes les données ({{
       currentObject.nbDonnees
@@ -42,10 +46,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de l'estimation du nombre"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

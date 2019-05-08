@@ -11,6 +11,10 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     return "lieudit";
   }
 
+  public getAnEntityLabel(): string {
+    return "un lieu-dit";
+  }
+
   getNewObject(): Lieudit {
     return {} as Lieudit;
   }

@@ -10,6 +10,10 @@ export class SexeComponent extends EntiteAvecLibelleComponent<Sexe> {
     return "sexe";
   }
 
+  public getAnEntityLabel(): string {
+    return "un sexe";
+  }
+
   getNewObject(): Sexe {
     return {} as Sexe;
   }

@@ -11,6 +11,10 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     return "departement";
   }
 
+  public getAnEntityLabel(): string {
+    return "un département";
+  }
+
   getNewObject(): Departement {
     return {} as Departement;
   }

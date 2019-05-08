@@ -3,7 +3,7 @@
     title="Âges"
     createButtonLibelle="Créer un âge"
     exportButtonLibelle="Exporter les âges"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,25 +12,28 @@
   <entity-messages></entity-messages>
 
   <age-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)"
   ></age-table>
 
-  <entite-avec-libelle-form
-    *ngIf="isCreationMode() || isEditionMode()"
-    [object]="objectToSave"
-    [mode]="mode"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
     creationTitle="Création d'un âge"
-    editionTitle="Edition de l'âge"
-    (confirm)="saveObject()"
+    editionTitle="Édition d'un âge"
+    [entityForm]="form"
+    [object]="objectToSave"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  ></entite-avec-libelle-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'âge ?"
     details="Toutes les données ({{
       currentObject.nbDonnees
@@ -42,10 +45,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de l'âge"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

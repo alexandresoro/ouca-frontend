@@ -3,7 +3,7 @@
     title="Comportements"
     createButtonLibelle="Créer un comportement"
     exportButtonLibelle="Exporter les comportements"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,7 +12,7 @@
   <entity-messages></entity-messages>
 
   <comportement-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
@@ -20,19 +20,21 @@
   >
   </comportement-table>
 
-  <entite-avec-libelle-et-code-form
-    *ngIf="isCreationMode() || isEditionMode()"
-    [object]="objectToSave"
-    [mode]="mode"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
     creationTitle="Création d'un comportement"
     editionTitle="Édition d'un comportement"
-    (confirm)="saveObject()"
+    [entityForm]="form"
+    [object]="objectToSave"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  >
-  </entite-avec-libelle-et-code-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer le comportement ?"
     details="{{ currentObject.nbDonnees }} données ont ce comportement."
     cancellationLabel="Non, annuler la suppression"
@@ -42,10 +44,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails du comportement"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>

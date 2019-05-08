@@ -3,7 +3,7 @@
     title="Estimations de la distance"
     createButtonLibelle="Créer une estimation"
     exportButtonLibelle="Exporter les estimations"
-    [areButtonsDisplayed]="isViewAllMode()"
+    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
     (onClickRefresh)="getAll()"
@@ -12,25 +12,28 @@
   <entity-messages></entity-messages>
 
   <estimation-distance-table
-    *ngIf="isViewAllMode()"
+    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)"
   ></estimation-distance-table>
 
-  <entite-avec-libelle-form
-    *ngIf="isCreationMode() || isEditionMode()"
-    [object]="objectToSave"
-    [mode]="mode"
+  <entity-form
+    *ngIf="
+      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
+    "
+    [componentType]="formComponentType"
     creationTitle="Création d'une estimation de la distance"
     editionTitle="Édition d'une estimation de la distance"
-    (confirm)="saveObject()"
+    [entityForm]="form"
+    [object]="objectToSave"
+    (confirm)="saveObject($event)"
     (back)="cancelEdition()"
-  ></entite-avec-libelle-form>
+  ></entity-form>
 
   <entity-delete-confirmation
-    *ngIf="isRemoveMode()"
+    *ngIf="entityModeHelper.isRemoveMode()"
     question="Êtes-vous certain de vouloir supprimer l'estimation de la distance ?"
     details="{{
       currentObject.nbDonnees
@@ -42,10 +45,10 @@
   </entity-delete-confirmation>
 
   <entity-details
-    *ngIf="isViewOneMode() || isRemoveMode()"
+    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
     [detailsData]="getDetailsData()"
     detailsTitle="Détails de l'estimation de la distance"
-    [isBackButtonDisplayed]="isViewOneMode()"
+    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
     (back)="viewAll()"
   >
   </entity-details>
