@@ -5,14 +5,13 @@ import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
-import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
-import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
+import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
 @Component({
   selector: "lieudit-form",
   templateUrl: "./lieudit-form.tpl.html"
 })
-export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
+export class LieuditFormComponent extends EntitySubFormComponent {
   public departements: Departement[];
 
   private communes: Commune[];
@@ -26,11 +25,8 @@ export class LieuditFormComponent extends EntiteSimpleFormComponent<Lieudit> {
   public latitudeFormControl = new FormControl("", [Validators.required]);
   public nomLieuDitFormControl = new FormControl("", [Validators.required]);
 
-  constructor(
-    private backendApiService: BackendApiService,
-    modeHelper: GestionModeHelper
-  ) {
-    super(modeHelper);
+  constructor(private backendApiService: BackendApiService) {
+    super();
   }
 
   ngOnInit(): void {

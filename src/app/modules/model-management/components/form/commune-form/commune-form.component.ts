@@ -4,24 +4,20 @@ import { Response } from "@angular/http";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
-import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
-import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
+import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
 @Component({
   selector: "commune-form",
   templateUrl: "./commune-form.tpl.html"
 })
-export class CommuneFormComponent extends EntiteSimpleFormComponent<Commune> {
+export class CommuneFormComponent extends EntitySubFormComponent {
   public departements: Departement[];
 
   public codeFormControl = new FormControl("", [Validators.required]);
   public nomFormControl = new FormControl("", [Validators.required]);
 
-  constructor(
-    private backendApiService: BackendApiService,
-    modeHelper: GestionModeHelper
-  ) {
-    super(modeHelper);
+  constructor(private backendApiService: BackendApiService) {
+    super();
   }
 
   ngOnInit() {

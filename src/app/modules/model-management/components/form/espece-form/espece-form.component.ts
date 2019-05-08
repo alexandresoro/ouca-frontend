@@ -4,25 +4,21 @@ import { Response } from "@angular/http";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Espece } from "basenaturaliste-model/espece.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
-import { GestionModeHelper } from "../../../pages/gestion-mode.enum";
-import { EntiteSimpleFormComponent } from "../entite-simple-form/entite-simple-form.component";
+import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
 @Component({
   selector: "espece-form",
   templateUrl: "./espece-form.tpl.html"
 })
-export class EspeceFormComponent extends EntiteSimpleFormComponent<Espece> {
+export class EspeceFormComponent extends EntitySubFormComponent {
   public classes: Classe[];
 
   public codeFormControl = new FormControl("", [Validators.required]);
   public nomFrancaisFormControl = new FormControl("", [Validators.required]);
   public nomLatinFormControl = new FormControl("", [Validators.required]);
 
-  constructor(
-    private backendApiService: BackendApiService,
-    modeHelper: GestionModeHelper
-  ) {
-    super(modeHelper);
+  constructor(private backendApiService: BackendApiService) {
+    super();
   }
 
   ngOnInit(): void {
