@@ -1,85 +1,40 @@
-<mat-card>
-  <mat-card-title>
-    <h2 *ngIf="isCreationMode()">Création d'une commune</h2>
-    <h2 *ngIf="isEditionMode()">Édition d'une commune</h2>
-  </mat-card-title>
+<!-- Departement -->
+<bn-select
+  [id]="'input-departement'"
+  placeholder="Département"
+  fieldForDisplay="code"
+  [options]="departements"
+>
+</bn-select>
 
-  <mat-card-content>
-    <form (ngSubmit)="save()" #entiteSimpleForm="ngForm" class="entite-form">
-      <!-- ID -->
-      <mat-form-field *ngIf="isEditionMode()">
-        <input
-          matInput
-          type="text"
-          placeholder="ID"
-          id="input-id"
-          name="id"
-          [(ngModel)]="object.id"
-          #fieldId="ngModel"
-          readonly
-        />
-      </mat-form-field>
+<!-- Code -->
+<mat-form-field>
+  <input
+    matInput
+    type="text"
+    id="input-code"
+    name="code"
+    placeholder="Code"
+    required
+    [formControl]="codeFormControl"
+  />
+  <mat-error *ngIf="codeFormControl.hasError('required')">
+    Le code de la commune ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
-      <!-- Departement -->
-      <bn-select
-        [id]="'input-departement'"
-        placeholder="Département"
-        fieldForDisplay="code"
-        [options]="departements"
-        [(model)]="object.departement"
-      >
-      </bn-select>
-
-      <!-- Code -->
-      <mat-form-field>
-        <input
-          matInput
-          type="text"
-          id="input-code"
-          name="code"
-          placeholder="Code"
-          [(ngModel)]="object.code"
-          required
-          [formControl]="codeFormControl"
-        />
-        <mat-error *ngIf="codeFormControl.hasError('required')">
-          Le code de la commune ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
-
-      <!-- Nom -->
-      <mat-form-field>
-        <input
-          matInput
-          type="text"
-          id="input-nom"
-          name="nom"
-          placeholder="Nom"
-          [(ngModel)]="object.nom"
-          required
-          [formControl]="nomFormControl"
-        />
-        <mat-error *ngIf="nomFormControl.hasError('required')">
-          Le nom de la commune ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
-
-      <div class="cancel-submit-buttons">
-        <button mat-raised-button color="accent" (click)="cancel()">
-          <mat-icon>cancel</mat-icon>
-          Annuler
-        </button>
-        <span class="button-spacer"></span>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="!entiteSimpleForm.form.valid"
-        >
-          <mat-icon>save</mat-icon>
-          Enregistrer
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+<!-- Nom -->
+<mat-form-field>
+  <input
+    matInput
+    type="text"
+    id="input-nom"
+    name="nom"
+    placeholder="Nom"
+    required
+    [formControl]="nomFormControl"
+  />
+  <mat-error *ngIf="nomFormControl.hasError('required')">
+    Le nom de la commune ne peut pas être vide.
+  </mat-error>
+</mat-form-field>

@@ -1,140 +1,92 @@
-<mat-card>
-  <mat-card-title>
-    <h2 *ngIf="isCreationMode()">Création d'un lieu-dit</h2>
-    <h2 *ngIf="isEditionMode()">Édition d'un lieu-dit</h2>
-  </mat-card-title>
+<!-- Departement -->
+<bn-select
+  [id]="'input-departement'"
+  [placeholder]="'Département'"
+  [fieldForDisplay]="'code'"
+  [options]="departements"
+  [(model)]="selectedDepartement"
+  (modelChange)="updateCommunes()"
+>
+</bn-select>
 
-  <mat-card-content>
-    <form (ngSubmit)="save()" #entiteSimpleForm="ngForm" class="entite-form">
-      <!-- ID -->
-      <mat-form-field *ngIf="isEditionMode()">
-        <input
-          matInput
-          type="text"
-          placeholder="ID"
-          id="input-id"
-          name="id"
-          [(ngModel)]="object.id"
-          #fieldId="ngModel"
-          readonly
-        />
-      </mat-form-field>
+<!-- Code Commune -->
+<bn-select
+  [id]="'input-code-commune'"
+  [placeholder]="'Code de la Commune'"
+  [fieldForDisplay]="'code'"
+  [options]="filteredCommunes"
+>
+</bn-select>
 
-      <!-- Departement -->
-      <bn-select
-        [id]="'input-departement'"
-        [placeholder]="'Département'"
-        [fieldForDisplay]="'code'"
-        [options]="departements"
-        [(model)]="selectedDepartement"
-        (modelChange)="updateCommunes()"
-      >
-      </bn-select>
+<!-- Nom Commune -->
+<bn-select
+  [id]="'input-nom-commune'"
+  [placeholder]="'Nom de la Commune'"
+  [fieldForDisplay]="'nom'"
+  [options]="filteredCommunes"
+>
+</bn-select>
 
-      <!-- Code Commune -->
-      <bn-select
-        [id]="'input-code-commune'"
-        [placeholder]="'Code de la Commune'"
-        [fieldForDisplay]="'code'"
-        [options]="filteredCommunes"
-        [(model)]="object.commune"
-      >
-      </bn-select>
+<!-- Nom lieudit -->
+<mat-form-field>
+  <input
+    matInput
+    type="text"
+    id="input-nom"
+    name="nom"
+    placeholder="Nom du lieu-dit"
+    required
+    [formControl]="nomLieuDitFormControl"
+  />
+  <mat-error *ngIf="nomLieuDitFormControl.hasError('required')">
+    Le nom du lieu-dit ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
-      <!-- Nom Commune -->
-      <bn-select
-        [id]="'input-nom-commune'"
-        [placeholder]="'Nom de la Commune'"
-        [fieldForDisplay]="'nom'"
-        [options]="filteredCommunes"
-        [(model)]="object.commune"
-      >
-      </bn-select>
+<!-- Altitude -->
+<mat-form-field>
+  <input
+    matInput
+    type="number"
+    id="input-altitude"
+    name="altitude"
+    placeholder="Altitude"
+    required
+    [formControl]="altitudeFormControl"
+  />
+  <mat-error *ngIf="altitudeFormControl.hasError('required')">
+    L'altitude du lieu-dit ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
-      <!-- Nom lieudit -->
-      <mat-form-field>
-        <input
-          matInput
-          type="text"
-          id="input-nom"
-          name="nom"
-          placeholder="Nom du lieu-dit"
-          [(ngModel)]="object.nom"
-          required
-          [formControl]="nomLieuDitFormControl"
-        />
-        <mat-error *ngIf="nomLieuDitFormControl.hasError('required')">
-          Le nom du lieu-dit ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
+<!-- Longitude -->
+<mat-form-field>
+  <input
+    matInput
+    type="number"
+    id="input-longitude"
+    name="longitude"
+    placeholder="Longitude"
+    required
+    [formControl]="longitudeFormControl"
+  />
+  <mat-error *ngIf="longitudeFormControl.hasError('required')">
+    La longitude du lieu-dit ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
-      <!-- Altitude -->
-      <mat-form-field>
-        <input
-          matInput
-          type="number"
-          id="input-altitude"
-          name="altitude"
-          placeholder="Altitude"
-          [(ngModel)]="object.altitude"
-          required
-          [formControl]="altitudeFormControl"
-        />
-        <mat-error *ngIf="altitudeFormControl.hasError('required')">
-          L'altitude du lieu-dit ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
-
-      <!-- Longitude -->
-      <mat-form-field>
-        <input
-          matInput
-          type="number"
-          id="input-longitude"
-          name="longitude"
-          placeholder="Longitude"
-          [(ngModel)]="object.longitude"
-          required
-          [formControl]="longitudeFormControl"
-        />
-        <mat-error *ngIf="longitudeFormControl.hasError('required')">
-          La longitude du lieu-dit ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
-
-      <!-- Latitude -->
-      <mat-form-field>
-        <input
-          matInput
-          type="number"
-          id="input-latitude"
-          name="latitude"
-          placeholder="Latitude"
-          [(ngModel)]="object.latitude"
-          required
-          [formControl]="latitudeFormControl"
-        />
-        <mat-error *ngIf="latitudeFormControl.hasError('required')">
-          La latitude du lieu-dit ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
-
-      <div class="cancel-submit-buttons">
-        <button mat-raised-button color="accent" (click)="cancel()">
-          <mat-icon>cancel</mat-icon>
-          Annuler
-        </button>
-        <span class="button-spacer"></span>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="!entiteSimpleForm.form.valid"
-        >
-          <mat-icon>save</mat-icon>
-          Enregistrer
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+<!-- Latitude -->
+<mat-form-field>
+  <input
+    matInput
+    type="number"
+    id="input-latitude"
+    name="latitude"
+    placeholder="Latitude"
+    required
+    [formControl]="latitudeFormControl"
+  />
+  <mat-error *ngIf="latitudeFormControl.hasError('required')">
+    La latitude du lieu-dit ne peut pas être vide.
+  </mat-error>
+</mat-form-field>

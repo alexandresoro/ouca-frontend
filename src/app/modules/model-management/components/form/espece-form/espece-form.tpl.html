@@ -1,102 +1,53 @@
-<mat-card>
-  <mat-card-title>
-    <h2 *ngIf="isCreationMode()">Création d'une espèce</h2>
-    <h2 *ngIf="isEditionMode()">Édition d'une espèce</h2>
-  </mat-card-title>
+<!-- Classe -->
+<bn-select
+  [id]="'input-classe'"
+  [placeholder]="'Classe espèce'"
+  [fieldForDisplay]="'libelle'"
+  [options]="classes"
+>
+</bn-select>
 
-  <mat-card-content>
-    <form (ngSubmit)="save()" #entiteSimpleForm="ngForm" class="entite-form">
-      <!-- ID -->
-      <mat-form-field *ngIf="isEditionMode()">
-        <input
-          matInput
-          type="text"
-          placeholder="ID"
-          id="input-id"
-          name="id"
-          [(ngModel)]="object.id"
-          #fieldId="ngModel"
-          readonly
-        />
-      </mat-form-field>
+<!-- Code espece -->
+<mat-form-field>
+  <input
+    matInput
+    type="text"
+    placeholder="Code"
+    id="input-code"
+    name="code"
+    required
+  />
+  <mat-error *ngIf="codeFormControl.hasError('required')">
+    Le code de l'espèce ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
-      <!-- Classe -->
-      <bn-select
-        [id]="'input-classe'"
-        [placeholder]="'Classe espèce'"
-        [fieldForDisplay]="'libelle'"
-        [options]="classes"
-        [(model)]="object.classe"
-      >
-      </bn-select>
+<!-- Nom francais -->
+<mat-form-field>
+  <input
+    matInput
+    type="text"
+    placeholder="Nom français"
+    id="input-nom-francais"
+    name="nom-francais"
+    required
+  />
+  <mat-error *ngIf="nomFrancaisFormControl.hasError('required')">
+    Le nom français de l'espèce ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
-      <!-- Code espece -->
-      <mat-form-field>
-        <input
-          matInput
-          type="text"
-          placeholder="Code"
-          id="input-code"
-          name="code"
-          [(ngModel)]="object.code"
-          #fieldId="ngModel"
-          required
-        />
-        <mat-error *ngIf="codeFormControl.hasError('required')">
-          Le code de l'espèce ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
-
-      <!-- Nom francais -->
-      <mat-form-field>
-        <input
-          matInput
-          type="text"
-          placeholder="Nom français"
-          id="input-nom-francais"
-          name="nom-francais"
-          [(ngModel)]="object.nomFrancais"
-          #fieldId="ngModel"
-          required
-        />
-        <mat-error *ngIf="nomFrancaisFormControl.hasError('required')">
-          Le nom français de l'espèce ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
-
-      <!-- Nom latin -->
-      <mat-form-field>
-        <input
-          matInput
-          type="text"
-          placeholder="Nom latin"
-          id="input-nom-latin"
-          name="nom-latin"
-          [(ngModel)]="object.nomLatin"
-          #fieldId="ngModel"
-          required
-        />
-        <mat-error *ngIf="nomLatinFormControl.hasError('required')">
-          Le nom latin de l'espèce ne peut pas être vide.
-        </mat-error>
-      </mat-form-field>
-
-      <div class="cancel-submit-buttons">
-        <button mat-raised-button color="accent" (click)="cancel()">
-          <mat-icon>cancel</mat-icon>
-          Annuler
-        </button>
-        <span class="button-spacer"></span>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="!entiteSimpleForm.form.valid"
-        >
-          <mat-icon>save</mat-icon>
-          Enregistrer
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+<!-- Nom latin -->
+<mat-form-field>
+  <input
+    matInput
+    type="text"
+    placeholder="Nom latin"
+    id="input-nom-latin"
+    name="nom-latin"
+    required
+  />
+  <mat-error *ngIf="nomLatinFormControl.hasError('required')">
+    Le nom latin de l'espèce ne peut pas être vide.
+  </mat-error>
+</mat-form-field>

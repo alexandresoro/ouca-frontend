@@ -1,63 +1,22 @@
-<mat-card>
-    <mat-card-title>
-        <h2 *ngIf="isCreationMode()">{{creationTitle}}</h2>
-        <h2 *ngIf="isEditionMode()">{{editionTitle}}</h2>
-    </mat-card-title>
+<!-- Libelle -->
+<mat-form-field>
+  <input
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['libelle']"
+    id="input-libelle"
+    matInput
+    name="libelle"
+    placeholder="Libellé"
+    type="text"
+  />
 
-    <mat-card-content>
-        <form (ngSubmit)="save()"
-            #entiteSimpleForm="ngForm"
-            class="entite-form">
+  <mat-error *ngIf="entityForm.controls['libelle'].hasError('required')">
+    Le champ "Libellé" ne peut pas être vide.
+  </mat-error>
+  <mat-error *ngIf="entityForm.hasError('alreadyExisting')">
+    {{ entityForm.getError("alreadyExisting").message }}
+  </mat-error>
+</mat-form-field>
 
-            <!-- ID -->
-            <mat-form-field *ngIf="isEditionMode()">
-                <input matInput
-                    type="text"
-                    placeholder="ID"
-                    id="input-id"
-                    name="id"
-                    [(ngModel)]="object.id"
-                    #fieldId="ngModel"
-                    readonly/>
-            </mat-form-field>
-
-            <!-- Libelle -->
-            <mat-form-field>
-                <input matInput
-                    type="text"
-                    placeholder="Libellé"
-                    id="input-libelle"
-                    name="libelle"
-                    [(ngModel)]="object.libelle"
-                    #fieldId="ngModel"
-                    required/>
-                <mat-error *ngIf="libelleFormControl.hasError('required')">
-                    Le Libellé ne peut pas être vide.
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Non compte -->
-            <mat-checkbox id="input-non-compte"
-                name="non-compte"
-                [(ngModel)]="object.nonCompte">Non compté</mat-checkbox>
-
-
-            <div class="cancel-submit-buttons">
-                <button mat-raised-button
-                    color="accent"
-                    (click)="cancel()">
-                    <mat-icon>cancel</mat-icon>
-                    Annuler
-                </button>
-                <span class="button-spacer"></span>
-                <button mat-raised-button
-                    color="primary"
-                    type="submit"
-                    [disabled]="!entiteSimpleForm.form.valid">
-                    <mat-icon>save</mat-icon>
-                    Enregistrer
-                </button>
-            </div>
-        </form>
-    </mat-card-content>
-</mat-card>
+<!-- Non compte -->
+<mat-checkbox id="input-non-compte" name="non-compte">Non compté</mat-checkbox>
