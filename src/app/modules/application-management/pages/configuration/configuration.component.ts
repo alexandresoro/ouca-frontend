@@ -5,9 +5,9 @@ import { ConfigurationPage } from "basenaturaliste-model/configuration-page.obje
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import * as _ from "lodash";
 import {
-  GestionMode,
-  GestionModeHelper
-} from "../../../model-management/pages/gestion-mode.enum";
+  EntityMode,
+  EntityModeHelper
+} from "../../../model-management/helpers/entity-mode.helper";
 import { PageComponent } from "../../../shared/components/page.component";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
@@ -49,15 +49,12 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   public configurationToSave: AppConfiguration;
 
-  public mode: GestionMode;
+  public mode: EntityModeHelper;
 
   public displayedColumns: string[] = ["propriete", "valeur"];
   public dataSource: MatTableDataSource<ProprieteValeur>;
 
-  constructor(
-    private backendApiService: BackendApiService,
-    public modeHelper: GestionModeHelper
-  ) {
+  constructor(private backendApiService: BackendApiService) {
     super();
   }
 
@@ -226,10 +223,10 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   private switchToEditionMode(): void {
     PageStatusHelper.resetPageStatus();
-    this.mode = GestionMode.EDITION;
+    this.mode = EntityMode.EDITION;
   }
 
   private switchToViewAllMode(): void {
-    this.mode = GestionMode.VIEW_ALL;
+    this.mode = EntityMode.VIEW_ALL;
   }
 }
