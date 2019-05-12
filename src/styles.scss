@@ -217,7 +217,6 @@ mat-toolbar.base-naturaliste-header {
 
     .combien-de-container {
       .nombre-espece {
-        width: 120px;
         margin-right: $standardColumnGap;
       }
 
@@ -226,12 +225,16 @@ mat-toolbar.base-naturaliste-header {
       }
 
       .sexe-espece {
-        width: 120px;
         margin-right: 4 * $standardColumnGap;
+        mat-form-field {
+          width: 120px;
+        }
       }
 
       .age-espece {
-        width: 120px;
+        mat-form-field {
+          width: 120px;
+        }
       }
     }
     .distance-regroupement-container {
