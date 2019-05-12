@@ -8,8 +8,7 @@
     placeholder="Code"
     type="text"
   />
-
-  <mat-error *ngIf="entityForm.controls['libelle'].hasError('required')">
+  <mat-error *ngIf="entityForm.controls['code'].hasError('required')">
     Le champ "Code" ne peut pas être vide.
   </mat-error>
   <mat-error *ngIf="entityForm.hasError('alreadyExistingCode')">

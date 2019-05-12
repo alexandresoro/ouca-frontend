@@ -1,12 +1,43 @@
 import { Component } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import { Espece } from "basenaturaliste-model/espece.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
+import { EspeceFormComponent } from "../../components/form/espece-form/espece-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
   templateUrl: "./espece.tpl.html"
 })
 export class EspeceComponent extends EntiteSimpleComponent<Espece> {
+  public formComponentType = EspeceFormComponent;
+
+  public ngOnInit(): void {
+    super.ngOnInit();
+    this.form = new FormGroup(
+      {
+        id: new FormControl("", []),
+        classe: new FormControl("", [Validators.required]),
+        code: new FormControl("", [Validators.required]),
+        nomFrancais: new FormControl("", [Validators.required]),
+        nomLatin: new FormControl("", [Validators.required]),
+        nbDonnees: new FormControl("", [])
+      },
+      [this.especeValidator]
+    );
+  }
+
+  private especeValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    return null;
+  }
+
   getEntityName(): string {
     return "espece";
   }

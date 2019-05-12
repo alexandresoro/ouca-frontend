@@ -19,4 +19,9 @@
 </mat-form-field>
 
 <!-- Non compte -->
-<mat-checkbox id="input-non-compte" name="non-compte">Non compté</mat-checkbox>
+<mat-checkbox
+  [formControl]="entityForm.controls['nomCompte']"
+  id="input-non-compte"
+  name="non-compte"
+  >Non compté</mat-checkbox
+>

@@ -1,53 +1,67 @@
 <!-- Classe -->
-<bn-select
-  [id]="'input-classe'"
-  [placeholder]="'Classe espèce'"
-  [fieldForDisplay]="'libelle'"
-  [options]="classes"
->
-</bn-select>
+<mat-form-field>
+  <mat-select
+    [formControl]="entityForm.controls['classe']"
+    id="input-classe"
+    name="classe"
+    placeholder="Classe de l'espèce"
+  >
+    <mat-option *ngFor="let classe of classes" [value]="classe">
+      {{ classe.libelle }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="entityForm.controls['classe'].hasError('required')">
+    Le champ "Classe de l'espèce" ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
 <!-- Code espece -->
 <mat-form-field>
   <input
-    matInput
-    type="text"
-    placeholder="Code"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['code']"
     id="input-code"
+    matInput
     name="code"
-    required
+    placeholder="Code de l'espèce"
+    type="text"
   />
-  <mat-error *ngIf="codeFormControl.hasError('required')">
-    Le code de l'espèce ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['code'].hasError('required')">
+    Le champ "Code de l'espèce" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
 
 <!-- Nom francais -->
 <mat-form-field>
   <input
-    matInput
-    type="text"
-    placeholder="Nom français"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['nomFrancais']"
     id="input-nom-francais"
+    matInput
     name="nom-francais"
-    required
+    placeholder="Nom français"
+    type="text"
   />
-  <mat-error *ngIf="nomFrancaisFormControl.hasError('required')">
-    Le nom français de l'espèce ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['nomFrancais'].hasError('required')">
+    Le champ "Nom français" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
 
 <!-- Nom latin -->
 <mat-form-field>
   <input
-    matInput
-    type="text"
-    placeholder="Nom latin"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['nomLatin']"
     id="input-nom-latin"
+    matInput
     name="nom-latin"
-    required
+    placeholder="Nom latin"
+    type="text"
   />
-  <mat-error *ngIf="nomLatinFormControl.hasError('required')">
-    Le nom latin de l'espèce ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['nomLatin'].hasError('required')">
+    Le champ "Nom latin" ne peut pas être vide.
   </mat-error>
 </mat-form-field>

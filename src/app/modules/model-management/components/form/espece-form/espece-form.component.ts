@@ -1,8 +1,6 @@
 import { Component } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Classe } from "basenaturaliste-model/classe.object";
-import { Espece } from "basenaturaliste-model/espece.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
@@ -12,10 +10,6 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
 })
 export class EspeceFormComponent extends EntitySubFormComponent {
   public classes: Classe[];
-
-  public codeFormControl = new FormControl("", [Validators.required]);
-  public nomFrancaisFormControl = new FormControl("", [Validators.required]);
-  public nomLatinFormControl = new FormControl("", [Validators.required]);
 
   constructor(private backendApiService: BackendApiService) {
     super();
@@ -31,9 +25,5 @@ export class EspeceFormComponent extends EntitySubFormComponent {
         console.error("Impossible de trouver les classes (" + error + ")");
       }
     );
-  }
-
-  getNewObject(): Espece {
-    return {} as Espece;
   }
 }

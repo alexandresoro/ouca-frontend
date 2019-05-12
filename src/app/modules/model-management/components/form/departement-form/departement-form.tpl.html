@@ -1,15 +1,16 @@
 <!-- Code -->
 <mat-form-field>
   <input
-    matInput
-    type="text"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['code']"
     id="input-code"
+    matInput
     name="code"
-    placeholder="Code"
-    required
-    [formControl]="codeFormControl"
+    placeholder="Code du département"
+    type="text"
   />
-  <mat-error *ngIf="codeFormControl.hasError('required')">
-    Le code ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['code'].hasError('required')">
+    Le champ "Code du département" ne peut pas être vide.
   </mat-error>
 </mat-form-field>

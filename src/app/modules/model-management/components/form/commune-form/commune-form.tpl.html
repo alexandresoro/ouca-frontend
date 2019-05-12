@@ -1,40 +1,50 @@
 <!-- Departement -->
-<bn-select
-  [id]="'input-departement'"
-  placeholder="Département"
-  fieldForDisplay="code"
-  [options]="departements"
->
-</bn-select>
+<mat-form-field>
+  <mat-select
+    [formControl]="entityForm.controls['departementId']"
+    id="input-departement"
+    name="departement"
+    placeholder="Département"
+  >
+    <mat-option *ngFor="let departement of departements" [value]="departement">
+      {{ departement.code }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="entityForm.controls['departementId'].hasError('required')">
+    Le champ "Département" ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
 <!-- Code -->
 <mat-form-field>
   <input
-    matInput
-    type="text"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['code']"
     id="input-code"
+    matInput
     name="code"
-    placeholder="Code"
-    required
-    [formControl]="codeFormControl"
+    placeholder="Code de la commune"
+    type="text"
   />
-  <mat-error *ngIf="codeFormControl.hasError('required')">
-    Le code de la commune ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['code'].hasError('required')">
+    Le champ "Code de la commune" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
 
 <!-- Nom -->
 <mat-form-field>
   <input
-    matInput
-    type="text"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['nom']"
     id="input-nom"
+    matInput
     name="nom"
-    placeholder="Nom"
-    required
-    [formControl]="nomFormControl"
+    placeholder="Nom de la commune"
+    type="text"
   />
-  <mat-error *ngIf="nomFormControl.hasError('required')">
-    Le nom de la commune ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['nom'].hasError('required')">
+    Le champ "Nom de la commune" ne peut pas être vide.
   </mat-error>
 </mat-form-field>

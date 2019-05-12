@@ -1,9 +1,7 @@
 import { Component } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
@@ -19,11 +17,6 @@ export class LieuditFormComponent extends EntitySubFormComponent {
   public filteredCommunes: Commune[];
 
   public selectedDepartement: Departement;
-
-  public altitudeFormControl = new FormControl("", [Validators.required]);
-  public longitudeFormControl = new FormControl("", [Validators.required]);
-  public latitudeFormControl = new FormControl("", [Validators.required]);
-  public nomLieuDitFormControl = new FormControl("", [Validators.required]);
 
   constructor(private backendApiService: BackendApiService) {
     super();
@@ -45,9 +38,9 @@ export class LieuditFormComponent extends EntitySubFormComponent {
       (result: Commune[]) => {
         this.communes = result;
         this.filteredCommunes = [];
-
-        if (!!this.object && !!this.object.commune) {
-          this.selectedDepartement = this.object.commune.departement;
+        // TODO
+        if (!!this.entityForm && !!this.entityForm.controls.commune.value) {
+          // this.selectedDepartement = this.object.commune.departement;
           this.updateCommunes();
         }
       },
@@ -55,10 +48,6 @@ export class LieuditFormComponent extends EntitySubFormComponent {
         console.error("Impossible de trouver les communes (" + error + ")");
       }
     );
-  }
-
-  getNewObject(): Lieudit {
-    return {} as Lieudit;
   }
 
   private updateCommunes(): void {

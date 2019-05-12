@@ -1,92 +1,118 @@
 <!-- Departement -->
-<bn-select
-  [id]="'input-departement'"
-  [placeholder]="'Département'"
-  [fieldForDisplay]="'code'"
-  [options]="departements"
-  [(model)]="selectedDepartement"
-  (modelChange)="updateCommunes()"
->
-</bn-select>
+<mat-form-field>
+  <mat-select
+    [formControl]="entityForm.controls['departement']"
+    id="input-departement"
+    name="departement"
+    placeholder="Département"
+  >
+    <mat-option *ngFor="let departement of departements" [value]="departement">
+      {{ departement.code }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="entityForm.controls['classeId'].hasError('required')">
+    Le champ "Département" ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
 <!-- Code Commune -->
-<bn-select
-  [id]="'input-code-commune'"
-  [placeholder]="'Code de la Commune'"
-  [fieldForDisplay]="'code'"
-  [options]="filteredCommunes"
->
-</bn-select>
+<mat-form-field>
+  <mat-select
+    [formControl]="entityForm.controls['codeCommune']"
+    id="input-code-commune"
+    name="code-commune"
+    placeholder="Code de la commune"
+  >
+    <mat-option *ngFor="let commune of filteredCommunes" [value]="commune">
+      {{ commune.code }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="entityForm.controls['codeCommune'].hasError('required')">
+    Le champ "Code de la commune" ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
 <!-- Nom Commune -->
-<bn-select
-  [id]="'input-nom-commune'"
-  [placeholder]="'Nom de la Commune'"
-  [fieldForDisplay]="'nom'"
-  [options]="filteredCommunes"
->
-</bn-select>
+<mat-form-field>
+  <mat-select
+    [formControl]="entityForm.controls['nomCommune']"
+    id="input-nom-commune"
+    name="nom-commune"
+    placeholder="Nom de la commune"
+  >
+    <mat-option *ngFor="let commune of filteredCommunes" [value]="commune">
+      {{ commune.nom }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="entityForm.controls['nomCommune'].hasError('required')">
+    Le champ "Nom de la commune" ne peut pas être vide.
+  </mat-error>
+</mat-form-field>
 
 <!-- Nom lieudit -->
 <mat-form-field>
   <input
-    matInput
-    type="text"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['nom']"
     id="input-nom"
+    matInput
     name="nom"
     placeholder="Nom du lieu-dit"
-    required
-    [formControl]="nomLieuDitFormControl"
+    type="text"
   />
-  <mat-error *ngIf="nomLieuDitFormControl.hasError('required')">
-    Le nom du lieu-dit ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['nom'].hasError('required')">
+    Le champ "Nom du lieu-dit" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
 
 <!-- Altitude -->
 <mat-form-field>
   <input
-    matInput
-    type="number"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['altitude']"
     id="input-altitude"
+    matInput
     name="altitude"
     placeholder="Altitude"
-    required
-    [formControl]="altitudeFormControl"
+    type="number"
   />
-  <mat-error *ngIf="altitudeFormControl.hasError('required')">
-    L'altitude du lieu-dit ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['altitude'].hasError('required')">
+    Le champ "Altitude" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
 
 <!-- Longitude -->
 <mat-form-field>
   <input
-    matInput
-    type="number"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['longitude']"
     id="input-longitude"
+    matInput
     name="longitude"
     placeholder="Longitude"
-    required
-    [formControl]="longitudeFormControl"
+    type="number"
   />
-  <mat-error *ngIf="longitudeFormControl.hasError('required')">
-    La longitude du lieu-dit ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['longitude'].hasError('required')">
+    Le champ "Longitude" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
 
 <!-- Latitude -->
 <mat-form-field>
   <input
-    matInput
-    type="number"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['latitude']"
     id="input-latitude"
+    matInput
     name="latitude"
     placeholder="Latitude"
-    required
-    [formControl]="latitudeFormControl"
+    type="number"
   />
-  <mat-error *ngIf="latitudeFormControl.hasError('required')">
-    La latitude du lieu-dit ne peut pas être vide.
+
+  <mat-error *ngIf="entityForm.controls['latitude'].hasError('required')">
+    Le champ "Latitude" ne peut pas être vide.
   </mat-error>
 </mat-form-field>

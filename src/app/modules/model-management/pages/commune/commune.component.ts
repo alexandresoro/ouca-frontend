@@ -1,4 +1,11 @@
 import { Component } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
@@ -9,6 +16,26 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
 })
 export class CommuneComponent extends EntiteSimpleComponent<Commune> {
   public formComponentType = CommuneFormComponent;
+
+  public ngOnInit(): void {
+    super.ngOnInit();
+    this.form = new FormGroup(
+      {
+        id: new FormControl("", []),
+        departement: new FormControl("", [Validators.required]),
+        code: new FormControl("", [Validators.required]),
+        nom: new FormControl("", [Validators.required]),
+        nbDonnees: new FormControl("", [])
+      },
+      [this.communeValidator]
+    );
+  }
+
+  private communeValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    return null;
+  }
 
   getEntityName(): string {
     return "commune";

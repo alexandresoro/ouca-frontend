@@ -1,12 +1,46 @@
 import { Component } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
+import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
   templateUrl: "./lieudit.tpl.html"
 })
 export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
+  public formComponentType = LieuditFormComponent;
+
+  public ngOnInit(): void {
+    super.ngOnInit();
+    this.form = new FormGroup(
+      {
+        id: new FormControl("", []),
+        departement: new FormControl("", [Validators.required]),
+        codeCommune: new FormControl("", [Validators.required]),
+        nomCommune: new FormControl("", [Validators.required]),
+        lieudit: new FormControl("", [Validators.required]),
+        altitude: new FormControl("", [Validators.required]),
+        longitude: new FormControl("", [Validators.required]),
+        latitude: new FormControl("", [Validators.required]),
+        nbDonnees: new FormControl("", [])
+      },
+      [this.lieuditValidator]
+    );
+  }
+
+  private lieuditValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    return null;
+  }
+
   getEntityName(): string {
     return "lieudit";
   }

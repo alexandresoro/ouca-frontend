@@ -1,6 +1,14 @@
 import { Component } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
+import { EstimationNombreFormComponent } from "../../components/form/estimation-nombre-form/estimation-nombre-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
@@ -9,6 +17,26 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
 export class EstimationNombreComponent extends EntiteSimpleComponent<
   EstimationNombre
 > {
+  public formComponentType = EstimationNombreFormComponent;
+
+  public ngOnInit(): void {
+    super.ngOnInit();
+    this.form = new FormGroup(
+      {
+        id: new FormControl("", []),
+        libelle: new FormControl("", [Validators.required]),
+        nomCompte: new FormControl("", [Validators.required])
+      },
+      [this.estimationNombreValidator]
+    );
+  }
+
+  private estimationNombreValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    return null;
+  }
+
   getEntityName(): string {
     return "estimation-nombre";
   }
