@@ -135,19 +135,22 @@
           <!-- CARD OBSERVATEUR + ASSOCIES -->
           <mat-card class="mat-card-override full-width-container">
             <!-- OBSERVATEUR -->
-            <input-observateur
-              [control]="inventaireForm.controls['observateur']"
-              [observateurs]="pageModel.observateurs"
-            >
-            </input-observateur>
+            <div>
+              <input-observateur
+                [control]="inventaireForm.controls['observateur']"
+                [observateurs]="pageModel.observateurs"
+              >
+              </input-observateur>
+            </div>
 
             <!-- ASSOCIES -->
-            <input-observateurs-associes
-              *ngIf="pageModel.areAssociesDisplayed"
-              [control]="inventaireForm.controls['observateursAssocies']"
-              [observateurs]="pageModel.observateurs"
-            >
-            </input-observateurs-associes>
+            <div *ngIf="pageModel.areAssociesDisplayed">
+              <input-observateurs-associes
+                [control]="inventaireForm.controls['observateursAssocies']"
+                [observateurs]="pageModel.observateurs"
+              >
+              </input-observateurs-associes>
+            </div>
           </mat-card>
           <!-- END CARD OBSERVATEUR + ASSOCIES -->
 
@@ -193,15 +196,19 @@
             *ngIf="pageModel.isMeteoDisplayed"
           >
             <!-- TEMPERATURE -->
-            <input-temperature
-              [control]="inventaireForm.controls['temperature']"
-            ></input-temperature>
+            <span class="temperature-container">
+              <input-temperature
+                [control]="inventaireForm.controls['temperature']"
+              ></input-temperature>
+            </span>
 
             <!-- METEOS -->
-            <input-meteos
-              [meteos]="pageModel.meteos"
-              [control]="inventaireForm.controls['meteos']"
-            ></input-meteos>
+            <span class="meteo-container">
+              <input-meteos
+                [meteos]="pageModel.meteos"
+                [control]="inventaireForm.controls['meteos']"
+              ></input-meteos>
+            </span>
           </mat-card>
           <!-- END CARD TEMPERATURE + METEO -->
         </div>
@@ -223,8 +230,11 @@
       <div class="espece-form">
         <form [formGroup]="donneeForm">
           <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
-          <mat-card class="mat-card-override bn-creation-quoi">
+          <mat-card
+            class="mat-card-override bn-creation-quoi full-width-container"
+          >
             <input-espece
+              class="card-espece"
               formGroupName="especeGroup"
               [controlGroup]="donneeForm.controls['especeGroup']"
               [classes]="classes$"
@@ -237,6 +247,7 @@
           <mat-card class="mat-card-override">
             <div class="combien-de-container">
               <input-nombre
+                class="estimation-nombre-espece"
                 [controlGroup]="donneeForm.controls['nombreGroup']"
                 [defaultNombre]="pageModel.defaultNombre"
                 [estimationsNombre]="pageModel.estimationsNombre"
@@ -246,6 +257,7 @@
 
               <!-- SEXE -->
               <input-sexe
+                class="sexe-espece"
                 [control]="donneeForm.controls['sexe']"
                 [sexes]="pageModel.sexes"
               ></input-sexe>
@@ -277,6 +289,15 @@
                 </span>
               </ng-container>
 
+              <span
+                *ngIf="
+                  pageModel.isDistanceDisplayed &&
+                  pageModel.isRegroupementDisplayed
+                "
+                class="distance-regroupement-separator"
+              >
+              </span>
+
               <!-- REGROUPEMENT-->
               <ng-container *ngIf="pageModel.isRegroupementDisplayed">
                 <input-regroupement
@@ -290,7 +311,9 @@
 
           <!-- CARD COMPORTEMENT x6 -->
           <mat-card class="mat-card-override">
-            <mat-card-content class="comportements-container">
+            <mat-card-content
+              class="comportements-container full-width-container"
+            >
               <input-comportements
                 formGroupName="comportementsGroup"
                 [controlGroup]="donneeForm.controls['comportementsGroup']"
@@ -302,7 +325,7 @@
 
           <!-- CARD MILIEU x4 -->
           <mat-card class="mat-card-override">
-            <mat-card-content class="milieux-container">
+            <mat-card-content class="milieux-container full-width-container">
               <input-milieux
                 formGroupName="milieuxGroup"
                 [controlGroup]="donneeForm.controls['milieuxGroup']"

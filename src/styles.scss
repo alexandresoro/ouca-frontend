@@ -56,6 +56,8 @@ $custom-typography: mat-typography-config(
 
 $standardColumnGap: 20px;
 
+$temperatureFieldWidth: 100px;
+
 body {
   margin: 0;
 }
@@ -139,6 +141,17 @@ mat-toolbar.base-naturaliste-header {
       }
     }
 
+    .card-espece {
+      display: grid;
+      grid-column-gap: $standardColumnGap;
+      grid-template-columns: 180px auto;
+      .espece-container {
+        mat-form-field {
+          width: 100%;
+        }
+      }
+    }
+
     .bn-creation-date {
       display: flex;
       flex-wrap: wrap;
@@ -156,17 +169,19 @@ mat-toolbar.base-naturaliste-header {
       margin-right: $standardColumnGap;
     }
 
-    .commune-container,
     .bn-creation-meteo {
-      display: flex;
-      .code-commune,
+      display: grid;
+      grid-template-columns: $temperatureFieldWidth auto;
+      grid-column-gap: $standardColumnGap;
       .temperature-container {
-        width: 100px;
-        margin-right: $standardColumnGap;
+        mat-form-field {
+          width: $temperatureFieldWidth;
+        }
       }
-      .nom-commune,
       .meteo-container {
-        flex: 1 0 auto;
+        mat-form-field {
+          width: 100%;
+        }
       }
     }
 
@@ -212,7 +227,7 @@ mat-toolbar.base-naturaliste-header {
 
       .sexe-espece {
         width: 120px;
-        margin-right: 80px;
+        margin-right: 4 * $standardColumnGap;
       }
 
       .age-espece {
@@ -233,8 +248,12 @@ mat-toolbar.base-naturaliste-header {
       }
 
       mat-form-field.regroupement-container {
-        margin-left: 4 * $standardColumnGap;
-        width: 141px;
+        width: 180px;
+      }
+
+      .distance-regroupement-separator {
+        display: inline-block;
+        width: 4 * $standardColumnGap;
       }
     }
   }
@@ -256,6 +275,13 @@ div.bn-creation-buttons {
   margin-right: 3 * $standardColumnGap;
 }
 
+input-comportements,
+input-milieux {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: $standardColumnGap;
+}
+
 .code-libelle-container {
   display: inline-block;
   .code-input {
@@ -269,6 +295,9 @@ div.bn-creation-buttons {
 
 .full-width-container > * {
   width: 100%;
+  mat-form-field {
+    width: 100%;
+  }
 }
 
 .base-naturaliste {
