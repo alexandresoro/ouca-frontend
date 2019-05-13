@@ -22,6 +22,7 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
+        classeId: new FormControl(""),
         classe: new FormControl("", [Validators.required]),
         code: new FormControl("", [Validators.required]),
         nomFrancais: new FormControl("", [Validators.required]),

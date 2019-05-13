@@ -8,6 +8,7 @@ import {
   Validators
 } from "@angular/forms";
 import { EntiteAvecLibelleEtCode } from "basenaturaliste-model/entite-avec-libelle-et-code.object";
+import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteAvecLibelleEtCodeFormComponent } from "../../components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -25,14 +26,14 @@ export class EntiteAvecLibelleEtCodeComponent<
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        code: new FormControl("", [Validators.required, this.codeValidator]),
+        code: new FormControl("", [Validators.required]),
         libelle: new FormControl("", [
           Validators.required,
           this.libelleValidator
         ]),
         nbDonnees: new FormControl("", [])
       },
-      [this.entityWithCodeAndLibelleValidator]
+      [this.entityWithCodeAndLibelleValidator, this.codeValidator]
     );
   }
 
@@ -43,9 +44,27 @@ export class EntiteAvecLibelleEtCodeComponent<
   }
 
   private codeValidator: ValidatorFn = (
-    control: AbstractControl
+    formGroup: FormGroup
   ): ValidationErrors | null => {
-    return null;
+    const value = formGroup.controls.code.value;
+    const id = formGroup.controls.id.value;
+
+    const valueIsAnExistingEntity: boolean = FormValidatorHelper.isExisting(
+      "code",
+      this.objects,
+      value,
+      id
+    );
+
+    return valueIsAnExistingEntity
+      ? {
+          alreadyExistingCode: {
+            message:
+              "Il existe déjà " + this.getAnEntityLabel() + " avec ce code",
+            value
+          }
+        }
+      : null;
   }
 
   private libelleValidator: ValidatorFn = (
