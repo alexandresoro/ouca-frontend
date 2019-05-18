@@ -34,6 +34,7 @@ import {
 } from "@angular/material-moment-adapter";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AutocompleteActiveSelection } from "./components/autocomplete/autocomplete-active-selection.directive";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { BnSelectComponent } from "./components/entite-select/bn-select.component";
@@ -72,6 +73,7 @@ import { BackendApiService } from "./services/backend-api.service";
   declarations: [
     ConfirmationDialogComponent,
     AutocompleteComponent,
+    AutocompleteActiveSelection,
     BnSelectComponent,
     MultipleOptionsDialogComponent
   ],

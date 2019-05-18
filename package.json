@@ -28,6 +28,7 @@
     "lodash": "*",
     "material-design-icons": "*",
     "moment": "*",
+    "ngx-take-until-destroy": "*",
     "rxjs": "*",
     "typeface-roboto": "*",
     "zone.js": "^0.8.4"
