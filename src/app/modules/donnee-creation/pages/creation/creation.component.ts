@@ -638,10 +638,10 @@ export class CreationComponent extends PageComponent implements OnInit {
   private handleDonneeFormState(toEnable: boolean): void {
     if (toEnable) {
       this.donneeForm.enable();
-      document.getElementById("btn-generate").disabled = false;
+      // document.getElementById("btn-generate").disabled = false;
     } else {
       this.donneeForm.disable();
-      document.getElementById("btn-generate").disabled = true;
+      // document.getElementById("btn-generate").disabled = true;
     }
   }
 
