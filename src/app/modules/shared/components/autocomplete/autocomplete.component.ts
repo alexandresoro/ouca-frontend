@@ -29,7 +29,7 @@ import { AutocompleteAttribute } from "./autocomplete-attribute.object";
   templateUrl: "./autocomplete.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AutocompleteComponent implements OnInit {
   @Input() public type: string;
 
   @Input() public values: EntiteSimple[];
@@ -51,21 +51,9 @@ export class AutocompleteComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatAutocompleteTrigger)
   trigger: MatAutocompleteTrigger;
 
-  subscription: Subscription;
-
   filteredValues: Observable<EntiteSimple[]>;
 
   private CHARACTERS_TO_IGNORE = /(\s|\'|\-|\,)/g;
-
-  ngAfterViewInit() {
-    this._subscribeToClosingActions();
-  }
-
-  ngOnDestroy() {
-    if (this.subscription && !this.subscription.closed) {
-      this.subscription.unsubscribe();
-    }
-  }
 
   ngOnInit(): void {
     this.filteredValues = this.control.valueChanges.pipe(
@@ -77,25 +65,6 @@ export class AutocompleteComponent implements OnInit, AfterViewInit, OnDestroy {
           : "" + value[this.attributesToFilter[0].key];
       }),
       map((value) => (value ? this._filter(value) : []))
-    );
-  }
-
-  private _subscribeToClosingActions(): void {
-    if (this.subscription && !this.subscription.closed) {
-      this.subscription.unsubscribe();
-    }
-
-    this.subscription = this.trigger.panelClosingActions.subscribe(
-      (e) => {
-        if (this.trigger.activeOption) {
-          this.updateSelectionWithOption(this.trigger.activeOption);
-        } else {
-          this.updateSelectionWithOption(null);
-        }
-        this.trigger.closePanel();
-      },
-      (err) => this._subscribeToClosingActions(),
-      () => this._subscribeToClosingActions()
     );
   }
 
