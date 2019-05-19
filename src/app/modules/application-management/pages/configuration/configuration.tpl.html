@@ -4,7 +4,7 @@
       <h1>Configuration</h1>
     </div>
     <span class="flex-spacer"></span>
-    <ng-container *ngIf="modeHelper.isViewAllMode(mode)">
+    <ng-container *ngIf="getIsAllViewMode()">
       <button
         mat-raised-button
         class="refresh-button"
@@ -28,7 +28,7 @@
   </div>
 
   <configuration-form
-    *ngIf="modeHelper.isEditionMode(mode)"
+    *ngIf="getIsEditionMode()"
     [model]="configurationToSave"
     [ages]="pageModel.ages"
     [departements]="pageModel.departements"
@@ -39,7 +39,7 @@
     (back)="cancelEdition()"
   ></configuration-form>
 
-  <div *ngIf="modeHelper.isViewAllMode(mode)" class="table-responsive">
+  <div *ngIf="getIsAllViewMode()" class="table-responsive">
     <mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="propriete">
         <mat-header-cell *matHeaderCellDef> Propriété </mat-header-cell>

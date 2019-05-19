@@ -1,5 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MultipleOptionsDialogData } from "./multiple-options-dialog-data.object";
 
 @Component({
   selector: "multiple-options-dialog",
@@ -8,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 export class MultipleOptionsDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<MultipleOptionsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: MultipleOptionsDialogComponent
+    @Inject(MAT_DIALOG_DATA) public data: MultipleOptionsDialogData
   ) {}
 
   closeDialog() {

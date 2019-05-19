@@ -4,10 +4,7 @@ import { AppConfiguration } from "basenaturaliste-model/app-configuration.object
 import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import * as _ from "lodash";
-import {
-  EntityMode,
-  EntityModeHelper
-} from "../../../model-management/helpers/entity-mode.helper";
+import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { PageComponent } from "../../../shared/components/page.component";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
@@ -48,8 +45,6 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   public pageModel: ConfigurationPage;
 
   public configurationToSave: AppConfiguration;
-
-  public mode: EntityModeHelper;
 
   public displayedColumns: string[] = ["propriete", "valeur"];
   public dataSource: MatTableDataSource<ProprieteValeur>;
@@ -223,10 +218,18 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   private switchToEditionMode(): void {
     PageStatusHelper.resetPageStatus();
-    this.mode = EntityMode.EDITION;
+    EntityModeHelper.switchToEditionMode();
   }
 
   private switchToViewAllMode(): void {
-    this.mode = EntityMode.VIEW_ALL;
+    EntityModeHelper.switchToViewAllMode();
+  }
+
+  public getIsAllViewMode(): boolean {
+    return EntityModeHelper.isViewAllMode();
+  }
+
+  public getIsEditionMode(): boolean {
+    return EntityModeHelper.isEditionMode();
   }
 }

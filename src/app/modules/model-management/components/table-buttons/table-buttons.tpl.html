@@ -1,24 +1,30 @@
 <div class="table-top-buttons">
-  <button *ngIf="!hideViewButton"
+  <button
+    *ngIf="!hideViewButton"
     mat-raised-button
     type="submit"
-    (click)="viewObject(age)"
-    [disabled]="!object">
+    (click)="viewObject()"
+    [disabled]="!object"
+  >
     <mat-icon>visibility</mat-icon>
     Visualiser
   </button>
-  <button mat-raised-button
+  <button
+    mat-raised-button
     type="submit"
-    (click)="editObject(age)"
-    [disabled]="!object">
+    (click)="editObject()"
+    [disabled]="!object"
+  >
     <mat-icon>edit</mat-icon>
     Éditer
   </button>
-  <button mat-raised-button
+  <button
+    mat-raised-button
     *ngIf="!hideDeleteButton"
     type="submit"
-    (click)="deleteObject(age)"
-    [disabled]="!object">
+    (click)="deleteObject()"
+    [disabled]="!object"
+  >
     <mat-icon>delete</mat-icon>
     Supprimer
   </button>
