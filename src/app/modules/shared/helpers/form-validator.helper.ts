@@ -33,6 +33,10 @@ export class FormValidatorHelper {
     restrictiveCondition?: boolean
   ): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+
       const valueIsNotAnInteger: boolean = !Number.isInteger(control.value);
 
       let valueHasWrongSign: boolean = false;
