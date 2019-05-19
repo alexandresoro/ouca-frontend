@@ -76,4 +76,8 @@ export class LieuditFormComponent extends EntitySubFormComponent {
   public resetCommunes(): void {
     this.entityForm.controls.commune.setValue(null);
   }
+
+  public getCommunesForm = (): FormGroup => {
+    return this.entityForm.controls.commune as FormGroup;
+  }
 }
