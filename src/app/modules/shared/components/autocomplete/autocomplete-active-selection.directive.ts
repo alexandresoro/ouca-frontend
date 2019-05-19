@@ -28,7 +28,10 @@ export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
     this.autoCompleteTrigger.panelClosingActions
       .pipe(untilDestroyed(this))
       .subscribe((e) => {
-        if (this.autoCompleteTrigger.activeOption) {
+        if (
+          this.autoCompleteTrigger.activeOption &&
+          this.autoCompleteTrigger.activeOption.value !== this.ngControl.value
+        ) {
           this.ngControl.reset(this.autoCompleteTrigger.activeOption.value);
         } else if (!this.ngControl.valid) {
           this.ngControl.reset(null);
