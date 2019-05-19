@@ -66,6 +66,9 @@
   <mat-error *ngIf="entityForm.controls['nom'].hasError('required')">
     Le champ "Nom du lieu-dit" ne peut pas être vide.
   </mat-error>
+  <mat-error *ngIf="entityForm.hasError('alreadyExistingNom')">
+    {{ entityForm.getError("alreadyExistingNom").message }}
+  </mat-error>
 </mat-form-field>
 
 <!-- Altitude -->

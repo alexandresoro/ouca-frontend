@@ -7,6 +7,9 @@ import {
   Validators
 } from "@angular/forms";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
+import * as diacritics from "diacritics";
+import * as _ from "lodash";
+import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -20,21 +23,44 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        commune: new FormControl("", []),
+        communeId: new FormControl("", []),
+        commune: new FormControl("", [Validators.required]),
         nom: new FormControl("", [Validators.required]),
         altitude: new FormControl("", [Validators.required]),
         longitude: new FormControl("", [Validators.required]),
         latitude: new FormControl("", [Validators.required]),
         nbDonnees: new FormControl("", [])
       },
-      [this.lieuditValidator]
+      [this.nomValidator]
     );
   }
 
-  private lieuditValidator: ValidatorFn = (
+  public nomValidator: ValidatorFn = (
     formGroup: FormGroup
   ): ValidationErrors | null => {
-    return null;
+    const nom = formGroup.controls.nom.value;
+    const commune = formGroup.controls.commune.value;
+    const id = formGroup.controls.id.value;
+
+    const foundEntityByCode: Lieudit = _.find(this.objects, (object: any) => {
+      return (
+        diacritics.remove(object.nom.trim().toLowerCase()) ===
+          diacritics.remove(nom.trim().toLowerCase()) &&
+        object.commune.id === commune.id
+      );
+    });
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundEntityByCode && id !== foundEntityByCode.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingNom",
+          "Il existe déjà " +
+            this.getAnEntityLabel() +
+            " avec ce nom dans cette commune."
+        )
+      : null;
   }
 
   getEntityName(): string {
