@@ -306,6 +306,35 @@ export class InventaireHelper {
     );
   }
 
+  public static isInventaireUpdated(
+    inventaireFromDB: Inventaire,
+    inventaireFromForm: Inventaire
+  ): boolean {
+    if (
+      inventaireFromDB.observateurId !== inventaireFromForm.observateurId ||
+      !moment(inventaireFromForm.date).isSame(moment(inventaireFromDB.date)) ||
+      inventaireFromDB.heure !== inventaireFromForm.heure ||
+      inventaireFromDB.duree !== inventaireFromForm.duree ||
+      inventaireFromDB.lieuditId !== inventaireFromForm.lieuditId ||
+      inventaireFromDB.altitude !== inventaireFromForm.altitude ||
+      inventaireFromDB.longitude !== inventaireFromForm.longitude ||
+      inventaireFromDB.latitude !== inventaireFromForm.latitude ||
+      inventaireFromDB.temperature !== inventaireFromForm.temperature ||
+      !_.isEqual(
+        _.sortBy(inventaireFromDB.associesIds),
+        _.sortBy(inventaireFromForm.associesIds)
+      ) ||
+      !_.isEqual(
+        _.sortBy(inventaireFromDB.meteosIds),
+        _.sortBy(inventaireFromForm.meteosIds)
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   /**
    * The observateur should be filled and should exist
    */

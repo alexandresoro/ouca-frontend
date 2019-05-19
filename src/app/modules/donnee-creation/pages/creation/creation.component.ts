@@ -288,18 +288,27 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on save donnee when in update mode
    */
   public saveInventaireAndDonnee(): void {
-    const isInventaireUpdated: boolean = true; // TODO
+    const inventaireToSave: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
+      this.inventaireForm
+    );
 
-    if (!!isInventaireUpdated) {
-      this.displayInventaireDialog();
-    }
+    this.backendApiService
+      .getInventaireById(InventaireHelper.getDisplayedInventaireId())
+      .subscribe((result) => {
+        if (!!InventaireHelper.isInventaireUpdated(result, inventaireToSave)) {
+          this.displayInventaireDialog();
+        } else {
+          this.updateInventaireAndDonnee(false);
+        }
+      });
   }
 
   private displayInventaireDialog(): void {
     const updateInventaireDialogData = new MultipleOptionsDialogData(
       "Confirmation de mise-à-jour",
-      "Voulez-vous mettre à jour la fiche inventaire pour cette fiche espèce " +
-        "seulement ou pour toutes les fiches espèces avec cette fiche inventaire ?",
+      "Vous avez modifié la fiche inventaire. " +
+        "Voulez-vous mettre à jour la fiche inventaire pour cette fiche espèce " +
+        "seulement ou pour toutes les fiches espèces de cette fiche inventaire ?",
       [
         {
           value: 1,
@@ -629,8 +638,10 @@ export class CreationComponent extends PageComponent implements OnInit {
   private handleDonneeFormState(toEnable: boolean): void {
     if (toEnable) {
       this.donneeForm.enable();
+      document.getElementById("btn-generate").disabled = false;
     } else {
       this.donneeForm.disable();
+      document.getElementById("btn-generate").disabled = true;
     }
   }
 

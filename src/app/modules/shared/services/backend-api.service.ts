@@ -19,19 +19,20 @@ export class BackendApiService {
   private CONFIGURATION: string = "configuration/";
   private CREATION: string = "creation/";
   private DELETE: string = "delete";
-  private DONNEE = "donnee/";
-  private EXPORT = "export";
-  private FIND_WITH_CONTEXT = "find_with_context";
-  private IMPORT = "import";
+  private DONNEE: string = "donnee/";
+  private EXPORT: string = "export";
+  private FIND: string = "find";
+  private FIND_WITH_CONTEXT: string = "find_with_context";
+  private IMPORT: string = "import";
   private INIT: string = "init";
   private INVENTAIRE: string = "inventaire/";
   private LIEUDIT: string = "lieudit/";
-  private NEXT_DONNEE = "next_donnee";
-  private NEXT_REGROUPEMENT = "next_regroupement";
-  private PREVIOUS_DONNEE = "previous_donnee";
+  private NEXT_DONNEE: string = "next_donnee";
+  private NEXT_REGROUPEMENT: string = "next_regroupement";
+  private PREVIOUS_DONNEE: string = "previous_donnee";
   private UPDATE: string = "update";
   private SAVE: string = "save";
-  private SEARCH_BY_COMMUNE = "search_by_commune/";
+  private SEARCH_BY_COMMUNE: string = "search_by_commune/";
 
   constructor(public http: HttpClient, private router: Router) {}
 
@@ -100,6 +101,10 @@ export class BackendApiService {
     inventaireToSave: Inventaire
   ): Observable<DbUpdateResult> {
     return this.httpPost(this.INVENTAIRE + this.SAVE, inventaireToSave);
+  }
+
+  public getInventaireById(id: number): Observable<any> {
+    return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
   }
 
   public getEntityInitialPageModel(
