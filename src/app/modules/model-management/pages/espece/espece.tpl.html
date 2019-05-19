@@ -23,7 +23,7 @@
     *ngIf="
       entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
     "
-    [componentType]="formComponentType"
+    [componentType]="getFormType()"
     creationTitle="Création d'une espèce"
     editionTitle="Édition d'une espèce"
     [entityForm]="form"

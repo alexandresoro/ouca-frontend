@@ -7,6 +7,8 @@ import {
   Validators
 } from "@angular/forms";
 import { Departement } from "basenaturaliste-model/departement.object";
+import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
+import { ListHelper } from "../../../shared/helpers/list-helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -15,14 +17,14 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./departement.tpl.html"
 })
 export class DepartementComponent extends EntiteSimpleComponent<Departement> {
-  public formComponentType = DepartementFormComponent;
-
   public ngOnInit(): void {
     super.ngOnInit();
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
         code: new FormControl("", [Validators.required]),
+        nbCommunes: new FormControl("", []),
+        nbLieuxdits: new FormControl("", []),
         nbDonnees: new FormControl("", [])
       },
       [this.departementValidator]
@@ -32,10 +34,27 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
   private departementValidator: ValidatorFn = (
     formGroup: FormGroup
   ): ValidationErrors | null => {
-    return null;
+    const code = formGroup.controls.code.value;
+    const id = formGroup.controls.id.value;
+
+    const foundDepartementByCode: Departement = ListHelper.findObjectInListByTextValue(
+      this.objects,
+      "code",
+      code
+    );
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundDepartementByCode && id !== foundDepartementByCode.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingCode",
+          "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
+        )
+      : null;
   }
 
-  getEntityName(): string {
+  public getEntityName(): string {
     return "departement";
   }
 
@@ -45,6 +64,10 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
 
   getNewObject(): Departement {
     return {} as Departement;
+  }
+
+  public getFormType(): any {
+    return DepartementFormComponent;
   }
 
   public getDetailsData(): EntityDetailsData[] {

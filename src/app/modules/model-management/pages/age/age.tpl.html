@@ -23,7 +23,7 @@
     *ngIf="
       entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
     "
-    [componentType]="formComponentType"
+    [componentType]="getFormType()"
     creationTitle="Création d'un âge"
     editionTitle="Édition d'un âge"
     [entityForm]="form"

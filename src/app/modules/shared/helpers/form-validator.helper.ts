@@ -1,4 +1,11 @@
-import { AbstractControl, ValidatorFn } from "@angular/forms";
+import {
+  AbstractControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn
+} from "@angular/forms";
+import * as diacritics from "diacritics";
+import * as _ from "lodash";
 import { TimeHelper } from "./time.helper";
 
 export class FormValidatorHelper {
@@ -66,5 +73,30 @@ export class FormValidatorHelper {
     return (control: AbstractControl): { [key: string]: any } | null => {
       return null;
     };
+  }
+
+  public static isExisting(
+    fieldName: string,
+    objects: any[],
+    value: string,
+    id: number
+  ): boolean {
+    return !!_.find(objects, (object: any) => {
+      return (
+        diacritics.remove(object[fieldName].trim().toLowerCase()) ===
+          diacritics.remove(value.trim().toLowerCase()) && id !== object.id
+      );
+    });
+  }
+
+  public static getValidatorResult(
+    key: string,
+    value: string
+  ): { [key: string]: any } | null {
+    const result: { [key: string]: any } = {};
+    result[key] = {
+      message: value
+    };
+    return result;
   }
 }

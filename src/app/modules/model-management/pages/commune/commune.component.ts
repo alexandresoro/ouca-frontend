@@ -15,8 +15,6 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./commune.tpl.html"
 })
 export class CommuneComponent extends EntiteSimpleComponent<Commune> {
-  public formComponentType = CommuneFormComponent;
-
   public ngOnInit(): void {
     super.ngOnInit();
     this.form = new FormGroup(
@@ -47,6 +45,10 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
 
   getNewObject(): Commune {
     return {} as Commune;
+  }
+
+  public getFormType(): any {
+    return CommuneFormComponent;
   }
 
   public getDetailsData(): EntityDetailsData[] {

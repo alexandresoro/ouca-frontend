@@ -17,8 +17,6 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
 export class EstimationNombreComponent extends EntiteSimpleComponent<
   EstimationNombre
 > {
-  public formComponentType = EstimationNombreFormComponent;
-
   public ngOnInit(): void {
     super.ngOnInit();
     this.form = new FormGroup(
@@ -35,6 +33,10 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
     formGroup: FormGroup
   ): ValidationErrors | null => {
     return null;
+  }
+
+  public getFormType(): any {
+    return EstimationNombreFormComponent;
   }
 
   getEntityName(): string {

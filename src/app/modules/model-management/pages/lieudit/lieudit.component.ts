@@ -15,8 +15,6 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./lieudit.tpl.html"
 })
 export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
-  public formComponentType = LieuditFormComponent;
-
   public ngOnInit(): void {
     super.ngOnInit();
     this.form = new FormGroup(
@@ -49,6 +47,10 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
 
   getNewObject(): Lieudit {
     return {} as Lieudit;
+  }
+
+  public getFormType(): any {
+    return LieuditFormComponent;
   }
 
   public getDetailsData(): EntityDetailsData[] {

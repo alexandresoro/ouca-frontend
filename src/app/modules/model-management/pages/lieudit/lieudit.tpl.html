@@ -25,7 +25,7 @@
     *ngIf="
       entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
     "
-    [componentType]="formComponentType"
+    [componentType]="getFormType()"
     creationTitle="Création d'un lieu-dit"
     editionTitle="Édition d'un lieu-dit"
     [entityForm]="form"

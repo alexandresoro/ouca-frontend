@@ -7,6 +7,8 @@ import {
   Validators
 } from "@angular/forms";
 import { Espece } from "basenaturaliste-model/espece.object";
+import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
+import { ListHelper } from "../../../shared/helpers/list-helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EspeceFormComponent } from "../../components/form/espece-form/espece-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -15,8 +17,6 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./espece.tpl.html"
 })
 export class EspeceComponent extends EntiteSimpleComponent<Espece> {
-  public formComponentType = EspeceFormComponent;
-
   public ngOnInit(): void {
     super.ngOnInit();
     this.form = new FormGroup(
@@ -29,14 +29,77 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
         nomLatin: new FormControl("", [Validators.required]),
         nbDonnees: new FormControl("", [])
       },
-      [this.especeValidator]
+      [this.codeValidator, this.nomFrancaisValidator, this.nomLatinValidator]
     );
   }
 
-  private especeValidator: ValidatorFn = (
+  private codeValidator: ValidatorFn = (
     formGroup: FormGroup
   ): ValidationErrors | null => {
-    return null;
+    const code = formGroup.controls.code.value;
+    const id = formGroup.controls.id.value;
+
+    const foundEspeceByCode: Espece = ListHelper.findObjectInListByTextValue(
+      this.objects,
+      "code",
+      code
+    );
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundEspeceByCode && id !== foundEspeceByCode.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingCode",
+          "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
+        )
+      : null;
+  }
+
+  private nomFrancaisValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    const nomFrancais = formGroup.controls.nomFrancais.value;
+    const id = formGroup.controls.id.value;
+
+    const foundEspeceByCode: Espece = ListHelper.findObjectInListByTextValue(
+      this.objects,
+      "nomFrancais",
+      nomFrancais
+    );
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundEspeceByCode && id !== foundEspeceByCode.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingNomFrancais",
+          "Il existe déjà " + this.getAnEntityLabel() + " avec ce nom français."
+        )
+      : null;
+  }
+
+  private nomLatinValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    const nomLatin = formGroup.controls.nomLatin.value;
+    const id = formGroup.controls.id.value;
+
+    const foundEspeceByCode: Espece = ListHelper.findObjectInListByTextValue(
+      this.objects,
+      "nomLatin",
+      nomLatin
+    );
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundEspeceByCode && id !== foundEspeceByCode.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingNomLatin",
+          "Il existe déjà " + this.getAnEntityLabel() + " avec ce nom latin."
+        )
+      : null;
   }
 
   getEntityName(): string {
@@ -49,6 +112,10 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
 
   getNewObject(): Espece {
     return {} as Espece;
+  }
+
+  public getFormType(): any {
+    return EspeceFormComponent;
   }
 
   public getDetailsData(): EntityDetailsData[] {
