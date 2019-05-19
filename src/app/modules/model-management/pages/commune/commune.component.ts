@@ -7,10 +7,12 @@ import {
   Validators
 } from "@angular/forms";
 import { Commune } from "basenaturaliste-model/commune.object";
+import * as diacritics from "diacritics";
+import * as _ from "lodash";
+import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
-
 @Component({
   templateUrl: "./commune.tpl.html"
 })
@@ -20,19 +22,67 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
+        departementId: new FormControl("", []),
         departement: new FormControl("", [Validators.required]),
         code: new FormControl("", [Validators.required]),
         nom: new FormControl("", [Validators.required]),
-        nbDonnees: new FormControl("", [])
+        nbDonnees: new FormControl("", []),
+        nbLieuxdits: new FormControl("", [])
       },
-      [this.communeValidator]
+      [this.codeValidator, this.nomValidator]
     );
   }
 
-  private communeValidator: ValidatorFn = (
+  public codeValidator: ValidatorFn = (
     formGroup: FormGroup
   ): ValidationErrors | null => {
-    return null;
+    const code = formGroup.controls.code.value;
+    const departement = formGroup.controls.departement.value;
+    const id = formGroup.controls.id.value;
+
+    const foundEntityByCode: Commune = _.find(this.objects, (object: any) => {
+      return object.code === code && object.departement.id === departement.id;
+    });
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundEntityByCode && id !== foundEntityByCode.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingCode",
+          "Il existe déjà " +
+            this.getAnEntityLabel() +
+            " avec ce code dans ce département."
+        )
+      : null;
+  }
+
+  public nomValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    const nom = formGroup.controls.nom.value;
+    const departement = formGroup.controls.departement.value;
+    const id = formGroup.controls.id.value;
+
+    const foundEntityByCode: Commune = _.find(this.objects, (object: any) => {
+      return (
+        diacritics.remove(object.nom.trim().toLowerCase()) ===
+          diacritics.remove(nom.trim().toLowerCase()) &&
+        object.departement.id === departement.id
+      );
+    });
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundEntityByCode && id !== foundEntityByCode.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingNom",
+          "Il existe déjà " +
+            this.getAnEntityLabel() +
+            " avec ce nom dans ce département."
+        )
+      : null;
   }
 
   getEntityName(): string {

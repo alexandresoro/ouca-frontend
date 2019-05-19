@@ -33,52 +33,6 @@ export class EntiteAvecLibelleEtCodeComponent<
     );
   }
 
-  private libelleValidator: ValidatorFn = (
-    formGroup: FormGroup
-  ): ValidationErrors | null => {
-    const libelle = formGroup.controls.libelle.value;
-    const id = formGroup.controls.id.value;
-
-    const foundDepartementByLibelle: EntiteAvecLibelleEtCode = ListHelper.findObjectInListByTextValue(
-      this.objects,
-      "libelle",
-      libelle
-    );
-
-    const valueIsAnExistingEntity: boolean =
-      !!foundDepartementByLibelle && id !== foundDepartementByLibelle.id;
-
-    return valueIsAnExistingEntity
-      ? FormValidatorHelper.getValidatorResult(
-          "alreadyExistingLibelle",
-          "Il existe déjà " + this.getAnEntityLabel() + " avec ce libellé."
-        )
-      : null;
-  }
-
-  private codeValidator: ValidatorFn = (
-    formGroup: FormGroup
-  ): ValidationErrors | null => {
-    const code = formGroup.controls.code.value;
-    const id = formGroup.controls.id.value;
-
-    const foundDepartementByCode: EntiteAvecLibelleEtCode = ListHelper.findObjectInListByTextValue(
-      this.objects,
-      "code",
-      code
-    );
-
-    const valueIsAnExistingEntity: boolean =
-      !!foundDepartementByCode && id !== foundDepartementByCode.id;
-
-    return valueIsAnExistingEntity
-      ? FormValidatorHelper.getValidatorResult(
-          "alreadyExistingCode",
-          "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
-        )
-      : null;
-  }
-
   public getFormType(): any {
     return EntiteAvecLibelleEtCodeFormComponent;
   }

@@ -1,9 +1,4 @@
-import {
-  AbstractControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn
-} from "@angular/forms";
+import { AbstractControl, ValidatorFn } from "@angular/forms";
 import * as diacritics from "diacritics";
 import * as _ from "lodash";
 import { TimeHelper } from "./time.helper";

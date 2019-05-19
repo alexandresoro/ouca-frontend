@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
+import { ListHelper } from "../../../shared/helpers/list-helper";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
@@ -183,5 +185,51 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
     this.objectToRemove = object;
     this.currentObject = object;
     EntityModeHelper.switchToRemoveMode();
+  }
+
+  public libelleValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    const libelle = formGroup.controls.libelle.value;
+    const id = formGroup.controls.id.value;
+
+    const foundEntityByLibelle: T = ListHelper.findObjectInListByTextValue(
+      this.objects,
+      "libelle",
+      libelle
+    );
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundEntityByLibelle && id !== foundEntityByLibelle.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingLibelle",
+          "Il existe déjà " + this.getAnEntityLabel() + " avec ce libellé."
+        )
+      : null;
+  }
+
+  public codeValidator: ValidatorFn = (
+    formGroup: FormGroup
+  ): ValidationErrors | null => {
+    const code = formGroup.controls.code.value;
+    const id = formGroup.controls.id.value;
+
+    const foundEntityByCode: T = ListHelper.findObjectInListByTextValue(
+      this.objects,
+      "code",
+      code
+    );
+
+    const valueIsAnExistingEntity: boolean =
+      !!foundEntityByCode && id !== foundEntityByCode.id;
+
+    return valueIsAnExistingEntity
+      ? FormValidatorHelper.getValidatorResult(
+          "alreadyExistingCode",
+          "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
+        )
+      : null;
   }
 }

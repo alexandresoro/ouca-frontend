@@ -1,4 +1,3 @@
-import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import * as diacritics from "diacritics";
 import * as _ from "lodash";
 

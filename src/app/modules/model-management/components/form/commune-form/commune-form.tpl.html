@@ -1,6 +1,7 @@
 <!-- Departement -->
 <mat-form-field>
   <mat-select
+    [errorStateMatcher]="matcher"
     [formControl]="entityForm.controls['departement']"
     id="input-departement"
     name="departement"
@@ -30,6 +31,9 @@
   <mat-error *ngIf="entityForm.controls['code'].hasError('required')">
     Le champ "Code de la commune" ne peut pas être vide.
   </mat-error>
+  <mat-error *ngIf="entityForm.hasError('alreadyExistingCode')">
+    {{ entityForm.getError("alreadyExistingCode").message }}
+  </mat-error>
 </mat-form-field>
 
 <!-- Nom -->
@@ -46,5 +50,8 @@
 
   <mat-error *ngIf="entityForm.controls['nom'].hasError('required')">
     Le champ "Nom de la commune" ne peut pas être vide.
+  </mat-error>
+  <mat-error *ngIf="entityForm.hasError('alreadyExistingNom')">
+    {{ entityForm.getError("alreadyExistingNom").message }}
   </mat-error>
 </mat-form-field>

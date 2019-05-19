@@ -13,14 +13,14 @@
   <mat-error *ngIf="entityForm.controls['libelle'].hasError('required')">
     Le champ "Libellé" ne peut pas être vide.
   </mat-error>
-  <mat-error *ngIf="entityForm.hasError('alreadyExisting')">
-    {{ entityForm.getError("alreadyExisting").message }}
+  <mat-error *ngIf="entityForm.hasError('alreadyExistingLibelle')">
+    {{ entityForm.getError("alreadyExistingLibelle").message }}
   </mat-error>
 </mat-form-field>
 
 <!-- Non compte -->
 <mat-checkbox
-  [formControl]="entityForm.controls['nomCompte']"
+  [formControl]="entityForm.controls['nonCompte']"
   id="input-non-compte"
   name="non-compte"
   >Non compté</mat-checkbox

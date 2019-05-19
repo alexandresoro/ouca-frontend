@@ -23,16 +23,11 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
       {
         id: new FormControl("", []),
         libelle: new FormControl("", [Validators.required]),
-        nomCompte: new FormControl("", [Validators.required])
+        nonCompte: new FormControl("", [Validators.required]),
+        nbDonnees: new FormControl("", [])
       },
-      [this.estimationNombreValidator]
+      [this.libelleValidator]
     );
-  }
-
-  private estimationNombreValidator: ValidatorFn = (
-    formGroup: FormGroup
-  ): ValidationErrors | null => {
-    return null;
   }
 
   public getFormType(): any {

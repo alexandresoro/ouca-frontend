@@ -33,29 +33,6 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     );
   }
 
-  private codeValidator: ValidatorFn = (
-    formGroup: FormGroup
-  ): ValidationErrors | null => {
-    const code = formGroup.controls.code.value;
-    const id = formGroup.controls.id.value;
-
-    const foundEspeceByCode: Espece = ListHelper.findObjectInListByTextValue(
-      this.objects,
-      "code",
-      code
-    );
-
-    const valueIsAnExistingEntity: boolean =
-      !!foundEspeceByCode && id !== foundEspeceByCode.id;
-
-    return valueIsAnExistingEntity
-      ? FormValidatorHelper.getValidatorResult(
-          "alreadyExistingCode",
-          "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
-        )
-      : null;
-  }
-
   private nomFrancaisValidator: ValidatorFn = (
     formGroup: FormGroup
   ): ValidationErrors | null => {

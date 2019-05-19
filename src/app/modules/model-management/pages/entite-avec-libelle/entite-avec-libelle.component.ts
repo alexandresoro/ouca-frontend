@@ -28,31 +28,8 @@ export class EntiteAvecLibelleComponent<
         libelle: new FormControl("", [Validators.required]),
         nbDonnees: new FormControl("", [])
       },
-      [this.entityWithLibelleValidator]
+      [this.libelleValidator]
     );
-  }
-
-  private entityWithLibelleValidator: ValidatorFn = (
-    formGroup: FormGroup
-  ): ValidationErrors | null => {
-    const libelle = formGroup.controls.libelle.value;
-    const id = formGroup.controls.id.value;
-
-    const foundEntityByLibelle: EntiteAvecLibelle = ListHelper.findObjectInListByTextValue(
-      this.objects,
-      "libelle",
-      libelle
-    );
-
-    const valueIsAnExistingEntity: boolean =
-      !!foundEntityByLibelle && id !== foundEntityByLibelle.id;
-
-    return valueIsAnExistingEntity
-      ? FormValidatorHelper.getValidatorResult(
-          "alreadyExistingLibelle",
-          "Il existe déjà " + this.getAnEntityLabel() + " avec ce libellé."
-        )
-      : null;
   }
 
   public getFormType(): any {
