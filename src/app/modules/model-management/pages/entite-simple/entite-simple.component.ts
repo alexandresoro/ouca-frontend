@@ -1,5 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
+import {
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn
+} from "@angular/forms";
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
@@ -31,15 +35,13 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   public ngOnInit(): void {
     this.switchToViewAllMode();
-
-    // Get all objects
-    this.getAll();
   }
 
-  public getAll(withoutResetPageStatus?: boolean): void {
-    if (!withoutResetPageStatus) {
+  public getAll(doNotResetPageStatus?: boolean): void {
+    if (!doNotResetPageStatus) {
       PageStatusHelper.resetPageStatus();
     }
+
     this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
       (result: T[]) => {
         this.objects = result;
@@ -60,6 +62,10 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   public getAnEntityLabel(): string {
     return "une entité";
+  }
+
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "L'entité" : "l'entité";
   }
 
   public getNewObject(): T {
@@ -89,16 +95,14 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
         .subscribe(
           (result: DbUpdateResult) => {
             PageStatusHelper.setSuccessStatus(
-              "L'entité a été supprimée avec succès"
+              this.getTheEntityLabel(true) + " a été supprimé(e) avec succès"
             );
 
-            this.getAll(true);
-            this.switchToViewAllMode();
+            this.switchToViewAllMode(true);
           },
           (error: Response) => {
             PageStatusHelper.setErrorStatus(
-              "Echec de la suppression de l'entité de type " +
-                this.getEntityName(),
+              "Echec de la suppression de " + this.getTheEntityLabel(),
               error
             );
           }
@@ -122,7 +126,6 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   public saveObject(objectToSave: T): void {
-    console.log("Entity to save", objectToSave);
     this.backendApiService
       .saveEntity(
         this.getEntityName(),
@@ -131,17 +134,22 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
       )
       .subscribe(
         (result: DbUpdateResult) => {
-          PageStatusHelper.setSuccessStatus(
-            "L'entité a été sauvegardée avec succès"
-          );
+          if (!!result && (!!result.insertId || !!result.affectedRows)) {
+            PageStatusHelper.setSuccessStatus(
+              this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès"
+            );
 
-          this.getAll(true);
-          this.switchToViewAllMode();
+            this.switchToViewAllMode(true);
+          } else {
+            PageStatusHelper.setErrorStatus(
+              "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
+              result
+            );
+          }
         },
         (error: Response) => {
           PageStatusHelper.setErrorStatus(
-            "Impossible de sauvegarder l'entité de type " +
-              this.getEntityName(),
+            "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
             error
           );
         }
@@ -151,6 +159,12 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   public cancelEdition(): void {
     PageStatusHelper.resetPageStatus();
     this.switchToViewAllMode();
+  }
+
+  public resetForm() {
+    if (!!this.form) {
+      this.form.reset(this.getNewObject());
+    }
   }
 
   private switchToCreationMode(): void {
@@ -167,7 +181,9 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
     EntityModeHelper.switchToEditionMode();
   }
 
-  private switchToViewAllMode(): void {
+  private switchToViewAllMode(doNotResetPageStatus?: boolean): void {
+    this.getAll(doNotResetPageStatus);
+    this.resetForm();
     this.objectToSave = this.getNewObject();
     this.currentObject = undefined;
     EntityModeHelper.switchToViewAllMode();

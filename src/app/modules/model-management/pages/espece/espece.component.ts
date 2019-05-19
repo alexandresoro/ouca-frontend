@@ -87,8 +87,23 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     return "une espèce";
   }
 
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "L'espèce" : "l'espèce";
+  }
+
   getNewObject(): Espece {
-    return {} as Espece;
+    return {
+      id: null,
+      classeId: null,
+      classe: {
+        id: null,
+        libelle: ""
+      },
+      code: "",
+      nomFrancais: "",
+      nomLatin: "",
+      nbDonnees: 0
+    };
   }
 
   public getFormType(): any {

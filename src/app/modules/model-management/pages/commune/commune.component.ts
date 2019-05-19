@@ -93,8 +93,23 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     return "une commune";
   }
 
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "La commune" : "la commune";
+  }
+
   getNewObject(): Commune {
-    return {} as Commune;
+    return {
+      id: null,
+      departementId: null,
+      departement: {
+        id: null,
+        code: ""
+      },
+      code: "",
+      nom: "",
+      nbDonnees: 0,
+      nbLieuxdits: 0
+    };
   }
 
   public getFormType(): any {

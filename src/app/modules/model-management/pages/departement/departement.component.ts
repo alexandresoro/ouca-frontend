@@ -62,8 +62,18 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     return "un département";
   }
 
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "Le département" : "le département";
+  }
+
   getNewObject(): Departement {
-    return {} as Departement;
+    return {
+      id: null,
+      code: "",
+      nbDonnees: 0,
+      nbCommunes: 0,
+      nbLieuxdits: 0
+    } as Departement;
   }
 
   public getFormType(): any {

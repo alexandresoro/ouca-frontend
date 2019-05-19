@@ -29,8 +29,8 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
     return "une classec";
   }
 
-  public getNewObject(): Classe {
-    return {} as Classe;
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "La classe" : "la classe";
   }
 
   public getDetailsData(): EntityDetailsData[] {

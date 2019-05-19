@@ -15,7 +15,7 @@ export class ComportementComponent extends EntiteAvecLibelleEtCodeComponent<
     return "un comportement";
   }
 
-  getNewObject(): Comportement {
-    return {} as Comportement;
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "Le comportement" : "le comportement";
   }
 }

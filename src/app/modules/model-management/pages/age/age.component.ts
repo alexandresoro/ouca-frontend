@@ -14,7 +14,7 @@ export class AgeComponent extends EntiteAvecLibelleComponent<Age> {
     return "un âge";
   }
 
-  public getNewObject(): Age {
-    return {} as Age;
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "L'âge" : "l'âge";
   }
 }

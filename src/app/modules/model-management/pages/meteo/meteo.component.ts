@@ -13,7 +13,8 @@ export class MeteoComponent extends EntiteAvecLibelleComponent<Meteo> {
   public getAnEntityLabel(): string {
     return "une météo";
   }
-  getNewObject(): Meteo {
-    return {} as Meteo;
+
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "La météo" : "la météo";
   }
 }

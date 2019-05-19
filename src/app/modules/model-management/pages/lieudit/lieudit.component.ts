@@ -77,8 +77,26 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     return "un lieu-dit";
   }
 
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "Le lieu-dit" : "le lieu-dit";
+  }
+
   getNewObject(): Lieudit {
-    return {} as Lieudit;
+    return {
+      id: null,
+      communeId: null,
+      commune: {
+        id: null,
+        departementId: null,
+        code: "",
+        nom: ""
+      },
+      nom: "",
+      altitude: 0,
+      longitude: 0,
+      latitude: 0,
+      nbDonnees: 0
+    };
   }
 
   public getFormType(): any {

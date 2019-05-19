@@ -1,19 +1,11 @@
 import { Component } from "@angular/core";
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { EntiteAvecLibelle } from "basenaturaliste-model/entite-avec-libelle.object";
 import * as _ from "lodash";
-import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
-import { ListHelper } from "../../../shared/helpers/list-helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteAvecLibelleFormComponent } from "../../components/form/entite-avec-libelle-form/entite-avec-libelle-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
+
 @Component({
   template: ""
 })
@@ -34,6 +26,14 @@ export class EntiteAvecLibelleComponent<
 
   public getFormType(): any {
     return EntiteAvecLibelleFormComponent;
+  }
+
+  public getNewObject(): T {
+    return {
+      id: null,
+      libelle: "",
+      nbDonnees: 0
+    } as T;
   }
 
   public getDetailsData(): EntityDetailsData[] {

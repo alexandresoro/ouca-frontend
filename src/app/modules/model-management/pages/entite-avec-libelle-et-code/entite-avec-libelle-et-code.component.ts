@@ -52,4 +52,13 @@ export class EntiteAvecLibelleEtCodeComponent<
 
     return detailsData;
   }
+
+  public getNewObject(): T {
+    return {
+      id: null,
+      code: "",
+      libelle: "",
+      nbDonnees: 0
+    } as T;
+  }
 }

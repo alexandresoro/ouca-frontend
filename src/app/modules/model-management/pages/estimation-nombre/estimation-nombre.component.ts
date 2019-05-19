@@ -42,8 +42,17 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
     return "une estimation du nombre";
   }
 
+  public getTheEntityLabel(uppercase?: boolean): string {
+    return !!uppercase ? "L'estimation du nombre" : "l'estimation du nombre";
+  }
+
   getNewObject(): EstimationNombre {
-    return {} as EstimationNombre;
+    return {
+      id: null,
+      libelle: "",
+      nonCompte: false,
+      nbDonnees: 0
+    };
   }
 
   public getDetailsData(): EntityDetailsData[] {
