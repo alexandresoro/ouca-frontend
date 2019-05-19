@@ -9,7 +9,13 @@
     min="1"
     [formControl]="control"
   />
-  <button matSuffix mat-button (click)="displayNextRegroupement()">
+  <button
+    id="btn-generate"
+    matSuffix
+    mat-button
+    color="primary"
+    (click)="displayNextRegroupement()"
+  >
     Générer
   </button>
 </mat-form-field>
