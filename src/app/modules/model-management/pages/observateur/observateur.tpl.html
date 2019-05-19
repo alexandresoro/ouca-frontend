@@ -24,7 +24,7 @@
     *ngIf="
       entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
     "
-    [componentType]="formComponentType"
+    [componentType]="getFormType()"
     creationTitle="Création d'un observateur"
     editionTitle="Édition d'un observateur"
     [entityForm]="form"

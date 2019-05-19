@@ -13,4 +13,7 @@
   <mat-error *ngIf="entityForm.controls['code'].hasError('required')">
     Le champ "Code du département" ne peut pas être vide.
   </mat-error>
+  <mat-error *ngIf="entityForm.hasError('alreadyExistingCode')">
+    {{ entityForm.getError("alreadyExistingCode").message }}
+  </mat-error>
 </mat-form-field>

@@ -30,6 +30,9 @@
   <mat-error *ngIf="entityForm.controls['code'].hasError('required')">
     Le champ "Code de l'espèce" ne peut pas être vide.
   </mat-error>
+  <mat-error *ngIf="entityForm.hasError('alreadyExistingCode')">
+    {{ entityForm.getError("alreadyExistingCode").message }}
+  </mat-error>
 </mat-form-field>
 
 <!-- Nom francais -->
@@ -47,6 +50,9 @@
   <mat-error *ngIf="entityForm.controls['nomFrancais'].hasError('required')">
     Le champ "Nom français" ne peut pas être vide.
   </mat-error>
+  <mat-error *ngIf="entityForm.hasError('alreadyExistingNomFrancais')">
+    {{ entityForm.getError("alreadyExistingNomFrancais").message }}
+  </mat-error>
 </mat-form-field>
 
 <!-- Nom latin -->
@@ -63,5 +69,8 @@
 
   <mat-error *ngIf="entityForm.controls['nomLatin'].hasError('required')">
     Le champ "Nom latin" ne peut pas être vide.
+  </mat-error>
+  <mat-error *ngIf="entityForm.hasError('alreadyExistingNomLatin')">
+    {{ entityForm.getError("alreadyExistingNomLatin").message }}
   </mat-error>
 </mat-form-field>

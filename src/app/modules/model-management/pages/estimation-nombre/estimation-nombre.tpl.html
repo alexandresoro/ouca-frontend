@@ -24,7 +24,7 @@
     *ngIf="
       entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
     "
-    [componentType]="formComponentType"
+    [componentType]="getFormType()"
     creationTitle="Création d'une estimation du nombre"
     editionTitle="Édition d'une estimation du nombre"
     [entityForm]="form"

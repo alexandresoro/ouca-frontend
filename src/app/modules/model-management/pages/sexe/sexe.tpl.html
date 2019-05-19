@@ -24,7 +24,7 @@
     *ngIf="
       entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
     "
-    [componentType]="formComponentType"
+    [componentType]="getFormType()"
     creationTitle="Création d'un sexe"
     editionTitle="Édition d'un sexe"
     [entityForm]="form"

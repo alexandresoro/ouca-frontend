@@ -11,8 +11,6 @@ import { EntityModeHelper } from "../../helpers/entity-mode.helper";
   template: ""
 })
 export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
-  public formComponentType = EntitySubFormComponent;
-
   public objects: T[];
 
   public currentObject: T;
@@ -43,6 +41,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
     this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
       (result: T[]) => {
         this.objects = result;
+        console.log(this.objects);
       },
       (error: Response) => {
         PageStatusHelper.setErrorStatus(
@@ -63,6 +62,10 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   public getNewObject(): T {
     return null;
+  }
+
+  public getFormType(): any {
+    return EntitySubFormComponent;
   }
 
   public newObject(): void {
@@ -104,6 +107,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   public editObject(object: T): void {
+    console.log("Object to display", object);
     this.switchToEditionMode(object);
   }
 
@@ -116,6 +120,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   public saveObject(objectToSave: T): void {
+    console.log("Entity to save", objectToSave);
     this.backendApiService
       .saveEntity(
         this.getEntityName(),

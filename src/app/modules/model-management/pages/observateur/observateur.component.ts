@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { Observateur } from "basenaturaliste-model/observateur.object";
-import { EntiteAvecLibelleFormComponent } from "../../components/form/entite-avec-libelle-form/entite-avec-libelle-form.component";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 @Component({
   templateUrl: "./observateur.tpl.html"

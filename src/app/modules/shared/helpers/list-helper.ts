@@ -1,3 +1,5 @@
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import * as diacritics from "diacritics";
 import * as _ from "lodash";
 
 export class ListHelper {
@@ -31,5 +33,18 @@ export class ListHelper {
 
   public static mapIdsToEntities(list: any[], valuesToFind: any[]) {
     return this.mapAttributesToEntities(list, "id", valuesToFind);
+  }
+
+  public static findObjectInListByTextValue(
+    objects: any[],
+    attributeName: string,
+    searchedValue: string
+  ): any {
+    return _.find(objects, (object: any) => {
+      return (
+        diacritics.remove(object[attributeName].trim().toLowerCase()) ===
+        diacritics.remove(searchedValue.trim().toLowerCase())
+      );
+    });
   }
 }

@@ -24,7 +24,7 @@
     *ngIf="
       entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
     "
-    [componentType]="formComponentType"
+    [componentType]="getFormType()"
     creationTitle="Création d'une météo"
     editionTitle="Édition d'une météo"
     [entityForm]="form"
