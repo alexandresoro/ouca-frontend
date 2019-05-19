@@ -14,6 +14,9 @@
     "esModuleInterop": true,
     "plugins": [{ "name": "typescript-tslint-plugin" }]
   },
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
+  },
   "include": ["src"],
-  "exclude": ["node_modules", "src/main.aot.ts"]
+  "exclude": ["node_modules", "src/main.ts"]
 }

@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "build": "webpack",
+    "build:aot": "webpack --config webpack.aot.config.js",
     "build:prod": "webpack --mode=production",
     "start": "webpack-dev-server"
   },
@@ -34,6 +35,8 @@
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
+    "@angular/compiler-cli": "*",
+    "@ngtools/webpack": "*",
     "@types/diacritics": "*",
     "@types/lodash": "*",
     "@types/node": "10",
