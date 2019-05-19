@@ -1,18 +1,25 @@
 <!-- Departement -->
 <mat-form-field>
   <mat-select
+    [errorStateMatcher]="matcher"
     id="input-departement"
     name="departement"
     placeholder="Département"
   >
     <mat-option
-      *ngFor="let departement of departements"
-      [value]="departement.id"
+      *ngFor="let departement of departements$ | async"
+      [value]="departement"
     >
       {{ departement.code }}
     </mat-option>
   </mat-select>
-  <mat-error *ngIf="entityForm.controls['commune'].hasError('required')">
+  <mat-error
+    *ngIf="
+      entityForm.controls['commune'].controls['departement'].hasError(
+        'required'
+      )
+    "
+  >
     Le champ "Département" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
@@ -20,16 +27,22 @@
 <!-- Code Commune -->
 <mat-form-field>
   <mat-select
-    [formControl]="entityForm.controls['commune']"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['commune'].controls['id']"
     id="input-code-commune"
     name="code-commune"
     placeholder="Code de la commune"
   >
-    <mat-option *ngFor="let commune of filteredCommunes" [value]="commune">
+    <mat-option
+      *ngFor="let commune of filteredCommunes$ | async"
+      [value]="commune.id"
+    >
       {{ commune.code }}
     </mat-option>
   </mat-select>
-  <mat-error *ngIf="entityForm.controls['commune'].hasError('required')">
+  <mat-error
+    *ngIf="entityForm.controls['commune'].controls['id'].hasError('required')"
+  >
     Le champ "Code de la commune" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
@@ -37,16 +50,26 @@
 <!-- Nom Commune -->
 <mat-form-field>
   <mat-select
-    [formControl]="entityForm.controls['commune']"
+    [errorStateMatcher]="matcher"
+    [formControl]="entityForm.controls['commune'].controls['id']"
     id="input-nom-commune"
     name="nom-commune"
     placeholder="Nom de la commune"
   >
-    <mat-option *ngFor="let commune of filteredCommunes" [value]="commune">
+    <mat-option
+      *ngFor="let commune of filteredCommunes$ | async"
+      [value]="commune.id"
+    >
       {{ commune.nom }}
     </mat-option>
   </mat-select>
-  <mat-error *ngIf="entityForm.controls['commune'].hasError('required')">
+  <mat-error
+    *ngIf="
+      entityForm.controls['commune'].controls['departement'].hasError(
+        'required'
+      )
+    "
+  >
     Le champ "Nom de la commune" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
