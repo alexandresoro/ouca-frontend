@@ -1,15 +1,6 @@
 import { Component } from "@angular/core";
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { EntiteAvecLibelleEtCode } from "basenaturaliste-model/entite-avec-libelle-et-code.object";
-import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
-import { ListHelper } from "../../../shared/helpers/list-helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteAvecLibelleEtCodeFormComponent } from "../../components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -26,8 +17,7 @@ export class EntiteAvecLibelleEtCodeComponent<
       {
         id: new FormControl("", []),
         code: new FormControl("", [Validators.required]),
-        libelle: new FormControl("", [Validators.required]),
-        nbDonnees: new FormControl("", [])
+        libelle: new FormControl("", [Validators.required])
       },
       [this.libelleValidator, this.codeValidator]
     );
@@ -51,14 +41,5 @@ export class EntiteAvecLibelleEtCodeComponent<
     );
 
     return detailsData;
-  }
-
-  public getNewObject(): T {
-    return {
-      id: null,
-      code: "",
-      libelle: "",
-      nbDonnees: 0
-    } as T;
   }
 }

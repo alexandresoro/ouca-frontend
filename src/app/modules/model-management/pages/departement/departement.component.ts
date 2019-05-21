@@ -22,10 +22,7 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        code: new FormControl("", [Validators.required]),
-        nbCommunes: new FormControl("", []),
-        nbLieuxdits: new FormControl("", []),
-        nbDonnees: new FormControl("", [])
+        code: new FormControl("", [Validators.required])
       },
       [this.departementValidator]
     );
@@ -64,16 +61,6 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
 
   public getTheEntityLabel(uppercase?: boolean): string {
     return !!uppercase ? "Le département" : "le département";
-  }
-
-  getNewObject(): Departement {
-    return {
-      id: null,
-      code: "",
-      nbDonnees: 0,
-      nbCommunes: 0,
-      nbLieuxdits: 0
-    } as Departement;
   }
 
   public getFormType(): any {

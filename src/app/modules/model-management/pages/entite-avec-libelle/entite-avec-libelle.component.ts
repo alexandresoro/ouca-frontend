@@ -17,8 +17,7 @@ export class EntiteAvecLibelleComponent<
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        libelle: new FormControl("", [Validators.required]),
-        nbDonnees: new FormControl("", [])
+        libelle: new FormControl("", [Validators.required])
       },
       [this.libelleValidator]
     );
@@ -26,14 +25,6 @@ export class EntiteAvecLibelleComponent<
 
   public getFormType(): any {
     return EntiteAvecLibelleFormComponent;
-  }
-
-  public getNewObject(): T {
-    return {
-      id: null,
-      libelle: "",
-      nbDonnees: 0
-    } as T;
   }
 
   public getDetailsData(): EntityDetailsData[] {

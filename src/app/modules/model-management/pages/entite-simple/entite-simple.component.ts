@@ -1,9 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import {
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn
-} from "@angular/forms";
+import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
@@ -57,7 +53,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   public getEntityName(): string {
-    return "";
+    return "unknown";
   }
 
   public getAnEntityLabel(): string {
@@ -69,7 +65,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   public getNewObject(): T {
-    return null;
+    return {} as T;
   }
 
   public getFormType(): any {
@@ -163,7 +159,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   public resetForm() {
     if (!!this.form) {
-      this.form.reset(this.getNewObject());
+      this.form.reset({});
     }
   }
 

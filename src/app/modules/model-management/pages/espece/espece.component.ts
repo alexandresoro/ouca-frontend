@@ -22,12 +22,10 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        classeId: new FormControl(""),
         classe: new FormControl("", [Validators.required]),
         code: new FormControl("", [Validators.required]),
         nomFrancais: new FormControl("", [Validators.required]),
-        nomLatin: new FormControl("", [Validators.required]),
-        nbDonnees: new FormControl("", [])
+        nomLatin: new FormControl("", [Validators.required])
       },
       [this.codeValidator, this.nomFrancaisValidator, this.nomLatinValidator]
     );
@@ -89,21 +87,6 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
 
   public getTheEntityLabel(uppercase?: boolean): string {
     return !!uppercase ? "L'espèce" : "l'espèce";
-  }
-
-  getNewObject(): Espece {
-    return {
-      id: null,
-      classeId: null,
-      classe: {
-        id: null,
-        libelle: ""
-      },
-      code: "",
-      nomFrancais: "",
-      nomLatin: "",
-      nbDonnees: 0
-    };
   }
 
   public getFormType(): any {

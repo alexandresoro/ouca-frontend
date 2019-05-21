@@ -40,13 +40,15 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     const commune = formGroup.controls.commune.value;
     const id = formGroup.controls.id.value;
 
-    const foundEntityByCode: Lieudit = _.find(this.objects, (object: any) => {
-      return (
-        diacritics.remove(object.nom.trim().toLowerCase()) ===
-          diacritics.remove(nom.trim().toLowerCase()) &&
-        object.commune.id === commune.id
-      );
-    });
+    const foundEntityByCode: Lieudit = nom
+      ? _.find(this.objects, (object: any) => {
+          return (
+            diacritics.remove(object.nom.trim().toLowerCase()) ===
+              diacritics.remove(nom.trim().toLowerCase()) &&
+            object.commune.id === commune.id
+          );
+        })
+      : null;
 
     const valueIsAnExistingEntity: boolean =
       !!foundEntityByCode && id !== foundEntityByCode.id;
@@ -71,24 +73,6 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
 
   public getTheEntityLabel(uppercase?: boolean): string {
     return !!uppercase ? "Le lieu-dit" : "le lieu-dit";
-  }
-
-  getNewObject(): Lieudit {
-    return {
-      id: null,
-      communeId: null,
-      commune: {
-        id: null,
-        departementId: null,
-        code: "",
-        nom: ""
-      },
-      nom: "",
-      altitude: 0,
-      longitude: 0,
-      latitude: 0,
-      nbDonnees: 0
-    };
   }
 
   public getFormType(): any {

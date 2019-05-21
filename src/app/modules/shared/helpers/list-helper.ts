@@ -39,11 +39,14 @@ export class ListHelper {
     attributeName: string,
     searchedValue: string
   ): any {
-    return _.find(objects, (object: any) => {
-      return (
-        diacritics.remove(object[attributeName].trim().toLowerCase()) ===
-        diacritics.remove(searchedValue.trim().toLowerCase())
-      );
-    });
+    return (
+      searchedValue &&
+      _.find(objects, (object: any) => {
+        return (
+          diacritics.remove(object[attributeName].trim().toLowerCase()) ===
+          diacritics.remove(searchedValue.trim().toLowerCase())
+        );
+      })
+    );
   }
 }

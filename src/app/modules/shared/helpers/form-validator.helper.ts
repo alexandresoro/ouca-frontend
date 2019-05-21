@@ -80,12 +80,15 @@ export class FormValidatorHelper {
     value: string,
     id: number
   ): boolean {
-    return !!_.find(objects, (object: any) => {
-      return (
-        diacritics.remove(object[fieldName].trim().toLowerCase()) ===
-          diacritics.remove(value.trim().toLowerCase()) && id !== object.id
-      );
-    });
+    return (
+      !!value &&
+      !!_.find(objects, (object: any) => {
+        return (
+          diacritics.remove(object[fieldName].trim().toLowerCase()) ===
+            diacritics.remove(value.trim().toLowerCase()) && id !== object.id
+        );
+      })
+    );
   }
 
   public static getValidatorResult(

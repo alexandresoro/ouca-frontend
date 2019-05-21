@@ -23,8 +23,7 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
       {
         id: new FormControl("", []),
         libelle: new FormControl("", [Validators.required]),
-        nonCompte: new FormControl("", [Validators.required]),
-        nbDonnees: new FormControl("", [])
+        nonCompte: new FormControl("", [Validators.required])
       },
       [this.libelleValidator]
     );
@@ -44,15 +43,6 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
 
   public getTheEntityLabel(uppercase?: boolean): string {
     return !!uppercase ? "L'estimation du nombre" : "l'estimation du nombre";
-  }
-
-  getNewObject(): EstimationNombre {
-    return {
-      id: null,
-      libelle: "",
-      nonCompte: false,
-      nbDonnees: 0
-    };
   }
 
   public getDetailsData(): EntityDetailsData[] {

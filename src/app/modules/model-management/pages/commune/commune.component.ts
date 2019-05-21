@@ -22,12 +22,9 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        departementId: new FormControl("", []),
         departement: new FormControl("", [Validators.required]),
         code: new FormControl("", [Validators.required]),
-        nom: new FormControl("", [Validators.required]),
-        nbDonnees: new FormControl("", []),
-        nbLieuxdits: new FormControl("", [])
+        nom: new FormControl("", [Validators.required])
       },
       [this.codeValidator, this.nomValidator]
     );
@@ -64,13 +61,15 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     const departement = formGroup.controls.departement.value;
     const id = formGroup.controls.id.value;
 
-    const foundEntityByCode: Commune = _.find(this.objects, (object: any) => {
-      return (
-        diacritics.remove(object.nom.trim().toLowerCase()) ===
-          diacritics.remove(nom.trim().toLowerCase()) &&
-        object.departement.id === departement.id
-      );
-    });
+    const foundEntityByCode: Commune = !!nom
+      ? _.find(this.objects, (object: any) => {
+          return (
+            diacritics.remove(object.nom.trim().toLowerCase()) ===
+              diacritics.remove(nom.trim().toLowerCase()) &&
+            object.departement.id === departement.id
+          );
+        })
+      : null;
 
     const valueIsAnExistingEntity: boolean =
       !!foundEntityByCode && id !== foundEntityByCode.id;
@@ -95,21 +94,6 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
 
   public getTheEntityLabel(uppercase?: boolean): string {
     return !!uppercase ? "La commune" : "la commune";
-  }
-
-  getNewObject(): Commune {
-    return {
-      id: null,
-      departementId: null,
-      departement: {
-        id: null,
-        code: ""
-      },
-      code: "",
-      nom: "",
-      nbDonnees: 0,
-      nbLieuxdits: 0
-    };
   }
 
   public getFormType(): any {
