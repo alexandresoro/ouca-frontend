@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
@@ -20,41 +20,46 @@ export class LieuditFormComponent extends EntitySubFormComponent {
 
   public selectedDepartement: Departement;
 
+  public departementControl: FormControl;
+
+  public nomCommuneControl: FormControl;
+
   constructor(private backendApiService: BackendApiService) {
     super();
   }
 
   ngOnInit(): void {
-    const departementControl = (this.entityForm.controls.commune as FormGroup)
-      .controls.departement;
-    departementControl.valueChanges.subscribe(
+    this.departementControl = new FormControl("", [Validators.required]);
+    this.nomCommuneControl = new FormControl("", [Validators.required]);
+
+    this.departements$ = new Subject();
+    this.communes$ = new Subject();
+
+    this.departementControl.valueChanges.subscribe(
       (selectedDepartement: Departement) => {
-        console.log("ici1", selectedDepartement);
-        this.resetCommunes();
+        this.resetSelectedCommune();
       }
     );
 
     this.filteredCommunes$ = combineLatest(
-      departementControl.valueChanges as Observable<Departement>,
+      this.departementControl.valueChanges as Observable<Departement>,
       this.communes$,
       (selectedDepartement, communes) => {
-        console.log("ici2", selectedDepartement);
         return communes && selectedDepartement && selectedDepartement.id
           ? communes.filter((commune) => {
-              return commune.departementId === selectedDepartement.id;
+              return (
+                commune.departement &&
+                commune.departement.id === selectedDepartement.id
+              );
             })
           : [];
       }
     );
 
-    this.departements$ = new Subject();
-    this.communes$ = new Subject();
-
     // Get all departements
     this.backendApiService.getAllEntities("departement").subscribe(
       (result: Departement[]) => {
         this.departements$.next(!!result ? result : []);
-        console.log(this.departements$);
       },
       (error: Response) => {
         console.error("Impossible de trouver les départements (" + error + ")");
@@ -65,7 +70,6 @@ export class LieuditFormComponent extends EntitySubFormComponent {
     this.backendApiService.getAllEntities("commune").subscribe(
       (result: Commune[]) => {
         this.communes$.next(!!result ? result : []);
-        console.log(this.communes$);
       },
       (error: Response) => {
         console.error("Impossible de trouver les communes (" + error + ")");
@@ -73,11 +77,8 @@ export class LieuditFormComponent extends EntitySubFormComponent {
     );
   }
 
-  public resetCommunes(): void {
+  public resetSelectedCommune(): void {
     this.entityForm.controls.commune.setValue(null);
-  }
-
-  public getCommunesForm = (): FormGroup => {
-    return this.entityForm.controls.commune as FormGroup;
+    this.nomCommuneControl.setValue(null);
   }
 }

@@ -23,19 +23,11 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        communeId: new FormControl("", []),
-        commune: new FormGroup({
-          id: new FormControl("", []),
-          code: new FormControl("", []),
-          nom: new FormControl("", []),
-          departementId: new FormControl("", []),
-          departement: new FormControl("", [])
-        }),
+        commune: new FormControl("", []),
         nom: new FormControl("", [Validators.required]),
         altitude: new FormControl("", [Validators.required]),
         longitude: new FormControl("", [Validators.required]),
-        latitude: new FormControl("", [Validators.required]),
-        nbDonnees: new FormControl("", [])
+        latitude: new FormControl("", [Validators.required])
       },
       [this.nomValidator]
     );
