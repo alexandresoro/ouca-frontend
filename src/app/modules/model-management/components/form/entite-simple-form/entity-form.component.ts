@@ -45,7 +45,7 @@ export class EntityFormComponent implements OnInit {
   ngOnInit() {
     this.loadComponent();
     if (!!this.object && !!this.object.id) {
-      this.entityForm.setValue(this.object);
+      this.entityForm.patchValue(this.object);
     }
   }
 
