@@ -24,6 +24,7 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
       {
         id: new FormControl("", []),
         commune: new FormControl("", []),
+        communeId: new FormControl("", [Validators.required]),
         nom: new FormControl("", [Validators.required]),
         altitude: new FormControl("", [Validators.required]),
         longitude: new FormControl("", [Validators.required]),
@@ -37,18 +38,19 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     formGroup: FormGroup
   ): ValidationErrors | null => {
     const nom = formGroup.controls.nom.value;
-    const commune = formGroup.controls.commune.value;
+    const communeId = formGroup.controls.communeId.value;
     const id = formGroup.controls.id.value;
 
-    const foundEntityByCode: Lieudit = nom
-      ? _.find(this.objects, (object: any) => {
-          return (
-            diacritics.remove(object.nom.trim().toLowerCase()) ===
-              diacritics.remove(nom.trim().toLowerCase()) &&
-            object.commune.id === commune.id
-          );
-        })
-      : null;
+    const foundEntityByCode: Lieudit =
+      nom && communeId
+        ? _.find(this.objects, (object: any) => {
+            return (
+              diacritics.remove(object.nom.trim().toLowerCase()) ===
+                diacritics.remove(nom.trim().toLowerCase()) &&
+              object.commune.id === communeId
+            );
+          })
+        : null;
 
     const valueIsAnExistingEntity: boolean =
       !!foundEntityByCode && id !== foundEntityByCode.id;

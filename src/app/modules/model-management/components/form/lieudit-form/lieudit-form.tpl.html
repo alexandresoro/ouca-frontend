@@ -23,19 +23,19 @@
 <mat-form-field>
   <mat-select
     [errorStateMatcher]="matcher"
-    [formControl]="entityForm.controls['commune']"
+    [formControl]="entityForm.controls['communeId']"
     id="input-code-commune"
     name="code-commune"
     placeholder="Code de la commune"
   >
     <mat-option
       *ngFor="let commune of filteredCommunes$ | async"
-      [value]="commune"
+      [value]="commune.id"
     >
       {{ commune.code }}
     </mat-option>
   </mat-select>
-  <mat-error *ngIf="entityForm.controls['commune'].hasError('required')">
+  <mat-error *ngIf="entityForm.controls['communeId'].hasError('required')">
     Le champ "Code de la commune" ne peut pas être vide.
   </mat-error>
 </mat-form-field>
@@ -88,6 +88,7 @@
     [formControl]="entityForm.controls['altitude']"
     id="input-altitude"
     matInput
+    min="0"
     name="altitude"
     placeholder="Altitude"
     type="number"
@@ -105,6 +106,7 @@
     [formControl]="entityForm.controls['longitude']"
     id="input-longitude"
     matInput
+    min="0"
     name="longitude"
     placeholder="Longitude"
     type="number"
@@ -122,6 +124,7 @@
     [formControl]="entityForm.controls['latitude']"
     id="input-latitude"
     matInput
+    min="0"
     name="latitude"
     placeholder="Latitude"
     type="number"
