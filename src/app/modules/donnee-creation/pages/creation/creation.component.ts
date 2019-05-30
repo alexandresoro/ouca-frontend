@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { Classe } from "basenaturaliste-model/classe.object";
@@ -124,6 +124,23 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.switchToNewInventaireMode();
     } else {
       this.onInitCreationPageError(creationPage);
+    }
+  }
+
+  @HostListener("document:keyup", ["$event"])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === "Enter") {
+      if (CreationModeHelper.isInventaireMode() && this.inventaireForm.valid) {
+        this.saveInventaire();
+      } else if (CreationModeHelper.isDonneeMode() && this.donneeForm.valid) {
+        this.saveDonnee();
+      } else if (
+        CreationModeHelper.isUpdateMode() &&
+        this.inventaireForm.valid &&
+        this.donneeForm.valid
+      ) {
+        this.saveInventaireAndDonnee();
+      }
     }
   }
 
