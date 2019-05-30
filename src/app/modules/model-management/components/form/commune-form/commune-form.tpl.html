@@ -23,6 +23,8 @@
     [formControl]="entityForm.controls['code']"
     id="input-code"
     matInput
+    max="99999"
+    min="0"
     name="code"
     placeholder="Code de la commune"
     type="number"
@@ -43,6 +45,7 @@
     [formControl]="entityForm.controls['nom']"
     id="input-nom"
     matInput
+    maxlength="100"
     name="nom"
     placeholder="Nom de la commune"
     type="text"

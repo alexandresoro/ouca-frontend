@@ -68,6 +68,7 @@
     [formControl]="entityForm.controls['nom']"
     id="input-nom"
     matInput
+    maxlength="150"
     name="nom"
     placeholder="Nom du lieu-dit"
     type="text"
@@ -89,6 +90,7 @@
     id="input-altitude"
     matInput
     min="0"
+    max="99999"
     name="altitude"
     placeholder="Altitude"
     type="number"
@@ -107,6 +109,7 @@
     id="input-longitude"
     matInput
     min="0"
+    max="99999999"
     name="longitude"
     placeholder="Longitude"
     type="number"
@@ -125,6 +128,7 @@
     id="input-latitude"
     matInput
     min="0"
+    max="99999999"
     name="latitude"
     placeholder="Latitude"
     type="number"
