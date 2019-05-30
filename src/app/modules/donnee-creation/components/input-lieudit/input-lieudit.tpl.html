@@ -42,6 +42,8 @@
       <input
         [formControl]="controlGroup.controls['altitude']"
         matInput
+        min="0"
+        max="99999"
         type="number"
         placeholder="Altitude"
         id="input-altitude"
@@ -54,6 +56,8 @@
       <input
         [formControl]="controlGroup.controls['longitude']"
         matInput
+        min="0"
+        max="99999999"
         type="number"
         placeholder="Longitude"
         id="input-longitude"
@@ -66,6 +70,8 @@
       <input
         [formControl]="controlGroup.controls['latitude']"
         matInput
+        min="0"
+        max="99999999"
         type="number"
         placeholder="Latitude"
         id="input-latitude"
