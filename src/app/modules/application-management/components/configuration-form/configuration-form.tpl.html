@@ -10,7 +10,7 @@
       class="configuration-form"
     >
       <!-- Nom du logiciel -->
-      <mat-form-field>
+      <mat-form-field *ngIf="false">
         <input
           matInput
           type="text"
@@ -57,6 +57,7 @@
           matInput
           type="number"
           min="1"
+          max="99999"
           placeholder="Nombre par défaut"
           id="input-nombre"
           name="input-nombre"
@@ -117,7 +118,7 @@
       >
 
       <!-- Path to mysql -->
-      <mat-form-field>
+      <mat-form-field *ngIf="false">
         <input
           matInput
           type="text"
@@ -129,7 +130,7 @@
       </mat-form-field>
 
       <!-- Path to mysqldump -->
-      <mat-form-field>
+      <mat-form-field *ngIf="false">
         <input
           matInput
           type="text"
@@ -141,7 +142,7 @@
       </mat-form-field>
 
       <!-- Path to import folder -->
-      <mat-form-field>
+      <mat-form-field *ngIf="false">
         <input
           matInput
           type="text"
@@ -153,7 +154,7 @@
       </mat-form-field>
 
       <!-- Path to export folder -->
-      <mat-form-field>
+      <mat-form-field *ngIf="false">
         <input
           matInput
           type="text"
