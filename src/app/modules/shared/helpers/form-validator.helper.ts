@@ -7,7 +7,7 @@ export class FormValidatorHelper {
   public static isAnExistingEntityValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const valueIsNotAnExistingEntity: boolean =
-        !control.value || (!!control.value && !control.value.id);
+        !!control.value && !control.value.id;
       return valueIsNotAnExistingEntity
         ? { forbiddenValue: { value: control.value } }
         : null;
