@@ -70,6 +70,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.classes$ = new Subject();
     this.especes$ = new Subject();
 
+    PageStatusHelper.resetPageStatus();
+
     this.initCreationPage();
   }
 
@@ -129,7 +131,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   @HostListener("document:keyup", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.key === "Enter") {
+    if (event.ctrlKey && event.key === "Enter") {
       if (CreationModeHelper.isInventaireMode() && this.inventaireForm.valid) {
         this.saveInventaire();
       } else if (CreationModeHelper.isDonneeMode() && this.donneeForm.valid) {

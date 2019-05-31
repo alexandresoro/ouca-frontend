@@ -58,6 +58,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   }
 
   private initConfigurationPage(): void {
+    PageStatusHelper.resetPageStatus();
     this.switchToViewAllMode();
     this.getCurrentConfigurations();
   }
