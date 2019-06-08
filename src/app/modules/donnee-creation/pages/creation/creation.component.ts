@@ -131,7 +131,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   @HostListener("document:keyup", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.ctrlKey && event.key === "Enter") {
+    if (/*event.ctrlKey &&*/ event.key === "Enter") {
       if (CreationModeHelper.isInventaireMode() && this.inventaireForm.valid) {
         this.saveInventaire();
       } else if (CreationModeHelper.isDonneeMode() && this.donneeForm.valid) {
@@ -295,7 +295,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       },
       (error: any) => {
         PageStatusHelper.setErrorStatus(
-          "La fiche espèce a été créée" +
+          "La fiche espèce a été sauvegardée" +
             " mais échec lors de la récupération du prochain numéro de regroupement utilisable.",
           error
         );
@@ -420,6 +420,8 @@ export class CreationComponent extends PageComponent implements OnInit {
         "La fiche espèce et sa fiche inventaire ont été mises-à-jour avec succès."
       );
       InventaireHelper.setDisplayedInventaireId(savedDonnee.inventaireId);
+
+      this.updateNextRegroupement();
     } else {
       this.onUpdateDonneeError(savedDonnee);
     }
@@ -657,10 +659,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   private handleDonneeFormState(toEnable: boolean): void {
     if (toEnable) {
       this.donneeForm.enable();
-      // document.getElementById("btn-generate").disabled = false;
     } else {
       this.donneeForm.disable();
-      // document.getElementById("btn-generate").disabled = true;
     }
   }
 
