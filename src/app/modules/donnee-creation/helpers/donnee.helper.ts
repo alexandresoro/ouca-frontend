@@ -491,7 +491,7 @@ export class DonneeHelper {
   }
 
   private static regroupementValidator(): ValidatorFn {
-    return FormValidatorHelper.isAnExistingEntityValidator();
+    return FormValidatorHelper.isAnIntegerValidator();
   }
 
   private static comportementValidator(): ValidatorFn {
