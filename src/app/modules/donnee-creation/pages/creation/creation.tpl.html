@@ -1,58 +1,64 @@
-<h1 class="mat-display-1" style="display: none">Saisie des observations</h1>
-
 <div class="bn-creation-body">
-  <!-- Bar containing the messages -->
+  <!-- Row containing the messages -->
   <div class="bn-creation-messages">
     <div [ngSwitch]="getPageStatus()">
-      <div *ngSwitchCase="pageStatusEnum.ERROR">{{ getMessage() }}</div>
-      <div *ngSwitchCase="pageStatusEnum.SUCCESS">{{ getMessage() }}</div>
+      <div *ngSwitchCase="pageStatusEnum.ERROR" class="error-message">
+        <mat-icon>error</mat-icon>{{ getMessage() }}
+      </div>
+      <div *ngSwitchCase="pageStatusEnum.SUCCESS" class="success-message">
+        <mat-icon>check_circle</mat-icon>{{ getMessage() }}
+      </div>
       <div *ngSwitchDefault>
-        <strong>Aucun message</strong>
+        <mat-icon>not_interested</mat-icon>Aucun message
       </div>
     </div>
   </div>
 
-  <!-- Bar containing the top buttons -->
+  <!-- Row containing the top buttons -->
   <div class="bn-creation-buttons">
     <!-- Top left buttons -->
     <span class="top-left-creation-buttons">
       <button
         mat-raised-button
+        matTooltip="Donnée précédente"
+        matTooltipClass="default-tooltip"
         color="primary"
         [disabled]="!isPreviousDonneeBtnDisplayed()"
         (click)="onPreviousDonneeBtnClicked()"
       >
         <mat-icon>navigate_before</mat-icon>
-        <span>Donnée précédente</span>
       </button>
 
       <button
         mat-raised-button
+        matTooltip="Donnée suivante"
+        matTooltipClass="default-tooltip"
         color="primary"
         [disabled]="!isNextDonneeBtnDisplayed()"
         (click)="onNextDonneeBtnClicked()"
       >
-        <span>Donnée suivante</span>
         <mat-icon>navigate_next</mat-icon>
       </button>
 
       <button
         mat-raised-button
+        matTooltip="Recherche par ID"
+        matTooltipClass="default-tooltip"
         color="primary"
         (click)="onSearchByIdBtnClicked()"
       >
         <mat-icon>search</mat-icon>
-        <span>Recherche par ID</span>
       </button>
 
       <button
         mat-raised-button
+        matTooltip="Nouvelle donnée"
+        matTooltipClass="default-tooltip"
         color="primary"
         *ngIf="isNewDonneeBtnDisplayed()"
         (click)="onNewDonneeBtnClicked()"
       >
         <mat-icon>add</mat-icon>
-        <span>Nouvelle donnée</span>
       </button>
     </span>
 
@@ -63,40 +69,45 @@
       <button
         mat-raised-button
         color="primary"
+        matTooltip="Enregistrer la fiche inventaire"
+        matTooltipClass="default-tooltip"
         *ngIf="isSaveInventaireBtnDisplayed()"
         [disabled]="!inventaireForm.valid"
         (click)="saveInventaire()"
       >
         <mat-icon>save</mat-icon>
-        <span>Enregistrer la fiche inventaire</span>
       </button>
       <button
         mat-raised-button
+        matTooltip="Enregistrer la fiche espèce"
+        matTooltipClass="default-tooltip"
         color="primary"
         *ngIf="isSaveDonneeBtnDisplayed()"
         [disabled]="!donneeForm.valid"
         (click)="saveDonnee()"
       >
         <mat-icon>save</mat-icon>
-        <span>Enregistrer la fiche espèce</span>
       </button>
       <button
         *ngIf="isUpdateDonneeBtnDisplayed()"
         mat-raised-button
+        matTooltip="Mettre à jour les fiches inventaire et espèce"
+        matTooltipClass="default-tooltip"
         color="primary"
         (click)="saveInventaireAndDonnee()"
+        [disabled]="!inventaireForm.valid || !donneeForm.valid"
       >
         <mat-icon>save</mat-icon>
-        <span>Mettre à jour les fiches inventaire et espèce</span>
       </button>
       <button
         mat-raised-button
+        matTooltip="Supprimer la donnée"
+        matTooltipClass="default-tooltip"
         color="primary"
         *ngIf="isDeleteDonneeBtnDisplayed()"
         (click)="onDeleteDonneeBtnClicked()"
       >
         <mat-icon>delete</mat-icon>
-        <span>Supprimer la donnée</span>
       </button>
     </span>
   </div>
@@ -357,41 +368,46 @@
     <span class="top-right-creation-buttons">
       <button
         mat-raised-button
+        matTooltip="Enregistrer la fiche inventaire"
+        matTooltipClass="default-tooltip"
         color="primary"
         *ngIf="isSaveInventaireBtnDisplayed()"
         [disabled]="!inventaireForm.valid"
         (click)="saveInventaire()"
       >
         <mat-icon>save</mat-icon>
-        <span>Enregistrer la fiche inventaire</span>
       </button>
       <button
         mat-raised-button
+        matTooltip="Enregistrer la fiche espèce"
+        matTooltipClass="default-tooltip"
         color="primary"
         *ngIf="isSaveDonneeBtnDisplayed()"
         [disabled]="!donneeForm.valid"
         (click)="saveDonnee()"
       >
         <mat-icon>save</mat-icon>
-        <span>Enregistrer la fiche espèce</span>
       </button>
       <button
         mat-raised-button
+        matTooltip="Mettre à jour les fiches inventaire et espèce"
+        matTooltipClass="default-tooltip"
         color="primary"
         *ngIf="isUpdateDonneeBtnDisplayed()"
         (click)="saveInventaireAndDonnee()"
+        [disabled]="!inventaireForm.valid || !donneeForm.valid"
       >
         <mat-icon>save</mat-icon>
-        <span>Mettre à jour les fiches inventaire et espèce</span>
       </button>
       <button
         mat-raised-button
+        matTooltip="Supprimer la donnée"
+        matTooltipClass="default-tooltip"
         color="primary"
         *ngIf="isDeleteDonneeBtnDisplayed()"
         (click)="onDeleteDonneeBtnClicked()"
       >
         <mat-icon>delete</mat-icon>
-        <span>Supprimer la donnée</span>
       </button>
     </span>
   </div>
