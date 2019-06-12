@@ -123,11 +123,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   public saveObject(objectToSave: T): void {
     this.backendApiService
-      .saveEntity(
-        this.getEntityName(),
-        objectToSave,
-        EntityModeHelper.isEditionMode()
-      )
+      .saveEntity(this.getEntityName(), objectToSave)
       .subscribe(
         (result: DbUpdateResult) => {
           if (!!result && (!!result.insertId || !!result.affectedRows)) {

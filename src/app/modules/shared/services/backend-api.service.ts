@@ -115,8 +115,7 @@ export class BackendApiService {
 
   public saveEntity<T extends EntiteSimple>(
     entityName: string,
-    entityToSave: T,
-    isUpdate: boolean = false
+    entityToSave: T
   ) {
     return this.httpPost(entityName + "/" + this.SAVE, entityToSave);
   }
