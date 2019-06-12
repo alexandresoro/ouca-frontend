@@ -1,17 +1,22 @@
 import { Component } from "@angular/core";
+import { QueryEncoder } from "@angular/http";
+import { Comportement } from "basenaturaliste-model/comportement.object";
 import { PageComponent } from "../../../shared/components/page.component";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-
+import { EntiteAvecLibelleEtCodeImportService } from "./services/entity-with-code-and-label.import.service";
 @Component({
   templateUrl: "./import.tpl.html"
 })
 export class ImportComponent extends PageComponent {
   private fileName: string;
+  private file: any;
 
   public isWaitPanelDisplayed: boolean = false;
 
-  constructor(private backendApiService: BackendApiService) {
+  constructor(
+    private entiteAvecLibelleEtCodeImportService: EntiteAvecLibelleEtCodeImportService
+  ) {
     super();
   }
 
@@ -19,6 +24,7 @@ export class ImportComponent extends PageComponent {
 
   public setFile(event: any): void {
     this.fileName = event.target.files[0].name;
+    this.file = event.target.files[0];
   }
   public onImportClicked(dataType: string): void {
     this.importData(dataType);
@@ -29,21 +35,11 @@ export class ImportComponent extends PageComponent {
   private importData(dataType: string): void {
     this.displayWaitPanel();
 
-    // Call back-end
-    this.backendApiService.importData(this.fileName, dataType).subscribe(
-      (result: string) => {
-        PageStatusHelper.setSuccessStatus(result);
-        this.hideWaitPanel();
-      },
-      (error: any) => {
-        PageStatusHelper.setErrorStatus(
-          "Impossible d'importer le fichier",
-          error
-        );
-        this.hideWaitPanel();
-      }
-    );
+    this.entiteAvecLibelleEtCodeImportService.readFile(this.file);
+
+    this.hideWaitPanel();
   }
+
   public displayWaitPanel(): void {
     this.isWaitPanelDisplayed = true;
   }
