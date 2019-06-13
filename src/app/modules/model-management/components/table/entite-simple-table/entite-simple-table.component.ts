@@ -23,9 +23,9 @@ export class EntiteSimpleTableComponent<T extends EntiteSimple>
 
   @Output() public view: EventEmitter<T> = new EventEmitter<T>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   public dataSource: MatTableDataSource<any>;
 
