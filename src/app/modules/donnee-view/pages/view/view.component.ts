@@ -1,12 +1,8 @@
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { Component, ViewChild } from "@angular/core";
-import {
-  MatDialog,
-  MatPaginator,
-  MatSort,
-  MatTableDataSource,
-  MatTreeNestedDataSource
-} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatTreeNestedDataSource } from "@angular/material/tree";
 import * as _ from "lodash";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";

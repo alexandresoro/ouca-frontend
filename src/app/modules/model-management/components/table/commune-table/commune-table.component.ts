@@ -1,5 +1,5 @@
 import { Component, SimpleChanges } from "@angular/core";
-import { MatTableDataSource } from "@angular/material";
+import { MatTableDataSource } from "@angular/material/table";
 import { Commune } from "basenaturaliste-model/commune.object";
 import * as _ from "lodash";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
