@@ -1,6 +1,6 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { Response } from "@angular/http";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { combineLatest, Observable, Subject } from "rxjs";
@@ -90,7 +90,7 @@ export class LieuditFormComponent extends EntitySubFormComponent
           );
         }
       },
-      (error: Response) => {
+      (error: HttpErrorResponse) => {
         console.error(
           "Impossible de trouver les communes ou departements (" + error + ")"
         );

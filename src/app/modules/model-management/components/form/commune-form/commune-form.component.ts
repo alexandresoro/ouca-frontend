@@ -1,5 +1,5 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { Response } from "@angular/http";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
@@ -21,7 +21,7 @@ export class CommuneFormComponent extends EntitySubFormComponent {
       (result: Departement[]) => {
         this.departements = result;
       },
-      (error: Response) => {
+      (error: HttpErrorResponse) => {
         console.error("Impossible de trouver les départements (" + error + ")");
       }
     );
