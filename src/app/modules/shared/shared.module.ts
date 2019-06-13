@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpModule } from "@angular/http";
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -48,7 +47,6 @@ import { BackendApiService } from "./services/backend-api.service";
     BrowserModule,
     CommonModule,
     FormsModule,
-    HttpModule,
     HttpClientModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -91,7 +89,6 @@ import { BackendApiService } from "./services/backend-api.service";
     CommonModule,
     ConfirmationDialogComponent,
     FormsModule,
-    HttpModule,
     HttpClientModule,
     MatAutocompleteModule,
     MatButtonModule,
