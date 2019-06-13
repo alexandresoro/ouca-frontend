@@ -24,7 +24,7 @@
     "@angular/platform-browser": "8",
     "@angular/platform-browser-dynamic": "8",
     "@angular/router": "8",
-    "core-js": "*",
+    "core-js": "3",
     "diacritics": "*",
     "lodash": "*",
     "material-design-icons": "*",
