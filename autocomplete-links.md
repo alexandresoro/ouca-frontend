@@ -9,4 +9,3 @@ https://github.com/angular/material2/issues/5697
 https://github.com/OasisDigital/angular-material-search-select
 https://github.com/OasisDigital/angular-material-search-select/blob/master/README.md
 https://mat-select-search.stackblitz.io/
-https://github.com/angular/material2/issues/3334#issuecomment-319191915

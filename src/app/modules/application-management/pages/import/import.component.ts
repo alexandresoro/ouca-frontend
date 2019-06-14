@@ -1,5 +1,4 @@
 import { Component } from "@angular/core";
-import { QueryEncoder } from "@angular/http";
 import { Comportement } from "basenaturaliste-model/comportement.object";
 import { PageComponent } from "../../../shared/components/page.component";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";

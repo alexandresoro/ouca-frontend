@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { MatTableDataSource } from "@angular/material";
+import { MatTableDataSource } from "@angular/material/table";
 import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
 import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";

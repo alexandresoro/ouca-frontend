@@ -48,7 +48,7 @@ export class AutocompleteComponent implements OnInit {
     AutocompleteEventObject
   > = new EventEmitter<AutocompleteEventObject>();
 
-  @ViewChild(MatAutocompleteTrigger)
+  @ViewChild(MatAutocompleteTrigger, { static: false })
   trigger: MatAutocompleteTrigger;
 
   filteredValues: Observable<EntiteSimple[]>;

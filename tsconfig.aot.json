@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "target": "es5",
+    "target": "es2015",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -13,9 +13,6 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "plugins": [{ "name": "typescript-tslint-plugin" }]
-  },
-  "angularCompilerOptions": {
-    "disableTypeScriptVersionCheck": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "src/main.ts"]

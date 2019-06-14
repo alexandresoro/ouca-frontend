@@ -7,7 +7,9 @@ import {
   SimpleChanges,
   ViewChild
 } from "@angular/core";
-import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 
 @Component({
@@ -23,9 +25,9 @@ export class EntiteSimpleTableComponent<T extends EntiteSimple>
 
   @Output() public view: EventEmitter<T> = new EventEmitter<T>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   public dataSource: MatTableDataSource<any>;
 

@@ -7,7 +7,10 @@ import {
   Self
 } from "@angular/core";
 import { NgControl } from "@angular/forms";
-import { MatAutocomplete, MatAutocompleteTrigger } from "@angular/material";
+import {
+  MatAutocomplete,
+  MatAutocompleteTrigger
+} from "@angular/material/autocomplete";
 import { untilDestroyed } from "ngx-take-until-destroy";
 
 @Directive({

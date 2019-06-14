@@ -1,5 +1,5 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { Response } from "@angular/http";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
@@ -21,7 +21,7 @@ export class EspeceFormComponent extends EntitySubFormComponent {
       (result: Classe[]) => {
         this.classes = result;
       },
-      (error: Response) => {
+      (error: HttpErrorResponse) => {
         console.error("Impossible de trouver les classes (" + error + ")");
       }
     );
