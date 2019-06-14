@@ -1,9 +1,6 @@
 import { Component } from "@angular/core";
-import { Comportement } from "basenaturaliste-model/comportement.object";
 import { PageComponent } from "../../../shared/components/page.component";
-import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { EntiteAvecLibelleEtCodeImportService } from "./services/entity-with-code-and-label.import.service";
 @Component({
   templateUrl: "./import.tpl.html"
 })
@@ -40,7 +37,7 @@ export class ImportComponent extends PageComponent {
   private importData(dataType: string): void {
     this.displayWaitPanel();
 
-    this.entiteAvecLibelleEtCodeImportService.readFile(this.file);
+    // this.entiteAvecLibelleEtCodeImportService.readFile(this.file);
 
     this.hideWaitPanel();
   }
