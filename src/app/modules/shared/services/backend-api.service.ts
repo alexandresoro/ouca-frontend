@@ -62,7 +62,7 @@ export class BackendApiService {
     );
   }
 
-  public importData(entityName: string, dataType: string): Observable<string> {
+  public importData(entityName: string, file: File): Observable<string> {
     return this.httpPost(entityName + "/" + this.IMPORT, {});
   }
 

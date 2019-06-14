@@ -5,8 +5,8 @@ import { BackendApiService } from "../../../shared/services/backend-api.service"
   templateUrl: "./import.tpl.html"
 })
 export class ImportComponent extends PageComponent {
-  private fileName: string;
-  private file: any;
+
+  private file: File;
 
   public isWaitPanelDisplayed: boolean = false;
 
@@ -17,30 +17,24 @@ export class ImportComponent extends PageComponent {
   /* CALLED FROM THE UI */
 
   public setFile(event: any): void {
-    this.fileName = event.target.files[0].name;
     this.file = event.target.files[0];
   }
-  public onImportClicked(dataType: string): void {
+  public onImportClicked(entityName: string): void {
+    this.displayWaitPanel();
     // this.importData(dataType);
-    this.backendApiService.importData(dataType, this.fileName).subscribe(
+    this.backendApiService.importData(entityName, this.file).subscribe(
       (result) => {
         // TODO
+        this.hideWaitPanel();
       },
       (error) => {
         // TODO
+        this.hideWaitPanel();
       }
     );
   }
 
   /* END CALLED FROM THE UI */
-
-  private importData(dataType: string): void {
-    this.displayWaitPanel();
-
-    // this.entiteAvecLibelleEtCodeImportService.readFile(this.file);
-
-    this.hideWaitPanel();
-  }
 
   public displayWaitPanel(): void {
     this.isWaitPanelDisplayed = true;
