@@ -22,7 +22,7 @@ export class ImportComponent extends PageComponent {
   }
   public onImportClicked(dataType: string): void {
     // this.importData(dataType);
-    this.backendApiService.importData("observateur", "observateur").subscribe(
+    this.backendApiService.importData(dataType, this.fileName).subscribe(
       (result) => {
         // TODO
       },
