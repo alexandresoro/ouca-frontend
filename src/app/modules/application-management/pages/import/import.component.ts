@@ -14,9 +14,7 @@ export class ImportComponent extends PageComponent {
 
   public isWaitPanelDisplayed: boolean = false;
 
-  constructor(
-    private entiteAvecLibelleEtCodeImportService: EntiteAvecLibelleEtCodeImportService
-  ) {
+  constructor(private backendApiService: BackendApiService) {
     super();
   }
 
@@ -27,7 +25,15 @@ export class ImportComponent extends PageComponent {
     this.file = event.target.files[0];
   }
   public onImportClicked(dataType: string): void {
-    this.importData(dataType);
+    // this.importData(dataType);
+    this.backendApiService.importData("observateur", "observateur").subscribe(
+      (result) => {
+        // TODO
+      },
+      (error) => {
+        // TODO
+      }
+    );
   }
 
   /* END CALLED FROM THE UI */

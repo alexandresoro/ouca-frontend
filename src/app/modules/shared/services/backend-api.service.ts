@@ -23,6 +23,7 @@ export class BackendApiService {
   private EXPORT: string = "export";
   private FIND: string = "find";
   private FIND_WITH_CONTEXT: string = "find_with_context";
+
   private IMPORT: string = "import";
   private INIT: string = "init";
   private INVENTAIRE: string = "inventaire/";
@@ -61,8 +62,8 @@ export class BackendApiService {
     );
   }
 
-  public importData(fileName: string, dataType: string): Observable<string> {
-    return this.httpPost(this.IMPORT + dataType, fileName);
+  public importData(entityName: string, dataType: string): Observable<string> {
+    return this.httpPost(entityName + "/" + this.IMPORT, {});
   }
 
   public getCreationInitialPageModel(): Observable<CreationPage> {
