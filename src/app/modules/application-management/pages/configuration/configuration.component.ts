@@ -30,11 +30,12 @@ const PROPRIETES_A_AFFICHER: IdPropriete[] = [
   { id: 8, propriete: "Afficher les observateurs associés" },
   { id: 9, propriete: "Afficher la météo" },
   { id: 10, propriete: "Afficher la distance" },
-  { id: 11, propriete: "Afficher le numéro de regroupement" }
+  { id: 11, propriete: "Afficher le numéro de regroupement" },
   /*{ id: 12, propriete: "Chemin vers MySQL" },
   { id: 13, propriete: "Chemin vers MySQL dump" },
   { id: 14, propriete: "Dossier d'import" },
   { id: 15, propriete: "Dossier d'export" }*/
+  { id: 15, propriete: "Dossier d'export" }
 ];
 
 @Component({
