@@ -35,6 +35,8 @@ export class BackendApiService {
   private SAVE: string = "save";
   private SEARCH_BY_COMMUNE: string = "search_by_commune/";
 
+  private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
+
   constructor(public http: HttpClient, private router: Router) {}
 
   private httpGet<T>(relativePath: string): Observable<T> {
@@ -63,7 +65,9 @@ export class BackendApiService {
   }
 
   public importData(entityName: string, file: File): Observable<string> {
-    return this.httpPost(entityName + "/" + this.IMPORT, {});
+    const formData: FormData = new FormData();
+    formData.append(this.FILE_TO_IMPORT_NAME, file, file.name);
+    return this.httpPost(entityName + "/" + this.IMPORT, formData);
   }
 
   public getCreationInitialPageModel(): Observable<CreationPage> {
