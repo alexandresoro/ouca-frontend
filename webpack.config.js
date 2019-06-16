@@ -8,7 +8,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const WebappWebpackPlugin = require("webapp-webpack-plugin");
 const path = require("path");
-const helpers = require("./config/helpers");
 
 module.exports = (env, argv) => {
   const isProductionMode = argv && argv.mode === "production";
@@ -87,8 +86,8 @@ module.exports = (env, argv) => {
       // Workaround for angular/angular#11580
       new webpack.ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
-        /angular(\\|\/)core(\\|\/)@angular/,
-        helpers.root("./src"), // location of your src
+        /(.+)?angular(\\|\/)core(.+)?/,
+        path.join(__dirname, "src"), // location of your src
         {} // a map of your routes
       ),
       new CheckerPlugin(),

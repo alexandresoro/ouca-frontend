@@ -4,7 +4,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const WebappWebpackPlugin = require("webapp-webpack-plugin");
 const path = require("path");
-const helpers = require("./config/helpers");
 const AngularCompilerPlugin = require("@ngtools/webpack").AngularCompilerPlugin;
 
 module.exports = (env, argv) => {
@@ -64,13 +63,6 @@ module.exports = (env, argv) => {
       }),
       new CleanWebpackPlugin({}),
       new WebappWebpackPlugin("./src/favicon.png"),
-      // Workaround for angular/angular#11580
-      new webpack.ContextReplacementPlugin(
-        // The (\\|\/) piece accounts for path separators in *nix and Windows
-        /angular(\\|\/)core(\\|\/)@angular/,
-        helpers.root("./src"), // location of your src
-        {} // a map of your routes
-      ),
       new HtmlWebpackPlugin({
         template: "src/index.html"
       }),
