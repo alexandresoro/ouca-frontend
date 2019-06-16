@@ -140,6 +140,7 @@ body.base-naturaliste {
       column-gap: 50px;
 
       .creation-inventaire-titre {
+        display: flex;
         button {
           height: 32px;
         }
@@ -156,11 +157,6 @@ body.base-naturaliste {
         display: grid;
         grid-column-gap: $standardColumnGap;
         grid-template-columns: 180px auto;
-        .espece-container {
-          mat-form-field {
-            width: 100%;
-          }
-        }
       }
 
       .bn-creation-date {
@@ -211,19 +207,6 @@ body.base-naturaliste {
       .bn-creation-quoi {
         display: flex;
         flex-wrap: wrap;
-
-        .quoi-classe {
-          margin-right: 3 * $standardColumnGap;
-        }
-
-        .quoi-espece {
-          width: 120px;
-          margin-right: $standardColumnGap;
-        }
-
-        .quoi-nom-classe {
-          flex: 1 0 auto;
-        }
       }
 
       .combien-de-container {
@@ -254,10 +237,6 @@ body.base-naturaliste {
 
           .estimation-distance-container {
             margin-right: $standardColumnGap;
-          }
-
-          .distance-container {
-            width: 120px;
           }
         }
 
@@ -294,17 +273,6 @@ body.base-naturaliste {
     display: grid;
     grid-template-columns: auto auto;
     grid-column-gap: $standardColumnGap;
-  }
-
-  .code-libelle-container {
-    display: inline-block;
-    .code-input {
-      margin-right: 10px;
-    }
-  }
-
-  .flex-container {
-    display: flex;
   }
 
   .full-width-container > * {
