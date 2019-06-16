@@ -328,6 +328,7 @@
             >
               <input-comportements
                 formGroupName="comportementsGroup"
+                [donneeForm]="donneeForm"
                 [controlGroup]="donneeForm.controls['comportementsGroup']"
                 [comportements]="pageModel.comportements"
               ></input-comportements>
@@ -340,6 +341,7 @@
             <mat-card-content class="milieux-container full-width-container">
               <input-milieux
                 formGroupName="milieuxGroup"
+                [donneeForm]="donneeForm"
                 [controlGroup]="donneeForm.controls['milieuxGroup']"
                 [milieux]="pageModel.milieux"
               ></input-milieux>

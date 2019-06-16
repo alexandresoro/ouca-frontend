@@ -79,7 +79,12 @@ export class InputEspeceComponent implements OnInit {
    * When selecting a classe, filter the list of especes
    */
   public resetSelectedEspece(): void {
-    this.controlGroup.controls.espece.setValue(null);
+    if (
+      this.controlGroup.controls.espece &&
+      !!this.controlGroup.controls.espece.value
+    ) {
+      this.controlGroup.controls.espece.setValue(null);
+    }
   }
 
   public displayClasseFormat = (classe: Classe): string => {

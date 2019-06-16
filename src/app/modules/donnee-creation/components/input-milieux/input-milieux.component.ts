@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit
+} from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Milieu } from "basenaturaliste-model/milieu.object";
+import { combineLatest, Observable } from "rxjs";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -8,8 +14,10 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   templateUrl: "./input-milieux.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputMilieuxComponent {
+export class InputMilieuxComponent implements OnInit {
   @Input() public milieux: Milieu[];
+
+  @Input() public donneeForm: FormGroup;
 
   @Input() public controlGroup: FormGroup;
 
@@ -26,19 +34,47 @@ export class InputMilieuxComponent {
     }
   ];
 
-  public addMilieu(event: any, index: number): void {
-    // TODO make this less crappy
-    const isComportementSet = !!event.value;
-    const nextMilieu = index + 2;
-    const nextMilieuControl = this.controlGroup.controls["milieu" + nextMilieu];
-
-    if (!!nextMilieuControl) {
-      if (isComportementSet) {
-        nextMilieuControl.enable();
+  ngOnInit(): void {
+    // First milieu should be enabled if and only if the donnee form is enabled
+    this.donneeForm.statusChanges.subscribe((status: string) => {
+      if (status !== "DISABLED") {
+        this.controlGroup.controls.milieu1.enable({
+          onlySelf: true
+        });
       } else {
-        nextMilieuControl.disable();
-        nextMilieuControl.setValue(null);
+        this.controlGroup.controls.milieu1.disable({
+          onlySelf: true
+        });
       }
+    });
+
+    // Other milieux should be active only if the previous milieu is active and has a valid value
+    for (let indexMilieu = 2; indexMilieu <= 4; indexMilieu++) {
+      combineLatest(
+        this.controlGroup.controls["milieu" + (indexMilieu - 1)]
+          .statusChanges as Observable<string>,
+        this.controlGroup.controls["milieu" + (indexMilieu - 1)]
+          .valueChanges as Observable<Milieu>,
+        (statusMilieuInPreviousElt, selectedMilieuInPreviousElt) => {
+          return {
+            statusMilieuInPreviousElt,
+            selectedMilieuInPreviousElt
+          };
+        }
+      ).subscribe((status) => {
+        if (
+          !!status.selectedMilieuInPreviousElt &&
+          status.statusMilieuInPreviousElt === "VALID"
+        ) {
+          this.controlGroup.controls["milieu" + indexMilieu].enable({
+            onlySelf: true
+          });
+        } else {
+          this.controlGroup.controls["milieu" + indexMilieu].disable({
+            onlySelf: true
+          });
+        }
+      });
     }
   }
 
