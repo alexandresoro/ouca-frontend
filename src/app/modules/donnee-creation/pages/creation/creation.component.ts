@@ -650,17 +650,17 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private handleInventaireFormState(toEnable: boolean): void {
     if (toEnable) {
-      this.inventaireForm.enable();
+      this.inventaireForm.enable({ emitEvent: false });
     } else {
-      this.inventaireForm.disable();
+      this.inventaireForm.disable({ emitEvent: false });
     }
   }
 
   private handleDonneeFormState(toEnable: boolean): void {
     if (toEnable) {
-      this.donneeForm.enable();
+      this.donneeForm.enable({ emitEvent: false });
     } else {
-      this.donneeForm.disable();
+      this.donneeForm.disable({ emitEvent: false });
     }
   }
 
