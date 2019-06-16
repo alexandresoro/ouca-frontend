@@ -1,14 +1,14 @@
-# Base Naturaliste (backend)
+# Base Naturaliste (frontend)
 
-This is the Node.js backend for Base Naturaliste application.
+This is the Angular frontend for Base Naturaliste application.
 
 ## Getting Started
 
 ### Dependencies
 
-The frontend for Base Naturaliste application:
+The backend for Base Naturaliste application:
 
-- [Base Naturaliste (frontend)](https://github.com/alexandresoro/basenaturaliste-frontend)
+- [Base Naturaliste (backend)](https://github.com/alexandresoro/basenaturaliste-backend)
 
 The objects exchanged between the backend and the frontend are defined in a common model:
 
