@@ -8,6 +8,7 @@ import { FormGroup } from "@angular/forms";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Espece } from "basenaturaliste-model/espece.object";
 import { combineLatest, Observable } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -52,9 +53,11 @@ export class InputEspeceComponent implements OnInit {
   public ngOnInit(): void {
     const classeControl = this.controlGroup.get("classe");
 
-    classeControl.valueChanges.subscribe((selectedClasse: Classe) => {
-      this.resetSelectedEspece();
-    });
+    classeControl.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe((selectedClasse: Classe) => {
+        this.resetSelectedEspece();
+      });
 
     this.filteredEspeces$ = combineLatest(
       classeControl.valueChanges as Observable<Classe>,

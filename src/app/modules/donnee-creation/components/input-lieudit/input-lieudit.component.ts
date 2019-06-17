@@ -9,6 +9,7 @@ import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -62,19 +63,23 @@ export class InputLieuditComponent implements OnInit {
     const communeControl = this.controlGroup.get("commune");
     const lieuDitControl = this.controlGroup.get("lieudit");
 
-    departementControl.valueChanges.subscribe(
-      (selectedDepartement: Departement) => {
+    departementControl.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe((selectedDepartement: Departement) => {
         this.resetCommunes();
-      }
-    );
+      });
 
-    communeControl.valueChanges.subscribe((selectedCommune: Commune) => {
-      this.resetLieuxDits();
-    });
+    communeControl.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe((selectedCommune: Commune) => {
+        this.resetLieuxDits();
+      });
 
-    lieuDitControl.valueChanges.subscribe((selectedLieuDit: Lieudit) => {
-      this.updateCoordinates(selectedLieuDit);
-    });
+    lieuDitControl.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe((selectedLieuDit: Lieudit) => {
+        this.updateCoordinates(selectedLieuDit);
+      });
 
     this.filteredCommunes$ = combineLatest(
       departementControl.valueChanges as Observable<Departement>,
