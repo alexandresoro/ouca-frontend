@@ -77,7 +77,7 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new CleanWebpackPlugin({}),
-      new WebappWebpackPlugin("./src/favicon.png"),
+      new WebappWebpackPlugin("./src/assets/img/logo.svg"),
       // Workaround for angular/angular#11580
       new webpack.ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
