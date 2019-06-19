@@ -54,7 +54,7 @@ module.exports = (env, argv) => {
         sourceMap: true
       }),
       new CleanWebpackPlugin({}),
-      new WebappWebpackPlugin("./src/favicon.png"),
+      new WebappWebpackPlugin("./src/assets/img/logo.svg"),
       new HtmlWebpackPlugin({
         template: "src/index.html"
       }),
