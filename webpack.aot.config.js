@@ -19,9 +19,6 @@ module.exports = (env, argv) => {
       extensions: [".ts", ".js"]
     },
 
-    // Source maps support ('inline-source-map' also works)
-    devtool: false,
-
     // Add the loader for .ts files.
     module: {
       rules: [
@@ -55,11 +52,6 @@ module.exports = (env, argv) => {
           "src/app/app.module.ts#AppModule"
         ),
         sourceMap: true
-      }),
-      new webpack.ProvidePlugin({
-        jQuery: "jquery",
-        $: "jquery",
-        jquery: "jquery"
       }),
       new CleanWebpackPlugin({}),
       new WebappWebpackPlugin("./src/favicon.png"),
