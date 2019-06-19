@@ -4,6 +4,11 @@
 
 @include mat-core();
 
+@font-face {
+  font-family: "Showcard Gothic";
+  src: url("assets/fonts/showg.ttf") format("truetype");
+}
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
@@ -60,9 +65,8 @@ body.base-naturaliste {
 }
 
 .base-naturaliste {
-  ////////// GENERAL //////////
   .default-tooltip {
-    background-color: mat-color($mat-grey, 700);
+    background-color: mat-color($mat-grey, 800);
     font-size: mat-font-size($defaultConfig, body-1);
   }
 
@@ -88,6 +92,18 @@ body.base-naturaliste {
       rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
     flex: 0 0 auto;
     height: auto;
+    z-index: 1000;
+
+    .icon-header {
+      margin-bottom: -10px;
+    }
+
+    .title-header {
+      font-family: Showcard Gothic;
+      font-size: 26px;
+      margin-left: 10px;
+      vertical-align: bottom;
+    }
   }
 
   .base-naturaliste-content {
@@ -107,12 +123,24 @@ body.base-naturaliste {
 
   .bn-creation-body {
     div.bn-creation-messages {
-      margin-top: 20px;
-      background-color: mat-color($mat-grey, 100);
+      margin-top: 30px;
       display: block;
       height: 20px;
-      padding-top: 10px;
-      padding-bottom: 10px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: mat-font-size($defaultConfig, body-1) + 2px;
+
+      .default-message {
+        color: mat-color($mat-grey, 900);
+      }
+
+      .success-message {
+        color: mat-color($mat-cyan, 700);
+      }
+
+      .error-message {
+        color: mat-color($mat-pink, 500);
+      }
     }
 
     div.bn-creation-buttons {
@@ -310,7 +338,11 @@ body.base-naturaliste {
   }
 
   button mat-icon:first-child {
-    // margin-right: 10px;
+    margin-right: 10px;
+  }
+
+  button.no-text-button mat-icon:first-child {
+    margin-right: 0px;
   }
 
   .table-topbar {
@@ -347,6 +379,12 @@ body.base-naturaliste {
     padding-left: 50px;
     padding-top: 20px;
     padding-bottom: 20px;
+  }
+
+  .bn-view-page {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 50px;
   }
 
   .mat-row-selected {

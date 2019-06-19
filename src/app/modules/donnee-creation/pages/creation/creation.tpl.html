@@ -3,13 +3,13 @@
   <div class="bn-creation-messages">
     <div [ngSwitch]="getPageStatus()">
       <div *ngSwitchCase="pageStatusEnum.ERROR" class="error-message">
-        <mat-icon>error</mat-icon>{{ getMessage() }}
+        <!--<mat-icon>error</mat-icon>-->{{ getMessage() }}
       </div>
       <div *ngSwitchCase="pageStatusEnum.SUCCESS" class="success-message">
-        <mat-icon>check_circle</mat-icon>{{ getMessage() }}
+        <!--<mat-icon>check_circle</mat-icon>-->{{ getMessage() }}
       </div>
-      <div *ngSwitchDefault>
-        <mat-icon>not_interested</mat-icon>Aucun message
+      <div *ngSwitchDefault class="default-message">
+        <!--<mat-icon>not_interested</mat-icon>-->Aucun message
       </div>
     </div>
   </div>
@@ -19,6 +19,7 @@
     <!-- Top left buttons -->
     <span class="top-left-creation-buttons">
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Donnée précédente"
         matTooltipClass="default-tooltip"
@@ -30,6 +31,7 @@
       </button>
 
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Donnée suivante"
         matTooltipClass="default-tooltip"
@@ -41,6 +43,7 @@
       </button>
 
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Recherche par ID"
         matTooltipClass="default-tooltip"
@@ -51,6 +54,7 @@
       </button>
 
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Nouvelle donnée"
         matTooltipClass="default-tooltip"
@@ -67,6 +71,7 @@
     <!-- Top right buttons -->
     <span class="top-right-creation-buttons">
       <button
+        class="no-text-button"
         mat-raised-button
         color="primary"
         matTooltip="Enregistrer la fiche inventaire"
@@ -78,6 +83,7 @@
         <mat-icon>save</mat-icon>
       </button>
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Enregistrer la fiche espèce"
         matTooltipClass="default-tooltip"
@@ -89,6 +95,7 @@
         <mat-icon>save</mat-icon>
       </button>
       <button
+        class="no-text-button"
         *ngIf="isUpdateDonneeBtnDisplayed()"
         mat-raised-button
         matTooltip="Mettre à jour les fiches inventaire et espèce"
@@ -100,6 +107,7 @@
         <mat-icon>save</mat-icon>
       </button>
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Supprimer la donnée"
         matTooltipClass="default-tooltip"
@@ -129,7 +137,7 @@
           *ngIf="isNewInventaireBtnDisplayed()"
           (click)="onNewInventaireBtnClicked()"
         >
-          Nouvel inventaire
+          Nouveau
         </button>
         <button
           mat-button
@@ -137,7 +145,7 @@
           *ngIf="isUpdateInventaireBtnDisplayed()"
           (click)="onEditInventaireBtnClicked()"
         >
-          Modifier l'inventaire
+          Modifier
         </button>
       </div>
 
@@ -369,6 +377,7 @@
     <span class="flex-spacer"></span>
     <span class="top-right-creation-buttons">
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Enregistrer la fiche inventaire"
         matTooltipClass="default-tooltip"
@@ -380,6 +389,7 @@
         <mat-icon>save</mat-icon>
       </button>
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Enregistrer la fiche espèce"
         matTooltipClass="default-tooltip"
@@ -391,6 +401,7 @@
         <mat-icon>save</mat-icon>
       </button>
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Mettre à jour les fiches inventaire et espèce"
         matTooltipClass="default-tooltip"
@@ -402,6 +413,7 @@
         <mat-icon>save</mat-icon>
       </button>
       <button
+        class="no-text-button"
         mat-raised-button
         matTooltip="Supprimer la donnée"
         matTooltipClass="default-tooltip"
