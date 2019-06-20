@@ -21,7 +21,7 @@ import { EntitySubFormDirective } from "./entity-sub-form.directive";
 export class EntityFormComponent implements OnInit {
   @Input() componentType: Type<EntitySubFormComponent>;
 
-  @ViewChild(EntitySubFormDirective, { static: false })
+  @ViewChild(EntitySubFormDirective, { static: true })
   entitySubFormDirective: EntitySubFormDirective;
 
   @Input() public creationTitle: string;
