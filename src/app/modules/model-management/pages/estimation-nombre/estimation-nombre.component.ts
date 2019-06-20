@@ -1,11 +1,5 @@
 import { Component } from "@angular/core";
-import {
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EstimationNombreFormComponent } from "../../components/form/estimation-nombre-form/estimation-nombre-form.component";
@@ -23,7 +17,7 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
       {
         id: new FormControl("", []),
         libelle: new FormControl("", [Validators.required]),
-        nonCompte: new FormControl("", [Validators.required])
+        nonCompte: new FormControl("")
       },
       [this.libelleValidator]
     );
