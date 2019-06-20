@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
@@ -75,7 +75,7 @@ export class LieuditFormComponent extends EntitySubFormComponent
       (result: [Departement[], Commune[]]) => {
         this.departements$.next(!!result[0] ? result[0] : []);
         this.communes$.next(!!result[1] ? result[1] : []);
-        console.log(this.entityForm.controls.communeId.value);
+
         if (this.entityForm.controls.commune.value) {
           this.departementControl.setValue(
             ListHelper.getFromList(

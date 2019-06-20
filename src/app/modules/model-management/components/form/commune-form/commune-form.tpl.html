@@ -2,12 +2,15 @@
 <mat-form-field>
   <mat-select
     [errorStateMatcher]="matcher"
-    [formControl]="entityForm.controls['departement']"
+    [formControl]="entityForm.controls['departementId']"
     id="input-departement"
     name="departement"
     placeholder="Département"
   >
-    <mat-option *ngFor="let departement of departements" [value]="departement">
+    <mat-option
+      *ngFor="let departement of departements"
+      [value]="departement.id"
+    >
       {{ departement.code }}
     </mat-option>
   </mat-select>

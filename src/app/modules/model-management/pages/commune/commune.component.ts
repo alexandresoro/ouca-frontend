@@ -22,7 +22,8 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        departement: new FormControl("", [Validators.required]),
+        departement: new FormControl("", []),
+        departementId: new FormControl("", [Validators.required]),
         code: new FormControl("", [Validators.required]),
         nom: new FormControl("", [Validators.required])
       },
@@ -34,11 +35,11 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     formGroup: FormGroup
   ): ValidationErrors | null => {
     const code = formGroup.controls.code.value;
-    const departement = formGroup.controls.departement.value;
+    const departement = formGroup.controls.departementId.value;
     const id = formGroup.controls.id.value;
 
     const foundEntityByCode: Commune = _.find(this.objects, (object: any) => {
-      return object.code === code && object.departement.id === departement.id;
+      return object.code === code && object.departement.id === departement;
     });
 
     const valueIsAnExistingEntity: boolean =
@@ -58,7 +59,7 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     formGroup: FormGroup
   ): ValidationErrors | null => {
     const nom = formGroup.controls.nom.value;
-    const departement = formGroup.controls.departement.value;
+    const departement = formGroup.controls.departementId.value;
     const id = formGroup.controls.id.value;
 
     const foundEntityByCode: Commune = !!nom
@@ -66,7 +67,7 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
           return (
             diacritics.remove(object.nom.trim().toLowerCase()) ===
               diacritics.remove(nom.trim().toLowerCase()) &&
-            object.departement.id === departement.id
+            object.departement.id === departement
           );
         })
       : null;

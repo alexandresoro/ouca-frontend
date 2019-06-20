@@ -20,6 +20,12 @@ export class CommuneFormComponent extends EntitySubFormComponent {
     this.backendApiService.getAllEntities("departement").subscribe(
       (result: Departement[]) => {
         this.departements = result;
+
+        if (this.entityForm.controls.departement.value) {
+          this.entityForm.controls.departementId.setValue(
+            this.entityForm.controls.departement.value.id
+          );
+        }
       },
       (error: HttpErrorResponse) => {
         console.error("Impossible de trouver les départements (" + error + ")");
