@@ -18,6 +18,7 @@ export class BackendApiService {
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
   private CREATION: string = "creation/";
+  private DATABASE: string = "database/";
   private DELETE: string = "delete";
   private DONNEE: string = "donnee/";
   private EXPORT: string = "export";
@@ -142,5 +143,9 @@ export class BackendApiService {
 
   public getAllDonnees(): Observable<any[]> {
     return this.httpGet(this.DONNEE + this.ALL);
+  }
+
+  public saveDatabase(): Observable<any> {
+    return this.httpGet(this.DATABASE + this.SAVE);
   }
 }
