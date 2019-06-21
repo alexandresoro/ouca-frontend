@@ -17,7 +17,7 @@ export class InputSexeComponent {
     {
       key: "libelle",
       exactSearchMode: false,
-      startWithMode: false
+      startWithMode: true
     }
   ];
 

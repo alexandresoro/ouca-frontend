@@ -29,7 +29,7 @@ export class InputEspeceComponent implements OnInit {
     {
       key: "libelle",
       exactSearchMode: false,
-      startWithMode: false
+      startWithMode: true
     }
   ];
   public especeAutocompleteAttributes: AutocompleteAttribute[] = [

@@ -17,7 +17,7 @@ export class InputAgeComponent {
     {
       key: "libelle",
       exactSearchMode: false,
-      startWithMode: false
+      startWithMode: true
     }
   ];
 

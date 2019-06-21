@@ -17,7 +17,7 @@ export class InputDistanceComponent {
     {
       key: "libelle",
       exactSearchMode: false,
-      startWithMode: false
+      startWithMode: true
     }
   ];
 

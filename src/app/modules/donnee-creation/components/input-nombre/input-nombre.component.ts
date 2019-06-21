@@ -19,7 +19,7 @@ export class InputNombreComponent {
     {
       key: "libelle",
       exactSearchMode: false,
-      startWithMode: false
+      startWithMode: true
     }
   ];
 
