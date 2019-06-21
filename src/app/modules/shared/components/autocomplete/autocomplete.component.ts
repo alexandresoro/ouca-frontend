@@ -130,6 +130,10 @@ export class AutocompleteComponent implements OnInit {
         ? valueFromList[attributeToFilter]
         : "" + valueFromList[attributeToFilter];
 
+    if (!isNaN(valueFromListStr) && !isNaN(filterValue as any)) {
+      return (+valueFromListStr + "").indexOf(+filterValue + "");
+    }
+
     return valueFromListStr.toLowerCase().indexOf(filterValue);
   }
 
