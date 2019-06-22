@@ -32,21 +32,25 @@ export class InputEspeceComponent implements OnInit {
       startWithMode: true
     }
   ];
+
   public especeAutocompleteAttributes: AutocompleteAttribute[] = [
     {
       key: "code",
       exactSearchMode: true,
-      startWithMode: true
+      startWithMode: true,
+      weight: 10
     },
     {
       key: "nomFrancais",
       exactSearchMode: false,
-      startWithMode: false
+      startWithMode: false,
+      weight: 1
     },
     {
       key: "nomLatin",
       exactSearchMode: false,
-      startWithMode: false
+      startWithMode: false,
+      weight: 1
     }
   ];
 

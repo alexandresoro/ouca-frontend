@@ -25,7 +25,8 @@ export class InputMilieuxComponent implements OnInit {
     {
       key: "code",
       exactSearchMode: true,
-      startWithMode: true
+      startWithMode: true,
+      weight: 1
     },
     {
       key: "libelle",

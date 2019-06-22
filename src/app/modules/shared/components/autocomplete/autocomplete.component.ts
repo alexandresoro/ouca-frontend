@@ -74,50 +74,100 @@ export class AutocompleteComponent implements OnInit {
       .replace(this.CHARACTERS_TO_IGNORE, "");
 
     if (!!this.values) {
-      return this.values.filter((valueFromList) => {
-        return this.searchInOptionsList(valueFromList, filterValue);
+      // We sort the values by their proority (i.e. the opposite of the weight)
+      const valuesWithPriorities = this.values.map((valueFromList) => {
+        const priority: number = this.computePriorityInList(
+          valueFromList,
+          filterValue
+        );
+        return {
+          valueFromList,
+          priority
+        };
       });
+
+      // Keep only the elements that match
+      const filteredValuesWithPriorities = _.filter(
+        valuesWithPriorities,
+        (valuesWithPriority) => {
+          return valuesWithPriority.priority <= 0;
+        }
+      );
+
+      // Return the elements by priority
+      return _.map(
+        _.sortBy(filteredValuesWithPriorities, (filteredValuesWithPriority) => {
+          return filteredValuesWithPriority.priority;
+        }),
+        (sortedValueWithPriority) => {
+          return sortedValueWithPriority.valueFromList;
+        }
+      );
     }
   }
 
-  private searchInOptionsList(
+  private computePriorityInList(
     valueFromList: EntiteSimple,
     filterValue: string
-  ): boolean {
-    return _.some(
+  ): number {
+    let priority: number = 1;
+
+    _.forEach(
       this.attributesToFilter,
       (attributeToFilter: AutocompleteAttribute) => {
-        return this.search(valueFromList, filterValue, attributeToFilter);
+        const weight: number = this.searchWithWeight(
+          valueFromList,
+          filterValue,
+          attributeToFilter
+        );
+        if (weight >= 0) {
+          // The value has been found
+          // If not found before, we reset the priority to 0
+          if (priority > 0) {
+            priority = 0;
+          }
+          priority -= weight;
+        }
       }
     );
+
+    return priority;
   }
 
-  private search(
+  // Perform a search of the filterValue and returns a weight
+  // It will return -1 if value is not found, otherwise it returns a weight >=0
+  private searchWithWeight(
     valueFromList: EntiteSimple,
     filterValue: string,
     attributeToFilter: AutocompleteAttribute
-  ): boolean {
-    if (attributeToFilter.startWithMode) {
-      return !!attributeToFilter.exactSearchMode
-        ? this.exactSearch(
-            valueFromList,
-            filterValue,
-            attributeToFilter.key
-          ) === 0
-        : this.approximativeSearch(
-            valueFromList,
-            filterValue,
-            attributeToFilter.key
-          ) === 0;
+  ): number {
+    let isMatching: boolean;
+
+    let indexFound: number;
+    if (!!attributeToFilter.exactSearchMode) {
+      indexFound = this.exactSearch(
+        valueFromList,
+        filterValue,
+        attributeToFilter.key
+      );
     } else {
-      return !!attributeToFilter.exactSearchMode
-        ? this.exactSearch(valueFromList, filterValue, attributeToFilter.key) >
-            -1
-        : this.approximativeSearch(
-            valueFromList,
-            filterValue,
-            attributeToFilter.key
-          ) > -1;
+      indexFound = this.approximativeSearch(
+        valueFromList,
+        filterValue,
+        attributeToFilter.key
+      );
+    }
+
+    if (!!attributeToFilter.startWithMode) {
+      isMatching = indexFound === 0;
+    } else {
+      isMatching = indexFound > -1;
+    }
+
+    if (isMatching) {
+      return !!attributeToFilter.weight ? attributeToFilter.weight : 0;
+    } else {
+      return -1;
     }
   }
   private exactSearch(
