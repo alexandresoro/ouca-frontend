@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
+import { distinctUntilChanged } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -15,6 +16,16 @@ export class InputNombreComponent {
 
   @Input() public defaultNombre: number;
 
+  public ngOnInit(): void {
+    const estimationControl = this.controlGroup.get("estimationNombre");
+
+    estimationControl.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe((selectedEstimation: EstimationNombre) => {
+        this.onEstimationNombreChanged(selectedEstimation);
+      });
+  }
+
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {
       key: "libelle",
@@ -23,7 +34,7 @@ export class InputNombreComponent {
     }
   ];
 
-  public onEstimationNombreChanged(estimation: EstimationNombre) {
+  private onEstimationNombreChanged(estimation: EstimationNombre) {
     if (!!estimation && !!estimation.nonCompte) {
       this.controlGroup.controls.nombre.disable();
       this.controlGroup.controls.nombre.setValue(null);
