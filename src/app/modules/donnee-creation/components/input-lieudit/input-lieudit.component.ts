@@ -46,7 +46,7 @@ export class InputLieuditComponent implements OnInit {
     {
       key: "nom",
       exactSearchMode: false,
-      startWithMode: false
+      startWithMode: true
     }
   ];
 
