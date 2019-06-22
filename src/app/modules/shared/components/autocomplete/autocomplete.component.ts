@@ -1,27 +1,17 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
-  Output,
   ViewChild
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import {
-  MatAutocompleteSelectedEvent,
-  MatAutocompleteTrigger
-} from "@angular/material/autocomplete";
-import { MatOption } from "@angular/material/typings";
+import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import * as diacritics from "diacritics";
-import { Observable, Subscription } from "rxjs";
-import { map } from "rxjs/operators";
-import { AutocompleteEventObject } from "./autocomplete-event.object";
-
 import * as _ from "lodash";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 
 @Component({
@@ -36,17 +26,9 @@ export class AutocompleteComponent implements OnInit {
 
   @Input() public attributesToFilter: AutocompleteAttribute[];
 
-  @Input() public startWithMode: boolean = false;
-
-  @Input() public exactSearchMode: boolean = false;
-
   @Input() public control: FormControl;
 
   @Input() public displayFn: ((value: any) => string) | null;
-
-  @Output() public onValueChanged: EventEmitter<
-    AutocompleteEventObject
-  > = new EventEmitter<AutocompleteEventObject>();
 
   @ViewChild(MatAutocompleteTrigger, { static: false })
   trigger: MatAutocompleteTrigger;
@@ -202,19 +184,6 @@ export class AutocompleteComponent implements OnInit {
       .toLowerCase()
       .replace(this.CHARACTERS_TO_IGNORE, "")
       .indexOf(filterValue);
-  }
-
-  public updateValue(newValue: MatAutocompleteSelectedEvent): void {
-    this.updateSelectionWithOption(newValue.option);
-  }
-
-  private updateSelectionWithOption(option: MatOption): void {
-    const newSelectedValue: EntiteSimple = option ? option.value : null;
-
-    const event: AutocompleteEventObject = new AutocompleteEventObject(
-      newSelectedValue
-    );
-    this.onValueChanged.emit(event);
   }
 
   public getDisplayedValue(object: EntiteSimple): string {

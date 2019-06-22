@@ -14,7 +14,6 @@
       autoActiveFirstOption
       #auto="matAutocomplete"
       [displayWith]="displayFn"
-      (optionSelected)="updateValue($event)"
     >
       <mat-option *ngFor="let value of filteredValues | async" [value]="value">
         {{ getDisplayedValue(value) }}
