@@ -205,7 +205,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   private onSaveAppConfigurationSuccess(saveResult: DbUpdateResult): void {
     PageStatusHelper.setSuccessStatus(
-      "La sauvegarde des congurations de l'application a été faite avec succès."
+      "La sauvegarde des configurations de l'application a été faite avec succès."
     );
     this.getCurrentConfigurations();
     this.switchToViewAllMode();
