@@ -5,13 +5,15 @@ import { ConfigurationFormComponent } from "./components/configuration-form/conf
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
 import { DatabaseComponent } from "./pages/database/database.component";
 import { ImportComponent } from "./pages/import/import.component";
+import { UpgradeAppComponent } from "./pages/upgrade-app/upgrade-app.component";
 @NgModule({
   imports: [SharedModule, ApplicationManagementRoutingModule],
   declarations: [
     ConfigurationComponent,
     ConfigurationFormComponent,
     DatabaseComponent,
-    ImportComponent
+    ImportComponent,
+    UpgradeAppComponent
   ],
   exports: [],
   providers: []
