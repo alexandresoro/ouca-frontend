@@ -75,6 +75,30 @@ body.base-naturaliste {
     height: 30px;
   }
 
+  .entite-avec-libelle-table,
+  .entite-avec-libelle-et-code-table,
+  .departement-table,
+  .commune-table,
+  .lieudit-table,
+  .classe-table,
+  .espece-table,
+  .estimation-nombre-table,
+  .bn-table-view
+   {
+    tr.mat-row {
+      height: 20px;
+    }
+
+    td.mat-cell {
+      font-size: 14px;
+    }
+  }
+
+  .mat-row-selected {
+    background: mat-color($mat-cyan, 100);
+  }
+
+
   mat-card.mat-card-override {
     padding: 12px;
     padding-bottom: 0;
@@ -391,10 +415,6 @@ body.base-naturaliste {
     padding-left: 50px;
   }
 
-  .mat-row-selected {
-    background: mat-color($mat-grey, 300);
-  }
-
   .cancel-submit-buttons {
     display: flex;
     flex: 0 0 auto;
@@ -567,7 +587,7 @@ body.base-naturaliste {
     td {
       padding-left: 5px;
       padding-right: 5px;
-      border: 1px solid mat-color($mat-grey, 500);
+      border: 0.5px solid mat-color($mat-cyan, 700);
     }
 
     th.bn-table-view-id,
