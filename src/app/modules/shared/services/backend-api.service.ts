@@ -1,3 +1,6 @@
+declare var BACKEND_HOST: string;
+declare var BACKEND_PORT: number;
+
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
@@ -13,7 +16,7 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class BackendApiService {
-  private API_URL: string = "http://localhost:4000/api/";
+  private API_URL: string = "http://" + BACKEND_HOST + ":" + BACKEND_PORT + "/api/";
 
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
@@ -38,7 +41,7 @@ export class BackendApiService {
 
   private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
 
-  constructor(public http: HttpClient, private router: Router) {}
+  constructor(public http: HttpClient, private router: Router) { }
 
   private httpGet<T>(relativePath: string): Observable<T> {
     const requestPath: string = this.API_URL + relativePath;

@@ -45,6 +45,14 @@ module.exports = (env, argv) => {
       ]
     },
     plugins: [
+      new webpack.DefinePlugin({
+        BACKEND_HOST: JSON.stringify(
+          argv && argv["backend-host"] ? argv["backend-host"] : "localhost"
+        ),
+        BACKEND_PORT: JSON.stringify(
+          argv && argv["backend-port"] ? argv["backend-port"] : 4000
+        )
+      }),
       new AngularCompilerPlugin({
         tsConfigPath: path.join(process.cwd(), "tsconfig.aot.json"),
         entryModule: path.join(

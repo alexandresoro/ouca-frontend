@@ -76,6 +76,10 @@ module.exports = (env, argv) => {
       ]
     },
     plugins: [
+      new webpack.DefinePlugin({
+        BACKEND_HOST: JSON.stringify("localhost"),
+        BACKEND_PORT: JSON.stringify(4000)
+      }),
       new CleanWebpackPlugin({}),
       new WebappWebpackPlugin("./src/assets/img/logo.svg"),
       // Workaround for angular/angular#11580
