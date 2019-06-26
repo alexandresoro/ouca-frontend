@@ -7,9 +7,6 @@ COPY basenaturaliste-frontend/package.json basenaturaliste-frontend/tsconfig.aot
 
 RUN yarn install
 
-ENV BACKEND_HOST localhost
-ENV BACKEND_PORT 4000
-
 COPY basenaturaliste-frontend/webpack.aot.config.js /app/basenaturaliste-frontend/
 COPY basenaturaliste-frontend/src/ /app/basenaturaliste-frontend/src
 
@@ -19,3 +16,6 @@ FROM nginx:alpine
 
 COPY basenaturaliste-frontend/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=node /app/basenaturaliste-frontend/dist /usr/share/nginx/html
+
+# Used because the nginx frontend acts as a reverse proxy to the backend
+EXPOSE 4000
