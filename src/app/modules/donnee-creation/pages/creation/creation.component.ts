@@ -565,8 +565,14 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
+  /**
+   * When clicking on New Inventaire button
+   * we switch to inventaire mode and reset the current inventaire ID to null
+   * but we do not reset the form fields
+   */
   public onNewInventaireBtnClicked(): void {
-    this.switchToNewInventaireMode();
+    InventaireHelper.setDisplayedInventaireId(null);
+    this.switchToInventaireMode();
   }
 
   public onEditInventaireBtnClicked(): void {
