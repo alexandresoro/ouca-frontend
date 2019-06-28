@@ -129,9 +129,17 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
   }
 
+  /**
+   * When clicking on Enter, we save the inventaire or donnee
+   * if it is valid
+   * and if the focus is not on a textarea field which can contain several lines
+   */
   @HostListener("document:keyup", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (/*event.ctrlKey &&*/ event.key === "Enter") {
+    if (
+      /*event.ctrlKey &&*/ event.key === "Enter" &&
+      document.activeElement.tagName.toLowerCase() !== "textarea"
+    ) {
       if (CreationModeHelper.isInventaireMode() && this.inventaireForm.valid) {
         this.saveInventaire();
       } else if (CreationModeHelper.isDonneeMode() && this.donneeForm.valid) {
