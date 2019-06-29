@@ -14,13 +14,14 @@ RUN yarn build:aot
 
 FROM nginx:alpine
 
-COPY basenaturaliste-frontend/docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY basenaturaliste-frontend/docker/nginx/nginx.conf /etc/nginx/nginx.conf.template
 COPY --from=node /app/basenaturaliste-frontend/dist /usr/share/nginx/html
 
 ENV BACKEND_HOST backend
 ENV BACKEND_PORT 4000
 
 COPY basenaturaliste-frontend/docker/nginx/docker-entrypoint.sh /
+RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 
 RUN /usr/bin/env sh
 
