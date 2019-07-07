@@ -2,40 +2,49 @@
   <h1>Import de données</h1>
 
   <ng-container *ngIf="isWaitPanelDisplayed">
-    <h2>
-      <mat-icon>loop</mat-icon> Veuillez patienter pendant l'import...</h2>
+    <h2><mat-icon>loop</mat-icon> Veuillez patienter pendant l'import...</h2>
   </ng-container>
 
   <ng-container *ngIf="!isWaitPanelDisplayed">
     <h2>Tutoriel d'import</h2>
     <h3>Préparation du fichier d'entrée</h3>
-    <p>Copiez les données à importer dans un tableur excel en respectant le format indiqué pour chaque type
-      de données.</p>
-    <p>Cliquez sur "Enregistrez-sous", choisir le type de fichier "CSV (séparateur point-virgule)". Enregistrez.</p>
-    <p>Ouvrez le fichier avec un éditeur de texte (Notepad) et vérifiez que vous avez respectez les points
-      suivants:
+    <p>
+      Copiez les données à importer dans un tableur excel en respectant le
+      format indiqué pour chaque type de données.
+    </p>
+    <p>
+      Cliquez sur "Enregistrez-sous", choisir le type de fichier "CSV
+      (séparateur point-virgule)". Enregistrez.
+    </p>
+    <p>
+      Ouvrez le fichier avec un éditeur de texte (Notepad) et vérifiez que vous
+      avez respectez les points suivants:
     </p>
     <ul>
       <li>Le fichier d'entrée ne doit pas contenir d'en-tête.</li>
       <li>Les colonnes sont séparées par des points-virgule (;).</li>
-      <li>L'ordre des colonnes est important.</li>
-      <li>Il y a une seule ligne vide à la fin du fichier.</li>
+      <li>L'ordre des colonnes est respecté.</li>
+      <li>Il n'y a pas de ligne vide à la fin du fichier.</li>
     </ul>
 
-
     <h3>Import</h3>
-    <p>Plus bas dans la page, choisissez le type de données que vous souhaitez importer.</p>
+    <p>
+      Plus bas dans la page, choisissez le type de données que vous souhaitez
+      importer.
+    </p>
     <p>Cliquer sur le bouton d'import.</p>
     <p>Choisissez le fichier d'entrée que vous venez de préparer.</p>
     <p>L'import se lance.</p>
 
     <h3>Résultats de l'import</h3>
-    <p>L'application va lire chaque ligne du fichier d'entrée et tenter d'importer cette ligne dans la base
-      de données.</p>
-    <p>Toutes les lignes qui n'ont pas pu être importées sont enregistrées dans un fichier de sortie situé
-      dans le même dossier que le fichier d'entrée.</p>
-
-
+    <p>
+      L'application va lire chaque ligne du fichier d'entrée et tenter
+      d'importer cette ligne dans la base de données.
+    </p>
+    <p>
+      Toutes les lignes qui n'ont pas pu être importées sont enregistrées dans
+      un fichier de sortie situé dans le même dossier que le fichier d'entrée.
+    </p>
 
     <mat-accordion>
       <!-- OBSERVATEURS -->
@@ -51,18 +60,21 @@
           <li>Colonne A: nom des observateurs</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-observateur"
           name="observateur"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('observateur')">
+          (click)="onImportClicked('observateur')"
+        >
           Lancer l'import des observateurs
         </button>
       </mat-expansion-panel>
-
 
       <!-- DEPARTEMENTS -->
       <mat-expansion-panel>
@@ -77,18 +89,21 @@
           <li>Colonne A: Département</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-departement"
           name="departement"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('departement')">
+          (click)="onImportClicked('departement')"
+        >
           Lancer l'import des départements
         </button>
       </mat-expansion-panel>
-
 
       <!-- COMMUNE -->
       <mat-expansion-panel>
@@ -105,18 +120,21 @@
           <li>Colonne C: Nom de la commune</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-commune"
           name="commune"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('commune')">
+          (click)="onImportClicked('commune')"
+        >
           Lancer l'import des communes
         </button>
       </mat-expansion-panel>
-
 
       <!-- LIEUDIT -->
       <mat-expansion-panel>
@@ -126,7 +144,9 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <p>Les départements et communes manquants seront automatiquement créés.</p>
+        <p>
+          Les départements et communes manquants seront automatiquement créés.
+        </p>
 
         <p>Liste des colonnes:</p>
         <ul>
@@ -139,14 +159,18 @@
           <li>Colonne G: Latitude (nombre entier)</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-lieudit"
           name="lieudit"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('lieudit')">
+          (click)="onImportClicked('lieudit')"
+        >
           Lancer l'import des lieux-dits
         </button>
       </mat-expansion-panel>
@@ -164,14 +188,18 @@
           <li>Colonne A: Libellé de la météo</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-meteo"
           name="meteo"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('meteo')">
+          (click)="onImportClicked('meteo')"
+        >
           Lancer l'import des météos
         </button>
       </mat-expansion-panel>
@@ -189,14 +217,18 @@
           <li>Colonne A: Libellé de la classe espèce</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-classe"
           name="classe"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('classe')">
+          (click)="onImportClicked('classe')"
+        >
           Lancer l'import des classes espèces
         </button>
       </mat-expansion-panel>
@@ -217,14 +249,18 @@
           <li>Colonne D: Nom latin de l'espèce</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-espece"
           name="espece"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('espece')">
+          (click)="onImportClicked('espece')"
+        >
           Lancer l'import des espèces
         </button>
       </mat-expansion-panel>
@@ -242,18 +278,21 @@
           <li>Colonne A: Libellé du sexe</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-sexe"
           name="sexe"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('sexe')">
+          (click)="onImportClicked('sexe')"
+        >
           Lancer l'import des sexes
         </button>
       </mat-expansion-panel>
-
 
       <!-- AGE -->
       <mat-expansion-panel>
@@ -268,18 +307,21 @@
           <li>Colonne A: Libellé de l'âge</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-age"
           name="age"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('age')">
+          (click)="onImportClicked('age')"
+        >
           Lancer l'import des âges
         </button>
       </mat-expansion-panel>
-
 
       <!-- ESTIMATION NOMBRE -->
       <mat-expansion-panel>
@@ -289,25 +331,30 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <p>Après l'import rendez vous sur la page de modification des estimations du nombre pour régler
-          l'option "Non compté"</p>
+        <p>
+          Après l'import rendez vous sur la page de modification des estimations
+          du nombre pour régler l'option "Non compté"
+        </p>
         <p>Liste des colonnes:</p>
         <ul>
           <li>Colonne A: Libellé de l'estimation du nombre</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-estimation-nombre"
           name="estimation-nombre"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('estimation-nombre')">
+          (click)="onImportClicked('estimation-nombre')"
+        >
           Lancer l'import des estimations du nombre
         </button>
       </mat-expansion-panel>
-
 
       <!-- ESTIMATION DISTANCE -->
       <mat-expansion-panel>
@@ -322,14 +369,18 @@
           <li>Colonne A: Libellé de l'estimation de la distance</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-estimation-distance"
           name="estimation-distance"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('estimation-distance')">
+          (click)="onImportClicked('estimation-distance')"
+        >
           Lancer l'import des estimations de la distance
         </button>
       </mat-expansion-panel>
@@ -348,18 +399,21 @@
           <li>Colonne B: Libellé du comportement</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-comportement"
           name="comportement"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('comportement')">
+          (click)="onImportClicked('comportement')"
+        >
           Lancer l'import des comportements
         </button>
       </mat-expansion-panel>
-
 
       <!-- MILIEUX -->
       <mat-expansion-panel>
@@ -375,18 +429,21 @@
           <li>Colonne B: Libellé du milieu</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-milieu"
           name="milieu"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('milieu')">
+          (click)="onImportClicked('milieu')"
+        >
           Lancer l'import des milieux
         </button>
       </mat-expansion-panel>
-
 
       <!-- DONNEE -->
       <mat-expansion-panel>
@@ -428,18 +485,24 @@
           <li>Colonne AB: Distance (nombre entier)</li>
           <li>Colonne AC: Température</li>
           <li>Colonne AD: Météos (liste séparée par des virgules)</li>
-          <li>Colonne AE: Observateurs associés (liste séparée par des virgules)</li>
+          <li>
+            Colonne AE: Observateurs associés (liste séparée par des virgules)
+          </li>
           <li>Colonne AF: Numéro de regroupement</li>
         </ul>
 
-        <input type=file
+        <input
+          type="file"
           id="input-donnee"
           name="donnee"
-          (change)="setFile($event)">
+          (change)="setFile($event)"
+        />
 
-        <button mat-raised-button
+        <button
+          mat-raised-button
           color="primary"
-          (click)="onImportClicked('donnee')">
+          (click)="onImportClicked('donnee')"
+        >
           Lancer l'import des données
         </button>
       </mat-expansion-panel>
