@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { Age } from "basenaturaliste-model/age.object";
-import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
-import { Departement } from "basenaturaliste-model/departement.object";
-import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
-import { Observateur } from "basenaturaliste-model/observateur.object";
-import { Sexe } from "basenaturaliste-model/sexe.object";
+import { Age } from "../../../../../basenaturaliste-model/age.object";
+import { AppConfiguration } from "../../../../../basenaturaliste-model/app-configuration.object";
+import { Departement } from "../../../../../basenaturaliste-model/departement.object";
+import { EstimationNombre } from "../../../../../basenaturaliste-model/estimation-nombre.object";
+import { Observateur } from "../../../../../basenaturaliste-model/observateur.object";
+import { Sexe } from "../../../../../basenaturaliste-model/sexe.object";
 
 @Component({
   selector: "configuration-form",

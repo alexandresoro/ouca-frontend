@@ -6,9 +6,9 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import * as diacritics from "diacritics";
 import * as _ from "lodash";
+import { Lieudit } from "../../../../../basenaturaliste-model/lieudit.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";

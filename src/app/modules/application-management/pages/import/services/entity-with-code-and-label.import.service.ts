@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { EntiteAvecLibelleEtCode } from "basenaturaliste-model/entite-avec-libelle-et-code.object";
+import { EntiteAvecLibelleEtCode } from "../../../../../../basenaturaliste-model/entite-avec-libelle-et-code.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { ImportService } from "./import.service";
 

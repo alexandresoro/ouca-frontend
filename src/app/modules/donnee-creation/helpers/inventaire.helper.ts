@@ -4,15 +4,15 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Commune } from "basenaturaliste-model/commune.object";
-import { CreationPage } from "basenaturaliste-model/creation-page.object";
-import { Departement } from "basenaturaliste-model/departement.object";
-import { Inventaire } from "basenaturaliste-model/inventaire.object";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
-import { Meteo } from "basenaturaliste-model/meteo.object";
-import { Observateur } from "basenaturaliste-model/observateur.object";
 import * as _ from "lodash";
 import moment = require("moment");
+import { Commune } from "../../../../basenaturaliste-model/commune.object";
+import { CreationPage } from "../../../../basenaturaliste-model/creation-page.object";
+import { Departement } from "../../../../basenaturaliste-model/departement.object";
+import { Inventaire } from "../../../../basenaturaliste-model/inventaire.object";
+import { Lieudit } from "../../../../basenaturaliste-model/lieudit.object";
+import { Meteo } from "../../../../basenaturaliste-model/meteo.object";
+import { Observateur } from "../../../../basenaturaliste-model/observateur.object";
 import { FormValidatorHelper } from "../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../shared/helpers/list-helper";
 import { TimeHelper } from "../../shared/helpers/time.helper";

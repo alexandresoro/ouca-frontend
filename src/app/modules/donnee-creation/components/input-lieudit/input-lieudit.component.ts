@@ -5,11 +5,11 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Commune } from "basenaturaliste-model/commune.object";
-import { Departement } from "basenaturaliste-model/departement.object";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
+import { Commune } from "../../../../../basenaturaliste-model/commune.object";
+import { Departement } from "../../../../../basenaturaliste-model/departement.object";
+import { Lieudit } from "../../../../../basenaturaliste-model/lieudit.object";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

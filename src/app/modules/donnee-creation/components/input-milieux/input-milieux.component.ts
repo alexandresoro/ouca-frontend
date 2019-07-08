@@ -5,8 +5,8 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Milieu } from "basenaturaliste-model/milieu.object";
 import { combineLatest, Observable } from "rxjs";
+import { Milieu } from "../../../../../basenaturaliste-model/milieu.object";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

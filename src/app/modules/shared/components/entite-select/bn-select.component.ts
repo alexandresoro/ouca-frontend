@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { EntiteSimple } from "../../../../../basenaturaliste-model/entite-simple.object";
 
 @Component({
   selector: "bn-select",

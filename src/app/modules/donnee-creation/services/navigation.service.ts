@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Classe } from "basenaturaliste-model/classe.object";
-import { Commune } from "basenaturaliste-model/commune.object";
-import { Departement } from "basenaturaliste-model/departement.object";
-import { Donnee } from "basenaturaliste-model/donnee.object";
+import { Classe } from "../../../../basenaturaliste-model/classe.object";
+import { Commune } from "../../../../basenaturaliste-model/commune.object";
+import { Departement } from "../../../../basenaturaliste-model/departement.object";
+import { Donnee } from "../../../../basenaturaliste-model/donnee.object";
 import { PageStatusHelper } from "../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../shared/services/backend-api.service";
 import { CreationModeEnum } from "../helpers/creation-mode.enum";

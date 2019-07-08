@@ -7,11 +7,11 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
-import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import * as diacritics from "diacritics";
 import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { EntiteSimple } from "../../../../../basenaturaliste-model/entite-simple.object";
 import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 
 @Component({

@@ -5,8 +5,8 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Comportement } from "basenaturaliste-model/comportement.object";
 import { combineLatest, Observable } from "rxjs";
+import { Comportement } from "../../../../../basenaturaliste-model/comportement.object";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

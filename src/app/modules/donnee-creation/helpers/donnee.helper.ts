@@ -4,17 +4,17 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Age } from "basenaturaliste-model/age.object";
-import { Classe } from "basenaturaliste-model/classe.object";
-import { Comportement } from "basenaturaliste-model/comportement.object";
-import { CreationPage } from "basenaturaliste-model/creation-page.object";
-import { Donnee } from "basenaturaliste-model/donnee.object";
-import { EntiteAvecLibelleEtCode } from "basenaturaliste-model/entite-avec-libelle-et-code.object";
-import { Espece } from "basenaturaliste-model/espece.object";
-import { EstimationDistance } from "basenaturaliste-model/estimation-distance.object";
-import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
-import { Milieu } from "basenaturaliste-model/milieu.object";
-import { Sexe } from "basenaturaliste-model/sexe.object";
+import { Age } from "../../../../basenaturaliste-model/age.object";
+import { Classe } from "../../../../basenaturaliste-model/classe.object";
+import { Comportement } from "../../../../basenaturaliste-model/comportement.object";
+import { CreationPage } from "../../../../basenaturaliste-model/creation-page.object";
+import { Donnee } from "../../../../basenaturaliste-model/donnee.object";
+import { EntiteAvecLibelleEtCode } from "../../../../basenaturaliste-model/entite-avec-libelle-et-code.object";
+import { Espece } from "../../../../basenaturaliste-model/espece.object";
+import { EstimationDistance } from "../../../../basenaturaliste-model/estimation-distance.object";
+import { EstimationNombre } from "../../../../basenaturaliste-model/estimation-nombre.object";
+import { Milieu } from "../../../../basenaturaliste-model/milieu.object";
+import { Sexe } from "../../../../basenaturaliste-model/sexe.object";
 import { FormValidatorHelper } from "../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../shared/helpers/list-helper";
 import { InventaireHelper } from "./inventaire.helper";

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Departement } from "basenaturaliste-model/departement.object";
+import { Departement } from "../../../../../../basenaturaliste-model/departement.object";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 @Component({

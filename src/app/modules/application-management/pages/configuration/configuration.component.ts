@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
-import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
-import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import * as _ from "lodash";
+import { AppConfiguration } from "../../../../../basenaturaliste-model/app-configuration.object";
+import { ConfigurationPage } from "../../../../../basenaturaliste-model/configuration-page.object";
+import { DbUpdateResult } from "../../../../../basenaturaliste-model/db-update-result.object";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { PageComponent } from "../../../shared/components/page.component";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";

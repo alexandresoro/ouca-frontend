@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Sexe } from "basenaturaliste-model/sexe.object";
+import { Sexe } from "../../../../../basenaturaliste-model/sexe.object";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

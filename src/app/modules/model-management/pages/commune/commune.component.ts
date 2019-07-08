@@ -6,9 +6,9 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Commune } from "basenaturaliste-model/commune.object";
 import * as diacritics from "diacritics";
 import * as _ from "lodash";
+import { Commune } from "../../../../../basenaturaliste-model/commune.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
