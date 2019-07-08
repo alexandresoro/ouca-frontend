@@ -26,8 +26,6 @@ ENV BACKEND_PORT 4000
 COPY docker/nginx/docker-entrypoint.sh /
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 
-RUN /usr/bin/env sh
-
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
 
