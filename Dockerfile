@@ -1,26 +1,29 @@
+# 1. Transpile the project
 FROM node:lts as node
 
-WORKDIR /app/basenaturaliste-frontend
+WORKDIR /app/frontend
 
-COPY basenaturaliste-model/ /app/basenaturaliste-model/
-COPY basenaturaliste-frontend/package.json basenaturaliste-frontend/tsconfig.aot.json basenaturaliste-frontend/yarn.lock basenaturaliste-frontend/.yarnrc /app/basenaturaliste-frontend/
+COPY package.json yarn.lock .yarnrc /app/frontend/
 
+# Set up the dependencies of the project
 RUN yarn install
 
-COPY basenaturaliste-frontend/webpack.aot.config.js /app/basenaturaliste-frontend/
-COPY basenaturaliste-frontend/src/ /app/basenaturaliste-frontend/src
+# Copy the source files for the transpile
+COPY tsconfig.aot.json webpack.aot.config.js /app/frontend/
+COPY src/ /app/frontend/src
 
 RUN yarn build:aot
 
+# 2. Build the nginx image along with the built project
 FROM nginx:alpine
 
-COPY basenaturaliste-frontend/docker/nginx/nginx.conf /etc/nginx/nginx.conf.template
-COPY --from=node /app/basenaturaliste-frontend/dist /usr/share/nginx/html
+COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf.template
+COPY --from=node /app/frontend/dist /usr/share/nginx/html
 
 ENV BACKEND_HOST backend
 ENV BACKEND_PORT 4000
 
-COPY basenaturaliste-frontend/docker/nginx/docker-entrypoint.sh /
+COPY docker/nginx/docker-entrypoint.sh /
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 
 RUN /usr/bin/env sh
