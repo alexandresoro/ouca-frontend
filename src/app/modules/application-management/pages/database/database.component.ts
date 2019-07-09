@@ -15,20 +15,8 @@ import { BackendApiService } from "../../../shared/services/backend-api.service"
 export class DatabaseComponent extends PageComponent {
   public isWaitPanelDisplayed: boolean = false;
 
-  private readonly DUMP_FILE_NAME: string = "sauvegarde_base_naturaliste_";
-  private readonly SQL_EXTENSION: string = ".sql";
-
-  constructor(
-    private http: HttpClient,
-    private backendApiService: BackendApiService
-  ) {
+  constructor(private backendApiService: BackendApiService) {
     super();
-  }
-
-  private getSaveDatabaseFileName = (): string => {
-    return (
-      this.DUMP_FILE_NAME + moment().format("YYYY-MM-DD") + this.SQL_EXTENSION
-    );
   }
 
   public onSaveDatabaseClicked(): void {
