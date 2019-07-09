@@ -1,6 +1,4 @@
-import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
-import moment = require("moment");
 import { PageComponent } from "../../../shared/components/page.component";
 import {
   getContentTypeFromResponse,
