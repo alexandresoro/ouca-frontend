@@ -1,7 +1,7 @@
 declare var BACKEND_HOST: string;
 declare var BACKEND_PORT: number;
 
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -16,7 +16,8 @@ import { Lieudit } from "../../../../basenaturaliste-model/lieudit.object";
 
 @Injectable()
 export class BackendApiService {
-  private API_URL: string = "http://" + BACKEND_HOST + ":" + BACKEND_PORT + "/api/";
+  private API_URL: string =
+    "http://" + BACKEND_HOST + ":" + BACKEND_PORT + "/api/";
 
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
@@ -41,12 +42,25 @@ export class BackendApiService {
 
   private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
 
-  constructor(public http: HttpClient, private router: Router) { }
+  constructor(public http: HttpClient, private router: Router) {}
 
   private httpGet<T>(relativePath: string): Observable<T> {
     const requestPath: string = this.API_URL + relativePath;
     console.log("GET ", requestPath);
     return this.http.get<T>(requestPath);
+  }
+
+  private httpGetObserveResponse<T>(
+    relativePath: string
+  ): Observable<HttpResponse<any>> {
+    const requestPath: string = this.API_URL + relativePath;
+    console.log("GET ", requestPath);
+    // tslint:disable-next-line: ban-types
+    const httpOptions: Object = {
+      observe: "response",
+      responseType: "blob" as "json"
+    };
+    return this.http.get<any>(requestPath, httpOptions);
   }
 
   private httpPost<T>(relativePath: string, objectToPost: any): Observable<T> {
@@ -148,7 +162,7 @@ export class BackendApiService {
     return this.httpGet(this.DONNEE + this.ALL);
   }
 
-  public saveDatabase(): Observable<any> {
-    return this.httpGet(this.DATABASE + this.SAVE);
+  public saveDatabase(): Observable<HttpResponse<any>> {
+    return this.httpGetObserveResponse(this.DATABASE + this.SAVE);
   }
 }
