@@ -44,6 +44,7 @@
     "@types/node": "10",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "5",
+    "basenaturaliste-model": "https://github.com/alexandresoro/basenaturaliste-model#master",
     "clean-webpack-plugin": "*",
     "copyfiles": "*",
     "css-loader": "*",

@@ -6,7 +6,7 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Espece } from "../../../../../basenaturaliste-model/espece.object";
+import { Espece } from "basenaturaliste-model/espece.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";

@@ -4,15 +4,15 @@ declare var BACKEND_PORT: number;
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
+import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
+import { CreationPage } from "basenaturaliste-model/creation-page.object";
+import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
+import { Donnee } from "basenaturaliste-model/donnee.object";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { Inventaire } from "basenaturaliste-model/inventaire.object";
+import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { Observable } from "rxjs";
-import { AppConfiguration } from "../../../../basenaturaliste-model/app-configuration.object";
-import { ConfigurationPage } from "../../../../basenaturaliste-model/configuration-page.object";
-import { CreationPage } from "../../../../basenaturaliste-model/creation-page.object";
-import { DbUpdateResult } from "../../../../basenaturaliste-model/db-update-result.object";
-import { Donnee } from "../../../../basenaturaliste-model/donnee.object";
-import { EntiteSimple } from "../../../../basenaturaliste-model/entite-simple.object";
-import { Inventaire } from "../../../../basenaturaliste-model/inventaire.object";
-import { Lieudit } from "../../../../basenaturaliste-model/lieudit.object";
 
 @Injectable()
 export class BackendApiService {

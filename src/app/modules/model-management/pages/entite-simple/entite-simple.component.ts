@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { DbUpdateResult } from "../../../../../basenaturaliste-model/db-update-result.object";
-import { EntiteSimple } from "../../../../../basenaturaliste-model/entite-simple.object";
+import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";

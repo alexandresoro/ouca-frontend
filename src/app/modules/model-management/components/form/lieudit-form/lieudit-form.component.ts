@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
+import { Commune } from "basenaturaliste-model/commune.object";
+import { Departement } from "basenaturaliste-model/departement.object";
 import { combineLatest, Observable, Subject } from "rxjs";
-import { Commune } from "../../../../../../basenaturaliste-model/commune.object";
-import { Departement } from "../../../../../../basenaturaliste-model/departement.object";
 import { ListHelper } from "../../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";

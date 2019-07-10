@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Comportement } from "../../../../../../basenaturaliste-model/comportement.object";
+import { Comportement } from "basenaturaliste-model/comportement.object";
 import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component";
 
 @Component({

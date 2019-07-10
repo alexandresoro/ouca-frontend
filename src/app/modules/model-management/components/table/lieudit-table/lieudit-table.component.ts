@@ -1,7 +1,7 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
+import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import * as _ from "lodash";
-import { Lieudit } from "../../../../../../basenaturaliste-model/lieudit.object";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface LieuditRow {

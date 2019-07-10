@@ -5,10 +5,10 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { Classe } from "basenaturaliste-model/classe.object";
+import { Espece } from "basenaturaliste-model/espece.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
-import { Classe } from "../../../../../basenaturaliste-model/classe.object";
-import { Espece } from "../../../../../basenaturaliste-model/espece.object";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

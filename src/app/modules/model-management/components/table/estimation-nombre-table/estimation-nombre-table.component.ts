@@ -1,7 +1,7 @@
 import { Component, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
+import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import * as _ from "lodash";
-import { EstimationNombre } from "../../../../../../basenaturaliste-model/estimation-nombre.object";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface EstimationNombreRow {

@@ -9,7 +9,7 @@ import {
   ViewChild
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { EntiteSimple } from "../../../../../../basenaturaliste-model/entite-simple.object";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { EntityModeHelper } from "../../../helpers/entity-mode.helper";
 import { EntitySubFormComponent } from "./entity-sub-form.component";
 import { EntitySubFormDirective } from "./entity-sub-form.directive";
