@@ -17,9 +17,14 @@
     </button>
   </div>
 
-  <mat-paginator [pageSizeOptions]="[1000, 2500, 5000]"></mat-paginator>
-
-  <table mat-table matSort [dataSource]="dataSource" class="bn-table-view">
+  <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
+  <table
+    mat-table
+    matSort
+    [dataSource]="dataSource"
+    class="bn-table-view mat-elevation-z8"
+    multiTemplateDataRows
+  >
     <ng-container matColumnDef="id">
       <th
         mat-header-cell
@@ -478,17 +483,129 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <ng-container matColumnDef="expandedDonnee">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="displayedColumns.length"
+      >
+        <div
+          class="donnee-detail"
+          [@detailExpand]="
+            !!selectedDonnee && element.id === selectedDonnee.id
+              ? 'expanded'
+              : 'collapsed'
+          "
+        >
+          <div>
+            ID: {{ element.id }}
+            <br />
+            Observateur: {{ element.observateur }}
+            <br />
+            Observateurs associés:
+            <span *ngFor="let a of element.associes; last as last">
+              {{ a.libelle }}
+              <span *ngIf="!last"> / </span>
+            </span>
+            <br />
+            Département: {{ element.departement }}
+            <br />
+            Code commune: {{ element.codeCommune }}
+            <br />
+            Nom commune: {{ element.nomCommune }}
+            <br />
+            Lieu-dit: {{ element.lieudit }}
+            <br />
+            Altitude:
+            {{
+              !!element.customizedAltitude
+                ? element.customizedAltitude
+                : element.altitude
+            }}
+            <br />
+            Longitude:
+            {{
+              !!element.customizedLongitude
+                ? element.customizedLongitude
+                : element.longitude
+            }}
+            <br />
+            Latitude:
+            {{
+              !!element.customizedLatitude
+                ? element.customizedLatitude
+                : element.latitude
+            }}
+            <br />
+            Date: {{ element.date | date: "dd/MM/yyyy" }}
+            <br />
+            Heure: {{ element.heure }}
+            <br />
+            Durée: {{ element.duree }}
+            <br />
+            Température: {{ element.temperature }}
+            <br />
+            Météos:
+            <span *ngFor="let m of element.meteos; last as last">
+              {{ m.libelle }}
+              <span *ngIf="!last"> / </span>
+            </span>
+            <br />
+            Classe: {{ element.classe }}
+            <br />
+            Code espèce: {{ element.codeEspece }}
+            <br />
+            Nom français: {{ element.nomFrancais }}
+            <br />
+            Nom latin: {{ element.nomLatin }}
+            <br />
+            Nombre: {{ element.nombre }} - {{ element.estimationNombre }}
+            <br />
+            Sexe: {{ element.sexe }}
+            <br />
+            Âge: {{ element.age }}
+            <br />
+            Distance: {{ element.estimationDistance }} -
+            {{ element.distance }}
+            <br />
+            Regroupement: {{ element.regroupement }}
+            <br />
+            Comportements:
+            <span *ngFor="let c of element.comportements; last as last">
+              {{ c.code }} - {{ c.libelle }}
+              <span *ngIf="!last"> / </span>
+            </span>
+            <br />
+            Milieux:
+            <span *ngFor="let m of element.milieux; last as last">
+              {{ m.code }} - {{ m.libelle }}
+              <span *ngIf="!last"> / </span>
+            </span>
+            <br />
+            Commentaires: {{ element.commentaire }}
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
+      class="donnee-row"
+      [class.donnee-expanded-row]="
+        !!selectedDonnee && selectedDonnee.id === row.id
+      "
       (click)="onRowClicked(row)"
-      [ngClass]="{
-        'mat-row-selected': !!selectedDonnee && selectedDonnee.id == row.id
-      }"
+    ></tr>
+
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expandedDonnee']"
+      class="donnee-detail-row"
     ></tr>
   </table>
 
-  <mat-paginator [pageSizeOptions]="[1000, 2500, 5000]"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
 </div>

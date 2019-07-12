@@ -1,3 +1,10 @@
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from "@angular/animations";
 import { Component, Input, SimpleChanges, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -5,13 +12,37 @@ import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
   selector: "table-donnees",
-  templateUrl: "./table-donnees.tpl.html"
+  templateUrl: "./table-donnees.tpl.html",
+  animations: [
+    trigger("detailExpand", [
+      state("collapsed", style({ height: "0px", minHeight: "0" })),
+      state("expanded", style({ height: "*" })),
+      transition(
+        "expanded <=> collapsed",
+        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+      )
+    ])
+  ]
 })
 export class TableDonneesComponent {
   public COMPORTEMENTS_INDEXES: number[] = [1, 2, 3, 4, 5, 6];
   public MILIEUX_INDEXES: number[] = [1, 2, 3, 4];
 
   public displayedColumns: string[] = [
+    "code_espece",
+    "nom_francais",
+    "nombre",
+    "sexe",
+    "age",
+    "departement",
+    "code_commune",
+    "nom_commune",
+    "lieudit",
+    "date",
+    "heure"
+  ];
+
+  public displayedColumnsV2: string[] = [
     "id",
     "observateur",
     "associes",
@@ -97,7 +128,7 @@ export class TableDonneesComponent {
 
   public onRowClicked(object: any): void {
     if (!!this.selectedDonnee && this.selectedDonnee.id === object.id) {
-      this.selectedDonnee = undefined;
+      this.selectedDonnee = null;
     } else {
       this.selectedDonnee = object;
     }
