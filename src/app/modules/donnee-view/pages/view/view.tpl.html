@@ -13,9 +13,98 @@
   </div>
 
   <div *ngIf="!displayWaitPanel">
-    <button mat-raised-button color="primary" (click)="onSearchButtonClicked()">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSearchAllDonneesButtonClicked()"
+    >
       Afficher toutes les fiches espèces
     </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSearchLastDonneesButtonClicked()"
+    >
+      Afficher les 100 dernières données
+    </button>
+    <div>
+      <form [formGroup]="searchForm">
+        <!-- ID -->
+        <mat-form-field>
+          <input
+            #input
+            matInput
+            [formControl]="searchForm.controls['id']"
+            placeholder="ID"
+            id="input-id"
+            name="id"
+            type="text"
+          />
+        </mat-form-field>
+
+        <!-- CLASSE / ESPECE -->
+        <input-espece
+          formGroupName="especeGroup"
+          [controlGroup]="searchForm.controls['especeGroup']"
+          [classes]="classes$"
+          [especes]="especes$"
+        ></input-espece>
+
+        <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
+        <input-lieudit
+          formGroupName="lieuditGroup"
+          [controlGroup]="searchForm.controls['lieuditGroup']"
+          [departements]="departements$"
+          [communes]="communes$"
+          [lieuxdits]="lieuxdits$"
+          [hideCoordinates]="true"
+        >
+        </input-lieudit>
+
+        <!-- DATES -->
+        <mat-form-field>
+          <input
+            matInput
+            maxlength="5"
+            [matDatepicker]="picker"
+            placeholder="Date de début"
+            id="input-from-date"
+            name="from-date"
+            [formControl]="searchForm.controls['fromDate']"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            matInput
+            maxlength="5"
+            [matDatepicker]="pickerToDate"
+            placeholder="Date de fin"
+            id="input-to-date"
+            name="to-date"
+            [formControl]="searchForm.controls['toDate']"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerToDate"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerToDate></mat-datepicker>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onSearchButtonClicked()"
+        >
+          Lancer la recherche
+        </button>
+      </form>
+    </div>
 
     <table-donnees [donneesToDisplay]="donneesToDisplay"></table-donnees>
   </div>

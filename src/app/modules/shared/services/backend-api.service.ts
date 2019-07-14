@@ -38,6 +38,7 @@ export class BackendApiService {
   private PREVIOUS_DONNEE: string = "previous_donnee";
   private UPDATE: string = "update";
   private SAVE: string = "save";
+  private SEARCH: string = "search";
   private SEARCH_BY_COMMUNE: string = "search_by_commune/";
 
   private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
@@ -160,6 +161,10 @@ export class BackendApiService {
 
   public getAllDonnees(): Observable<any[]> {
     return this.httpGet(this.DONNEE + this.ALL);
+  }
+
+  public getDonneesByCustomizedFilters(parameters: any): Observable<any[]> {
+    return this.httpPost(this.DONNEE + this.SEARCH, parameters);
   }
 
   public saveDatabase(): Observable<HttpResponse<any>> {

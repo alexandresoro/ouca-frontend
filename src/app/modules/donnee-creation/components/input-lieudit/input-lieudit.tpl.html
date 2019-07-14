@@ -35,7 +35,7 @@
     </autocomplete>
   </div>
 
-  <div class="coordonnees-form">
+  <div *ngIf="!hideCoordinates" class="coordonnees-form">
     <!-- ALTITUDE -->
     <mat-form-field>
       <input

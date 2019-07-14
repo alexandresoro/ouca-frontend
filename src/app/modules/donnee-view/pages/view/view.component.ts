@@ -1,9 +1,17 @@
 import { NestedTreeControl } from "@angular/cdk/tree";
-import { Component, ViewChild } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Component } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
+import { Classe } from "basenaturaliste-model/classe.object";
+import { Commune } from "basenaturaliste-model/commune.object";
+import { Departement } from "basenaturaliste-model/departement.object";
+import { Espece } from "basenaturaliste-model/espece.object";
+import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import * as _ from "lodash";
+import { combineLatest, Observable, Subject } from "rxjs";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SelectDialogData } from "../../components/select-dialog/select-dialog-data.object";
@@ -122,6 +130,27 @@ const COLUMNS_TREE_DATA: TreeNode[] = [
   templateUrl: "./view.tpl.html"
 })
 export class ViewComponent {
+  public searchForm: FormGroup = new FormGroup({
+    id: new FormControl(),
+    especeGroup: new FormGroup({
+      classe: new FormControl(),
+      espece: new FormControl()
+    }),
+    lieuditGroup: new FormGroup({
+      departement: new FormControl(),
+      commune: new FormControl(),
+      lieudit: new FormControl()
+    }),
+    fromDate: new FormControl(),
+    toDate: new FormControl()
+  });
+
+  public classes$: Subject<Classe[]>;
+  public especes$: Subject<Espece[]>;
+  public departements$: Subject<Departement[]>;
+  public communes$: Subject<Commune[]>;
+  public lieuxdits$: Subject<Lieudit[]>;
+
   treeControl = new NestedTreeControl<TreeNode>((node) => node.children);
   treeData = new MatTreeNestedDataSource<TreeNode>();
 
@@ -171,11 +200,60 @@ export class ViewComponent {
     !!node.children && node.children.length > 0
 
   public ngOnInit(): void {
+    this.classes$ = new Subject();
+    this.especes$ = new Subject();
+    this.departements$ = new Subject();
+    this.communes$ = new Subject();
+    this.lieuxdits$ = new Subject();
     // TODO
     this.columns = columnsData;
+
+    combineLatest(
+      this.backendApiService.getAllEntities("classe") as Observable<Classe[]>,
+      this.backendApiService.getAllEntities("espece") as Observable<Espece[]>,
+      this.backendApiService.getAllEntities("departement") as Observable<
+        Departement[]
+      >,
+      this.backendApiService.getAllEntities("commune") as Observable<Commune[]>,
+      this.backendApiService.getAllEntities("lieudit") as Observable<Lieudit[]>
+    ).subscribe(
+      (result: [Classe[], Espece[], Departement[], Commune[], Lieudit[]]) => {
+        this.classes$.next(!!result[0] ? result[0] : []);
+        this.especes$.next(!!result[1] ? result[1] : []);
+        this.departements$.next(!!result[2] ? result[2] : []);
+        this.communes$.next(!!result[3] ? result[3] : []);
+        this.lieuxdits$.next(!!result[4] ? result[4] : []);
+      },
+      (error: HttpErrorResponse) => {
+        console.error(
+          "Impossible de trouver les classes ou les espèces (" + error + ")"
+        );
+      }
+    );
   }
 
   public onSearchButtonClicked(): void {
+    this.displayWaitPanel = true;
+    console.log(this.searchForm);
+
+    this.backendApiService
+      .getDonneesByCustomizedFilters(this.searchForm.value)
+      .subscribe(
+        (results: any) => {
+          this.displayWaitPanel = false;
+          this.donneesToDisplay = results;
+        },
+        (error: any) => {
+          PageStatusHelper.setErrorStatus(
+            "Impossible de récupérer les fiches espèces.",
+            error
+          );
+          this.displayWaitPanel = false;
+        }
+      );
+  }
+
+  public onSearchAllDonneesButtonClicked(): void {
     this.displayWaitPanel = true;
     console.log("SELECT", this.selectOptions);
     console.log("WHERE", this.whereOptions);

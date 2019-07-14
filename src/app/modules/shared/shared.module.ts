@@ -36,6 +36,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatTreeModule } from "@angular/material/tree";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { InputEspeceComponent } from "../donnee-creation/components/input-espece/input-espece.component";
+import { InputLieuditComponent } from "../donnee-creation/components/input-lieudit/input-lieudit.component";
 import { AutocompleteActiveSelection } from "./components/autocomplete/autocomplete-active-selection.directive";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
@@ -77,6 +79,8 @@ import { BackendApiService } from "./services/backend-api.service";
     AutocompleteComponent,
     BnSelectComponent,
     ConfirmationDialogComponent,
+    InputEspeceComponent,
+    InputLieuditComponent,
     MultipleOptionsDialogComponent
   ],
   entryComponents: [
@@ -92,6 +96,8 @@ import { BackendApiService } from "./services/backend-api.service";
     ConfirmationDialogComponent,
     FormsModule,
     HttpClientModule,
+    InputEspeceComponent,
+    InputLieuditComponent,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,

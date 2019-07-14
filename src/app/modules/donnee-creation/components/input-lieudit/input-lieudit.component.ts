@@ -26,6 +26,8 @@ export class InputLieuditComponent implements OnInit {
 
   @Input() public controlGroup: FormGroup;
 
+  @Input() public hideCoordinates: boolean = false;
+
   public filteredLieuxdits$: Observable<Lieudit[]>;
 
   public filteredCommunes$: Observable<Commune[]>;
@@ -78,7 +80,9 @@ export class InputLieuditComponent implements OnInit {
     lieuDitControl.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe((selectedLieuDit: Lieudit) => {
-        this.updateCoordinates(selectedLieuDit);
+        if (!this.hideCoordinates) {
+          this.updateCoordinates(selectedLieuDit);
+        }
       });
 
     this.filteredCommunes$ = combineLatest(

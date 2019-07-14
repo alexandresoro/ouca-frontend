@@ -5,8 +5,6 @@ import { InputCommentaireComponent } from "./components/input-commentaire/input-
 import { InputComportementsComponent } from "./components/input-comportements/input-comportements.component";
 import { InputDateComponent } from "./components/input-date/input-date.component";
 import { InputDistanceComponent } from "./components/input-distance/input-distance.component";
-import { InputEspeceComponent } from "./components/input-espece/input-espece.component";
-import { InputLieuditComponent } from "./components/input-lieudit/input-lieudit.component";
 import { InputMeteosComponent } from "./components/input-meteos/input-metos.component";
 import { InputMilieuxComponent } from "./components/input-milieux/input-milieux.component";
 import { InputNombreComponent } from "./components/input-nombre/input-nombre.component";
@@ -30,8 +28,6 @@ import { NavigationService } from "./services/navigation.service";
     InputComportementsComponent,
     InputDateComponent,
     InputDistanceComponent,
-    InputEspeceComponent,
-    InputLieuditComponent,
     InputMeteosComponent,
     InputMilieuxComponent,
     InputNombreComponent,
