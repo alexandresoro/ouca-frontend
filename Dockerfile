@@ -6,7 +6,7 @@ WORKDIR /app/frontend
 COPY package.json yarn.lock .yarnrc /app/frontend/
 
 # Set up the dependencies of the project
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 # Copy the source files for the transpile
 COPY tsconfig.aot.json webpack.aot.config.js /app/frontend/
