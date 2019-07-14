@@ -725,4 +725,12 @@ body.base-naturaliste {
       display: flex;
     }
   }
+
+  .donnee-details-panel {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
 }

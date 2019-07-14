@@ -497,92 +497,101 @@
               : 'collapsed'
           "
         >
-          <div>
-            ID: {{ element.id }}
-            <br />
-            Observateur: {{ element.observateur }}
-            <br />
-            Observateurs associés:
-            <span *ngFor="let a of element.associes; last as last">
-              {{ a.libelle }}
-              <span *ngIf="!last"> / </span>
-            </span>
-            <br />
-            Département: {{ element.departement }}
-            <br />
-            Code commune: {{ element.codeCommune }}
-            <br />
-            Nom commune: {{ element.nomCommune }}
-            <br />
-            Lieu-dit: {{ element.lieudit }}
-            <br />
-            Altitude:
-            {{
-              !!element.customizedAltitude
-                ? element.customizedAltitude
-                : element.altitude
-            }}
-            <br />
-            Longitude:
-            {{
-              !!element.customizedLongitude
-                ? element.customizedLongitude
-                : element.longitude
-            }}
-            <br />
-            Latitude:
-            {{
-              !!element.customizedLatitude
-                ? element.customizedLatitude
-                : element.latitude
-            }}
-            <br />
-            Date: {{ element.date | date: "dd/MM/yyyy" }}
-            <br />
-            Heure: {{ element.heure }}
-            <br />
-            Durée: {{ element.duree }}
-            <br />
-            Température: {{ element.temperature }}
-            <br />
-            Météos:
-            <span *ngFor="let m of element.meteos; last as last">
-              {{ m.libelle }}
-              <span *ngIf="!last"> / </span>
-            </span>
-            <br />
-            Classe: {{ element.classe }}
-            <br />
-            Code espèce: {{ element.codeEspece }}
-            <br />
-            Nom français: {{ element.nomFrancais }}
-            <br />
-            Nom latin: {{ element.nomLatin }}
-            <br />
-            Nombre: {{ element.nombre }} - {{ element.estimationNombre }}
-            <br />
-            Sexe: {{ element.sexe }}
-            <br />
-            Âge: {{ element.age }}
-            <br />
-            Distance: {{ element.estimationDistance }} -
-            {{ element.distance }}
-            <br />
-            Regroupement: {{ element.regroupement }}
-            <br />
-            Comportements:
-            <span *ngFor="let c of element.comportements; last as last">
-              {{ c.code }} - {{ c.libelle }}
-              <span *ngIf="!last"> / </span>
-            </span>
-            <br />
-            Milieux:
-            <span *ngFor="let m of element.milieux; last as last">
-              {{ m.code }} - {{ m.libelle }}
-              <span *ngIf="!last"> / </span>
-            </span>
-            <br />
-            Commentaires: {{ element.commentaire }}
+          <div class="donnee-details-panel">
+            <div>
+              <strong>ID:</strong> {{ element.id }}
+              <br />
+              <strong>Observateur:</strong> {{ element.observateur }}
+              <br />
+              <span
+                ><strong>Observateurs associés:</strong>
+                <span *ngFor="let a of element.associes; last as last">
+                  {{ a.libelle }}
+                  <span *ngIf="!last"> / </span>
+                </span>
+              </span>
+              <br />
+              <strong>Date:</strong> {{ element.date | date: "dd/MM/yyyy" }}
+              <br />
+              <strong>Heure:</strong> {{ element.heure }}
+              <br />
+              <strong>Durée:</strong> {{ element.duree }}
+              <br />
+              <strong>Température:</strong> {{ element.temperature }}
+              <br />
+              <strong>Météos:</strong>
+              <span *ngFor="let m of element.meteos; last as last">
+                {{ m.libelle }}
+                <span *ngIf="!last"> / </span>
+              </span>
+            </div>
+            <div>
+              <strong>Département:</strong> {{ element.departement }}
+              <br />
+              <strong>Code commune:</strong> {{ element.codeCommune }}
+              <br />
+              <strong>Nom commune:</strong> {{ element.nomCommune }}
+              <br />
+              <strong>Lieu-dit:</strong> {{ element.lieudit }}
+              <br />
+              <strong>Altitude:</strong>
+              {{
+                !!element.customizedAltitude
+                  ? element.customizedAltitude
+                  : element.altitude
+              }}
+              <br />
+              <strong>Longitude:</strong>
+              {{
+                !!element.customizedLongitude
+                  ? element.customizedLongitude
+                  : element.longitude
+              }}
+              <br />
+              <strong>Latitude:</strong>
+              {{
+                !!element.customizedLatitude
+                  ? element.customizedLatitude
+                  : element.latitude
+              }}
+            </div>
+            <div>
+              <strong>Classe:</strong> {{ element.classe }}
+              <br />
+              <strong>Code espèce:</strong> {{ element.codeEspece }}
+              <br />
+              <strong>Nom français:</strong> {{ element.nomFrancais }}
+              <br />
+              <strong>Nom latin:</strong> {{ element.nomLatin }}
+              <br />
+              <strong>Nombre:</strong> {{ element.nombre }} -
+              {{ element.estimationNombre }}
+              <br />
+              <strong>Sexe:</strong> {{ element.sexe }}
+              <br />
+              <strong>Âge:</strong> {{ element.age }}
+              <br />
+              <strong>Distance:</strong> {{ element.estimationDistance }} -
+              {{ element.distance }}
+              <br />
+              <strong>Regroupement:</strong> {{ element.regroupement }}
+              <br />
+            </div>
+            <div>
+              <strong>Comportements:</strong>
+              <span *ngFor="let c of element.comportements; last as last">
+                {{ c.code }} - {{ c.libelle }}
+                <span *ngIf="!last"> / </span>
+              </span>
+              <br />
+              <strong>Milieux:</strong>
+              <span *ngFor="let m of element.milieux; last as last">
+                {{ m.code }} - {{ m.libelle }}
+                <span *ngIf="!last"> / </span>
+              </span>
+              <br />
+              <strong>Commentaires:</strong> {{ element.commentaire }}
+            </div>
           </div>
         </div>
       </td>
