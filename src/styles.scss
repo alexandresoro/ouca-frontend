@@ -707,6 +707,9 @@ body.base-naturaliste {
 
     tr.donnee-detail-row {
       height: 0;
+      td {
+        background: mat-color($mat-grey, 100);
+      }
     }
 
     tr.donnee-expanded-row {
@@ -714,6 +717,7 @@ body.base-naturaliste {
       td {
         border-bottom-width: 0;
       }
+      background: mat-color($mat-cyan, 100);
     }
 
     tr.donnee-row:not(.donnee-expanded-row):active {
@@ -732,5 +736,10 @@ body.base-naturaliste {
     grid-template-columns: 25% 25% 25% 25%;
     padding-bottom: 20px;
     padding-top: 20px;
+    background: mat-color($mat-grey, 100);
+
+    div {
+      padding-right: 20px;
+    }
   }
 }
