@@ -46,7 +46,6 @@
     "awesome-typescript-loader": "5",
     "basenaturaliste-model": "https://github.com/alexandresoro/basenaturaliste-model#master",
     "clean-webpack-plugin": "*",
-    "copyfiles": "*",
     "css-loader": "*",
     "file-loader": "*",
     "html-loader": "^0.5.5",
