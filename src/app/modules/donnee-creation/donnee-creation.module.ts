@@ -23,18 +23,12 @@ import { NavigationService } from "./services/navigation.service";
   imports: [SharedModule, DonneeCreationRoutingModule],
   declarations: [
     CreationComponent,
-    InputAgeComponent,
     InputCommentaireComponent,
     InputComportementsComponent,
     InputDateComponent,
-    InputDistanceComponent,
     InputMeteosComponent,
     InputMilieuxComponent,
-    InputNombreComponent,
-    InputObservateurComponent,
     InputObservateursAssociesComponent,
-    InputRegroupementComponent,
-    InputSexeComponent,
     InputTemperatureComponent,
     InputTimeComponent,
     SearchByIdDialogComponent

@@ -36,8 +36,14 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatTreeModule } from "@angular/material/tree";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { InputAgeComponent } from "../donnee-creation/components/input-age/input-age.component";
+import { InputDistanceComponent } from "../donnee-creation/components/input-distance/input-distance.component";
 import { InputEspeceComponent } from "../donnee-creation/components/input-espece/input-espece.component";
 import { InputLieuditComponent } from "../donnee-creation/components/input-lieudit/input-lieudit.component";
+import { InputNombreComponent } from "../donnee-creation/components/input-nombre/input-nombre.component";
+import { InputObservateurComponent } from "../donnee-creation/components/input-observateur/input-observateur.component";
+import { InputRegroupementComponent } from "../donnee-creation/components/input-regroupement/input-regroupement.component";
+import { InputSexeComponent } from "../donnee-creation/components/input-sexe/input-sexe.component";
 import { AutocompleteActiveSelection } from "./components/autocomplete/autocomplete-active-selection.directive";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
@@ -79,8 +85,14 @@ import { BackendApiService } from "./services/backend-api.service";
     AutocompleteComponent,
     BnSelectComponent,
     ConfirmationDialogComponent,
+    InputAgeComponent,
+    InputDistanceComponent,
     InputEspeceComponent,
     InputLieuditComponent,
+    InputNombreComponent,
+    InputObservateurComponent,
+    InputRegroupementComponent,
+    InputSexeComponent,
     MultipleOptionsDialogComponent
   ],
   entryComponents: [
@@ -96,8 +108,14 @@ import { BackendApiService } from "./services/backend-api.service";
     ConfirmationDialogComponent,
     FormsModule,
     HttpClientModule,
+    InputAgeComponent,
+    InputDistanceComponent,
     InputEspeceComponent,
     InputLieuditComponent,
+    InputNombreComponent,
+    InputObservateurComponent,
+    InputRegroupementComponent,
+    InputSexeComponent,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,

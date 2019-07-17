@@ -5,11 +5,16 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
+import { Age } from "basenaturaliste-model/age.object";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Espece } from "basenaturaliste-model/espece.object";
+import { EstimationDistance } from "basenaturaliste-model/estimation-distance.object";
+import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
+import { Observateur } from "basenaturaliste-model/observateur.object";
+import { Sexe } from "basenaturaliste-model/sexe.object";
 import * as _ from "lodash";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
@@ -132,6 +137,7 @@ const COLUMNS_TREE_DATA: TreeNode[] = [
 export class ViewComponent {
   public searchForm: FormGroup = new FormGroup({
     id: new FormControl(),
+    observateur: new FormControl(),
     especeGroup: new FormGroup({
       classe: new FormControl(),
       espece: new FormControl()
@@ -141,15 +147,31 @@ export class ViewComponent {
       commune: new FormControl(),
       lieudit: new FormControl()
     }),
+    nombreGroup: new FormGroup({
+      nombre: new FormControl(""),
+      estimationNombre: new FormControl("")
+    }),
+    sexe: new FormControl(""),
+    age: new FormControl(""),
+    distanceGroup: new FormGroup({
+      distance: new FormControl(""),
+      estimationDistance: new FormControl("")
+    }),
+    regroupement: new FormControl(""),
     fromDate: new FormControl(),
     toDate: new FormControl()
   });
 
-  public classes$: Subject<Classe[]>;
-  public especes$: Subject<Espece[]>;
+  public observateurs: Observateur[];
   public departements$: Subject<Departement[]>;
   public communes$: Subject<Commune[]>;
   public lieuxdits$: Subject<Lieudit[]>;
+  public classes$: Subject<Classe[]>;
+  public especes$: Subject<Espece[]>;
+  public estimationsNombre: EstimationNombre[];
+  public estimationsDistance: EstimationDistance[];
+  public sexes: Sexe[];
+  public ages: Age[];
 
   treeControl = new NestedTreeControl<TreeNode>((node) => node.children);
   treeData = new MatTreeNestedDataSource<TreeNode>();
@@ -215,14 +237,43 @@ export class ViewComponent {
         Departement[]
       >,
       this.backendApiService.getAllEntities("commune") as Observable<Commune[]>,
-      this.backendApiService.getAllEntities("lieudit") as Observable<Lieudit[]>
+      this.backendApiService.getAllEntities("lieudit") as Observable<Lieudit[]>,
+      this.backendApiService.getAllEntities("observateur") as Observable<
+        Observateur[]
+      >,
+      this.backendApiService.getAllEntities("sexe") as Observable<Sexe[]>,
+      this.backendApiService.getAllEntities("age") as Observable<Age[]>,
+      this.backendApiService.getAllEntities("estimation-nombre") as Observable<
+        EstimationNombre[]
+      >,
+      this.backendApiService.getAllEntities(
+        "estimation-distance"
+      ) as Observable<EstimationDistance[]>
     ).subscribe(
-      (result: [Classe[], Espece[], Departement[], Commune[], Lieudit[]]) => {
+      (
+        result: [
+          Classe[],
+          Espece[],
+          Departement[],
+          Commune[],
+          Lieudit[],
+          Observateur[],
+          Sexe[],
+          Age[],
+          EstimationNombre[],
+          EstimationDistance[]
+        ]
+      ) => {
         this.classes$.next(!!result[0] ? result[0] : []);
         this.especes$.next(!!result[1] ? result[1] : []);
         this.departements$.next(!!result[2] ? result[2] : []);
         this.communes$.next(!!result[3] ? result[3] : []);
         this.lieuxdits$.next(!!result[4] ? result[4] : []);
+        this.observateurs = !!result[5] ? result[5] : [];
+        this.sexes = !!result[6] ? result[6] : [];
+        this.ages = !!result[7] ? result[7] : [];
+        this.estimationsNombre = !!result[8] ? result[8] : [];
+        this.estimationsDistance = !!result[9] ? result[9] : [];
       },
       (error: HttpErrorResponse) => {
         console.error(

@@ -20,13 +20,6 @@
     >
       Afficher toutes les fiches espèces
     </button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onSearchLastDonneesButtonClicked()"
-    >
-      Afficher les 100 dernières données
-    </button>
     <div>
       <form [formGroup]="searchForm">
         <!-- ID -->
@@ -42,24 +35,11 @@
           />
         </mat-form-field>
 
-        <!-- CLASSE / ESPECE -->
-        <input-espece
-          formGroupName="especeGroup"
-          [controlGroup]="searchForm.controls['especeGroup']"
-          [classes]="classes$"
-          [especes]="especes$"
-        ></input-espece>
-
-        <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
-        <input-lieudit
-          formGroupName="lieuditGroup"
-          [controlGroup]="searchForm.controls['lieuditGroup']"
-          [departements]="departements$"
-          [communes]="communes$"
-          [lieuxdits]="lieuxdits$"
-          [hideCoordinates]="true"
+        <input-observateur
+          [control]="searchForm.controls['observateur']"
+          [observateurs]="observateurs"
         >
-        </input-lieudit>
+        </input-observateur>
 
         <!-- DATES -->
         <mat-form-field>
@@ -95,6 +75,58 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #pickerToDate></mat-datepicker>
         </mat-form-field>
+
+        <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
+        <input-lieudit
+          formGroupName="lieuditGroup"
+          [controlGroup]="searchForm.controls['lieuditGroup']"
+          [departements]="departements$"
+          [communes]="communes$"
+          [lieuxdits]="lieuxdits$"
+          [hideCoordinates]="true"
+        >
+        </input-lieudit>
+
+        <!-- CLASSE / ESPECE -->
+        <input-espece
+          formGroupName="especeGroup"
+          [controlGroup]="searchForm.controls['especeGroup']"
+          [classes]="classes$"
+          [especes]="especes$"
+        ></input-espece>
+
+        <input-nombre
+          class="estimation-nombre-espece"
+          [controlGroup]="searchForm.controls['nombreGroup']"
+          [estimationsNombre]="estimationsNombre"
+          formGroupName="nombreGroup"
+        >
+        </input-nombre>
+
+        <!-- SEXE -->
+        <input-sexe
+          class="sexe-espece"
+          [control]="searchForm.controls['sexe']"
+          [sexes]="sexes"
+        ></input-sexe>
+
+        <!-- AGE  -->
+        <input-age
+          class="age-espece"
+          [control]="searchForm.controls['age']"
+          [ages]="ages"
+        ></input-age>
+
+        <input-distance
+          [controlGroup]="searchForm.controls['distanceGroup']"
+          [estimationsDistance]="estimationsDistance"
+          formGroupName="distanceGroup"
+        >
+        </input-distance>
+
+        <input-regroupement
+          [control]="searchForm.controls['regroupement']"
+        ></input-regroupement>
 
         <button
           mat-raised-button
