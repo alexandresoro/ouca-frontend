@@ -741,4 +741,23 @@ body.base-naturaliste {
       padding-right: 20px;
     }
   }
+
+  .search-filters-panel {
+    background: mat-color($mat-grey, 100);
+    padding-left: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .search-filters-form {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 25% 25% 25% 25%;
+
+      div {
+        mat-form-field {
+          width: 90%;
+        }
+      }
+    }
+  }
 }

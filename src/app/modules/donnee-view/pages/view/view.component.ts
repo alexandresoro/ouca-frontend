@@ -138,6 +138,7 @@ export class ViewComponent {
   public searchForm: FormGroup = new FormGroup({
     id: new FormControl(),
     observateur: new FormControl(),
+    temperature: new FormControl(),
     especeGroup: new FormGroup({
       classe: new FormControl(),
       espece: new FormControl()

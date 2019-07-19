@@ -44,6 +44,7 @@ import { InputNombreComponent } from "../donnee-creation/components/input-nombre
 import { InputObservateurComponent } from "../donnee-creation/components/input-observateur/input-observateur.component";
 import { InputRegroupementComponent } from "../donnee-creation/components/input-regroupement/input-regroupement.component";
 import { InputSexeComponent } from "../donnee-creation/components/input-sexe/input-sexe.component";
+import { InputTemperatureComponent } from "../donnee-creation/components/input-temperature/input-temperature.component";
 import { AutocompleteActiveSelection } from "./components/autocomplete/autocomplete-active-selection.directive";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
@@ -93,6 +94,7 @@ import { BackendApiService } from "./services/backend-api.service";
     InputObservateurComponent,
     InputRegroupementComponent,
     InputSexeComponent,
+    InputTemperatureComponent,
     MultipleOptionsDialogComponent
   ],
   entryComponents: [
@@ -116,6 +118,7 @@ import { BackendApiService } from "./services/backend-api.service";
     InputObservateurComponent,
     InputRegroupementComponent,
     InputSexeComponent,
+    InputTemperatureComponent,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,

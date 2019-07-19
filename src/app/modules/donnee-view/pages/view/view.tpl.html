@@ -13,121 +13,135 @@
   </div>
 
   <div *ngIf="!displayWaitPanel">
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onSearchAllDonneesButtonClicked()"
-    >
-      Afficher toutes les fiches espèces
-    </button>
-    <div>
+    <div class="search-filters-panel">
       <form [formGroup]="searchForm">
-        <!-- ID -->
-        <mat-form-field>
-          <input
-            #input
-            matInput
-            [formControl]="searchForm.controls['id']"
-            placeholder="ID"
-            id="input-id"
-            name="id"
-            type="text"
-          />
-        </mat-form-field>
+        <div class="search-filters-form">
+          <div>
+            <!-- ID -->
+            <mat-form-field>
+              <input
+                #input
+                matInput
+                [formControl]="searchForm.controls['id']"
+                placeholder="ID"
+                id="input-id"
+                name="id"
+                type="text"
+              />
+            </mat-form-field>
+            <br />
 
-        <input-observateur
-          [control]="searchForm.controls['observateur']"
-          [observateurs]="observateurs"
-        >
-        </input-observateur>
+            <input-observateur
+              [control]="searchForm.controls['observateur']"
+              [observateurs]="observateurs"
+            >
+            </input-observateur>
+            <br />
 
-        <!-- DATES -->
-        <mat-form-field>
-          <input
-            matInput
-            maxlength="5"
-            [matDatepicker]="picker"
-            placeholder="Date de début"
-            id="input-from-date"
-            name="from-date"
-            [formControl]="searchForm.controls['fromDate']"
-          />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+            <!-- DATES -->
+            <mat-form-field>
+              <input
+                matInput
+                maxlength="5"
+                [matDatepicker]="picker"
+                placeholder="Date de début"
+                id="input-from-date"
+                name="from-date"
+                [formControl]="searchForm.controls['fromDate']"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
 
-        <mat-form-field>
-          <input
-            matInput
-            maxlength="5"
-            [matDatepicker]="pickerToDate"
-            placeholder="Date de fin"
-            id="input-to-date"
-            name="to-date"
-            [formControl]="searchForm.controls['toDate']"
-          />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="pickerToDate"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #pickerToDate></mat-datepicker>
-        </mat-form-field>
+            <br />
+            <mat-form-field>
+              <input
+                matInput
+                maxlength="5"
+                [matDatepicker]="pickerToDate"
+                placeholder="Date de fin"
+                id="input-to-date"
+                name="to-date"
+                [formControl]="searchForm.controls['toDate']"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="pickerToDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #pickerToDate></mat-datepicker>
+            </mat-form-field>
+            <br />
 
-        <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
-        <input-lieudit
-          formGroupName="lieuditGroup"
-          [controlGroup]="searchForm.controls['lieuditGroup']"
-          [departements]="departements$"
-          [communes]="communes$"
-          [lieuxdits]="lieuxdits$"
-          [hideCoordinates]="true"
-        >
-        </input-lieudit>
+            <!-- TEMPERATURE -->
+            <input-temperature
+              [control]="searchForm.controls['temperature']"
+            ></input-temperature>
+          </div>
+          <div>
+            <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
+            <input-lieudit
+              formGroupName="lieuditGroup"
+              [controlGroup]="searchForm.controls['lieuditGroup']"
+              [departements]="departements$"
+              [communes]="communes$"
+              [lieuxdits]="lieuxdits$"
+              [hideCoordinates]="true"
+            >
+            </input-lieudit>
+          </div>
+          <div>
+            <!-- CLASSE / ESPECE -->
+            <input-espece
+              formGroupName="especeGroup"
+              [controlGroup]="searchForm.controls['especeGroup']"
+              [classes]="classes$"
+              [especes]="especes$"
+            ></input-espece>
+            <br />
 
-        <!-- CLASSE / ESPECE -->
-        <input-espece
-          formGroupName="especeGroup"
-          [controlGroup]="searchForm.controls['especeGroup']"
-          [classes]="classes$"
-          [especes]="especes$"
-        ></input-espece>
+            <input-nombre
+              class="estimation-nombre-espece"
+              [controlGroup]="searchForm.controls['nombreGroup']"
+              [estimationsNombre]="estimationsNombre"
+              formGroupName="nombreGroup"
+            >
+            </input-nombre>
+            <br />
+          </div>
+          <div>
 
-        <input-nombre
-          class="estimation-nombre-espece"
-          [controlGroup]="searchForm.controls['nombreGroup']"
-          [estimationsNombre]="estimationsNombre"
-          formGroupName="nombreGroup"
-        >
-        </input-nombre>
+            <!-- SEXE -->
+            <input-sexe
+              class="sexe-espece"
+              [control]="searchForm.controls['sexe']"
+              [sexes]="sexes"
+            ></input-sexe>
+            <br />
 
-        <!-- SEXE -->
-        <input-sexe
-          class="sexe-espece"
-          [control]="searchForm.controls['sexe']"
-          [sexes]="sexes"
-        ></input-sexe>
+            <!-- AGE  -->
+            <input-age
+              class="age-espece"
+              [control]="searchForm.controls['age']"
+              [ages]="ages"
+            ></input-age>
+            <br />
 
-        <!-- AGE  -->
-        <input-age
-          class="age-espece"
-          [control]="searchForm.controls['age']"
-          [ages]="ages"
-        ></input-age>
+            <input-distance
+              [controlGroup]="searchForm.controls['distanceGroup']"
+              [estimationsDistance]="estimationsDistance"
+              formGroupName="distanceGroup"
+            >
+            </input-distance>
+            <br />
 
-        <input-distance
-          [controlGroup]="searchForm.controls['distanceGroup']"
-          [estimationsDistance]="estimationsDistance"
-          formGroupName="distanceGroup"
-        >
-        </input-distance>
-
-        <input-regroupement
-          [control]="searchForm.controls['regroupement']"
-        ></input-regroupement>
-
+            <input-regroupement
+              [control]="searchForm.controls['regroupement']"
+            ></input-regroupement>
+          </div>
+        </div>
         <button
           mat-raised-button
           color="primary"
