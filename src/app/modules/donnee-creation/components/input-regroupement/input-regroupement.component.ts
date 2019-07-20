@@ -11,6 +11,8 @@ export class InputRegroupementComponent {
 
   @Input() public nextRegroupement: number;
 
+  @Input() public hideButton: boolean;
+
   public displayNextRegroupement(): void {
     this.control.setValue(this.nextRegroupement);
   }

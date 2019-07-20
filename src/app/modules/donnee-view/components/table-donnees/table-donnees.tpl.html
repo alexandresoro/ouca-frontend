@@ -1,7 +1,14 @@
 <div>
   <div *ngIf="filteringOnGoing">Veuillez patienter...</div>
 
-  <div *ngIf="!filteringOnGoing">
+  <div
+    *ngIf="
+      !filteringOnGoing &&
+      !!dataSource &&
+      !!dataSource.data &&
+      dataSource.data.length > 0
+    "
+  >
     <mat-form-field>
       <input
         matInput
@@ -13,11 +20,10 @@
       />
     </mat-form-field>
     <button mat-raised-button color="primary" (click)="applyFilter()">
-      Appliquer le filtre
+      Filtrer les résultats
     </button>
   </div>
 
-  <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
   <table
     mat-table
     matSort

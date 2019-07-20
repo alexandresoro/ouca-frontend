@@ -139,6 +139,8 @@ export class ViewComponent {
     id: new FormControl(),
     observateur: new FormControl(),
     temperature: new FormControl(),
+    heure: new FormControl(),
+    duree: new FormControl(),
     especeGroup: new FormGroup({
       classe: new FormControl(),
       espece: new FormControl()
@@ -160,7 +162,8 @@ export class ViewComponent {
     }),
     regroupement: new FormControl(""),
     fromDate: new FormControl(),
-    toDate: new FormControl()
+    toDate: new FormControl(),
+    commentaire: new FormControl()
   });
 
   public observateurs: Observateur[];
@@ -286,7 +289,6 @@ export class ViewComponent {
 
   public onSearchButtonClicked(): void {
     this.displayWaitPanel = true;
-    console.log(this.searchForm);
 
     this.backendApiService
       .getDonneesByCustomizedFilters(this.searchForm.value)

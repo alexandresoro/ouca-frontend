@@ -70,7 +70,10 @@ export class InputEspeceComponent implements OnInit {
         if (especes) {
           if (!!selectedClasse && !!selectedClasse.id) {
             return especes.filter((espece) => {
-              return espece.classeId === selectedClasse.id;
+              return (
+                espece.classeId === selectedClasse.id ||
+                (espece.classe && espece.classe.id === selectedClasse.id)
+              );
             });
           } else {
             return especes;

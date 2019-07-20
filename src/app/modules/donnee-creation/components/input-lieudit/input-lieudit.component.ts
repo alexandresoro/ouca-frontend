@@ -91,7 +91,11 @@ export class InputLieuditComponent implements OnInit {
       (selectedDepartement, communes) => {
         return communes && selectedDepartement && selectedDepartement.id
           ? communes.filter((commune) => {
-              return commune.departementId === selectedDepartement.id;
+              return (
+                commune.departementId === selectedDepartement.id ||
+                (commune.departement &&
+                  commune.departement.id === selectedDepartement.id)
+              );
             })
           : [];
       }
@@ -103,7 +107,10 @@ export class InputLieuditComponent implements OnInit {
       (selectedCommune, lieuxdits) => {
         return lieuxdits && selectedCommune && selectedCommune.id
           ? lieuxdits.filter((lieudit) => {
-              return lieudit.communeId === selectedCommune.id;
+              return (
+                lieudit.communeId === selectedCommune.id ||
+                (lieudit.commune && lieudit.commune.id === selectedCommune.id)
+              );
             })
           : [];
       }
