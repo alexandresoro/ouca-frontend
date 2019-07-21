@@ -1,11 +1,14 @@
 import { Component } from "@angular/core";
 import { PageComponent } from "../../../shared/components/page.component";
+import {
+  getContentTypeFromResponse,
+  saveFile
+} from "../../../shared/helpers/file-downloader.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 @Component({
   templateUrl: "./import.tpl.html"
 })
 export class ImportComponent extends PageComponent {
-
   private file: File;
 
   public isWaitPanelDisplayed: boolean = false;
@@ -23,8 +26,12 @@ export class ImportComponent extends PageComponent {
     this.displayWaitPanel();
     // this.importData(dataType);
     this.backendApiService.importData(entityName, this.file).subscribe(
-      (result) => {
-        // TODO
+      (response) => {
+        saveFile(
+          response.body,
+          this.file.name.split(".csv")[0] + ".erreurs.csv",
+          getContentTypeFromResponse(response)
+        );
         this.hideWaitPanel();
       },
       (error) => {

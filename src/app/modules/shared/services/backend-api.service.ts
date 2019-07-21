@@ -64,6 +64,20 @@ export class BackendApiService {
     return this.http.get<any>(requestPath, httpOptions);
   }
 
+  private httpPostObserveResponse<T>(
+    relativePath: string,
+    objectToPost: any
+  ): Observable<HttpResponse<any>> {
+    const requestPath: string = this.API_URL + relativePath;
+    console.log("POST", requestPath, objectToPost);
+    // tslint:disable-next-line: ban-types
+    const httpOptions: Object = {
+      observe: "response",
+      responseType: "blob" as "json"
+    };
+    return this.http.post<any>(requestPath, objectToPost, httpOptions);
+  }
+
   private httpPost<T>(relativePath: string, objectToPost: any): Observable<T> {
     const requestPath: string = this.API_URL + relativePath;
     console.log("POST", requestPath, objectToPost);
@@ -83,10 +97,16 @@ export class BackendApiService {
     );
   }
 
-  public importData(entityName: string, file: File): Observable<string> {
+  public importData(
+    entityName: string,
+    file: File
+  ): Observable<HttpResponse<any>> {
     const formData: FormData = new FormData();
     formData.append(this.FILE_TO_IMPORT_NAME, file, file.name);
-    return this.httpPost(entityName + "/" + this.IMPORT, formData);
+    return this.httpPostObserveResponse(
+      entityName + "/" + this.IMPORT,
+      formData
+    );
   }
 
   public getCreationInitialPageModel(): Observable<CreationPage> {
