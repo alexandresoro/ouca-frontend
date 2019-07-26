@@ -2,6 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import {
+  getContentTypeFromResponse,
+  saveFile
+} from "../../../shared/helpers/file-downloader.helper";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
@@ -76,10 +80,6 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
     this.switchToCreationMode();
   }
 
-  public exportObjects(): void {
-    alert("Fonctionnalité non supportée");
-  }
-
   public deleteObject(object: T): void {
     this.switchToRemoveMode(object);
   }
@@ -146,6 +146,38 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
           );
         }
       );
+  }
+
+  public exportObjects(): void {
+    this.backendApiService.exportData(this.getEntityName()).subscribe(
+      (response: any) => {
+        const byteCharacters = atob(response.body);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        });
+
+        saveFile(blob, "xlsx.xlsx", getContentTypeFromResponse(response));
+
+        /*
+        saveFile(
+          response.body,
+          this.getEntityName() + ".xlsx",
+          getContentTypeFromResponse(response)
+        );*/
+      },
+      (error: Response) => {
+        PageStatusHelper.setErrorStatus(
+          "Erreur lors de l'export de " + this.getTheEntityLabel(),
+          error
+        );
+      }
+    );
   }
 
   public cancelEdition(): void {
