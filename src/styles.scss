@@ -743,11 +743,11 @@ body.base-naturaliste {
   }
 
   .search-filters-panel {
-    background: mat-color($mat-grey, 100);
     padding-left: 30px;
     padding-top: 20px;
     padding-bottom: 20px;
     margin-bottom: 40px;
+    border: 3px solid mat-color($mat-cyan, 800);
 
     .search-filters-form {
       width: 100%;
