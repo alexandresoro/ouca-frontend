@@ -20,22 +20,16 @@ export interface ProprieteValeur {
 }
 
 const PROPRIETES_A_AFFICHER: IdPropriete[] = [
-  /*{ id: 1, propriete: "Nom de l'application" },*/
-  { id: 2, propriete: "Observateur par défaut" },
-  { id: 3, propriete: "Département par défaut" },
-  { id: 4, propriete: "Estimation du nombre par défaut" },
-  { id: 5, propriete: "Nombre par défaut" },
-  { id: 6, propriete: "Sexe par défaut" },
-  { id: 7, propriete: "Âge par défaut" },
-  { id: 8, propriete: "Afficher les observateurs associés" },
-  { id: 9, propriete: "Afficher la météo" },
-  { id: 10, propriete: "Afficher la distance" },
-  { id: 11, propriete: "Afficher le numéro de regroupement" },
-  /*{ id: 12, propriete: "Chemin vers MySQL" },
-  { id: 13, propriete: "Chemin vers MySQL dump" },
-  { id: 14, propriete: "Dossier d'import" },
-  { id: 15, propriete: "Dossier d'export" }*/
-  { id: 15, propriete: "Dossier d'export" }
+  { id: 1, propriete: "Observateur par défaut" },
+  { id: 2, propriete: "Département par défaut" },
+  { id: 3, propriete: "Estimation du nombre par défaut" },
+  { id: 4, propriete: "Nombre par défaut" },
+  { id: 5, propriete: "Sexe par défaut" },
+  { id: 6, propriete: "Âge par défaut" },
+  { id: 7, propriete: "Afficher les observateurs associés" },
+  { id: 8, propriete: "Afficher la météo" },
+  { id: 9, propriete: "Afficher la distance" },
+  { id: 10, propriete: "Afficher le numéro de regroupement" }
 ];
 
 @Component({
@@ -73,67 +67,52 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
       } else {
         switch (proprieteAAfficher.id) {
           case 1:
-            valeurToSet = this.configurationToSave.applicationName;
-            break;
-          case 2:
             valeurToSet = !!this.configurationToSave.defaultObservateur
               ? this.configurationToSave.defaultObservateur.libelle
               : "";
             break;
-          case 3:
+          case 2:
             valeurToSet = !!this.configurationToSave.defaultDepartement
               ? this.configurationToSave.defaultDepartement.code
               : "";
             break;
-          case 4:
+          case 3:
             valeurToSet = !!this.configurationToSave.defaultEstimationNombre
               ? this.configurationToSave.defaultEstimationNombre.libelle
               : "";
             break;
-          case 5:
+          case 4:
             valeurToSet = "" + this.configurationToSave.defaultNombre;
             break;
-          case 6:
+          case 5:
             valeurToSet = !!this.configurationToSave.defaultSexe
               ? this.configurationToSave.defaultSexe.libelle
               : "";
             break;
-          case 7:
+          case 6:
             valeurToSet = !!this.configurationToSave.defaultAge
               ? this.configurationToSave.defaultAge.libelle
               : "";
             break;
-          case 8:
+          case 7:
             valeurToSet = this.configurationToSave.areAssociesDisplayed
               ? "Oui"
               : "Non";
             break;
-          case 9:
+          case 8:
             valeurToSet = this.configurationToSave.isMeteoDisplayed
               ? "Oui"
               : "Non";
             break;
-          case 10:
+          case 9:
             valeurToSet = this.configurationToSave.isDistanceDisplayed
               ? "Oui"
               : "Non";
             break;
-          case 11:
+          case 10:
             valeurToSet = this.configurationToSave.isRegroupementDisplayed
               ? "Oui"
               : "Non";
-            break;
-          case 12:
-            valeurToSet = this.configurationToSave.mySqlPath;
-            break;
-          case 13:
-            valeurToSet = this.configurationToSave.mySqlDumpPath;
-            break;
-          case 14:
-            valeurToSet = this.configurationToSave.importFolderPath;
-            break;
-          case 15:
-            valeurToSet = this.configurationToSave.exportFolderPath;
             break;
           default:
             break;
