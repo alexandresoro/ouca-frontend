@@ -151,25 +151,11 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   public exportObjects(): void {
     this.backendApiService.exportData(this.getEntityName()).subscribe(
       (response: any) => {
-        const byteCharacters = atob(response.body);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], {
-          type:
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        });
-
-        saveFile(blob, "xlsx.xlsx", getContentTypeFromResponse(response));
-
-        /*
         saveFile(
           response.body,
           this.getEntityName() + ".xlsx",
           getContentTypeFromResponse(response)
-        );*/
+        );
       },
       (error: Response) => {
         PageStatusHelper.setErrorStatus(
