@@ -39,7 +39,8 @@ export class TableDonneesComponent {
     "nom_commune",
     "lieudit",
     "date",
-    "heure"
+    "heure",
+    "observateur"
   ];
 
   public displayedColumnsV2: string[] = [
