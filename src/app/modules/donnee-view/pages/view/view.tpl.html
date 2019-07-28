@@ -157,6 +157,14 @@
         >
           Lancer la recherche
         </button>
+
+        <!-- Retourner un fichier excel -->
+        <mat-checkbox
+          id="input-excel"
+          name="input-excel"
+          [formControl]="searchForm.controls['excelMode']"
+          >Exporter les résultats dans un fichier Excel</mat-checkbox
+        >
       </form>
     </div>
 

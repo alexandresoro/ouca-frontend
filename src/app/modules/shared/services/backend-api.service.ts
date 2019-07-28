@@ -191,6 +191,12 @@ export class BackendApiService {
     return this.httpPost(this.DONNEE + this.SEARCH, parameters);
   }
 
+  public exportDonneesByCustomizedFilters(
+    parameters: any
+  ): Observable<HttpResponse<any>> {
+    return this.httpPostObserveResponse(this.DONNEE + this.EXPORT, parameters);
+  }
+
   public saveDatabase(): Observable<HttpResponse<any>> {
     return this.httpGetObserveResponse(this.DATABASE + this.SAVE);
   }

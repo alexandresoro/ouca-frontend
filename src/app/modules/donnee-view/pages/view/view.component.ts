@@ -17,6 +17,10 @@ import { Observateur } from "basenaturaliste-model/observateur.object";
 import { Sexe } from "basenaturaliste-model/sexe.object";
 import * as _ from "lodash";
 import { combineLatest, Observable, Subject } from "rxjs";
+import {
+  getContentTypeFromResponse,
+  saveFile
+} from "../../../shared/helpers/file-downloader.helper";
 import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SelectDialogData } from "../../components/select-dialog/select-dialog-data.object";
@@ -163,7 +167,8 @@ export class ViewComponent {
     regroupement: new FormControl(""),
     fromDate: new FormControl(),
     toDate: new FormControl(),
-    commentaire: new FormControl()
+    commentaire: new FormControl(),
+    excelMode: new FormControl()
   });
 
   public observateurs: Observateur[];
@@ -290,21 +295,43 @@ export class ViewComponent {
   public onSearchButtonClicked(): void {
     this.displayWaitPanel = true;
 
-    this.backendApiService
-      .getDonneesByCustomizedFilters(this.searchForm.value)
-      .subscribe(
-        (results: any) => {
-          this.displayWaitPanel = false;
-          this.donneesToDisplay = results;
-        },
-        (error: any) => {
-          PageStatusHelper.setErrorStatus(
-            "Impossible de récupérer les fiches espèces.",
-            error
-          );
-          this.displayWaitPanel = false;
-        }
-      );
+    if (this.searchForm.controls.excelMode.value) {
+      this.backendApiService
+        .exportDonneesByCustomizedFilters(this.searchForm.value)
+        .subscribe(
+          (response: any) => {
+            this.displayWaitPanel = false;
+            saveFile(
+              response.body,
+              "donnees.xlsx",
+              getContentTypeFromResponse(response)
+            );
+          },
+          (error: any) => {
+            PageStatusHelper.setErrorStatus(
+              "Impossible de récupérer les fiches espèces.",
+              error
+            );
+            this.displayWaitPanel = false;
+          }
+        );
+    } else {
+      this.backendApiService
+        .getDonneesByCustomizedFilters(this.searchForm.value)
+        .subscribe(
+          (results: any) => {
+            this.displayWaitPanel = false;
+            this.donneesToDisplay = results;
+          },
+          (error: any) => {
+            PageStatusHelper.setErrorStatus(
+              "Impossible de récupérer les fiches espèces.",
+              error
+            );
+            this.displayWaitPanel = false;
+          }
+        );
+    }
   }
 
   public onSearchAllDonneesButtonClicked(): void {
