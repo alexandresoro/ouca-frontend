@@ -40,6 +40,7 @@ export class TableDonneesComponent {
     "lieudit",
     "date",
     "heure",
+    "duree",
     "observateur"
   ];
 
