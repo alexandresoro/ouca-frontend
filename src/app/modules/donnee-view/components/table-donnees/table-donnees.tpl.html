@@ -181,7 +181,11 @@
         Altitude
       </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.altitude }}
+        {{
+          !!element.customizedAltitude
+            ? element.customizedAltitude
+            : element.altitude
+        }}
       </td>
     </ng-container>
 
@@ -213,7 +217,11 @@
         Latitude
       </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.latitude }}
+        {{
+          !!element.customizedLatitude
+            ? element.customizedLatitude
+            : element.latitude
+        }}
       </td>
     </ng-container>
 
