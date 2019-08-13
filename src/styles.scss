@@ -765,4 +765,15 @@ body.base-naturaliste {
   #input-excel {
     margin-left: 20px;
   }
+
+  .panel-table-donnees {
+    .table-donnees-filter {
+      width: 400px;
+      margin-right: 20px;
+    }
+
+    mat-paginator {
+      margin-top: 20px;
+    }
+  }
 }

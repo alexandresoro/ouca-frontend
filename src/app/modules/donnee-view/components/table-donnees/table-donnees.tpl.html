@@ -1,4 +1,4 @@
-<div>
+<div class="panel-table-donnees">
   <div *ngIf="filteringOnGoing">Veuillez patienter...</div>
 
   <div
@@ -9,7 +9,7 @@
       dataSource.data.length > 0
     "
   >
-    <mat-form-field>
+    <mat-form-field class="table-donnees-filter">
       <input
         matInput
         type="text"
@@ -604,8 +604,8 @@
 
               <span *ngIf="element.distance || element.estimationDistance">
                 <strong>Distance:</strong
-                ><span *ngIf="element.estimationDistance"
-                  > {{ element.estimationDistance }} -</span
+                ><span *ngIf="element.estimationDistance">
+                  {{ element.estimationDistance }} -</span
                 >
                 <span *ngIf="element.distance"> {{ element.distance }} m</span>
                 <br />
