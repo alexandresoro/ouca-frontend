@@ -4,11 +4,14 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { Age } from "basenaturaliste-model/age.object";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
+import { Comportement } from "basenaturaliste-model/comportement.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Espece } from "basenaturaliste-model/espece.object";
 import { EstimationDistance } from "basenaturaliste-model/estimation-distance.object";
 import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
+import { Meteo } from "basenaturaliste-model/meteo.object";
+import { Milieu } from "basenaturaliste-model/milieu.object";
 import { Observateur } from "basenaturaliste-model/observateur.object";
 import { Sexe } from "basenaturaliste-model/sexe.object";
 import { combineLatest, Observable, Subject } from "rxjs";
@@ -27,6 +30,8 @@ export class ViewComponent {
     id: new FormControl(),
     observateur: new FormControl(),
     temperature: new FormControl(),
+    meteo: new FormControl(),
+    associe: new FormControl(),
     heure: new FormControl(),
     duree: new FormControl(),
     especeGroup: new FormGroup({
@@ -39,19 +44,21 @@ export class ViewComponent {
       lieudit: new FormControl()
     }),
     nombreGroup: new FormGroup({
-      nombre: new FormControl(""),
-      estimationNombre: new FormControl("")
+      nombre: new FormControl(),
+      estimationNombre: new FormControl()
     }),
-    sexe: new FormControl(""),
-    age: new FormControl(""),
+    sexe: new FormControl(),
+    age: new FormControl(),
     distanceGroup: new FormGroup({
-      distance: new FormControl(""),
-      estimationDistance: new FormControl("")
+      distance: new FormControl(),
+      estimationDistance: new FormControl()
     }),
-    regroupement: new FormControl(""),
+    regroupement: new FormControl(),
     fromDate: new FormControl(),
     toDate: new FormControl(),
     commentaire: new FormControl(),
+    comportement: new FormControl(),
+    milieu: new FormControl(),
     excelMode: new FormControl()
   });
 
@@ -65,6 +72,9 @@ export class ViewComponent {
   public estimationsDistance: EstimationDistance[];
   public sexes: Sexe[];
   public ages: Age[];
+  public comportements: Comportement[];
+  public milieux: Milieu[];
+  public meteos: Meteo[];
 
   public displayWaitPanel: boolean = false;
 
@@ -97,7 +107,12 @@ export class ViewComponent {
       >,
       this.backendApiService.getAllEntities(
         "estimation-distance"
-      ) as Observable<EstimationDistance[]>
+      ) as Observable<EstimationDistance[]>,
+      this.backendApiService.getAllEntities("comportement") as Observable<
+        Comportement[]
+      >,
+      this.backendApiService.getAllEntities("milieu") as Observable<Milieu[]>,
+      this.backendApiService.getAllEntities("meteo") as Observable<Meteo[]>
     ).subscribe(
       (
         result: [
@@ -110,7 +125,10 @@ export class ViewComponent {
           Sexe[],
           Age[],
           EstimationNombre[],
-          EstimationDistance[]
+          EstimationDistance[],
+          Comportement[],
+          Milieu[],
+          Meteo[]
         ]
       ) => {
         this.classes$.next(!!result[0] ? result[0] : []);
@@ -123,6 +141,9 @@ export class ViewComponent {
         this.ages = !!result[7] ? result[7] : [];
         this.estimationsNombre = !!result[8] ? result[8] : [];
         this.estimationsDistance = !!result[9] ? result[9] : [];
+        this.comportements = !!result[10] ? result[10] : [];
+        this.milieux = !!result[11] ? result[11] : [];
+        this.meteos = !!result[12] ? result[12] : [];
       },
       (error: HttpErrorResponse) => {
         console.error(

@@ -21,11 +21,11 @@
               />
             </mat-form-field>
 
+            <!-- OBSERVATEURS -->
             <input-observateur
               [control]="searchForm.controls['observateur']"
               [observateurs]="observateurs"
-            >
-            </input-observateur>
+            ></input-observateur>
 
             <!-- DATES -->
             <mat-form-field>
@@ -76,6 +76,7 @@
               label="Durée"
             ></input-time>
           </div>
+
           <div>
             <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
             <input-lieudit
@@ -92,7 +93,21 @@
             <input-temperature
               [control]="searchForm.controls['temperature']"
             ></input-temperature>
+
+            <!-- METEO -->
+            <autocomplete-meteo
+              [control]="searchForm.controls['meteo']"
+              [meteos]="meteos"
+            ></autocomplete-meteo>
+
+            <!-- OBSERVATEURS ASSOCIES -->
+            <input-observateur
+              [control]="searchForm.controls['associe']"
+              [observateurs]="observateurs"
+              [placeholder]="'Observateur associé'"
+            ></input-observateur>
           </div>
+
           <div>
             <!-- CLASSE / ESPECE -->
             <input-espece
@@ -102,6 +117,7 @@
               [especes]="especes$"
             ></input-espece>
 
+            <!-- ESTIMATION NOMBRE / NOMBRE -->
             <input-nombre
               class="estimation-nombre-espece"
               [controlGroup]="searchForm.controls['nombreGroup']"
@@ -124,7 +140,9 @@
               [ages]="ages"
             ></input-age>
           </div>
+
           <div>
+            <!-- ESTIMATION DISTANCE / DISTANCE -->
             <input-distance
               [controlGroup]="searchForm.controls['distanceGroup']"
               [estimationsDistance]="estimationsDistance"
@@ -132,16 +150,30 @@
             >
             </input-distance>
 
+            <!-- REGROUPEMENT -->
             <input-regroupement
               [control]="searchForm.controls['regroupement']"
               [hideButton]="true"
             ></input-regroupement>
 
+            <!-- COMPORTEMENT -->
+            <autocomplete-comportement
+              [control]="searchForm.controls['comportement']"
+              [comportements]="comportements"
+            ></autocomplete-comportement>
+
+            <!-- MILIEU -->
+            <autocomplete-milieu
+              [control]="searchForm.controls['milieu']"
+              [milieux]="milieux"
+            ></autocomplete-milieu>
+
+            <!-- COMMENTAIRES -->
             <mat-form-field>
               <input
                 matInput
                 type="text"
-                placeholder="Commentaire"
+                placeholder="Commentaires"
                 id="input-commentaire"
                 name="input-commentaire"
                 [formControl]="searchForm.controls['commentaire']"
