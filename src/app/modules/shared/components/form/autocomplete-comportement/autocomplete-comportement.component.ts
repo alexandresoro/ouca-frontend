@@ -11,7 +11,7 @@ import { AutocompleteAttribute } from "../../autocomplete/autocomplete-attribute
 export class AutocompleteComportementComponent {
   @Input() public comportements: Comportement[];
 
-  @Input() public formControl: FormControl;
+  @Input() public control: FormControl;
 
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {

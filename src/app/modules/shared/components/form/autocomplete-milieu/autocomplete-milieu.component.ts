@@ -11,7 +11,7 @@ import { AutocompleteAttribute } from "../../autocomplete/autocomplete-attribute
 export class AutocompleteMilieuComponent {
   @Input() public milieux: Milieu[];
 
-  @Input() public formControl: FormControl;
+  @Input() public control: FormControl;
 
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {
