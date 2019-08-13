@@ -50,6 +50,8 @@ import { AutocompleteActiveSelection } from "./components/autocomplete/autocompl
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { BnSelectComponent } from "./components/entite-select/bn-select.component";
+import { AutocompleteComportementComponent } from "./components/form/autocomplete-comportement/autocomplete-comportement.component";
+import { AutocompleteMilieuComponent } from "./components/form/autocomplete-milieu/autocomplete-milieu.component";
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
 import { BackendApiService } from "./services/backend-api.service";
 
@@ -84,6 +86,8 @@ import { BackendApiService } from "./services/backend-api.service";
   ],
   declarations: [
     AutocompleteActiveSelection,
+    AutocompleteComportementComponent,
+    AutocompleteMilieuComponent,
     AutocompleteComponent,
     BnSelectComponent,
     ConfirmationDialogComponent,
@@ -105,6 +109,8 @@ import { BackendApiService } from "./services/backend-api.service";
   ],
   exports: [
     AutocompleteComponent,
+    AutocompleteComportementComponent,
+    AutocompleteMilieuComponent,
     BnSelectComponent,
     BrowserAnimationsModule,
     BrowserModule,
