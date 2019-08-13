@@ -14,6 +14,8 @@ export class InputObservateurComponent {
 
   @Input() public observateurs: Observateur[];
 
+  @Input() public placeholder?: string = "Observateur";
+
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {
       key: "libelle",
