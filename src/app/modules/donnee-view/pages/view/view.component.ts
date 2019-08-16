@@ -28,10 +28,10 @@ import { BackendApiService } from "../../../shared/services/backend-api.service"
 export class ViewComponent {
   public searchForm: FormGroup = new FormGroup({
     id: new FormControl(),
-    observateur: new FormControl(),
+    observateurs: new FormControl(),
     temperature: new FormControl(),
-    meteo: new FormControl(),
-    associe: new FormControl(),
+    meteos: new FormControl(),
+    associes: new FormControl(),
     heure: new FormControl(),
     duree: new FormControl(),
     especeGroup: new FormGroup({
@@ -47,8 +47,8 @@ export class ViewComponent {
       nombre: new FormControl(),
       estimationNombre: new FormControl()
     }),
-    sexe: new FormControl(),
-    age: new FormControl(),
+    sexes: new FormControl(),
+    ages: new FormControl(),
     distanceGroup: new FormGroup({
       distance: new FormControl(),
       estimationDistance: new FormControl()
@@ -57,8 +57,8 @@ export class ViewComponent {
     fromDate: new FormControl(),
     toDate: new FormControl(),
     commentaire: new FormControl(),
-    comportement: new FormControl(),
-    milieu: new FormControl(),
+    comportements: new FormControl(),
+    milieux: new FormControl(),
     excelMode: new FormControl()
   });
 

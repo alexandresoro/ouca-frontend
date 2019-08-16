@@ -22,10 +22,22 @@
             </mat-form-field>
 
             <!-- OBSERVATEURS -->
-            <input-observateur
-              [control]="searchForm.controls['observateur']"
-              [observateurs]="observateurs"
-            ></input-observateur>
+            <mat-form-field>
+              <mat-select
+                placeholder="Observateurs"
+                id="input-observateurs"
+                name="observateurs"
+                [formControl]="searchForm.controls['observateurs']"
+                multiple
+              >
+                <mat-option
+                  *ngFor="let observateur of observateurs"
+                  [value]="observateur.id"
+                >
+                  {{ observateur.libelle }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
             <!-- DATES -->
             <mat-form-field>
@@ -95,17 +107,37 @@
             ></input-temperature>
 
             <!-- METEO -->
-            <autocomplete-meteo
-              [control]="searchForm.controls['meteo']"
-              [meteos]="meteos"
-            ></autocomplete-meteo>
+            <mat-form-field>
+              <mat-select
+                placeholder="Météos"
+                id="input-meteos"
+                name="meteos"
+                [formControl]="searchForm.controls['meteos']"
+                multiple
+              >
+                <mat-option *ngFor="let meteo of meteos" [value]="meteo.id">
+                  {{ meteo.libelle }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
             <!-- OBSERVATEURS ASSOCIES -->
-            <input-observateur
-              [control]="searchForm.controls['associe']"
-              [observateurs]="observateurs"
-              [placeholder]="'Observateur associé'"
-            ></input-observateur>
+            <mat-form-field>
+              <mat-select
+                placeholder="Observateurs associés"
+                id="input-associes"
+                name="associes"
+                [formControl]="searchForm.controls['associes']"
+                multiple
+              >
+                <mat-option
+                  *ngFor="let associe of observateurs"
+                  [value]="associe.id"
+                >
+                  {{ associe.libelle }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
 
           <div>
@@ -126,16 +158,34 @@
             </input-nombre>
 
             <!-- SEXE -->
-            <input-sexe
-              [control]="searchForm.controls['sexe']"
-              [sexes]="sexes"
-            ></input-sexe>
+            <mat-form-field>
+              <mat-select
+                placeholder="Sexes"
+                id="input-sexes"
+                name="sexes"
+                [formControl]="searchForm.controls['sexes']"
+                multiple
+              >
+                <mat-option *ngFor="let sexe of sexes" [value]="sexe.id">
+                  {{ sexe.libelle }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
             <!-- AGE  -->
-            <input-age
-              [control]="searchForm.controls['age']"
-              [ages]="ages"
-            ></input-age>
+            <mat-form-field>
+              <mat-select
+                placeholder="Ages"
+                id="input-ages"
+                name="ages"
+                [formControl]="searchForm.controls['ages']"
+                multiple
+              >
+                <mat-option *ngFor="let age of ages" [value]="age.id">
+                  {{ age.libelle }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
 
           <div>
@@ -154,16 +204,38 @@
             ></input-regroupement>
 
             <!-- COMPORTEMENT -->
-            <autocomplete-comportement
-              [control]="searchForm.controls['comportement']"
-              [comportements]="comportements"
-            ></autocomplete-comportement>
+            <!-- METEOS -->
+            <mat-form-field>
+              <mat-select
+                placeholder="Comportements"
+                id="input-comportements"
+                name="comportements"
+                [formControl]="searchForm.controls['comportements']"
+                multiple
+              >
+                <mat-option
+                  *ngFor="let comportement of comportements"
+                  [value]="comportement.id"
+                >
+                  {{ comportement.code }} - {{ comportement.libelle }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
             <!-- MILIEU -->
-            <autocomplete-milieu
-              [control]="searchForm.controls['milieu']"
-              [milieux]="milieux"
-            ></autocomplete-milieu>
+            <mat-form-field>
+              <mat-select
+                placeholder="Milieux"
+                id="input-milieux"
+                name="milieux"
+                [formControl]="searchForm.controls['milieux']"
+                multiple
+              >
+                <mat-option *ngFor="let milieu of milieux" [value]="milieu.id">
+                  {{ milieu.code }} - {{ milieu.libelle }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
             <!-- COMMENTAIRES -->
             <mat-form-field>
