@@ -53,6 +53,7 @@ import { BnSelectComponent } from "./components/entite-select/bn-select.componen
 import { AutocompleteComportementComponent } from "./components/form/autocomplete-comportement/autocomplete-comportement.component";
 import { AutocompleteMeteoComponent } from "./components/form/autocomplete-meteo/autocomplete-meteo.component";
 import { AutocompleteMilieuComponent } from "./components/form/autocomplete-milieu/autocomplete-milieu.component";
+import { MultipleSelectComponent } from "./components/form/multiple-select/multiple-select.component";
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
 import { BackendApiService } from "./services/backend-api.service";
 
@@ -103,7 +104,8 @@ import { BackendApiService } from "./services/backend-api.service";
     InputSexeComponent,
     InputTemperatureComponent,
     InputTimeComponent,
-    MultipleOptionsDialogComponent
+    MultipleOptionsDialogComponent,
+    MultipleSelectComponent
   ],
   entryComponents: [
     ConfirmationDialogComponent,
@@ -152,6 +154,7 @@ import { BackendApiService } from "./services/backend-api.service";
     MatTooltipModule,
     MatTreeModule,
     MultipleOptionsDialogComponent,
+    MultipleSelectComponent,
     ReactiveFormsModule
   ],
   providers: [

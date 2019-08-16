@@ -22,22 +22,13 @@
             </mat-form-field>
 
             <!-- OBSERVATEURS -->
-            <mat-form-field>
-              <mat-select
-                placeholder="Observateurs"
-                id="input-observateurs"
-                name="observateurs"
-                [formControl]="searchForm.controls['observateurs']"
-                multiple
-              >
-                <mat-option
-                  *ngFor="let observateur of observateurs"
-                  [value]="observateur.id"
-                >
-                  {{ observateur.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <multiple-select
+              [attributesToDisplay]="['libelle']"
+              [control]="searchForm.controls['observateurs']"
+              [id]="'observateurs'"
+              [options]="observateurs"
+              [placeholder]="'Observateurs'"
+            ></multiple-select>
 
             <!-- DATES -->
             <mat-form-field>
@@ -107,37 +98,22 @@
             ></input-temperature>
 
             <!-- METEO -->
-            <mat-form-field>
-              <mat-select
-                placeholder="Météos"
-                id="input-meteos"
-                name="meteos"
-                [formControl]="searchForm.controls['meteos']"
-                multiple
-              >
-                <mat-option *ngFor="let meteo of meteos" [value]="meteo.id">
-                  {{ meteo.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <multiple-select
+              [attributesToDisplay]="['libelle']"
+              [control]="searchForm.controls['meteos']"
+              [id]="'meteos'"
+              [options]="meteos"
+              [placeholder]="'Météos'"
+            ></multiple-select>
 
             <!-- OBSERVATEURS ASSOCIES -->
-            <mat-form-field>
-              <mat-select
-                placeholder="Observateurs associés"
-                id="input-associes"
-                name="associes"
-                [formControl]="searchForm.controls['associes']"
-                multiple
-              >
-                <mat-option
-                  *ngFor="let associe of observateurs"
-                  [value]="associe.id"
-                >
-                  {{ associe.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <multiple-select
+              [attributesToDisplay]="['libelle']"
+              [control]="searchForm.controls['associes']"
+              [id]="'associes'"
+              [options]="observateurs"
+              [placeholder]="'Observateurs associés'"
+            ></multiple-select>
           </div>
 
           <div>
@@ -158,34 +134,22 @@
             </input-nombre>
 
             <!-- SEXE -->
-            <mat-form-field>
-              <mat-select
-                placeholder="Sexes"
-                id="input-sexes"
-                name="sexes"
-                [formControl]="searchForm.controls['sexes']"
-                multiple
-              >
-                <mat-option *ngFor="let sexe of sexes" [value]="sexe.id">
-                  {{ sexe.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <multiple-select
+              [attributesToDisplay]="['libelle']"
+              [control]="searchForm.controls['sexes']"
+              [id]="'sexes'"
+              [options]="sexes"
+              [placeholder]="'Sexes'"
+            ></multiple-select>
 
             <!-- AGE  -->
-            <mat-form-field>
-              <mat-select
-                placeholder="Ages"
-                id="input-ages"
-                name="ages"
-                [formControl]="searchForm.controls['ages']"
-                multiple
-              >
-                <mat-option *ngFor="let age of ages" [value]="age.id">
-                  {{ age.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <multiple-select
+              [attributesToDisplay]="['libelle']"
+              [control]="searchForm.controls['ages']"
+              [id]="'ages'"
+              [options]="ages"
+              [placeholder]="'Ages'"
+            ></multiple-select>
           </div>
 
           <div>
@@ -204,38 +168,22 @@
             ></input-regroupement>
 
             <!-- COMPORTEMENT -->
-            <!-- METEOS -->
-            <mat-form-field>
-              <mat-select
-                placeholder="Comportements"
-                id="input-comportements"
-                name="comportements"
-                [formControl]="searchForm.controls['comportements']"
-                multiple
-              >
-                <mat-option
-                  *ngFor="let comportement of comportements"
-                  [value]="comportement.id"
-                >
-                  {{ comportement.code }} - {{ comportement.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <multiple-select
+              [attributesToDisplay]="['code', 'libelle']"
+              [control]="searchForm.controls['comportements']"
+              [id]="'comportements'"
+              [options]="comportements"
+              [placeholder]="'Comportements'"
+            ></multiple-select>
 
             <!-- MILIEU -->
-            <mat-form-field>
-              <mat-select
-                placeholder="Milieux"
-                id="input-milieux"
-                name="milieux"
-                [formControl]="searchForm.controls['milieux']"
-                multiple
-              >
-                <mat-option *ngFor="let milieu of milieux" [value]="milieu.id">
-                  {{ milieu.code }} - {{ milieu.libelle }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <multiple-select
+              [attributesToDisplay]="['code', 'libelle']"
+              [control]="searchForm.controls['milieux']"
+              [id]="'milieux'"
+              [options]="milieux"
+              [placeholder]="'Milieux'"
+            ></multiple-select>
 
             <!-- COMMENTAIRES -->
             <mat-form-field>
