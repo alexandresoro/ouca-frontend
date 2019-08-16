@@ -1,0 +1,12 @@
+<mat-form-field>
+  <mat-select
+    placeholder="{{ placeholder }}"
+    id="multiple-select-{{ id }}"
+    [formControl]="control"
+    multiple
+  >
+    <mat-option *ngFor="let option of options" [value]="option.id">
+      {{ getDisplayedValue(option) }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
