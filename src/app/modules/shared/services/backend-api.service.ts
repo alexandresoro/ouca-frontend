@@ -42,9 +42,7 @@ export class BackendApiService {
   constructor(public http: HttpClient, private router: Router) {}
 
   private getApiUrl = (): string => {
-    const isLocalhost: boolean =
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "ou-ca";
+    const isLocalhost: boolean = window.location.hostname === "localhost";
     const port: string = isLocalhost
       ? "" + this.LOCALHOST_BACKEND_PORT
       : window.location.port;
