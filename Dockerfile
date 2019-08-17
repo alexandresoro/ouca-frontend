@@ -32,6 +32,3 @@ RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
-
-# Used because the nginx frontend acts as a reverse proxy to the backend
-EXPOSE 4000
