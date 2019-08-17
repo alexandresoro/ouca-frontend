@@ -1,5 +1,3 @@
-declare var BACKEND_PORT: number;
-
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
@@ -15,8 +13,7 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class BackendApiService {
-  private API_URL: string =
-    "http://" + window.location.hostname + ":" + BACKEND_PORT + "/api/";
+  private LOCALHOST_BACKEND_PORT = 4000;
 
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
@@ -44,8 +41,22 @@ export class BackendApiService {
 
   constructor(public http: HttpClient, private router: Router) {}
 
+  private getApiUrl = (): string => {
+    const isLocalhost: boolean = window.location.hostname === "localhost";
+    const port: string = isLocalhost
+      ? "" + this.LOCALHOST_BACKEND_PORT
+      : window.location.port;
+    return (
+      window.location.protocol +
+      "//" +
+      window.location.hostname +
+      (port ? ":" + port : "") +
+      "/api/"
+    );
+  }
+
   private httpGet<T>(relativePath: string): Observable<T> {
-    const requestPath: string = this.API_URL + relativePath;
+    const requestPath: string = this.getApiUrl() + relativePath;
     console.log("GET ", requestPath);
     return this.http.get<T>(requestPath);
   }
@@ -53,7 +64,7 @@ export class BackendApiService {
   private httpGetObserveResponse<T>(
     relativePath: string
   ): Observable<HttpResponse<any>> {
-    const requestPath: string = this.API_URL + relativePath;
+    const requestPath: string = this.getApiUrl() + relativePath;
     console.log("GET ", requestPath);
     // tslint:disable-next-line: ban-types
     const httpOptions: Object = {
@@ -67,7 +78,7 @@ export class BackendApiService {
     relativePath: string,
     objectToPost: any
   ): Observable<HttpResponse<any>> {
-    const requestPath: string = this.API_URL + relativePath;
+    const requestPath: string = this.getApiUrl() + relativePath;
     console.log("POST", requestPath, objectToPost);
     // tslint:disable-next-line: ban-types
     const httpOptions: Object = {
@@ -78,7 +89,7 @@ export class BackendApiService {
   }
 
   private httpPost<T>(relativePath: string, objectToPost: any): Observable<T> {
-    const requestPath: string = this.API_URL + relativePath;
+    const requestPath: string = this.getApiUrl() + relativePath;
     console.log("POST", requestPath, objectToPost);
     return this.http.post<T>(requestPath, objectToPost);
   }
