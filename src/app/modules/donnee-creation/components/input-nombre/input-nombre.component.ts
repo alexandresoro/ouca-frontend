@@ -16,8 +16,12 @@ export class InputNombreComponent {
 
   @Input() public defaultNombre: number;
 
+  @Input() public isMultipleSelectMode?: boolean;
+
   public ngOnInit(): void {
-    const estimationControl = this.controlGroup.get("estimationNombre");
+    const estimationControl = this.isMultipleSelectMode
+      ? this.controlGroup.get("estimationsNombre")
+      : this.controlGroup.get("estimationNombre");
 
     estimationControl.valueChanges
       .pipe(distinctUntilChanged())

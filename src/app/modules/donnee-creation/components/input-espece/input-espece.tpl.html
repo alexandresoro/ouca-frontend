@@ -10,6 +10,7 @@
 
 <!-- ESPECE -->
 <autocomplete
+  *ngIf="!isMultipleSelectMode"
   [attributesToFilter]="especeAutocompleteAttributes"
   type="Espèce"
   [values]="filteredEspeces$ | async"
@@ -17,3 +18,12 @@
   [displayFn]="displayEspeceFormat"
 >
 </autocomplete>
+
+<multiple-select
+  *ngIf="isMultipleSelectMode"
+  [attributesToDisplay]="['code', 'nomFrancais', 'nomLatin']"
+  [control]="controlGroup.controls['especes']"
+  [id]="'especes'"
+  [options]="filteredEspeces$ | async"
+  [placeholder]="'Espèces'"
+></multiple-select>

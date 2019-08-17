@@ -26,6 +26,7 @@
   <div class="full-width-container">
     <!-- LIEU-DIT -->
     <autocomplete
+      *ngIf="!isMultipleSelectMode"
       [type]="'Lieu-dit'"
       [values]="filteredLieuxdits$ | async"
       [control]="controlGroup.controls['lieudit']"
@@ -33,6 +34,15 @@
       [displayFn]="displayLieuDitFormat"
     >
     </autocomplete>
+
+    <multiple-select
+      *ngIf="isMultipleSelectMode"
+      [attributesToDisplay]="['nom']"
+      [control]="controlGroup.controls['lieuxdits']"
+      [id]="'lieuxdits'"
+      [options]="filteredLieuxdits$ | async"
+      [placeholder]="'Lieux-dits'"
+    ></multiple-select>
   </div>
 
   <div *ngIf="!hideCoordinates" class="coordonnees-form">

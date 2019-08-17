@@ -23,6 +23,8 @@ export class InputEspeceComponent implements OnInit {
 
   @Input() public especes: Observable<Espece[]>;
 
+  @Input() public isMultipleSelectMode?: boolean;
+
   public filteredEspeces$: Observable<Espece[]>;
 
   public classeAutocompleteAttributes: AutocompleteAttribute[] = [
@@ -94,6 +96,11 @@ export class InputEspeceComponent implements OnInit {
       !!this.controlGroup.controls.espece.value
     ) {
       this.controlGroup.controls.espece.setValue(null);
+    } else if (
+      this.controlGroup.controls.especes &&
+      !!this.controlGroup.controls.especes.value
+    ) {
+      this.controlGroup.controls.especes.setValue(null);
     }
   }
 

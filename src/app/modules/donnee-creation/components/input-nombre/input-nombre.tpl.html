@@ -15,6 +15,7 @@
 
 <!-- ESTIMATION NOMBRE -->
 <autocomplete
+  *ngIf="!isMultipleSelectMode"
   [type]="'Estimation du nombre'"
   [values]="estimationsNombre"
   [control]="controlGroup.controls['estimationNombre']"
@@ -22,3 +23,12 @@
   [displayFn]="displayEstimationNombreFormat"
 >
 </autocomplete>
+
+<multiple-select
+  *ngIf="isMultipleSelectMode"
+  [attributesToDisplay]="['libelle']"
+  [control]="controlGroup.controls['estimationsNombre']"
+  [id]="'estimations-nombre'"
+  [options]="estimationsNombre"
+  [placeholder]="'Estimations du nombre'"
+></multiple-select>

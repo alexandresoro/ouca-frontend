@@ -28,6 +28,8 @@ export class InputLieuditComponent implements OnInit {
 
   @Input() public hideCoordinates: boolean = false;
 
+  @Input() public isMultipleSelectMode?: boolean;
+
   public filteredLieuxdits$: Observable<Lieudit[]>;
 
   public filteredCommunes$: Observable<Commune[]>;
@@ -63,7 +65,9 @@ export class InputLieuditComponent implements OnInit {
   public ngOnInit(): void {
     const departementControl = this.controlGroup.get("departement");
     const communeControl = this.controlGroup.get("commune");
-    const lieuDitControl = this.controlGroup.get("lieudit");
+    const lieuDitControl = this.isMultipleSelectMode
+      ? this.controlGroup.get("lieuxdits")
+      : this.controlGroup.get("lieudit");
 
     departementControl.valueChanges
       .pipe(distinctUntilChanged())
@@ -128,7 +132,9 @@ export class InputLieuditComponent implements OnInit {
    * When selecting a commune, filter the list of lieux-dits and reset coordinates
    */
   public resetLieuxDits(): void {
-    this.controlGroup.controls.lieudit.setValue(null);
+    this.isMultipleSelectMode
+      ? this.controlGroup.controls.lieuxdits.setValue(null)
+      : this.controlGroup.controls.lieudit.setValue(null);
   }
 
   /**

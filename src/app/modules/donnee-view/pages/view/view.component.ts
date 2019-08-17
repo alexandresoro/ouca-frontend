@@ -36,22 +36,22 @@ export class ViewComponent {
     duree: new FormControl(),
     especeGroup: new FormGroup({
       classe: new FormControl(),
-      espece: new FormControl()
+      especes: new FormControl()
     }),
     lieuditGroup: new FormGroup({
       departement: new FormControl(),
       commune: new FormControl(),
-      lieudit: new FormControl()
+      lieuxdits: new FormControl()
     }),
     nombreGroup: new FormGroup({
       nombre: new FormControl(),
-      estimationNombre: new FormControl()
+      estimationsNombre: new FormControl()
     }),
     sexes: new FormControl(),
     ages: new FormControl(),
     distanceGroup: new FormGroup({
       distance: new FormControl(),
-      estimationDistance: new FormControl()
+      estimationsDistance: new FormControl()
     }),
     regroupement: new FormControl(),
     fromDate: new FormControl(),

@@ -89,6 +89,7 @@
               [communes]="communes$"
               [lieuxdits]="lieuxdits$"
               [hideCoordinates]="true"
+              [isMultipleSelectMode]="true"
             >
             </input-lieudit>
 
@@ -123,6 +124,7 @@
               [controlGroup]="searchForm.controls['especeGroup']"
               [classes]="classes$"
               [especes]="especes$"
+              [isMultipleSelectMode]="true"
             ></input-espece>
 
             <!-- ESTIMATION NOMBRE / NOMBRE -->
@@ -130,6 +132,7 @@
               [controlGroup]="searchForm.controls['nombreGroup']"
               [estimationsNombre]="estimationsNombre"
               formGroupName="nombreGroup"
+              [isMultipleSelectMode]="true"
             >
             </input-nombre>
 
@@ -158,6 +161,7 @@
               [controlGroup]="searchForm.controls['distanceGroup']"
               [estimationsDistance]="estimationsDistance"
               formGroupName="distanceGroup"
+              [isMultipleSelectMode]="true"
             >
             </input-distance>
 

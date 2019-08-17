@@ -13,6 +13,8 @@ export class InputDistanceComponent {
 
   @Input() public controlGroup: FormGroup;
 
+  @Input() public isMultipleSelectMode?: boolean;
+
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {
       key: "libelle",

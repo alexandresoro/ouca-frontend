@@ -1,5 +1,6 @@
 <!-- ESTIMATION DISTANCE -->
 <autocomplete
+  *ngIf="!isMultipleSelectMode"
   class="estimation-distance-container"
   [type]="'Estimation de la distance'"
   [values]="estimationsDistance"
@@ -8,6 +9,15 @@
   [displayFn]="displayEstimationDistanceFormat"
 >
 </autocomplete>
+
+<multiple-select
+  *ngIf="isMultipleSelectMode"
+  [attributesToDisplay]="['libelle']"
+  [control]="controlGroup.controls['estimationsDistance']"
+  [id]="'estimations-distance'"
+  [options]="estimationsDistance"
+  [placeholder]="'Estimations de la distance'"
+></multiple-select>
 
 <!-- DISTANCE -->
 <mat-form-field class="distance">
