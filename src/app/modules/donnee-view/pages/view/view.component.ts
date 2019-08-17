@@ -35,7 +35,7 @@ export class ViewComponent {
     heure: new FormControl(),
     duree: new FormControl(),
     especeGroup: new FormGroup({
-      classe: new FormControl(),
+      classes: new FormControl(),
       especes: new FormControl()
     }),
     lieuditGroup: new FormGroup({

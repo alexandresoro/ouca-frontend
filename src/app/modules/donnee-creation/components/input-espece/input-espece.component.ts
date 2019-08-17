@@ -57,26 +57,41 @@ export class InputEspeceComponent implements OnInit {
   ];
 
   public ngOnInit(): void {
-    const classeControl = this.controlGroup.get("classe");
+    const classeControl = this.isMultipleSelectMode
+      ? this.controlGroup.get("classes")
+      : this.controlGroup.get("classe");
 
-    classeControl.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe((selectedClasse: Classe) => {
-        this.resetSelectedEspece();
-      });
+    classeControl.valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
+      this.resetSelectedEspece();
+    });
 
     this.filteredEspeces$ = combineLatest(
-      classeControl.valueChanges as Observable<Classe>,
+      classeControl.valueChanges,
       this.especes,
-      (selectedClasse, especes) => {
+      (selection, especes) => {
         if (especes) {
-          if (!!selectedClasse && !!selectedClasse.id) {
-            return especes.filter((espece) => {
-              return (
-                espece.classeId === selectedClasse.id ||
-                (espece.classe && espece.classe.id === selectedClasse.id)
-              );
-            });
+          if (selection) {
+            if (this.isMultipleSelectMode) {
+              if (selection.length > 0) {
+                return especes.filter((espece) => {
+                  return (
+                    selection.indexOf(espece.classeId) > -1 ||
+                    selection.indexOf(espece.classe.id) > -1
+                  );
+                });
+              } else {
+                return especes;
+              }
+            } else {
+              if (!!selection.id) {
+                return especes.filter((espece) => {
+                  return (
+                    espece.classeId === selection.id ||
+                    (espece.classe && espece.classe.id === selection.id)
+                  );
+                });
+              }
+            }
           } else {
             return especes;
           }
