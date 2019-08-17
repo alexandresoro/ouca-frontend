@@ -2,6 +2,7 @@
   <div class="full-width-container">
     <!-- DEPARTEMENT -->
     <autocomplete
+      *ngIf="!isMultipleSelectMode"
       [attributesToFilter]="departementAutocompleteAttributes"
       type="Département"
       [values]="departements | async"
@@ -9,11 +10,21 @@
       [displayFn]="displayDepartementFormat"
     >
     </autocomplete>
+
+    <multiple-select
+      *ngIf="isMultipleSelectMode"
+      [attributesToDisplay]="['code']"
+      [control]="controlGroup.controls['departements']"
+      [id]="'communes'"
+      [options]="departements | async"
+      [placeholder]="'Départements'"
+    ></multiple-select>
   </div>
 
   <div class="full-width-container">
     <!-- COMMUNE -->
     <autocomplete
+      *ngIf="!isMultipleSelectMode"
       [type]="'Commune'"
       [values]="filteredCommunes$ | async"
       [control]="controlGroup.controls['commune']"
@@ -21,6 +32,15 @@
       [displayFn]="displayCommuneFormat"
     >
     </autocomplete>
+
+    <multiple-select
+      *ngIf="isMultipleSelectMode"
+      [attributesToDisplay]="['code', 'nom']"
+      [control]="controlGroup.controls['communes']"
+      [id]="'communes'"
+      [options]="filteredCommunes$ | async"
+      [placeholder]="'Communes'"
+    ></multiple-select>
   </div>
 
   <div class="full-width-container">

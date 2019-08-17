@@ -39,8 +39,8 @@ export class ViewComponent {
       especes: new FormControl()
     }),
     lieuditGroup: new FormGroup({
-      departement: new FormControl(),
-      commune: new FormControl(),
+      departements: new FormControl(),
+      communes: new FormControl(),
       lieuxdits: new FormControl()
     }),
     nombreGroup: new FormGroup({

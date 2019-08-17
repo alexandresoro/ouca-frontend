@@ -63,23 +63,25 @@ export class InputLieuditComponent implements OnInit {
   ];
 
   public ngOnInit(): void {
-    const departementControl = this.controlGroup.get("departement");
-    const communeControl = this.controlGroup.get("commune");
+    const departementControl = this.isMultipleSelectMode
+      ? this.controlGroup.get("departements")
+      : this.controlGroup.get("departement");
+    const communeControl = this.isMultipleSelectMode
+      ? this.controlGroup.get("communes")
+      : this.controlGroup.get("commune");
     const lieuDitControl = this.isMultipleSelectMode
       ? this.controlGroup.get("lieuxdits")
       : this.controlGroup.get("lieudit");
 
     departementControl.valueChanges
       .pipe(distinctUntilChanged())
-      .subscribe((selectedDepartement: Departement) => {
+      .subscribe(() => {
         this.resetCommunes();
       });
 
-    communeControl.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe((selectedCommune: Commune) => {
-        this.resetLieuxDits();
-      });
+    communeControl.valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
+      this.resetLieuxDits();
+    });
 
     lieuDitControl.valueChanges
       .pipe(distinctUntilChanged())
@@ -90,33 +92,63 @@ export class InputLieuditComponent implements OnInit {
       });
 
     this.filteredCommunes$ = combineLatest(
-      departementControl.valueChanges as Observable<Departement>,
+      departementControl.valueChanges,
       this.communes,
-      (selectedDepartement, communes) => {
-        return communes && selectedDepartement && selectedDepartement.id
-          ? communes.filter((commune) => {
-              return (
-                commune.departementId === selectedDepartement.id ||
-                (commune.departement &&
-                  commune.departement.id === selectedDepartement.id)
-              );
-            })
-          : [];
+      (selection, communes) => {
+        if (communes) {
+          if (selection) {
+            if (this.isMultipleSelectMode) {
+              return communes.filter((commune) => {
+                return (
+                  selection.indexOf(commune.departementId) > -1 ||
+                  selection.indexOf(commune.departement.id) > -1
+                );
+              });
+            } else {
+              return communes.filter((commune) => {
+                return (
+                  commune.departementId === selection.id ||
+                  (commune.departement &&
+                    commune.departement.id === selection.id)
+                );
+              });
+            }
+          } else {
+            return communes;
+          }
+        } else {
+          return [];
+        }
       }
     );
 
     this.filteredLieuxdits$ = combineLatest(
-      communeControl.valueChanges as Observable<Commune>,
+      communeControl.valueChanges,
       this.lieuxdits,
-      (selectedCommune, lieuxdits) => {
-        return lieuxdits && selectedCommune && selectedCommune.id
-          ? lieuxdits.filter((lieudit) => {
-              return (
-                lieudit.communeId === selectedCommune.id ||
-                (lieudit.commune && lieudit.commune.id === selectedCommune.id)
-              );
-            })
-          : [];
+      (selection, lieuxdits) => {
+        if (lieuxdits) {
+          if (selection) {
+            if (this.isMultipleSelectMode) {
+              return lieuxdits.filter((lieudit) => {
+                return (
+                  selection.indexOf(lieudit.communeId) > -1 ||
+                  selection.indexOf(lieudit.commune.id) > -1
+                );
+              });
+            } else {
+              return lieuxdits.filter((lieudit) => {
+                return (
+                  lieudit.communeId === selection.id ||
+                  (lieudit.commune && lieudit.commune.id === selection.id)
+                );
+              });
+            }
+          } else {
+            return lieuxdits;
+          }
+        } else {
+          return [];
+        }
       }
     );
   }
@@ -125,7 +157,9 @@ export class InputLieuditComponent implements OnInit {
    * When selecting a departement, filter the list of communes
    */
   public resetCommunes(): void {
-    this.controlGroup.controls.commune.setValue(null);
+    this.isMultipleSelectMode
+      ? this.controlGroup.controls.communes.setValue(null)
+      : this.controlGroup.controls.commune.setValue(null);
   }
 
   /**
