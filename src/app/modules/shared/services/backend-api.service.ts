@@ -1,4 +1,3 @@
-declare var BACKEND_HOST: string;
 declare var BACKEND_PORT: number;
 
 import { HttpClient, HttpResponse } from "@angular/common/http";
@@ -17,7 +16,7 @@ import { Observable } from "rxjs";
 @Injectable()
 export class BackendApiService {
   private API_URL: string =
-    "http://" + BACKEND_HOST + ":" + BACKEND_PORT + "/api/";
+    "http://" + window.location.hostname + ":" + BACKEND_PORT + "/api/";
 
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
