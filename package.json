@@ -6,7 +6,6 @@
     "build": "webpack",
     "build:aot": "webpack --config webpack.aot.config.js",
     "build:prod": "webpack --mode=production",
-    "copy:model": "copyfiles -u 1 ../basenaturaliste-model/*.ts src",
     "start": "webpack-dev-server"
   },
   "keywords": [],
