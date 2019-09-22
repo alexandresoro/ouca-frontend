@@ -52,11 +52,49 @@ The backend for Base Naturaliste application which is called from this frontend:
 
 ### Run the project
 
-On-going...
+The following options are available through yarn:
+
+- **build** : Transpiles the TypeScript project to the _dist/_ output folder.
+- **build:prod** : Same as **build** but with production mode set for webpack.
+- **build:aot** : Same as **build:prod** plus AOT compilation. This is usually the build type that should be used for production deployment.
+- **start** : Builds and runs the webpack dev server.
+
+Example:
+
+```
+yarn start
+```
 
 ### Deployment
 
-On-going...
+1. Build the project:
+
+```
+yarn build:aot
+```
+
+This will generate the application files in the _dist/_ folder.
+
+2. Start the application
+
+Set the previously built _dist/_ folder as the root of your favorite web server.
+
+The project was mainly developed with nginx in mind. You can find the template for the nginx configuration used for the Docker configuration described below in the _docker/nginx/_ folder.
+
+## Docker
+
+This project can be run as a Docker container.
+
+A Dockerfile is provided, and will expose the web application on port 80.
+
+The web server also acts as a reverse proxy for the backend.
+
+The backend location can be overridden with the following variables:
+
+| Docker ENV variable | Default value | Explanation                          |
+| ------------------- | :-----------: | ------------------------------------ |
+| BACKEND_HOST        |    backend    | The URL where the backend is located |
+| BACKEND_PORT        |     4000      | The port used by the backend         |
 
 ## Authors
 
