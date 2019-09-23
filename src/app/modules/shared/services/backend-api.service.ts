@@ -66,8 +66,7 @@ export class BackendApiService {
   ): Observable<HttpResponse<any>> {
     const requestPath: string = this.getApiUrl() + relativePath;
     console.log("GET ", requestPath);
-    // tslint:disable-next-line: ban-types
-    const httpOptions: Object = {
+    const httpOptions: Record<string, any> = {
       observe: "response",
       responseType: "blob" as "json"
     };
@@ -80,8 +79,7 @@ export class BackendApiService {
   ): Observable<HttpResponse<any>> {
     const requestPath: string = this.getApiUrl() + relativePath;
     console.log("POST", requestPath, objectToPost);
-    // tslint:disable-next-line: ban-types
-    const httpOptions: Object = {
+    const httpOptions: Record<string, any> = {
       observe: "response",
       responseType: "blob" as "json"
     };

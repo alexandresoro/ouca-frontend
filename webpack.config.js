@@ -39,11 +39,9 @@ module.exports = (env, argv) => {
         {
           test: /\.ts$/,
           enforce: "pre",
-          loader: "tslint-loader",
+          loader: "eslint-loader",
           options: {
-            emitErrors: true,
-            failOnHint: true,
-            formatter: "stylish"
+            failOnError: true
           }
         },
         {

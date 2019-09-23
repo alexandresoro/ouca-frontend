@@ -11,8 +11,7 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "plugins": [{ "name": "typescript-tslint-plugin" }]
+    "esModuleInterop": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "src/main.ts"]

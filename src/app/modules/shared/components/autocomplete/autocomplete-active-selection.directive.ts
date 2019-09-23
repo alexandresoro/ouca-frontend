@@ -25,7 +25,7 @@ export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
     @Self()
     private readonly autoCompleteTrigger: MatAutocompleteTrigger,
     private ngControl: NgControl
-  ) {}
+  ) { }
 
   ngAfterViewInit() {
     this.autoCompleteTrigger.panelClosingActions
@@ -42,6 +42,5 @@ export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
       });
   }
 
-  // tslint:disable-next-line: no-empty
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { } // eslint-disable-line @typescript-eslint/no-empty-function
 }

@@ -5,5 +5,7 @@
   "html.format.wrapAttributes": "force",
   "html.format.wrapLineLength": 100,
   "npm.packageManager": "yarn",
-  "prettier.tslintIntegration": true
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": ["typescript", "javascript"],
+  "eslint.packageManager": "yarn"
 }
