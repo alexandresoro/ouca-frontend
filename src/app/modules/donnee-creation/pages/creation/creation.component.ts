@@ -135,15 +135,15 @@ export class CreationComponent extends PageComponent implements OnInit {
    * and if the focus is not on a textarea field which can contain several lines
    */
   @HostListener("document:keyup", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
+  handleKeyboardEvent(event: KeyboardEvent): void {
     if (
       /*event.ctrlKey &&*/ event.key === "Enter" &&
       document.activeElement.tagName.toLowerCase() !== "textarea"
     ) {
       if (CreationModeHelper.isInventaireMode() && this.inventaireForm.valid) {
-        this.saveInventaire();
+        this.onSaveInventaireButtonClicked();
       } else if (CreationModeHelper.isDonneeMode() && this.donneeForm.valid) {
-        this.saveDonnee();
+        this.onSaveDonneeButtonClicked();
       } else if (
         CreationModeHelper.isUpdateMode() &&
         this.inventaireForm.valid &&
@@ -206,14 +206,25 @@ export class CreationComponent extends PageComponent implements OnInit {
   /**
    * Called when clicking on Save Inventaire button
    */
-  public saveInventaire(): void {
+  public onSaveInventaireButtonClicked(): void {
+    if (InventaireHelper.getDisplayedInventaireId()) {
+      // Update the existing inventaire and switch to donnee mode
+      this.saveInventaire();
+    } else {
+      // Wait until first donnee is created to create the inventaire
+      // Switch to donnee mode
+      this.switchToEditionDonneeMode();
+    }
+  }
+
+  private saveInventaire(saveDonnee?: boolean): void {
     const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
 
     this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
       (saveInventaireResult: DbUpdateResult) => {
-        this.onCreateInventaireSuccess(saveInventaireResult);
+        this.onCreateInventaireSuccess(saveInventaireResult, saveDonnee);
       },
       (error: any) => {
         this.onCreateInventaireError(error);
@@ -229,25 +240,30 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onCreateInventaireSuccess(
-    saveInventaireResult: DbUpdateResult
+    saveInventaireResult: DbUpdateResult,
+    saveDonnee?: boolean
   ): void {
     if (
       !!saveInventaireResult &&
       (!!saveInventaireResult.insertId || !!saveInventaireResult.affectedRows)
     ) {
-      if (!!saveInventaireResult.insertId) {
+      if (saveInventaireResult.insertId) {
         PageStatusHelper.setSuccessStatus(
           "La fiche inventaire a été créée avec succès."
         );
         InventaireHelper.setDisplayedInventaireId(
           saveInventaireResult.insertId
         );
+
+        if (saveDonnee) {
+          this.saveDonnee();
+        }
       } else {
         PageStatusHelper.setSuccessStatus(
           "La fiche inventaire a été mise-à-jour avec succès."
         );
+        this.switchToEditionDonneeMode();
       }
-      this.switchToEditionDonneeMode();
     } else {
       this.onCreateInventaireError(saveInventaireResult);
     }
@@ -256,7 +272,15 @@ export class CreationComponent extends PageComponent implements OnInit {
   /**
    * Called when clicking on Save Donnee button
    */
-  public saveDonnee(): void {
+  public onSaveDonneeButtonClicked(): void {
+    if (InventaireHelper.getDisplayedInventaireId()) {
+      this.saveDonnee();
+    } else {
+      this.saveInventaire(true);
+    }
+  }
+
+  private saveDonnee(): void {
     const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
@@ -271,14 +295,14 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private onSaveDonneeError(saveError: any) {
+  private onSaveDonneeError(saveError: any): void {
     PageStatusHelper.setErrorStatus(
       "Echec de la création de la fiche espèce.",
       saveError
     );
   }
 
-  private onSaveDonneeSuccess(savedDonnee: Donnee) {
+  private onSaveDonneeSuccess(savedDonnee: Donnee): void {
     if (!!savedDonnee && !!savedDonnee.id) {
       PageStatusHelper.setSuccessStatus(
         "La fiche espèce a été créée avec succès."
@@ -322,7 +346,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.backendApiService
       .getInventaireById(InventaireHelper.getDisplayedInventaireId())
       .subscribe((result) => {
-        if (!!InventaireHelper.isInventaireUpdated(result, inventaireToSave)) {
+        if (InventaireHelper.isInventaireUpdated(result, inventaireToSave)) {
           this.displayInventaireDialog();
         } else {
           this.updateInventaireAndDonnee(false);
@@ -370,7 +394,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     const inventaireToSave: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
-    if (!!createNewInventaire) {
+    if (createNewInventaire) {
       inventaireToSave.id = null;
     }
 
@@ -386,7 +410,7 @@ export class CreationComponent extends PageComponent implements OnInit {
           (saveInventaireResult.affectedRows > 0 ||
             saveInventaireResult.insertId > 0)
         ) {
-          if (!!createNewInventaire) {
+          if (createNewInventaire) {
             donneeToSave.inventaireId = saveInventaireResult.insertId;
           }
 
@@ -474,7 +498,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private displayPreviousDonnne() {
+  private displayPreviousDonnne(): void {
     DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
       this.navigationService.getPreviousDonnee(),
@@ -509,7 +533,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (!!result) {
+      if (result) {
         this.onDeleteConfirmButtonClicked();
       }
     });
@@ -597,7 +621,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((idToFind: number) => {
-      if (!!idToFind) {
+      if (idToFind) {
         // Save the current donnee, inventaire and mode
         if (!CreationModeHelper.isUpdateMode()) {
           this.saveCurrentContext(this.getCurrentDonneeFromForm());
@@ -608,7 +632,7 @@ export class CreationComponent extends PageComponent implements OnInit {
             if (!!result && !!result.donnee) {
               InventaireHelper.setInventaireFormFromInventaire(
                 this.inventaireForm,
-                (result.donnee as Donnee).inventaire as Inventaire,
+                result.donnee.inventaire as Inventaire,
                 this.pageModel
               );
               DonneeHelper.setDonneeFormFromDonnee(

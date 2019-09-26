@@ -78,7 +78,7 @@
         matTooltipClass="default-tooltip"
         *ngIf="isSaveInventaireBtnDisplayed()"
         [disabled]="!inventaireForm.valid"
-        (click)="saveInventaire()"
+        (click)="onSaveInventaireButtonClicked()"
       >
         <mat-icon>save</mat-icon>
       </button>
@@ -90,7 +90,7 @@
         color="primary"
         *ngIf="isSaveDonneeBtnDisplayed()"
         [disabled]="!donneeForm.valid"
-        (click)="saveDonnee()"
+        (click)="onSaveDonneeButtonClicked()"
       >
         <mat-icon>save</mat-icon>
       </button>
@@ -384,7 +384,7 @@
         color="primary"
         *ngIf="isSaveInventaireBtnDisplayed()"
         [disabled]="!inventaireForm.valid"
-        (click)="saveInventaire()"
+        (click)="onSaveInventaireButtonClicked()"
       >
         <mat-icon>save</mat-icon>
       </button>
@@ -396,7 +396,7 @@
         color="primary"
         *ngIf="isSaveDonneeBtnDisplayed()"
         [disabled]="!donneeForm.valid"
-        (click)="saveDonnee()"
+        (click)="onSaveDonneeButtonClicked()"
       >
         <mat-icon>save</mat-icon>
       </button>
