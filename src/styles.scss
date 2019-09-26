@@ -145,27 +145,6 @@ body.base-naturaliste {
   }
 
   .bn-creation-body {
-    div.bn-creation-messages {
-      margin-top: 25px;
-      display: block;
-      height: 20px;
-      margin-bottom: 10px;
-      font-weight: bold;
-      font-size: mat-font-size($defaultConfig, body-1) + 2px;
-
-      .default-message {
-        color: mat-color($mat-grey, 900);
-      }
-
-      .success-message {
-        color: mat-color($mat-cyan, 700);
-      }
-
-      .error-message {
-        color: mat-color($mat-pink, 500);
-      }
-    }
-
     div.bn-creation-buttons {
       .top-left-creation-buttons {
         button {
@@ -434,11 +413,6 @@ body.base-naturaliste {
     label.mat-checkbox-layout {
       padding-bottom: 20px;
     }
-  }
-
-  .bn-creation-messages {
-    padding-right: 50px;
-    padding-left: 50px;
   }
 
   .bn-entity-page {

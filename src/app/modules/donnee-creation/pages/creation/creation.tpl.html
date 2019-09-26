@@ -1,19 +1,4 @@
 <div class="bn-creation-body">
-  <!-- Row containing the messages -->
-  <div class="bn-creation-messages">
-    <div [ngSwitch]="getPageStatus()">
-      <div *ngSwitchCase="pageStatusEnum.ERROR" class="error-message">
-        <!--<mat-icon>error</mat-icon>-->{{ getMessage() }}
-      </div>
-      <div *ngSwitchCase="pageStatusEnum.SUCCESS" class="success-message">
-        <!--<mat-icon>check_circle</mat-icon>-->{{ getMessage() }}
-      </div>
-      <div *ngSwitchDefault class="default-message">
-        <!--<mat-icon>not_interested</mat-icon>-->Aucun message
-      </div>
-    </div>
-  </div>
-
   <!-- Row containing the top buttons -->
   <div class="bn-creation-buttons">
     <!-- Top left buttons -->

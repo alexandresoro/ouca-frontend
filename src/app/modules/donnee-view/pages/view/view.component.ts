@@ -19,8 +19,9 @@ import {
   getContentTypeFromResponse,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
-import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
+import { StatusMessageSeverity, StatusMessageComponent, StatusMessageParameters } from "../../../shared/components/status-message/status-message.component";
+import { MatSnackBarConfig, MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   templateUrl: "./view.tpl.html"
@@ -80,7 +81,9 @@ export class ViewComponent {
 
   public donneesToDisplay: any[] = [];
 
-  constructor(private backendApiService: BackendApiService) {}
+  constructor(private backendApiService: BackendApiService,
+    public snackbar: MatSnackBar,
+  ) { }
 
   public ngOnInit(): void {
     this.classes$ = new Subject();
@@ -170,8 +173,9 @@ export class ViewComponent {
             );
           },
           (error: any) => {
-            PageStatusHelper.setErrorStatus(
+            this.openStatusMessage(
               "Impossible de récupérer les fiches espèces.",
+              StatusMessageSeverity.ERROR,
               error
             );
             this.displayWaitPanel = false;
@@ -186,13 +190,25 @@ export class ViewComponent {
             this.donneesToDisplay = results;
           },
           (error: any) => {
-            PageStatusHelper.setErrorStatus(
+            this.openStatusMessage(
               "Impossible de récupérer les fiches espèces.",
+              StatusMessageSeverity.ERROR,
               error
             );
             this.displayWaitPanel = false;
           }
         );
     }
+  }
+
+  private openStatusMessage = (message: string, severity: StatusMessageSeverity, error?: any): void => {
+    this.snackbar.openFromComponent(StatusMessageComponent, {
+      data: {
+        message: message,
+        severity: severity,
+        error: error
+      },
+      duration: 5000
+    } as MatSnackBarConfig<StatusMessageParameters>);
   }
 }

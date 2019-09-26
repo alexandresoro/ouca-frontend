@@ -12,7 +12,6 @@ import { EntitySubFormDirective } from "./components/form/entite-simple-form/ent
 import { EspeceFormComponent } from "./components/form/espece-form/espece-form.component";
 import { EstimationNombreFormComponent } from "./components/form/estimation-nombre-form/estimation-nombre-form.component";
 import { LieuditFormComponent } from "./components/form/lieudit-form/lieudit-form.component";
-import { EntityMessagesComponent } from "./components/messages/messages.component";
 import { TableButtonsComponent } from "./components/table-buttons/table-buttons.component";
 import { TableTopbarComponent } from "./components/table-topbar/table-topbar.component";
 import { AgeTableComponent } from "./components/table/age-table/age-table.component";
@@ -78,7 +77,6 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     EntitySubFormComponent,
     EntityDeleteConfirmationComponent,
     EntiteSimpleTableComponent,
-    EntityMessagesComponent,
     EspeceComponent,
     EspeceFormComponent,
     EspeceTableComponent,
@@ -114,4 +112,4 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
   exports: [],
   providers: []
 })
-export class ModelManagementModule {}
+export class ModelManagementModule { }

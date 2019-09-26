@@ -6,8 +6,9 @@ import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import * as _ from "lodash";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { PageComponent } from "../../../shared/components/page.component";
-import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
+import { StatusMessageSeverity, StatusMessageComponent, StatusMessageParameters } from "../../../shared/components/status-message/status-message.component";
 
 export interface IdPropriete {
   id: number;
@@ -44,7 +45,9 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   public displayedColumns: string[] = ["propriete", "valeur"];
   public dataSource: MatTableDataSource<ProprieteValeur>;
 
-  constructor(private backendApiService: BackendApiService) {
+  constructor(private backendApiService: BackendApiService,
+    public snackbar: MatSnackBar
+  ) {
     super();
   }
 
@@ -53,7 +56,6 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   }
 
   private initConfigurationPage(): void {
-    PageStatusHelper.resetPageStatus();
     this.switchToViewAllMode();
     this.getCurrentConfigurations();
   }
@@ -151,7 +153,6 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   }
 
   public cancelEdition(): void {
-    PageStatusHelper.resetPageStatus();
     this.switchToViewAllMode();
   }
   ////// END FROM UI //////
@@ -176,29 +177,31 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   }
 
   private onInitConfigurationPageError(error: any): void {
-    PageStatusHelper.setErrorStatus(
+    this.openStatusMessage(
       "Impossible de charger la page de configuration.",
+      StatusMessageSeverity.ERROR,
       error
     );
   }
 
   private onSaveAppConfigurationSuccess(saveResult: DbUpdateResult): void {
-    PageStatusHelper.setSuccessStatus(
-      "La sauvegarde des configurations de l'application a été faite avec succès."
+    this.openStatusMessage(
+      "La sauvegarde des configurations de l'application a été faite avec succès.",
+      StatusMessageSeverity.SUCCESS
     );
     this.getCurrentConfigurations();
     this.switchToViewAllMode();
   }
 
   private onSaveAppConfigurationError(error: any): void {
-    PageStatusHelper.setErrorStatus(
+    this.openStatusMessage(
       "Impossible de sauvegarder la configuration de l'application.",
+      StatusMessageSeverity.ERROR,
       error
     );
   }
 
   private switchToEditionMode(): void {
-    PageStatusHelper.resetPageStatus();
     EntityModeHelper.switchToEditionMode();
   }
 
@@ -212,5 +215,16 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   public getIsEditionMode(): boolean {
     return EntityModeHelper.isEditionMode();
+  }
+
+  private openStatusMessage = (message: string, severity: StatusMessageSeverity, error?: any): void => {
+    this.snackbar.openFromComponent(StatusMessageComponent, {
+      data: {
+        message: message,
+        severity: severity,
+        error: error
+      },
+      duration: 5000
+    } as MatSnackBarConfig<StatusMessageParameters>);
   }
 }

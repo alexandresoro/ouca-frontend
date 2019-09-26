@@ -3,7 +3,6 @@ import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
-import { PageStatusHelper } from "../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../shared/services/backend-api.service";
 import { CreationModeEnum } from "../helpers/creation-mode.enum";
 import { CreationModeHelper } from "../helpers/creation-mode.helper";
@@ -23,7 +22,7 @@ export class NavigationService {
   private savedCommune: Commune;
   private savedClasse: Classe;
 
-  constructor(public backendApiService: BackendApiService) {}
+  constructor(public backendApiService: BackendApiService) { }
 
   public init(lastDonnee: Donnee, numberOfDonnees: number): void {
     this.lastDonnee = lastDonnee;
@@ -148,10 +147,10 @@ export class NavigationService {
       (previousDonnee: Donnee) => {
         if (!!previousDonnee && !!previousDonnee.id) {
           this.previousDonnee = previousDonnee;
-          PageStatusHelper.setInfoStatus(
+          /*PageStatusHelper.setInfoStatus(
             "ID de la donnée précédente: " + previousDonnee.id,
             previousDonnee
-          );
+          );*/
         } else {
           this.onPopulatePreviousDonneeError(previousDonnee);
         }
@@ -164,10 +163,10 @@ export class NavigationService {
 
   private onPopulatePreviousDonneeError(error: any): void {
     this.previousDonnee = null;
-    PageStatusHelper.setWarningStatus(
+    /*PageStatusHelper.setWarningStatus(
       "Impossible de récupérer la donnée précédente",
       error
-    );
+    );*/
   }
 
   public populateNextDonnee(id: number): void {
@@ -176,10 +175,10 @@ export class NavigationService {
         if (!!nextDonnee && !!nextDonnee.id) {
           this.nextDonnee = nextDonnee;
           this.nextMode = CreationModeEnum.UPDATE;
-          PageStatusHelper.setInfoStatus(
+          /*PageStatusHelper.setInfoStatus(
             "ID de la donnée suivante: " + nextDonnee.id,
             nextDonnee
-          );
+          );*/
         } else {
           this.onPopulateNextDonneeError(nextDonnee);
         }
@@ -193,10 +192,10 @@ export class NavigationService {
   private onPopulateNextDonneeError(error: any): void {
     this.nextDonnee = null;
     this.nextMode = null;
-    PageStatusHelper.setWarningStatus(
+    /*PageStatusHelper.setWarningStatus(
       "Impossible de récupérer la donnée suivante",
       error
-    );
+    );*/
   }
 
   public getNextMode(): CreationModeEnum {

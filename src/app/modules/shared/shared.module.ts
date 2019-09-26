@@ -29,6 +29,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSelectModule } from "@angular/material/select";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -56,6 +57,7 @@ import { AutocompleteMilieuComponent } from "./components/form/autocomplete-mili
 import { MultipleSelectComponent } from "./components/form/multiple-select/multiple-select.component";
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
 import { BackendApiService } from "./services/backend-api.service";
+import { StatusMessageComponent } from "./components/status-message/status-message.component";
 
 @NgModule({
   imports: [
@@ -79,6 +81,7 @@ import { BackendApiService } from "./services/backend-api.service";
     MatMomentDateModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatSortModule,
     MatTableModule,
     MatToolbarModule,
@@ -105,11 +108,13 @@ import { BackendApiService } from "./services/backend-api.service";
     InputTemperatureComponent,
     InputTimeComponent,
     MultipleOptionsDialogComponent,
-    MultipleSelectComponent
+    MultipleSelectComponent,
+    StatusMessageComponent
   ],
   entryComponents: [
     ConfirmationDialogComponent,
-    MultipleOptionsDialogComponent
+    MultipleOptionsDialogComponent,
+    StatusMessageComponent
   ],
   exports: [
     AutocompleteComponent,
@@ -148,6 +153,7 @@ import { BackendApiService } from "./services/backend-api.service";
     MatMomentDateModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatSortModule,
     MatTableModule,
     MatToolbarModule,
@@ -169,4 +175,4 @@ import { BackendApiService } from "./services/backend-api.service";
     BackendApiService
   ]
 })
-export class SharedModule {}
+export class SharedModule { }

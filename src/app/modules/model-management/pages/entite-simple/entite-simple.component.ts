@@ -8,10 +8,11 @@ import {
 } from "../../../shared/helpers/file-downloader.helper";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
-import { PageStatusHelper } from "../../../shared/helpers/page-status.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
+import { StatusMessageSeverity, StatusMessageComponent, StatusMessageParameters } from "../../../shared/components/status-message/status-message.component";
+import { MatSnackBarConfig, MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   template: ""
@@ -31,16 +32,15 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   public entityModeHelper = EntityModeHelper;
 
-  constructor(private backendApiService: BackendApiService) {}
+  constructor(private backendApiService: BackendApiService,
+    public snackbar: MatSnackBar
+  ) { }
 
   public ngOnInit(): void {
     this.switchToViewAllMode();
   }
 
   public getAll(doNotResetPageStatus?: boolean): void {
-    if (!doNotResetPageStatus) {
-      PageStatusHelper.resetPageStatus();
-    }
 
     this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
       (result: T[]) => {
@@ -48,8 +48,9 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
         console.log(this.objects);
       },
       (error: Response) => {
-        PageStatusHelper.setErrorStatus(
+        this.openStatusMessage(
           "Impossible de trouver les objets.",
+          StatusMessageSeverity.ERROR,
           error
         );
       }
@@ -90,15 +91,17 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
         .deleteEntity(this.getEntityName(), this.objectToRemove.id)
         .subscribe(
           (result: DbUpdateResult) => {
-            PageStatusHelper.setSuccessStatus(
-              this.getTheEntityLabel(true) + " a été supprimé(e) avec succès"
+            this.openStatusMessage(
+              this.getTheEntityLabel(true) + " a été supprimé(e) avec succès",
+              StatusMessageSeverity.SUCCESS
             );
 
             this.switchToViewAllMode(true);
           },
           (error: Response) => {
-            PageStatusHelper.setErrorStatus(
+            this.openStatusMessage(
               "Echec de la suppression de " + this.getTheEntityLabel(),
+              StatusMessageSeverity.ERROR,
               error
             );
           }
@@ -127,21 +130,24 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
       .subscribe(
         (result: DbUpdateResult) => {
           if (!!result && (!!result.insertId || !!result.affectedRows)) {
-            PageStatusHelper.setSuccessStatus(
-              this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès"
+            this.openStatusMessage(
+              this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès",
+              StatusMessageSeverity.SUCCESS
             );
 
             this.switchToViewAllMode(true);
           } else {
-            PageStatusHelper.setErrorStatus(
+            this.openStatusMessage(
               "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
+              StatusMessageSeverity.ERROR,
               result
             );
           }
         },
         (error: Response) => {
-          PageStatusHelper.setErrorStatus(
+          this.openStatusMessage(
             "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
+            StatusMessageSeverity.ERROR,
             error
           );
         }
@@ -158,8 +164,9 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
         );
       },
       (error: Response) => {
-        PageStatusHelper.setErrorStatus(
+        this.openStatusMessage(
           "Erreur lors de l'export de " + this.getTheEntityLabel(),
+          StatusMessageSeverity.ERROR,
           error
         );
       }
@@ -167,7 +174,6 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   public cancelEdition(): void {
-    PageStatusHelper.resetPageStatus();
     this.switchToViewAllMode();
   }
 
@@ -178,14 +184,12 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   private switchToCreationMode(): void {
-    PageStatusHelper.resetPageStatus();
     this.objectToSave = this.getNewObject();
     this.currentObject = this.getNewObject();
     EntityModeHelper.switchToCreationMode();
   }
 
   private switchToEditionMode(object: T): void {
-    PageStatusHelper.resetPageStatus();
     this.objectToSave = object;
     this.currentObject = object;
     EntityModeHelper.switchToEditionMode();
@@ -200,14 +204,12 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   private switchToViewOneMode(object: T): void {
-    PageStatusHelper.resetPageStatus();
     this.objectToView = object;
     this.currentObject = object;
     EntityModeHelper.switchToViewOneMode();
   }
 
   private switchToRemoveMode(object: T): void {
-    PageStatusHelper.resetPageStatus();
     this.objectToRemove = object;
     this.currentObject = object;
     EntityModeHelper.switchToRemoveMode();
@@ -230,9 +232,9 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
     return valueIsAnExistingEntity
       ? FormValidatorHelper.getValidatorResult(
-          "alreadyExistingLibelle",
-          "Il existe déjà " + this.getAnEntityLabel() + " avec ce libellé."
-        )
+        "alreadyExistingLibelle",
+        "Il existe déjà " + this.getAnEntityLabel() + " avec ce libellé."
+      )
       : null;
   }
 
@@ -253,9 +255,20 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
     return valueIsAnExistingEntity
       ? FormValidatorHelper.getValidatorResult(
-          "alreadyExistingCode",
-          "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
-        )
+        "alreadyExistingCode",
+        "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
+      )
       : null;
+  }
+
+  private openStatusMessage = (message: string, severity: StatusMessageSeverity, error?: any): void => {
+    this.snackbar.openFromComponent(StatusMessageComponent, {
+      data: {
+        message: message,
+        severity: severity,
+        error: error
+      },
+      duration: 5000
+    } as MatSnackBarConfig<StatusMessageParameters>);
   }
 }

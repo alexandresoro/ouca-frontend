@@ -9,8 +9,6 @@
     (onClickRefresh)="getAll()"
   ></top-buttons>
 
-  <entity-messages></entity-messages>
-
   <estimation-distance-table
     *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="objects"
