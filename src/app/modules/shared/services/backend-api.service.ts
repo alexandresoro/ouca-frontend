@@ -13,7 +13,6 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class BackendApiService {
-  private LOCALHOST_BACKEND_PORT = 4000;
 
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
@@ -39,18 +38,15 @@ export class BackendApiService {
 
   private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
 
-  constructor(public http: HttpClient, private router: Router) {}
+  constructor(public http: HttpClient, private router: Router) { }
 
   private getApiUrl = (): string => {
-    const isLocalhost: boolean = window.location.hostname === "localhost";
-    const port: string = isLocalhost
-      ? "" + this.LOCALHOST_BACKEND_PORT
-      : window.location.port;
     return (
       window.location.protocol +
       "//" +
       window.location.hostname +
-      (port ? ":" + port : "") +
+      ":" +
+      window.location.port +
       "/api/"
     );
   }

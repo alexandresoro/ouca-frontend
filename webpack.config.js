@@ -30,7 +30,10 @@ module.exports = (env, argv) => {
     devServer: {
       port: 3000,
       open: true,
-      historyApiFallback: true
+      historyApiFallback: true,
+      proxy: {
+        "/api": "http://localhost:4000"
+      }
     },
 
     // Add the loader for .ts files.
