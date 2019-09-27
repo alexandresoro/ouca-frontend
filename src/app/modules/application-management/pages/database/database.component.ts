@@ -21,7 +21,7 @@ export class DatabaseComponent extends PageComponent {
     super(snackbar);
   }
 
-  public onSaveDatabaseClicked(): void {
+  public onSaveDatabaseClicked = (): void => {
     this.displayWaitPanel();
     this.backendApiService.saveDatabase().subscribe(
       (response) => {
@@ -43,13 +43,13 @@ export class DatabaseComponent extends PageComponent {
         );
       }
     );
-  }
+  };
 
-  private displayWaitPanel(): void {
+  private displayWaitPanel = (): void => {
     this.isWaitPanelDisplayed = true;
-  }
+  };
 
-  private hideWaitPanel(): void {
+  private hideWaitPanel = (): void => {
     this.isWaitPanelDisplayed = false;
-  }
+  };
 }

@@ -21,14 +21,13 @@ export class ImportComponent extends PageComponent {
     super(snackbar);
   }
 
-  /* CALLED FROM THE UI */
-
-  public setFile(event: any): void {
+  public setFile = (event: any): void => {
     this.file = event.target.files[0];
-  }
-  public onImportClicked(entityName: string): void {
+  };
+
+  public onImportClicked = (entityName: string): void => {
     this.displayWaitPanel();
-    // this.importData(dataType);
+
     this.backendApiService.importData(entityName, this.file).subscribe(
       (response) => {
         saveFile(
@@ -39,19 +38,20 @@ export class ImportComponent extends PageComponent {
         this.hideWaitPanel();
       },
       (error) => {
-        // TODO
         this.hideWaitPanel();
+        this.showErrorMessage(
+          "Une erreur est survenue pendant l'import",
+          error
+        );
       }
     );
-  }
+  };
 
-  /* END CALLED FROM THE UI */
-
-  public displayWaitPanel(): void {
+  private displayWaitPanel = (): void => {
     this.isWaitPanelDisplayed = true;
-  }
+  };
 
-  public hideWaitPanel(): void {
+  private hideWaitPanel = (): void => {
     this.isWaitPanelDisplayed = false;
-  }
+  };
 }
