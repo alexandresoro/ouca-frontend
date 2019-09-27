@@ -20,12 +20,7 @@ import {
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import {
-  StatusMessageSeverity,
-  StatusMessageComponent,
-  StatusMessageParameters
-} from "../../../shared/components/status-message/status-message.component";
-import { MatSnackBarConfig, MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { PageComponent } from "../../../shared/pages/page.component";
 
 @Component({
@@ -181,9 +176,8 @@ export class ViewComponent extends PageComponent {
             );
           },
           (error: any) => {
-            this.openStatusMessage(
+            this.showErrorMessage(
               "Impossible de récupérer les fiches espèces.",
-              StatusMessageSeverity.ERROR,
               error
             );
             this.displayWaitPanel = false;
@@ -198,9 +192,8 @@ export class ViewComponent extends PageComponent {
             this.donneesToDisplay = results;
           },
           (error: any) => {
-            this.openStatusMessage(
+            this.showErrorMessage(
               "Impossible de récupérer les fiches espèces.",
-              StatusMessageSeverity.ERROR,
               error
             );
             this.displayWaitPanel = false;

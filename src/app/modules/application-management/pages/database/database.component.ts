@@ -25,16 +25,22 @@ export class DatabaseComponent extends PageComponent {
     this.displayWaitPanel();
     this.backendApiService.saveDatabase().subscribe(
       (response) => {
-        console.log("Sauvegarde terminée");
         saveFile(
           response.body,
           getFileNameFromResponseContentDisposition(response),
           getContentTypeFromResponse(response)
         );
         this.hideWaitPanel();
+        this.showSuccessMessage(
+          "La sauvegarde de la base de données est terminée."
+        );
       },
-      (error) => {
+      (error: any) => {
         this.hideWaitPanel();
+        this.showErrorMessage(
+          "Il semble qu'une erreur soit survenue pendant la sauvegarde de la base de données.",
+          error
+        );
       }
     );
   }

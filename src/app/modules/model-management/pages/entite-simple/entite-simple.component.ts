@@ -11,12 +11,7 @@ import { ListHelper } from "../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
-import {
-  StatusMessageSeverity,
-  StatusMessageComponent,
-  StatusMessageParameters
-} from "../../../shared/components/status-message/status-message.component";
-import { MatSnackBarConfig, MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { PageComponent } from "../../../shared/pages/page.component";
 
 @Component({
@@ -49,18 +44,14 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
     this.switchToViewAllMode();
   }
 
-  public getAll(doNotResetPageStatus?: boolean): void {
+  public getAll(): void {
     this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
       (result: T[]) => {
         this.objects = result;
         console.log(this.objects);
       },
       (error: Response) => {
-        this.openStatusMessage(
-          "Impossible de trouver les objets.",
-          StatusMessageSeverity.ERROR,
-          error
-        );
+        this.showErrorMessage("Impossible de trouver les objets.", error);
       }
     );
   }
@@ -99,17 +90,15 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
         .deleteEntity(this.getEntityName(), this.objectToRemove.id)
         .subscribe(
           (result: DbUpdateResult) => {
-            this.openStatusMessage(
-              this.getTheEntityLabel(true) + " a été supprimé(e) avec succès",
-              StatusMessageSeverity.SUCCESS
+            this.showSuccessMessage(
+              this.getTheEntityLabel(true) + " a été supprimé(e) avec succès"
             );
 
             this.switchToViewAllMode(true);
           },
           (error: Response) => {
-            this.openStatusMessage(
+            this.showErrorMessage(
               "Echec de la suppression de " + this.getTheEntityLabel(),
-              StatusMessageSeverity.ERROR,
               error
             );
           }
@@ -138,24 +127,21 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
       .subscribe(
         (result: DbUpdateResult) => {
           if (!!result && (!!result.insertId || !!result.affectedRows)) {
-            this.openStatusMessage(
-              this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès",
-              StatusMessageSeverity.SUCCESS
+            this.showSuccessMessage(
+              this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès"
             );
 
             this.switchToViewAllMode(true);
           } else {
-            this.openStatusMessage(
+            this.showErrorMessage(
               "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
-              StatusMessageSeverity.ERROR,
               result
             );
           }
         },
         (error: Response) => {
-          this.openStatusMessage(
+          this.showErrorMessage(
             "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
-            StatusMessageSeverity.ERROR,
             error
           );
         }
@@ -172,9 +158,8 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
         );
       },
       (error: Response) => {
-        this.openStatusMessage(
+        this.showErrorMessage(
           "Erreur lors de l'export de " + this.getTheEntityLabel(),
-          StatusMessageSeverity.ERROR,
           error
         );
       }

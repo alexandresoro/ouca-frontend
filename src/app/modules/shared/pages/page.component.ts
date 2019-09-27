@@ -8,7 +8,7 @@ import {
 export class PageComponent {
   constructor(protected snackbar: MatSnackBar) {}
 
-  protected openStatusMessage = (
+  private showStatusMessage = (
     message: string,
     severity: StatusMessageSeverity,
     error?: any
@@ -21,5 +21,14 @@ export class PageComponent {
       },
       duration: 5000
     } as MatSnackBarConfig<StatusMessageParameters>);
+  };
+
+  protected showErrorMessage = (message: string, error?: any): void => {
+    this.showStatusMessage(message, StatusMessageSeverity.ERROR, error);
+    console.error(message, error);
+  };
+
+  protected showSuccessMessage = (message: string): void => {
+    this.showStatusMessage(message, StatusMessageSeverity.SUCCESS);
   };
 }

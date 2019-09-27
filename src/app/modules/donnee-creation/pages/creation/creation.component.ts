@@ -87,11 +87,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onInitCreationPageError(error: any): void {
-    this.openStatusMessage(
-      "Impossible de charger la page de création.",
-      StatusMessageSeverity.ERROR,
-      error
-    );
+    this.showErrorMessage("Impossible de charger la page de création.", error);
   }
 
   /**
@@ -230,9 +226,8 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onCreateInventaireError(error: any): void {
-    this.openStatusMessage(
+    this.showErrorMessage(
       "Echec de la création de la fiche inventaire.",
-      StatusMessageSeverity.ERROR,
       error
     );
   }
@@ -246,10 +241,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       (!!saveInventaireResult.insertId || !!saveInventaireResult.affectedRows)
     ) {
       if (saveInventaireResult.insertId) {
-        this.openStatusMessage(
-          "La fiche inventaire a été créée avec succès.",
-          StatusMessageSeverity.SUCCESS
-        );
+        this.showSuccessMessage("La fiche inventaire a été créée avec succès.");
         InventaireHelper.setDisplayedInventaireId(
           saveInventaireResult.insertId
         );
@@ -258,9 +250,8 @@ export class CreationComponent extends PageComponent implements OnInit {
           this.saveDonnee();
         }
       } else {
-        this.openStatusMessage(
-          "La fiche inventaire a été mise-à-jour avec succès.",
-          StatusMessageSeverity.SUCCESS
+        this.showSuccessMessage(
+          "La fiche inventaire a été mise-à-jour avec succès."
         );
         this.switchToEditionDonneeMode();
       }
@@ -296,19 +287,16 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onSaveDonneeError(saveError: any): void {
-    this.openStatusMessage(
+    StatusMessageSeverity.SUCCESS;
+    this.showErrorMessage(
       "Echec de la création de la fiche espèce.",
-      StatusMessageSeverity.ERROR,
       saveError
     );
   }
 
   private onSaveDonneeSuccess(savedDonnee: Donnee): void {
     if (!!savedDonnee && !!savedDonnee.id) {
-      this.openStatusMessage(
-        "La fiche espèce a été créée avec succès.",
-        StatusMessageSeverity.SUCCESS
-      );
+      this.showErrorMessage("La fiche espèce a été créée avec succès.");
       this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
 
       this.updateNextRegroupement();
@@ -328,10 +316,9 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.nextRegroupement = regroupement;
       },
       (error: any) => {
-        this.openStatusMessage(
+        this.showErrorMessage(
           "La fiche espèce a été sauvegardée" +
             " mais échec lors de la récupération du prochain numéro de regroupement utilisable.",
-          StatusMessageSeverity.ERROR,
           error
         );
       }
@@ -436,26 +423,23 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onUpdateInventaireError(error: any): void {
-    this.openStatusMessage(
+    this.showErrorMessage(
       "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
-      StatusMessageSeverity.ERROR,
       error
     );
   }
 
   private onUpdateDonneeError(error: any): void {
-    this.openStatusMessage(
+    this.showErrorMessage(
       "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
-      StatusMessageSeverity.ERROR,
       error
     );
   }
 
   private onUpdateDonneeAndInventaireSuccess(savedDonnee: Donnee): void {
     if (!!savedDonnee && !!savedDonnee.id) {
-      this.openStatusMessage(
-        "La fiche espèce et sa fiche inventaire ont été mises-à-jour avec succès.",
-        StatusMessageSeverity.SUCCESS
+      this.showSuccessMessage(
+        "La fiche espèce et sa fiche inventaire ont été mises-à-jour avec succès."
       );
       InventaireHelper.setDisplayedInventaireId(savedDonnee.inventaireId);
 
@@ -561,19 +545,12 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onDeleteDonneeError(error: any): void {
-    this.openStatusMessage(
-      "Echec de la suppression de la fiche espèce.",
-      StatusMessageSeverity.ERROR,
-      error
-    );
+    this.showErrorMessage("Echec de la suppression de la fiche espèce.", error);
   }
 
   private onDeleteDonneeSuccess(deleteResult: any): void {
     if (!!deleteResult && !!deleteResult.affectedRows) {
-      this.openStatusMessage(
-        "La fiche espèce a été supprimée avec succès.",
-        StatusMessageSeverity.SUCCESS
-      );
+      this.showSuccessMessage("La fiche espèce a été supprimée avec succès.");
 
       this.displayNextDonnee();
       this.navigationService.updateNavigationAfterADonneeWasDeleted();
@@ -655,18 +632,16 @@ export class CreationComponent extends PageComponent implements OnInit {
                 result.nextDonnee
               );
             } else {
-              this.openStatusMessage(
-                "Aucune fiche espèce trouvée avec l'ID " + idToFind + ".",
-                StatusMessageSeverity.ERROR
+              this.showErrorMessage(
+                "Aucune fiche espèce trouvée avec l'ID " + idToFind + "."
               );
             }
           },
           (error: any) => {
-            this.openStatusMessage(
+            this.showErrorMessage(
               "Echec de la récupération de la fiche espèce avec l'ID " +
                 idToFind +
                 ".",
-              StatusMessageSeverity.ERROR,
               error
             );
           }

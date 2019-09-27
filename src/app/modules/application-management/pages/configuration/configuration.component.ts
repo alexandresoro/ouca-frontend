@@ -7,7 +7,6 @@ import * as _ from "lodash";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { StatusMessageSeverity } from "../../../shared/components/status-message/status-message.component";
 import { PageComponent } from "../../../shared/pages/page.component";
 
 export enum ConfigurationParameterID {
@@ -218,9 +217,8 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   };
 
   private onInitConfigurationPageError = (error: any): void => {
-    this.openStatusMessage(
+    this.showErrorMessage(
       "Impossible de charger le contenu de la page de configuration.",
-      StatusMessageSeverity.ERROR,
       error
     );
   };
@@ -229,16 +227,14 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     dbResults: DbUpdateResult[]
   ): void => {
     if (this.isSaveConfigurationSuccess(dbResults)) {
-      this.openStatusMessage(
-        "La configuration de l'application a été mise à jour.",
-        StatusMessageSeverity.SUCCESS
+      this.showSuccessMessage(
+        "La configuration de l'application a été mise à jour."
       );
       this.getCurrentConfiguration();
       this.switchToViewAllMode();
     } else {
-      this.openStatusMessage(
+      this.showErrorMessage(
         "Il semble qu'une erreur soit survenue pendant la sauvegarde de la configuration.",
-        StatusMessageSeverity.ERROR,
         dbResults
       );
     }
@@ -255,9 +251,8 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   };
 
   private onSaveAppConfigurationError = (error: any): void => {
-    this.openStatusMessage(
+    this.showErrorMessage(
       "Impossible de sauvegarder la configuration de l'application.",
-      StatusMessageSeverity.ERROR,
       error
     );
   };
