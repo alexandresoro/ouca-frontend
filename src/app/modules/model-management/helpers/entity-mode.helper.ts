@@ -1,5 +1,3 @@
-import { PageComponent } from "../../shared/components/page.component";
-
 export enum EntityMode {
   VIEW_ALL,
   VIEW_ONE,
@@ -7,7 +5,7 @@ export enum EntityMode {
   EDITION,
   REMOVE
 }
-export class EntityModeHelper extends PageComponent {
+export class EntityModeHelper {
   private static mode: EntityMode;
 
   public static isViewAllMode(): boolean {

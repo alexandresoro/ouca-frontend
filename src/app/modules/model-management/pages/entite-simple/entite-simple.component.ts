@@ -11,13 +11,19 @@ import { ListHelper } from "../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
-import { StatusMessageSeverity, StatusMessageComponent, StatusMessageParameters } from "../../../shared/components/status-message/status-message.component";
+import {
+  StatusMessageSeverity,
+  StatusMessageComponent,
+  StatusMessageParameters
+} from "../../../shared/components/status-message/status-message.component";
 import { MatSnackBarConfig, MatSnackBar } from "@angular/material/snack-bar";
+import { PageComponent } from "../../../shared/pages/page.component";
 
 @Component({
   template: ""
 })
-export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
+export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
+  implements OnInit {
   public objects: T[];
 
   public currentObject: T;
@@ -32,16 +38,18 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   public entityModeHelper = EntityModeHelper;
 
-  constructor(private backendApiService: BackendApiService,
-    public snackbar: MatSnackBar
-  ) { }
+  constructor(
+    private backendApiService: BackendApiService,
+    protected snackbar: MatSnackBar
+  ) {
+    super(snackbar);
+  }
 
   public ngOnInit(): void {
     this.switchToViewAllMode();
   }
 
   public getAll(doNotResetPageStatus?: boolean): void {
-
     this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
       (result: T[]) => {
         this.objects = result;
@@ -66,7 +74,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "L'entité" : "l'entité";
+    return uppercase ? "L'entité" : "l'entité";
   }
 
   public getNewObject(): T {
@@ -232,11 +240,11 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
     return valueIsAnExistingEntity
       ? FormValidatorHelper.getValidatorResult(
-        "alreadyExistingLibelle",
-        "Il existe déjà " + this.getAnEntityLabel() + " avec ce libellé."
-      )
+          "alreadyExistingLibelle",
+          "Il existe déjà " + this.getAnEntityLabel() + " avec ce libellé."
+        )
       : null;
-  }
+  };
 
   public codeValidator: ValidatorFn = (
     formGroup: FormGroup
@@ -255,20 +263,9 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
     return valueIsAnExistingEntity
       ? FormValidatorHelper.getValidatorResult(
-        "alreadyExistingCode",
-        "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
-      )
+          "alreadyExistingCode",
+          "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
+        )
       : null;
-  }
-
-  private openStatusMessage = (message: string, severity: StatusMessageSeverity, error?: any): void => {
-    this.snackbar.openFromComponent(StatusMessageComponent, {
-      data: {
-        message: message,
-        severity: severity,
-        error: error
-      },
-      duration: 5000
-    } as MatSnackBarConfig<StatusMessageParameters>);
-  }
+  };
 }

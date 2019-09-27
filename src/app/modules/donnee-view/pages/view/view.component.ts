@@ -20,13 +20,18 @@ import {
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { StatusMessageSeverity, StatusMessageComponent, StatusMessageParameters } from "../../../shared/components/status-message/status-message.component";
+import {
+  StatusMessageSeverity,
+  StatusMessageComponent,
+  StatusMessageParameters
+} from "../../../shared/components/status-message/status-message.component";
 import { MatSnackBarConfig, MatSnackBar } from "@angular/material/snack-bar";
+import { PageComponent } from "../../../shared/pages/page.component";
 
 @Component({
   templateUrl: "./view.tpl.html"
 })
-export class ViewComponent {
+export class ViewComponent extends PageComponent {
   public searchForm: FormGroup = new FormGroup({
     id: new FormControl(),
     observateurs: new FormControl(),
@@ -81,9 +86,12 @@ export class ViewComponent {
 
   public donneesToDisplay: any[] = [];
 
-  constructor(private backendApiService: BackendApiService,
-    public snackbar: MatSnackBar,
-  ) { }
+  constructor(
+    private backendApiService: BackendApiService,
+    protected snackbar: MatSnackBar
+  ) {
+    super(snackbar);
+  }
 
   public ngOnInit(): void {
     this.classes$ = new Subject();
@@ -199,16 +207,5 @@ export class ViewComponent {
           }
         );
     }
-  }
-
-  private openStatusMessage = (message: string, severity: StatusMessageSeverity, error?: any): void => {
-    this.snackbar.openFromComponent(StatusMessageComponent, {
-      data: {
-        message: message,
-        severity: severity,
-        error: error
-      },
-      duration: 5000
-    } as MatSnackBarConfig<StatusMessageParameters>);
   }
 }

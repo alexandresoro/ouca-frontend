@@ -1,11 +1,12 @@
 import { Component } from "@angular/core";
-import { PageComponent } from "../../../shared/components/page.component";
 import {
   getContentTypeFromResponse,
   getFileNameFromResponseContentDisposition,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
+import { PageComponent } from "../../../shared/pages/page.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   templateUrl: "./database.tpl.html"
@@ -13,8 +14,11 @@ import { BackendApiService } from "../../../shared/services/backend-api.service"
 export class DatabaseComponent extends PageComponent {
   public isWaitPanelDisplayed: boolean = false;
 
-  constructor(private backendApiService: BackendApiService) {
-    super();
+  constructor(
+    private backendApiService: BackendApiService,
+    protected snackbar: MatSnackBar
+  ) {
+    super(snackbar);
   }
 
   public onSaveDatabaseClicked(): void {

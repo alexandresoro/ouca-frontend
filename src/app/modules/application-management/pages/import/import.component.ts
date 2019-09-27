@@ -1,10 +1,11 @@
 import { Component } from "@angular/core";
-import { PageComponent } from "../../../shared/components/page.component";
 import {
   getContentTypeFromResponse,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
+import { PageComponent } from "../../../shared/pages/page.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
 @Component({
   templateUrl: "./import.tpl.html"
 })
@@ -13,8 +14,11 @@ export class ImportComponent extends PageComponent {
 
   public isWaitPanelDisplayed: boolean = false;
 
-  constructor(private backendApiService: BackendApiService) {
-    super();
+  constructor(
+    private backendApiService: BackendApiService,
+    protected snackbar: MatSnackBar
+  ) {
+    super(snackbar);
   }
 
   /* CALLED FROM THE UI */

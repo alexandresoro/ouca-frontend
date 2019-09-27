@@ -5,10 +5,10 @@ import { ConfigurationPage } from "basenaturaliste-model/configuration-page.obje
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import * as _ from "lodash";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
-import { PageComponent } from "../../../shared/components/page.component";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
-import { StatusMessageSeverity, StatusMessageComponent, StatusMessageParameters } from "../../../shared/components/status-message/status-message.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { StatusMessageSeverity } from "../../../shared/components/status-message/status-message.component";
+import { PageComponent } from "../../../shared/pages/page.component";
 
 export interface IdPropriete {
   id: number;
@@ -45,10 +45,11 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   public displayedColumns: string[] = ["propriete", "valeur"];
   public dataSource: MatTableDataSource<ProprieteValeur>;
 
-  constructor(private backendApiService: BackendApiService,
-    public snackbar: MatSnackBar
+  constructor(
+    private backendApiService: BackendApiService,
+    protected snackbar: MatSnackBar
   ) {
-    super();
+    super(snackbar);
   }
 
   public ngOnInit(): void {
@@ -60,7 +61,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     this.getCurrentConfigurations();
   }
 
-  public buildDataSource() {
+  public buildDataSource(): void {
     const dataSourceToBuild: ProprieteValeur[] = [];
     _.forEach(PROPRIETES_A_AFFICHER, (proprieteAAfficher) => {
       let valeurToSet: string;
@@ -69,17 +70,17 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
       } else {
         switch (proprieteAAfficher.id) {
           case 1:
-            valeurToSet = !!this.configurationToSave.defaultObservateur
+            valeurToSet = this.configurationToSave.defaultObservateur
               ? this.configurationToSave.defaultObservateur.libelle
               : "";
             break;
           case 2:
-            valeurToSet = !!this.configurationToSave.defaultDepartement
+            valeurToSet = this.configurationToSave.defaultDepartement
               ? this.configurationToSave.defaultDepartement.code
               : "";
             break;
           case 3:
-            valeurToSet = !!this.configurationToSave.defaultEstimationNombre
+            valeurToSet = this.configurationToSave.defaultEstimationNombre
               ? this.configurationToSave.defaultEstimationNombre.libelle
               : "";
             break;
@@ -87,12 +88,12 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
             valeurToSet = "" + this.configurationToSave.defaultNombre;
             break;
           case 5:
-            valeurToSet = !!this.configurationToSave.defaultSexe
+            valeurToSet = this.configurationToSave.defaultSexe
               ? this.configurationToSave.defaultSexe.libelle
               : "";
             break;
           case 6:
-            valeurToSet = !!this.configurationToSave.defaultAge
+            valeurToSet = this.configurationToSave.defaultAge
               ? this.configurationToSave.defaultAge.libelle
               : "";
             break;
@@ -215,16 +216,5 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   public getIsEditionMode(): boolean {
     return EntityModeHelper.isEditionMode();
-  }
-
-  private openStatusMessage = (message: string, severity: StatusMessageSeverity, error?: any): void => {
-    this.snackbar.openFromComponent(StatusMessageComponent, {
-      data: {
-        message: message,
-        severity: severity,
-        error: error
-      },
-      duration: 5000
-    } as MatSnackBarConfig<StatusMessageParameters>);
   }
 }

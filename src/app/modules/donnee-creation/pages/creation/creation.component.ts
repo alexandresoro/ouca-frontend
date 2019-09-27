@@ -15,7 +15,7 @@ import { ConfirmationDialogData } from "../../../shared/components/confirmation-
 import { ConfirmationDialogComponent } from "../../../shared/components/confirmation-dialog/confirmation-dialog.component";
 import { MultipleOptionsDialogData } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog-data.object";
 import { MultipleOptionsDialogComponent } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog.component";
-import { PageComponent } from "../../../shared/components/page.component";
+
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { CreationModeEnum } from "../../helpers/creation-mode.enum";
@@ -23,8 +23,9 @@ import { CreationModeHelper } from "../../helpers/creation-mode.helper";
 import { DonneeHelper } from "../../helpers/donnee.helper";
 import { InventaireHelper } from "../../helpers/inventaire.helper";
 import { NavigationService } from "../../services/navigation.service";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
-import { StatusMessageComponent, StatusMessageParameters, StatusMessageSeverity } from "../../../shared/components/status-message/status-message.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { StatusMessageSeverity } from "../../../shared/components/status-message/status-message.component";
+import { PageComponent } from "../../../shared/pages/page.component";
 
 @Component({
   templateUrl: "./creation.tpl.html"
@@ -51,10 +52,10 @@ export class CreationComponent extends PageComponent implements OnInit {
   constructor(
     private backendApiService: BackendApiService,
     public dialog: MatDialog,
-    public snackbar: MatSnackBar,
+    protected snackbar: MatSnackBar,
     public navigationService: NavigationService
   ) {
-    super();
+    super(snackbar);
   }
 
   public ngOnInit(): void {
@@ -86,7 +87,11 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onInitCreationPageError(error: any): void {
-    this.openStatusMessage("Impossible de charger la page de création.", StatusMessageSeverity.ERROR, error);
+    this.openStatusMessage(
+      "Impossible de charger la page de création.",
+      StatusMessageSeverity.ERROR,
+      error
+    );
   }
 
   /**
@@ -94,7 +99,6 @@ export class CreationComponent extends PageComponent implements OnInit {
    * @param creationPage: CreationPage
    */
   private onInitCreationPageSucces(creationPage: CreationPage): void {
-
     if (!!creationPage && !!creationPage.observateurs) {
       this.pageModel = creationPage;
 
@@ -326,7 +330,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       (error: any) => {
         this.openStatusMessage(
           "La fiche espèce a été sauvegardée" +
-          " mais échec lors de la récupération du prochain numéro de regroupement utilisable.",
+            " mais échec lors de la récupération du prochain numéro de regroupement utilisable.",
           StatusMessageSeverity.ERROR,
           error
         );
@@ -357,8 +361,8 @@ export class CreationComponent extends PageComponent implements OnInit {
     const updateInventaireDialogData = new MultipleOptionsDialogData(
       "Confirmation de mise-à-jour",
       "Vous avez modifié la fiche inventaire. " +
-      "Voulez-vous mettre à jour la fiche inventaire pour cette fiche espèce " +
-      "seulement ou pour toutes les fiches espèces de cette fiche inventaire ?",
+        "Voulez-vous mettre à jour la fiche inventaire pour cette fiche espèce " +
+        "seulement ou pour toutes les fiches espèces de cette fiche inventaire ?",
       [
         {
           value: 1,
@@ -653,15 +657,15 @@ export class CreationComponent extends PageComponent implements OnInit {
             } else {
               this.openStatusMessage(
                 "Aucune fiche espèce trouvée avec l'ID " + idToFind + ".",
-                StatusMessageSeverity.ERROR,
+                StatusMessageSeverity.ERROR
               );
             }
           },
           (error: any) => {
             this.openStatusMessage(
               "Echec de la récupération de la fiche espèce avec l'ID " +
-              idToFind +
-              ".",
+                idToFind +
+                ".",
               StatusMessageSeverity.ERROR,
               error
             );
@@ -719,17 +723,4 @@ export class CreationComponent extends PageComponent implements OnInit {
   public getCurrentDonneeIndex(): number {
     return this.navigationService.getCurrentDonneeIndex();
   }
-
-  private openStatusMessage = (message: string, severity: StatusMessageSeverity, error?: any): void => {
-    this.snackbar.openFromComponent(StatusMessageComponent, {
-      data: {
-        message: message,
-        severity: severity,
-        error: error
-      },
-      duration: 5000
-    } as MatSnackBarConfig<StatusMessageParameters>);
-  }
-
-
 }
