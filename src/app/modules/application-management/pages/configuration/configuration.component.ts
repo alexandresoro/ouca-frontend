@@ -10,40 +10,38 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { StatusMessageSeverity } from "../../../shared/components/status-message/status-message.component";
 import { PageComponent } from "../../../shared/pages/page.component";
 
-export interface IdPropriete {
-  id: number;
-  propriete: string;
+export enum ConfigurationParameterID {
+  DEFAULT_OBSERVATEUR,
+  DEFAULT_DEPARTEMENT,
+  DEFAULT_ESTIMATION_NOMBRE,
+  DEFAULT_NOMBRE,
+  DEFAULT_SEXE,
+  DEFAULT_AGE,
+  DISPLAY_ASSOCIES,
+  DISPLAY_METEO,
+  DISPLAY_REGROUPEMENT,
+  DISPLAY_DISTANCE
 }
 
-export interface ProprieteValeur {
-  propriete: string;
-  valeur: string;
+export interface ConfigurationParameter {
+  id: ConfigurationParameterID;
+  label: string;
+  value: string;
 }
-
-const PROPRIETES_A_AFFICHER: IdPropriete[] = [
-  { id: 1, propriete: "Observateur par défaut" },
-  { id: 2, propriete: "Département par défaut" },
-  { id: 3, propriete: "Estimation du nombre par défaut" },
-  { id: 4, propriete: "Nombre par défaut" },
-  { id: 5, propriete: "Sexe par défaut" },
-  { id: 6, propriete: "Âge par défaut" },
-  { id: 7, propriete: "Afficher les observateurs associés" },
-  { id: 8, propriete: "Afficher la météo" },
-  { id: 9, propriete: "Afficher la distance" },
-  { id: 10, propriete: "Afficher le numéro de regroupement" }
-];
 
 @Component({
   selector: "configuration",
   templateUrl: "./configuration.tpl.html"
 })
 export class ConfigurationComponent extends PageComponent implements OnInit {
+  private configurationParametersToDisplay: ConfigurationParameter[];
   public pageModel: ConfigurationPage;
 
   public configurationToSave: AppConfiguration;
 
-  public displayedColumns: string[] = ["propriete", "valeur"];
-  public dataSource: MatTableDataSource<ProprieteValeur>;
+  public displayedColumns: string[] = ["label", "value"];
+
+  public dataSource: MatTableDataSource<ConfigurationParameter>;
 
   constructor(
     private backendApiService: BackendApiService,
@@ -56,64 +54,111 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     this.initConfigurationPage();
   }
 
-  private initConfigurationPage(): void {
+  private initConfigurationPage = (): void => {
+    this.configurationParametersToDisplay = [
+      {
+        id: ConfigurationParameterID.DEFAULT_OBSERVATEUR,
+        label: "Observateur par défaut",
+        value: ""
+      },
+      {
+        id: ConfigurationParameterID.DEFAULT_DEPARTEMENT,
+        label: "Département par défaut",
+        value: ""
+      },
+      {
+        id: ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE,
+        label: "Estimation du nombre par défaut",
+        value: ""
+      },
+      {
+        id: ConfigurationParameterID.DEFAULT_NOMBRE,
+        label: "Nombre par défaut",
+        value: ""
+      },
+      {
+        id: ConfigurationParameterID.DEFAULT_SEXE,
+        label: "Sexe par défaut",
+        value: ""
+      },
+      {
+        id: ConfigurationParameterID.DEFAULT_AGE,
+        label: "Âge par défaut",
+        value: ""
+      },
+      {
+        id: ConfigurationParameterID.DISPLAY_ASSOCIES,
+        label: "Afficher les observateurs associés",
+        value: "Non"
+      },
+      {
+        id: ConfigurationParameterID.DISPLAY_METEO,
+        label: "Afficher la météo",
+        value: "Non"
+      },
+      {
+        id: ConfigurationParameterID.DISPLAY_DISTANCE,
+        label: "Afficher la distance",
+        value: "Non"
+      },
+      {
+        id: ConfigurationParameterID.DISPLAY_REGROUPEMENT,
+        label: "Afficher le numéro de regroupement",
+        value: "Non"
+      }
+    ];
     this.switchToViewAllMode();
-    this.getCurrentConfigurations();
-  }
+    this.getCurrentConfiguration();
+  };
 
-  public buildDataSource(): void {
-    const dataSourceToBuild: ProprieteValeur[] = [];
-    _.forEach(PROPRIETES_A_AFFICHER, (proprieteAAfficher) => {
-      let valeurToSet: string;
-      if (!this.configurationToSave) {
-        valeurToSet = "";
-      } else {
-        switch (proprieteAAfficher.id) {
-          case 1:
-            valeurToSet = this.configurationToSave.defaultObservateur
+  public buildDataSource = (): void => {
+    _.forEach(this.configurationParametersToDisplay, (parameter) => {
+      let value: string = "";
+      if (this.configurationToSave) {
+        switch (parameter.id) {
+          case ConfigurationParameterID.DEFAULT_OBSERVATEUR:
+            value = this.configurationToSave.defaultObservateur
               ? this.configurationToSave.defaultObservateur.libelle
               : "";
             break;
-          case 2:
-            valeurToSet = this.configurationToSave.defaultDepartement
+          case ConfigurationParameterID.DEFAULT_DEPARTEMENT:
+            value = this.configurationToSave.defaultDepartement
               ? this.configurationToSave.defaultDepartement.code
               : "";
             break;
-          case 3:
-            valeurToSet = this.configurationToSave.defaultEstimationNombre
+          case ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE:
+            value = this.configurationToSave.defaultEstimationNombre
               ? this.configurationToSave.defaultEstimationNombre.libelle
               : "";
             break;
-          case 4:
-            valeurToSet = "" + this.configurationToSave.defaultNombre;
+          case ConfigurationParameterID.DEFAULT_NOMBRE:
+            value = "" + this.configurationToSave.defaultNombre;
             break;
-          case 5:
-            valeurToSet = this.configurationToSave.defaultSexe
+          case ConfigurationParameterID.DEFAULT_SEXE:
+            value = this.configurationToSave.defaultSexe
               ? this.configurationToSave.defaultSexe.libelle
               : "";
             break;
-          case 6:
-            valeurToSet = this.configurationToSave.defaultAge
+          case ConfigurationParameterID.DEFAULT_AGE:
+            value = this.configurationToSave.defaultAge
               ? this.configurationToSave.defaultAge.libelle
               : "";
             break;
-          case 7:
-            valeurToSet = this.configurationToSave.areAssociesDisplayed
+          case ConfigurationParameterID.DISPLAY_ASSOCIES:
+            value = this.configurationToSave.areAssociesDisplayed
               ? "Oui"
               : "Non";
             break;
-          case 8:
-            valeurToSet = this.configurationToSave.isMeteoDisplayed
+          case ConfigurationParameterID.DISPLAY_METEO:
+            value = this.configurationToSave.isMeteoDisplayed ? "Oui" : "Non";
+            break;
+          case ConfigurationParameterID.DISPLAY_DISTANCE:
+            value = this.configurationToSave.isDistanceDisplayed
               ? "Oui"
               : "Non";
             break;
-          case 9:
-            valeurToSet = this.configurationToSave.isDistanceDisplayed
-              ? "Oui"
-              : "Non";
-            break;
-          case 10:
-            valeurToSet = this.configurationToSave.isRegroupementDisplayed
+          case ConfigurationParameterID.DISPLAY_REGROUPEMENT:
+            value = this.configurationToSave.isRegroupementDisplayed
               ? "Oui"
               : "Non";
             break;
@@ -121,44 +166,39 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
             break;
         }
       }
-      dataSourceToBuild.push({
-        propriete: proprieteAAfficher.propriete,
-        valeur: valeurToSet
-      });
+      parameter.value = value;
     });
-    this.dataSource = new MatTableDataSource(dataSourceToBuild);
-  }
+    this.dataSource = new MatTableDataSource(
+      this.configurationParametersToDisplay
+    );
+  };
 
-  ////// CALLED FROM UI //////
-  public refresh(): void {
+  public refresh = (): void => {
     this.initConfigurationPage();
-  }
+  };
 
-  public editConfigurations(): void {
+  public editConfigurations = (): void => {
     this.switchToEditionMode();
-  }
+  };
 
-  public saveAppConfiguration(): void {
-    console.log("App Configuration à sauvegarder", this.configurationToSave);
-
+  public saveAppConfiguration = (): void => {
     this.backendApiService
       .saveAppConfiguration(this.configurationToSave)
       .subscribe(
-        (result: DbUpdateResult) => {
-          this.onSaveAppConfigurationSuccess(result);
+        (dbResults: DbUpdateResult[]) => {
+          this.onSaveAppConfigurationSuccess(dbResults);
         },
         (error: any) => {
           this.onSaveAppConfigurationError(error);
         }
       );
-  }
+  };
 
-  public cancelEdition(): void {
+  public cancelEdition = (): void => {
     this.switchToViewAllMode();
-  }
-  ////// END FROM UI //////
+  };
 
-  private getCurrentConfigurations(): void {
+  private getCurrentConfiguration = (): void => {
     this.backendApiService.getConfigurationInitialPageModel().subscribe(
       (configurationPage: ConfigurationPage) => {
         this.onInitConfigurationPageSuccess(configurationPage);
@@ -167,54 +207,74 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
         this.onInitConfigurationPageError(error);
       }
     );
-  }
+  };
 
-  private onInitConfigurationPageSuccess(
+  private onInitConfigurationPageSuccess = (
     configurationPage: ConfigurationPage
-  ): void {
+  ): void => {
     this.pageModel = configurationPage;
     this.configurationToSave = configurationPage.appConfiguration;
     this.buildDataSource();
-  }
+  };
 
-  private onInitConfigurationPageError(error: any): void {
+  private onInitConfigurationPageError = (error: any): void => {
     this.openStatusMessage(
-      "Impossible de charger la page de configuration.",
+      "Impossible de charger le contenu de la page de configuration.",
       StatusMessageSeverity.ERROR,
       error
     );
-  }
+  };
 
-  private onSaveAppConfigurationSuccess(saveResult: DbUpdateResult): void {
-    this.openStatusMessage(
-      "La sauvegarde des configurations de l'application a été faite avec succès.",
-      StatusMessageSeverity.SUCCESS
-    );
-    this.getCurrentConfigurations();
-    this.switchToViewAllMode();
-  }
+  private onSaveAppConfigurationSuccess = (
+    dbResults: DbUpdateResult[]
+  ): void => {
+    if (this.isSaveConfigurationSuccess(dbResults)) {
+      this.openStatusMessage(
+        "La configuration de l'application a été mise à jour.",
+        StatusMessageSeverity.SUCCESS
+      );
+      this.getCurrentConfiguration();
+      this.switchToViewAllMode();
+    } else {
+      this.openStatusMessage(
+        "Il semble qu'une erreur soit survenue pendant la sauvegarde de la configuration.",
+        StatusMessageSeverity.ERROR,
+        dbResults
+      );
+    }
+  };
 
-  private onSaveAppConfigurationError(error: any): void {
+  private isSaveConfigurationSuccess = (
+    dbResults: DbUpdateResult[]
+  ): boolean => {
+    let isSuccess: boolean = true;
+    for (const dbResult of dbResults) {
+      isSuccess = isSuccess || dbResult.affectedRows === 1;
+    }
+    return isSuccess;
+  };
+
+  private onSaveAppConfigurationError = (error: any): void => {
     this.openStatusMessage(
       "Impossible de sauvegarder la configuration de l'application.",
       StatusMessageSeverity.ERROR,
       error
     );
-  }
+  };
 
-  private switchToEditionMode(): void {
+  private switchToEditionMode = (): void => {
     EntityModeHelper.switchToEditionMode();
-  }
+  };
 
-  private switchToViewAllMode(): void {
+  private switchToViewAllMode = (): void => {
     EntityModeHelper.switchToViewAllMode();
-  }
+  };
 
-  public getIsAllViewMode(): boolean {
+  public getIsAllViewMode = (): boolean => {
     return EntityModeHelper.isViewAllMode();
-  }
+  };
 
-  public getIsEditionMode(): boolean {
+  public getIsEditionMode = (): boolean => {
     return EntityModeHelper.isEditionMode();
-  }
+  };
 }

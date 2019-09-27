@@ -13,7 +13,6 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class BackendApiService {
-
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
   private CREATION: string = "creation/";
@@ -38,7 +37,7 @@ export class BackendApiService {
 
   private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
 
-  constructor(public http: HttpClient, private router: Router) { }
+  constructor(public http: HttpClient, private router: Router) {}
 
   private getApiUrl = (): string => {
     return (
@@ -49,7 +48,7 @@ export class BackendApiService {
       window.location.port +
       "/api/"
     );
-  }
+  };
 
   private httpGet<T>(relativePath: string): Observable<T> {
     const requestPath: string = this.getApiUrl() + relativePath;
@@ -92,14 +91,14 @@ export class BackendApiService {
     return this.httpGet(this.CONFIGURATION + this.INIT);
   }
 
-  public saveAppConfiguration(
+  public saveAppConfiguration = (
     appConfigurationToSave: AppConfiguration
-  ): Observable<DbUpdateResult> {
+  ): Observable<DbUpdateResult[]> => {
     return this.httpPost(
       this.CONFIGURATION + this.UPDATE,
       appConfigurationToSave
     );
-  }
+  };
 
   public importData(
     entityName: string,

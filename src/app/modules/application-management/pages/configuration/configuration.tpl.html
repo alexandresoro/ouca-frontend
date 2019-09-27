@@ -22,7 +22,7 @@
         (click)="editConfigurations()"
       >
         <mat-icon>create</mat-icon>
-        <span>Modifier les configurations</span>
+        <span>Modifier la configuration</span>
       </button>
     </ng-container>
   </div>
@@ -41,17 +41,17 @@
 
   <div *ngIf="getIsAllViewMode()" class="table-responsive">
     <mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="propriete">
+      <ng-container matColumnDef="label">
         <mat-header-cell *matHeaderCellDef> Propriété </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.propriete }} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{ element.label }} </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="valeur">
+      <ng-container matColumnDef="value">
         <mat-header-cell mat-header-cell *matHeaderCellDef>
           Valeur
         </mat-header-cell>
         <mat-cell mat-cell *matCellDef="let element">
-          {{ element.valeur }}
+          {{ element.value }}
         </mat-cell>
       </ng-container>
 
