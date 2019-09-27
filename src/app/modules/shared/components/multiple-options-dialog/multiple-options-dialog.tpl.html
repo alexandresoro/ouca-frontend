@@ -4,7 +4,7 @@
   <button
     *ngFor="let option of data.options"
     mat-raised-button
-    color="primary"
+    color="{{ option.color }}"
     [mat-dialog-close]="option.value"
   >
     {{ option.label }}

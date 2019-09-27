@@ -12,7 +12,7 @@ export class MultipleOptionsDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: MultipleOptionsDialogData
   ) {}
 
-  closeDialog() {
+  public closeDialog(): void {
     this.dialogRef.close();
   }
 }

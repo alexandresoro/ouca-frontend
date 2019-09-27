@@ -55,7 +55,7 @@ export class AutocompleteComponent implements OnInit {
       .remove(value.toLowerCase())
       .replace(this.CHARACTERS_TO_IGNORE, "");
 
-    if (!!this.values) {
+    if (this.values) {
       // We sort the values by their proority (i.e. the opposite of the weight)
       const valuesWithPriorities = this.values.map((valueFromList) => {
         const priority: number = this.computePriorityInList(
@@ -126,7 +126,7 @@ export class AutocompleteComponent implements OnInit {
     let isMatching: boolean;
 
     let indexFound: number;
-    if (!!attributeToFilter.exactSearchMode) {
+    if (attributeToFilter.exactSearchMode) {
       indexFound = this.exactSearch(
         valueFromList,
         filterValue,
@@ -140,14 +140,14 @@ export class AutocompleteComponent implements OnInit {
       );
     }
 
-    if (!!attributeToFilter.startWithMode) {
+    if (attributeToFilter.startWithMode) {
       isMatching = indexFound === 0;
     } else {
       isMatching = indexFound > -1;
     }
 
     if (isMatching) {
-      return !!attributeToFilter.weight ? attributeToFilter.weight : 0;
+      return attributeToFilter.weight ? attributeToFilter.weight : 0;
     } else {
       return -1;
     }
@@ -189,7 +189,7 @@ export class AutocompleteComponent implements OnInit {
   public getDisplayedValue(object: EntiteSimple): string {
     let displayedValue: string = "";
 
-    if (!!object) {
+    if (object) {
       displayedValue = object[this.attributesToFilter[0].key];
       for (
         let indexAttribute = 1;

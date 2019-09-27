@@ -12,7 +12,7 @@ export class ConfirmationDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData
   ) {}
 
-  closeDialog() {
+  public closeDialog(): void {
     this.dialogRef.close();
   }
 }

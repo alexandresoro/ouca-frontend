@@ -345,30 +345,40 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private displayInventaireDialog(): void {
-    const updateInventaireDialogData = new MultipleOptionsDialogData(
-      "Confirmation de mise-à-jour",
-      "Vous avez modifié la fiche inventaire. " +
+    const ALL_DONNEES_OPTION: number = 1;
+    const ONLY_CURRENT_DONNEE_OPTION: number = 2;
+    const CANCEL_OPTION: number = 3;
+
+    const updateInventaireDialogData: MultipleOptionsDialogData = {
+      title: "Confirmation de mise-à-jour",
+      content:
+        "Vous avez modifié la fiche inventaire. " +
         "Voulez-vous mettre à jour la fiche inventaire pour cette fiche espèce " +
         "seulement ou pour toutes les fiches espèces de cette fiche inventaire ?",
-      [
+      options: [
         {
-          value: 1,
-          label: "Pour toutes les fiches espèces de cette fiche inventaire"
+          value: ALL_DONNEES_OPTION,
+          label: "Pour toutes les fiches espèces de cette fiche inventaire",
+          color: "primary"
         },
-        { value: 2, label: "Pour cette fiche espèce seulement" },
-        { value: 3, label: "Annuler" }
+        {
+          value: ONLY_CURRENT_DONNEE_OPTION,
+          label: "Pour cette fiche espèce seulement",
+          color: "primary"
+        },
+        { value: CANCEL_OPTION, label: "Annuler", color: "accent" }
       ]
-    );
+    };
     const dialogRef = this.dialog.open(MultipleOptionsDialogComponent, {
       width: "800px",
       data: updateInventaireDialogData
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
+      if (result === ALL_DONNEES_OPTION) {
         // We just update the existing inventaire
         this.updateInventaireAndDonnee(false);
-      } else if (result === 2) {
+      } else if (result === ONLY_CURRENT_DONNEE_OPTION) {
         // We create a new inventaire for this donnee
         this.updateInventaireAndDonnee(true);
       }

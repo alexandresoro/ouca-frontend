@@ -1,13 +1,13 @@
-export class MultipleOptionsDialogData {
+export interface MultipleOptionsDialogOption {
+  value: number;
+  label: string;
+  color: string;
+}
+
+export interface MultipleOptionsDialogData {
   title: string;
 
   content: string;
 
-  options: any[];
-
-  constructor(title: string, content: string, options: any[]) {
-    this.title = title;
-    this.content = content;
-    this.options = options;
-  }
+  options: MultipleOptionsDialogOption[];
 }
