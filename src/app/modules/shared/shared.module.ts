@@ -50,9 +50,6 @@ import { InputTimeComponent } from "../donnee-creation/components/input-time/inp
 import { AutocompleteActiveSelection } from "./components/autocomplete/autocomplete-active-selection.directive";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
-import { AutocompleteComportementComponent } from "./components/form/autocomplete-comportement/autocomplete-comportement.component";
-import { AutocompleteMeteoComponent } from "./components/form/autocomplete-meteo/autocomplete-meteo.component";
-import { AutocompleteMilieuComponent } from "./components/form/autocomplete-milieu/autocomplete-milieu.component";
 import { MultipleSelectComponent } from "./components/form/multiple-select/multiple-select.component";
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
 import { BackendApiService } from "./services/backend-api.service";
@@ -90,9 +87,6 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
   ],
   declarations: [
     AutocompleteActiveSelection,
-    AutocompleteComportementComponent,
-    AutocompleteMeteoComponent,
-    AutocompleteMilieuComponent,
     AutocompleteComponent,
     ConfirmationDialogComponent,
     InputAgeComponent,
@@ -116,9 +110,6 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
   ],
   exports: [
     AutocompleteComponent,
-    AutocompleteComportementComponent,
-    AutocompleteMeteoComponent,
-    AutocompleteMilieuComponent,
     BrowserAnimationsModule,
     BrowserModule,
     CommonModule,

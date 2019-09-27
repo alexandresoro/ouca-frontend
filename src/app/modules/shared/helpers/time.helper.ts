@@ -1,6 +1,6 @@
 export class TimeHelper {
   public static getFormattedTime(timeStr: string): string {
-    if (!!timeStr) {
+    if (timeStr) {
       let value = timeStr;
       const dateRegExp1: RegExp = new RegExp("^[0-9][0-9][0-9][0-9]$");
       if (dateRegExp1.test(value)) {
