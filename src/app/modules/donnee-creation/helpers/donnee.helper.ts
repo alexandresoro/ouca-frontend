@@ -26,11 +26,11 @@ export class DonneeHelper {
     return this.displayedDonneeId;
   }
 
-  public static setDisplayedDonneeId(id: number) {
+  public static setDisplayedDonneeId(id: number): void {
     this.displayedDonneeId = id;
   }
 
-  public static createDonneeForm() {
+  public static createDonneeForm(): FormGroup {
     this.displayedDonneeId = null;
 
     return new FormGroup({
@@ -86,38 +86,26 @@ export class DonneeHelper {
     donneeForm: FormGroup,
     pageModel: CreationPage
   ): void {
-    let defaultAge: Age = null;
-    if (!!pageModel.defaultAgeId) {
-      defaultAge = ListHelper.getFromList(
-        pageModel.ages,
-        "id",
-        pageModel.defaultAgeId
-      );
-    }
+    const defaultAge: Age = ListHelper.findEntityInListByID(
+      pageModel.ages,
+      pageModel.defaultAgeId
+    ) as Age;
 
-    let defaultSexe: Sexe = null;
-    if (!!pageModel.defaultSexeId) {
-      defaultSexe = ListHelper.getFromList(
-        pageModel.sexes,
-        "id",
-        pageModel.defaultSexeId
-      );
-    }
+    const defaultSexe: Sexe = ListHelper.findEntityInListByID(
+      pageModel.sexes,
+      pageModel.defaultSexeId
+    ) as Sexe;
 
-    let defaultEstimationNombre: EstimationNombre = null;
-    if (!!pageModel.defaultEstimationNombreId) {
-      defaultEstimationNombre = ListHelper.getFromList(
-        pageModel.estimationsNombre,
-        "id",
-        pageModel.defaultEstimationNombreId
-      );
-    }
+    const defaultEstimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
+      pageModel.estimationsNombre,
+      pageModel.defaultEstimationNombreId
+    ) as EstimationNombre;
 
     let defaultNombre: number = null;
     if (
-      !!pageModel.defaultNombre &&
-      (!!!defaultEstimationNombre ||
-        (!!defaultEstimationNombre && !defaultEstimationNombre.nonCompte))
+      pageModel.defaultNombre &&
+      (!defaultEstimationNombre ||
+        (defaultEstimationNombre && !defaultEstimationNombre.nonCompte))
     ) {
       defaultNombre = pageModel.defaultNombre;
     }
@@ -219,16 +207,16 @@ export class DonneeHelper {
     const age: Age = donneeFormControls.age.value;
     const estimationDistance = distanceFormControls.estimationDistance.value;
 
-    const donnee: any = {
+    const donnee: Donnee = {
       id: this.displayedDonneeId,
       inventaireId: InventaireHelper.getDisplayedInventaireId(),
-      especeId: !!espece ? espece.id : null,
+      especeId: espece ? espece.id : null,
       nombre: nombreFormControls.nombre.value,
-      estimationNombreId: !!estimationNombre ? estimationNombre.id : null,
-      sexeId: !!sexe ? sexe.id : null,
-      ageId: !!age ? age.id : null,
+      estimationNombreId: estimationNombre ? estimationNombre.id : null,
+      sexeId: sexe ? sexe.id : null,
+      ageId: age ? age.id : null,
       distance: distanceFormControls.distance.value,
-      estimationDistanceId: !!estimationDistance ? estimationDistance.id : null,
+      estimationDistanceId: estimationDistance ? estimationDistance.id : null,
       regroupement: donneeFormControls.regroupement.value,
       comportementsIds,
       milieuxIds,
@@ -265,42 +253,40 @@ export class DonneeHelper {
     const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
       .controls;
 
-    const espece: Espece = ListHelper.getFromList(
+    const espece: Espece = ListHelper.findEntityInListByID(
       pageModel.especes,
-      "id",
       donnee.especeId
-    );
+    ) as Espece;
 
     const classe: Classe =
-      !!espece && !!espece.classeId
-        ? ListHelper.getFromList(pageModel.classes, "id", espece.classeId)
-        : !!classeToDisplay
+      !!espece && espece.classeId
+        ? (ListHelper.findEntityInListByID(
+            pageModel.classes,
+            espece.classeId
+          ) as Classe)
+        : classeToDisplay
         ? classeToDisplay
         : null;
 
-    const estimationNombre: EstimationNombre = ListHelper.getFromList(
+    const estimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
       pageModel.estimationsNombre,
-      "id",
       donnee.estimationNombreId
-    );
+    ) as EstimationNombre;
 
-    const estimationDistance: EstimationDistance = ListHelper.getFromList(
+    const estimationDistance: EstimationDistance = ListHelper.findEntityInListByID(
       pageModel.estimationsDistance,
-      "id",
       donnee.estimationDistanceId
-    );
+    ) as EstimationDistance;
 
-    const sexe: Sexe = ListHelper.getFromList(
+    const sexe: Sexe = ListHelper.findEntityInListByID(
       pageModel.sexes,
-      "id",
       donnee.sexeId
-    );
+    ) as Sexe;
 
-    const age: EstimationDistance = ListHelper.getFromList(
+    const age: EstimationDistance = ListHelper.findEntityInListByID(
       pageModel.ages,
-      "id",
       donnee.ageId
-    );
+    ) as Age;
 
     especeFormControls.classe.setValue(classe);
     especeFormControls.espece.setValue(espece);
@@ -315,7 +301,7 @@ export class DonneeHelper {
     distanceFormControls.estimationDistance.setValue(estimationDistance);
     donneeFormControls.regroupement.setValue(donnee.regroupement);
 
-    if (!!donnee.comportementsIds) {
+    if (donnee.comportementsIds) {
       comportementsFormControls.comportement1.setValue(
         this.getComportement(
           pageModel.comportements,
@@ -359,7 +345,7 @@ export class DonneeHelper {
         )
       );
     }
-    if (!!donnee.milieuxIds) {
+    if (donnee.milieuxIds) {
       milieuxFormControls.milieu1.setValue(
         this.getMilieu(pageModel.milieux, donnee.milieuxIds, 1)
       );
@@ -393,14 +379,17 @@ export class DonneeHelper {
    * @param index index of the entity to return
    */
   private static getEntiteCodeEtLibelle(
-    list: any[],
+    entities: EntiteAvecLibelleEtCode[],
     ids: number[],
     index: number
   ): EntiteAvecLibelleEtCode {
     const id: number =
       ids.length >= index && !!ids[index - 1] ? ids[index - 1] : null;
 
-    return ListHelper.getFromList(list, "id", id);
+    return ListHelper.findEntityInListByID(
+      entities,
+      id
+    ) as EntiteAvecLibelleEtCode;
   }
 
   /**

@@ -37,11 +37,11 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     const nomFrancais = formGroup.controls.nomFrancais.value;
     const id = formGroup.controls.id.value;
 
-    const foundEspeceByCode: Espece = ListHelper.findObjectInListByTextValue(
+    const foundEspeceByCode: Espece = ListHelper.findEntityInListByStringAttribute(
       this.objects,
       "nomFrancais",
       nomFrancais
-    );
+    ) as Espece;
 
     const valueIsAnExistingEntity: boolean =
       !!foundEspeceByCode && id !== foundEspeceByCode.id;
@@ -52,7 +52,7 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
           "Il existe déjà " + this.getAnEntityLabel() + " avec ce nom français."
         )
       : null;
-  }
+  };
 
   private nomLatinValidator: ValidatorFn = (
     formGroup: FormGroup
@@ -60,11 +60,11 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     const nomLatin = formGroup.controls.nomLatin.value;
     const id = formGroup.controls.id.value;
 
-    const foundEspeceByCode: Espece = ListHelper.findObjectInListByTextValue(
+    const foundEspeceByCode: Espece = ListHelper.findEntityInListByStringAttribute(
       this.objects,
       "nomLatin",
       nomLatin
-    );
+    ) as Espece;
 
     const valueIsAnExistingEntity: boolean =
       !!foundEspeceByCode && id !== foundEspeceByCode.id;
@@ -75,7 +75,7 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
           "Il existe déjà " + this.getAnEntityLabel() + " avec ce nom latin."
         )
       : null;
-  }
+  };
 
   getEntityName(): string {
     return "espece";
@@ -86,7 +86,7 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "L'espèce" : "l'espèce";
+    return uppercase ? "L'espèce" : "l'espèce";
   }
 
   public getFormType(): any {

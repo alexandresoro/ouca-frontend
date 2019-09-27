@@ -1,52 +1,84 @@
 import * as diacritics from "diacritics";
 import * as _ from "lodash";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 
 export class ListHelper {
-  public static getFromList(
-    list: any[],
-    comparisonField: string,
-    valueToFind: any
-  ): any {
-    return list.find((object) => object[comparisonField] === valueToFind);
-  }
+  private static findEntityInListByAttribute(
+    entities: EntiteSimple[],
+    comparedAttributeName: string,
+    searchedValue: number | string
+  ): EntiteSimple | null {
+    if (!searchedValue) {
+      return null;
+    }
 
-  public static mapEntitiesToAttributes(list: any, attributeName: string) {
-    return _.map(list, (entity: any) => {
-      return entity[attributeName];
-    });
-  }
-
-  public static mapEntitiesToIds(list: any) {
-    return this.mapEntitiesToAttributes(list, "id");
-  }
-
-  public static mapAttributesToEntities(
-    list: any[],
-    comparisonField: string,
-    valuesToFind: any[]
-  ): any[] {
-    return _.map(valuesToFind, (valueToFind) => {
-      return ListHelper.getFromList(list, comparisonField, valueToFind);
-    });
-  }
-
-  public static mapIdsToEntities(list: any[], valuesToFind: any[]) {
-    return this.mapAttributesToEntities(list, "id", valuesToFind);
-  }
-
-  public static findObjectInListByTextValue(
-    objects: any[],
-    attributeName: string,
-    searchedValue: string
-  ): any {
-    return (
-      searchedValue &&
-      _.find(objects, (object: any) => {
-        return (
-          diacritics.remove(object[attributeName].trim().toLowerCase()) ===
-          diacritics.remove(searchedValue.trim().toLowerCase())
-        );
-      })
+    return entities.find(
+      (entity) => entity[comparedAttributeName] === searchedValue
     );
+  }
+
+  public static findEntityInListByNumberAttribute(
+    entities: EntiteSimple[],
+    comparedAttributeName: string,
+    searchedValue: number
+  ): EntiteSimple | null {
+    return this.findEntityInListByAttribute(
+      entities,
+      comparedAttributeName,
+      searchedValue
+    );
+  }
+
+  public static findEntityInListByStringAttribute(
+    entities: EntiteSimple[],
+    comparedAttributeName: string,
+    searchedValue: string,
+    exactSearch?: boolean
+  ): EntiteSimple {
+    if (exactSearch) {
+      return this.findEntityInListByAttribute(
+        entities,
+        comparedAttributeName,
+        searchedValue
+      );
+    }
+
+    if (!searchedValue) {
+      return null;
+    }
+
+    return _.find(entities, (entity: EntiteSimple) => {
+      return (
+        diacritics.remove(
+          entity[comparedAttributeName].trim().toLowerCase()
+        ) === diacritics.remove(searchedValue.trim().toLowerCase())
+      );
+    });
+  }
+
+  public static findEntityInListByID(
+    entities: EntiteSimple[],
+    id: number
+  ): EntiteSimple | null {
+    return this.findEntityInListByAttribute(entities, "id", id);
+  }
+
+  public static getIDsFromEntities = (entities: EntiteSimple[]): number[] => {
+    return _.map(entities, (entity: EntiteSimple) => {
+      return entity.id;
+    });
+  };
+
+  public static getEntitiesFromIDs(
+    allEntities: EntiteSimple[],
+    idsToGet: number[]
+  ): EntiteSimple[] {
+    return _.map(idsToGet, (id) => {
+      return ListHelper.findEntityInListByNumberAttribute(
+        allEntities,
+        "id",
+        id
+      );
+    });
   }
 }

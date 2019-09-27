@@ -94,7 +94,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
               this.getTheEntityLabel(true) + " a été supprimé(e) avec succès"
             );
 
-            this.switchToViewAllMode(true);
+            this.switchToViewAllMode();
           },
           (error: Response) => {
             this.showErrorMessage(
@@ -131,7 +131,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
               this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès"
             );
 
-            this.switchToViewAllMode(true);
+            this.switchToViewAllMode();
           } else {
             this.showErrorMessage(
               "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
@@ -170,8 +170,8 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
     this.switchToViewAllMode();
   }
 
-  public resetForm() {
-    if (!!this.form) {
+  public resetForm(): void {
+    if (this.form) {
       this.form.reset({});
     }
   }
@@ -188,8 +188,8 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
     EntityModeHelper.switchToEditionMode();
   }
 
-  private switchToViewAllMode(doNotResetPageStatus?: boolean): void {
-    this.getAll(doNotResetPageStatus);
+  private switchToViewAllMode(): void {
+    this.getAll();
     this.resetForm();
     this.objectToSave = this.getNewObject();
     this.currentObject = undefined;
@@ -214,11 +214,11 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
     const libelle = formGroup.controls.libelle.value;
     const id = formGroup.controls.id.value;
 
-    const foundEntityByLibelle: T = ListHelper.findObjectInListByTextValue(
+    const foundEntityByLibelle: T = ListHelper.findEntityInListByStringAttribute(
       this.objects,
       "libelle",
       libelle
-    );
+    ) as T;
 
     const valueIsAnExistingEntity: boolean =
       !!foundEntityByLibelle && id !== foundEntityByLibelle.id;
@@ -237,11 +237,11 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
     const code = formGroup.controls.code.value;
     const id = formGroup.controls.id.value;
 
-    const foundEntityByCode: T = ListHelper.findObjectInListByTextValue(
+    const foundEntityByCode: T = ListHelper.findEntityInListByStringAttribute(
       this.objects,
       "code",
       code
-    );
+    ) as T;
 
     const valueIsAnExistingEntity: boolean =
       !!foundEntityByCode && id !== foundEntityByCode.id;

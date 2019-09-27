@@ -13,9 +13,9 @@ export const saveFile = (
   blobContent: Blob,
   fileName: string,
   mediaType?: string
-) => {
+): void => {
   const blob = new Blob([blobContent], {
-    type: !!mediaType ? mediaType : "application/octet-stream"
+    type: mediaType ? mediaType : "application/octet-stream"
   });
   saveAs(blob, fileName);
 };
@@ -23,7 +23,7 @@ export const saveFile = (
 export const getContentTypeFromResponse = (
   res: HttpResponse<any>
 ): string | null => {
-  return !!res.headers.get("content-type")
+  return res.headers.get("content-type")
     ? res.headers.get("content-type")
     : null;
 };
@@ -36,7 +36,7 @@ export const getContentTypeFromResponse = (
 export const getFileNameFromResponseContentDisposition = (
   res: HttpResponse<any>
 ): string => {
-  if (!!res.headers.get("content-disposition")) {
+  if (res.headers.get("content-disposition")) {
     const contentDisposition = res.headers.get("content-disposition");
     const matches = /filename="([^;]+)"/gi.exec(contentDisposition);
     const fileName = (matches[1] || DEFAULT_FILE_NAME).trim();

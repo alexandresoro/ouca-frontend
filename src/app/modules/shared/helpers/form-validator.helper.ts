@@ -69,7 +69,7 @@ export class FormValidatorHelper {
   }
 
   public static emptyValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (): { [key: string]: any } | null => {
       return null;
     };
   }

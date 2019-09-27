@@ -34,7 +34,7 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     const code = formGroup.controls.code.value;
     const id = formGroup.controls.id.value;
 
-    const foundDepartementByCode: Departement = ListHelper.findObjectInListByTextValue(
+    const foundDepartementByCode: Departement = ListHelper.findEntityInListByStringAttribute(
       this.objects,
       "code",
       code
@@ -49,7 +49,7 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
           "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
         )
       : null;
-  }
+  };
 
   public getEntityName(): string {
     return "departement";

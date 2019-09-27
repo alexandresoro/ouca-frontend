@@ -24,11 +24,11 @@ export class InventaireHelper {
     return this.displayedInventaireId;
   }
 
-  public static setDisplayedInventaireId(id: number) {
+  public static setDisplayedInventaireId(id: number): void {
     this.displayedInventaireId = id;
   }
 
-  public static createInventaireForm() {
+  public static createInventaireForm(): FormGroup {
     this.displayedInventaireId = null;
 
     return new FormGroup({
@@ -79,23 +79,15 @@ export class InventaireHelper {
     inventaireForm: FormGroup,
     pageModel: CreationPage
   ): void {
-    let defaultObservateur: Observateur = null;
-    if (!!pageModel.defaultObservateurId) {
-      defaultObservateur = ListHelper.getFromList(
-        pageModel.observateurs,
-        "id",
-        pageModel.defaultObservateurId
-      );
-    }
+    const defaultObservateur: Observateur = ListHelper.findEntityInListByID(
+      pageModel.observateurs,
+      pageModel.defaultObservateurId
+    ) as Observateur;
 
-    let defaultDepartement: Departement = null;
-    if (!!pageModel.defaultDepartementId) {
-      defaultDepartement = ListHelper.getFromList(
-        pageModel.departements,
-        "id",
-        pageModel.defaultDepartementId
-      );
-    }
+    const defaultDepartement: Departement = ListHelper.findEntityInListByID(
+      pageModel.departements,
+      pageModel.defaultDepartementId
+    ) as Departement;
 
     this.displayedInventaireId = null;
 
@@ -137,7 +129,7 @@ export class InventaireHelper {
 
     const observateur: Observateur = inventaireFormControls.observateur.value;
 
-    const associesIds: number[] = ListHelper.mapEntitiesToIds(
+    const associesIds: number[] = ListHelper.getIDsFromEntities(
       inventaireFormControls.observateursAssocies.value
     );
 
@@ -161,18 +153,18 @@ export class InventaireHelper {
 
     const temperature: number = inventaireFormControls.temperature.value;
 
-    const meteosIds: number[] = ListHelper.mapEntitiesToIds(
+    const meteosIds: number[] = ListHelper.getIDsFromEntities(
       inventaireFormControls.meteos.value
     );
 
     const inventaire: Inventaire = {
       id: this.displayedInventaireId,
-      observateurId: !!observateur ? observateur.id : null,
+      observateurId: observateur ? observateur.id : null,
       associesIds,
       date,
       heure,
       duree,
-      lieuditId: !!lieudit ? lieudit.id : null,
+      lieuditId: lieudit ? lieudit.id : null,
       altitude,
       longitude,
       latitude,
@@ -211,49 +203,45 @@ export class InventaireHelper {
   ): void {
     console.log("Inventaire à afficher dans le formulaire:", inventaire);
 
-    const observateur: Observateur = ListHelper.getFromList(
+    const observateur: Observateur = ListHelper.findEntityInListByID(
       pageModel.observateurs,
-      "id",
       inventaire.observateurId
-    );
+    ) as Observateur;
 
-    const lieudit: Lieudit = ListHelper.getFromList(
+    const lieudit: Lieudit = ListHelper.findEntityInListByID(
       pageModel.lieudits,
-      "id",
       inventaire.lieuditId
-    );
+    ) as Lieudit;
 
     let commune: Commune = null;
     if (!!lieudit && !!lieudit.communeId) {
-      commune = ListHelper.getFromList(
+      commune = ListHelper.findEntityInListByID(
         pageModel.communes,
-        "id",
         lieudit.communeId
-      );
-    } else if (!!communeToDisplay) {
+      ) as Commune;
+    } else if (communeToDisplay) {
       commune = communeToDisplay;
     }
 
     let departement: Departement = null;
     if (!!commune && !!commune.departementId) {
-      departement = ListHelper.getFromList(
+      departement = ListHelper.findEntityInListByID(
         pageModel.departements,
-        "id",
         commune.departementId
-      );
-    } else if (!!departementToDisplay) {
+      ) as Departement;
+    } else if (departementToDisplay) {
       departement = departementToDisplay;
     }
 
-    const associes: Observateur[] = ListHelper.mapIdsToEntities(
+    const associes: Observateur[] = ListHelper.getEntitiesFromIDs(
       pageModel.observateurs,
       inventaire.associesIds
-    );
+    ) as Observateur[];
 
-    const meteos: Meteo[] = ListHelper.mapIdsToEntities(
+    const meteos: Meteo[] = ListHelper.getEntitiesFromIDs(
       pageModel.meteos,
       inventaire.meteosIds
-    );
+    ) as Meteo[];
 
     this.displayedInventaireId = inventaire.id;
 
@@ -278,15 +266,11 @@ export class InventaireHelper {
       lieuditFormControls.longitude.setValue(inventaire.longitude);
       lieuditFormControls.latitude.setValue(inventaire.latitude);
     } else {
-      lieuditFormControls.altitude.setValue(
-        !!lieudit ? lieudit.altitude : null
-      );
+      lieuditFormControls.altitude.setValue(lieudit ? lieudit.altitude : null);
       lieuditFormControls.longitude.setValue(
-        !!lieudit ? lieudit.longitude : null
+        lieudit ? lieudit.longitude : null
       );
-      lieuditFormControls.latitude.setValue(
-        !!lieudit ? lieudit.latitude : null
-      );
+      lieuditFormControls.latitude.setValue(lieudit ? lieudit.latitude : null);
     }
     inventaireFormControls.temperature.setValue(inventaire.temperature);
     inventaireFormControls.meteos.setValue(meteos);

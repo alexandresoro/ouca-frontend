@@ -41,15 +41,13 @@ export class LieuditFormComponent extends EntitySubFormComponent
     this.departements$ = new Subject();
     this.communes$ = new Subject();
 
-    this.departementControl.valueChanges.subscribe(
-      (selectedDepartement: Departement) => {
-        if (!this.initialSetting) {
-          this.resetSelectedCommune();
-        } else {
-          this.initialSetting = false;
-        }
+    this.departementControl.valueChanges.subscribe(() => {
+      if (!this.initialSetting) {
+        this.resetSelectedCommune();
+      } else {
+        this.initialSetting = false;
       }
-    );
+    });
 
     this.filteredCommunes$ = combineLatest(
       this.departementControl.valueChanges as Observable<Departement>,
@@ -73,17 +71,14 @@ export class LieuditFormComponent extends EntitySubFormComponent
       this.backendApiService.getAllEntities("commune") as Observable<Commune[]>
     ).subscribe(
       (result: [Departement[], Commune[]]) => {
-        this.departements$.next(!!result[0] ? result[0] : []);
-        this.communes$.next(!!result[1] ? result[1] : []);
+        this.departements$.next(result[0] ? result[0] : []);
+        this.communes$.next(result[1] ? result[1] : []);
 
         if (this.entityForm.controls.commune.value) {
-          this.departementControl.setValue(
-            ListHelper.getFromList(
-              result[0],
-              "id",
-              this.entityForm.controls.commune.value.departement.id
-            )
-          );
+          this.departementControl.setValue(ListHelper.findEntityInListByID(
+            result[0],
+            this.entityForm.controls.commune.value.departement.id
+          ) as Departement);
 
           this.entityForm.controls.communeId.setValue(
             this.entityForm.controls.commune.value.id
