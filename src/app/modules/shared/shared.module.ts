@@ -29,7 +29,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSelectModule } from "@angular/material/select";
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -50,7 +50,6 @@ import { InputTimeComponent } from "../donnee-creation/components/input-time/inp
 import { AutocompleteActiveSelection } from "./components/autocomplete/autocomplete-active-selection.directive";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
-import { BnSelectComponent } from "./components/entite-select/bn-select.component";
 import { AutocompleteComportementComponent } from "./components/form/autocomplete-comportement/autocomplete-comportement.component";
 import { AutocompleteMeteoComponent } from "./components/form/autocomplete-meteo/autocomplete-meteo.component";
 import { AutocompleteMilieuComponent } from "./components/form/autocomplete-milieu/autocomplete-milieu.component";
@@ -95,7 +94,6 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     AutocompleteMeteoComponent,
     AutocompleteMilieuComponent,
     AutocompleteComponent,
-    BnSelectComponent,
     ConfirmationDialogComponent,
     InputAgeComponent,
     InputDistanceComponent,
@@ -121,7 +119,6 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     AutocompleteComportementComponent,
     AutocompleteMeteoComponent,
     AutocompleteMilieuComponent,
-    BnSelectComponent,
     BrowserAnimationsModule,
     BrowserModule,
     CommonModule,
@@ -175,4 +172,4 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     BackendApiService
   ]
 })
-export class SharedModule { }
+export class SharedModule {}
