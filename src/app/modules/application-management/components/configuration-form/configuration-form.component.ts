@@ -5,6 +5,7 @@ import { Departement } from "basenaturaliste-model/departement.object";
 import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
 import { Observateur } from "basenaturaliste-model/observateur.object";
 import { Sexe } from "basenaturaliste-model/sexe.object";
+import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 
 @Component({
   selector: "configuration-form",
@@ -33,5 +34,9 @@ export class ConfigurationFormComponent {
 
   public cancel(): void {
     this.back.emit();
+  }
+
+  public compareEntities(e1: EntiteSimple, e2: EntiteSimple): boolean {
+    return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
 }

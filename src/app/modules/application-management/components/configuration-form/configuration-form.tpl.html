@@ -9,37 +9,49 @@
       #entiteSimpleForm="ngForm"
       class="configuration-form"
     >
-      <!-- Observateur par défaut -->
-      <bn-select
-        [id]="'input-observateur'"
-        [placeholder]="'Observateur par défaut'"
-        [fieldForDisplay]="'libelle'"
-        [options]="observateurs"
-        [(model)]="model.defaultObservateur"
-      >
-      </bn-select>
+      <!-- Default Observateur -->
+      <mat-form-field>
+        <mat-select
+          id="input-observateur"
+          placeholder="Observateur par défaut"
+          [(value)]="model.defaultObservateur"
+          [compareWith]="compareEntities"
+        >
+          <mat-option *ngFor="let o of observateurs" [value]="o">
+            {{ o.libelle }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-      <!-- Département par défaut -->
-      <bn-select
-        [id]="'input-departement'"
-        [placeholder]="'Département par défaut'"
-        [fieldForDisplay]="'code'"
-        [options]="departements"
-        [(model)]="model.defaultDepartement"
-      >
-      </bn-select>
+      <!-- Default Departement -->
+      <mat-form-field>
+        <mat-select
+          id="input-departement"
+          placeholder="Département par défaut"
+          [(value)]="model.defaultDepartement"
+          [compareWith]="compareEntities"
+        >
+          <mat-option *ngFor="let d of departements" [value]="d">
+            {{ d.code }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-      <!-- Estimation nombre par défaut -->
-      <bn-select
-        [id]="'input-estimation-nombre'"
-        [placeholder]="'Estimation du nombre par défaut'"
-        [fieldForDisplay]="'libelle'"
-        [options]="estimationsNombre"
-        [(model)]="model.defaultEstimationNombre"
-      >
-      </bn-select>
+      <!-- Default Estimation nombre -->
+      <mat-form-field>
+        <mat-select
+          id="input-estimation-nombre"
+          placeholder="Estimation du nombre par défaut"
+          [(value)]="model.defaultEstimationNombre"
+          [compareWith]="compareEntities"
+        >
+          <mat-option *ngFor="let e of estimationsNombre" [value]="e">
+            {{ e.libelle }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-      <!-- Nombre par défaut -->
+      <!-- Default Nombre -->
       <mat-form-field>
         <input
           matInput
@@ -53,27 +65,35 @@
         />
       </mat-form-field>
 
-      <!-- Sexe par défaut -->
-      <bn-select
-        [id]="'input-sexe'"
-        [placeholder]="'Sexe par défaut'"
-        [fieldForDisplay]="'libelle'"
-        [options]="sexes"
-        [(model)]="model.defaultSexe"
-      >
-      </bn-select>
+      <!-- Default Sexe -->
+      <mat-form-field>
+        <mat-select
+          id="input-sexe"
+          placeholder="Sexe par défaut"
+          [(value)]="model.defaultSexe"
+          [compareWith]="compareEntities"
+        >
+          <mat-option *ngFor="let s of sexes" [value]="s">
+            {{ s.libelle }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
       <!-- Age par défaut -->
-      <bn-select
-        [id]="'input-age'"
-        [placeholder]="'Âge par défaut'"
-        [fieldForDisplay]="'libelle'"
-        [options]="ages"
-        [(model)]="model.defaultAge"
-      >
-      </bn-select>
+      <mat-form-field>
+        <mat-select
+          id="input-age"
+          placeholder="Âge par défaut"
+          [(value)]="model.defaultAge"
+          [compareWith]="compareEntities"
+        >
+          <mat-option *ngFor="let a of ages" [value]="a">
+            {{ a.libelle }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-      <!-- Afficher les observateurs associés -->
+      <!-- Display observateurs associés -->
       <mat-checkbox
         id="input-associes"
         name="input-associes"
@@ -81,7 +101,7 @@
         >Afficher les observateurs associés</mat-checkbox
       >
 
-      <!-- Afficher la meteo -->
+      <!-- Display meteo -->
       <mat-checkbox
         id="input-meteo"
         name="input-meteo"
@@ -89,7 +109,7 @@
         >Afficher la météo</mat-checkbox
       >
 
-      <!-- Afficher la distance -->
+      <!-- Display distance -->
       <mat-checkbox
         id="input-distance"
         name="input-distance"
@@ -97,7 +117,7 @@
         >Afficher la distance</mat-checkbox
       >
 
-      <!-- Afficher le regroupement -->
+      <!-- Display regroupement -->
       <mat-checkbox
         id="input-regroupement"
         name="input-regroupement"
