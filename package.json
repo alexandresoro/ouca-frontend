@@ -27,7 +27,7 @@
     "diacritics": "*",
     "file-saver": "*",
     "lodash": "*",
-    "material-design-icons": "*",
+    "material-design-icons-iconfont": "*",
     "moment": "*",
     "ngx-take-until-destroy": "*",
     "rxjs": "*",
