@@ -12,9 +12,9 @@ export class TableEspecesWithNbDonneesComponent {
   public displayedColumns: string[] = [
     "classe",
     "code",
-    "nom_francais",
-    "nom_latin",
-    "nb_donnees"
+    "nomFrancais",
+    "nomLatin",
+    "nbDonnees"
   ];
 
   @Input() public especesToDisplay: EspeceWithNbDonnees[];
