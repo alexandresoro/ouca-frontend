@@ -1,0 +1,118 @@
+<div class="panel-table-donnees">
+  <div *ngIf="filteringOnGoing">Veuillez patienter...</div>
+
+  <div
+    *ngIf="
+      !filteringOnGoing &&
+      !!dataSource &&
+      !!dataSource.data &&
+      dataSource.data.length > 0
+    "
+  >
+    <mat-form-field class="table-donnees-filter">
+      <input
+        matInput
+        type="text"
+        placeholder="Filtre"
+        id="input-filtre"
+        name="filtre"
+        [(ngModel)]="filterValue"
+      />
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="applyFilter()">
+      Filtrer les résultats
+    </button>
+  </div>
+
+  <table
+    mat-table
+    matSort
+    [dataSource]="dataSource"
+    class="bn-table-view mat-elevation-z8"
+    multiTemplateDataRows
+  >
+    <ng-container matColumnDef="classe">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-classe"
+      >
+        Classe espèce
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.classe }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="code">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-code-espece"
+      >
+        Code espèce
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.code }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nom_francais">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-nom-francais"
+      >
+        Nom français
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.nomFrancais }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nom_latin">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-nom-latin"
+      >
+        Nom latin
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.nomLatin }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nb_donnees">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="bn-table-view-nombre"
+      >
+        Nombre de fiches espèces
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.nbDonnees }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="donnee-row"
+      [class.donnee-expanded-row]="
+        !!selectedEspece && selectedEspece.code === row.code
+      "
+      (click)="onRowClicked(row)"
+    ></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
+</div>

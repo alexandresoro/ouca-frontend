@@ -54,6 +54,7 @@ import { MultipleSelectComponent } from "./components/form/multiple-select/multi
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
 import { BackendApiService } from "./services/backend-api.service";
 import { StatusMessageComponent } from "./components/status-message/status-message.component";
+import { MatTabsModule } from "@angular/material/tabs";
 
 @NgModule({
   imports: [
@@ -80,6 +81,7 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     MatSnackBarModule,
     MatSortModule,
     MatTableModule,
+    MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
@@ -144,6 +146,7 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     MatSnackBarModule,
     MatSortModule,
     MatTableModule,
+    MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,

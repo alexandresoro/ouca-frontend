@@ -742,7 +742,14 @@ body.base-naturaliste {
     margin-left: 20px;
   }
 
+  div.mat-tab-body-wrapper {
+    margin-left: -20px;
+  }
+
   .panel-table-donnees {
+    margin-top: 30px;
+    margin-left: 20px;
+
     .table-donnees-filter {
       width: 400px;
       margin-right: 20px;

@@ -221,11 +221,23 @@
       </form>
     </div>
 
-    <table-donnees
-      *ngIf="!displayWaitPanel"
-      [donneesToDisplay]="donneesToDisplay"
-    ></table-donnees>
-
+    <ng-container
+      *ngIf="
+        !displayWaitPanel &&
+        (donneesToDisplay.length > 0 || especesWithNbDonnees.length > 0)
+      "
+    >
+      <mat-tab-group>
+        <mat-tab label="Données">
+          <table-donnees [donneesToDisplay]="donneesToDisplay"></table-donnees>
+        </mat-tab>
+        <mat-tab label="Espèces">
+          <table-especes-with-nb-donnees
+            [especesToDisplay]="especesWithNbDonnees"
+          ></table-especes-with-nb-donnees>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
     <div *ngIf="displayWaitPanel" style="text-align: center">
       <img
         src="../../../../../assets/img/green-bird.svg"

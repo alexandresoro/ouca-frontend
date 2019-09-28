@@ -14,7 +14,7 @@ import { Meteo } from "basenaturaliste-model/meteo.object";
 import { Milieu } from "basenaturaliste-model/milieu.object";
 import { Observateur } from "basenaturaliste-model/observateur.object";
 import { Sexe } from "basenaturaliste-model/sexe.object";
-import { combineLatest, Observable, Subject } from "rxjs";
+import { combineLatest, Observable, Subject, BehaviorSubject } from "rxjs";
 import {
   getContentTypeFromResponse,
   saveFile
@@ -22,6 +22,8 @@ import {
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { PageComponent } from "../../../shared/pages/page.component";
+import * as _ from "lodash";
+import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
 
 @Component({
   templateUrl: "./view.tpl.html"
@@ -68,7 +70,7 @@ export class ViewComponent extends PageComponent {
   public communes$: Subject<Commune[]>;
   public lieuxdits$: Subject<Lieudit[]>;
   public classes$: Subject<Classe[]>;
-  public especes$: Subject<Espece[]>;
+  public especes$: BehaviorSubject<Espece[]>;
   public estimationsNombre: EstimationNombre[];
   public estimationsDistance: EstimationDistance[];
   public sexes: Sexe[];
@@ -81,6 +83,8 @@ export class ViewComponent extends PageComponent {
 
   public donneesToDisplay: any[] = [];
 
+  public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
+
   constructor(
     private backendApiService: BackendApiService,
     protected snackbar: MatSnackBar
@@ -90,7 +94,7 @@ export class ViewComponent extends PageComponent {
 
   public ngOnInit(): void {
     this.classes$ = new Subject();
-    this.especes$ = new Subject();
+    this.especes$ = new BehaviorSubject([]);
     this.departements$ = new Subject();
     this.communes$ = new Subject();
     this.lieuxdits$ = new Subject();
@@ -181,10 +185,11 @@ export class ViewComponent extends PageComponent {
             reader.onload = (): void => {
               let isErrorCase = false;
               try {
-                this.showErrorMessage(JSON.parse(reader.result as string).reason);
+                this.showErrorMessage(
+                  JSON.parse(reader.result as string).reason
+                );
                 isErrorCase = true;
-              }
-              catch (e) {
+              } catch (e) {
                 //
               }
               if (!isErrorCase) {
@@ -194,7 +199,7 @@ export class ViewComponent extends PageComponent {
                   getContentTypeFromResponse(response)
                 );
               }
-            }
+            };
             reader.readAsText(response.body);
           },
           (error: any) => {
@@ -208,19 +213,37 @@ export class ViewComponent extends PageComponent {
     } else {
       this.backendApiService
         .getDonneesByCustomizedFilters(this.searchForm.value)
-        .subscribe(
-          (results: any) => {
-            this.displayWaitPanel = false;
-            this.donneesToDisplay = results;
-          },
-          (error: any) => {
-            this.showErrorMessage(
-              "Impossible de récupérer les fiches espèces.",
-              error
-            );
-            this.displayWaitPanel = false;
-          }
-        );
+        .subscribe((results: any) => {
+          this.displayWaitPanel = false;
+          this.donneesToDisplay = results;
+          this.setEspecesWithNbDonnees(this.donneesToDisplay);
+        });
     }
   }
+
+  /**
+   * Counts number of donnees by code espece
+   */
+  private setEspecesWithNbDonnees = (donnees: any[]): void => {
+    const nbDonneesByEspeceMap: { [key: string]: number } = _.countBy(
+      donnees,
+      (donnee) => {
+        return donnee.codeEspece;
+      }
+    );
+
+    this.especesWithNbDonnees = _.map(nbDonneesByEspeceMap, (value, key) => {
+      const espece: Espece = _.find(this.especes$.getValue(), (espece) => {
+        return espece.code === key;
+      });
+
+      return {
+        classe: espece.classe.libelle,
+        code: key,
+        nomFrancais: espece.nomFrancais,
+        nomLatin: espece.nomLatin,
+        nbDonnees: value
+      };
+    });
+  };
 }
