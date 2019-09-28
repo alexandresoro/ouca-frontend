@@ -86,12 +86,18 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
     if (!!isConfirmed && !!this.objectToRemove) {
       this.backendApiService
         .deleteEntity(this.getEntityName(), this.objectToRemove.id)
-        .subscribe((result: DbUpdateResult) => {
-          this.showSuccessMessage(
-            this.getTheEntityLabel(true) + " a été supprimé(e) avec succès"
-          );
-
-          this.switchToViewAllMode();
+        .subscribe((response: PostResponse) => {
+          if (response.isSuccess) {
+            this.showSuccessMessage(
+              this.getTheEntityLabel(true) + " a été supprimé(e) avec succès."
+            );
+            this.switchToViewAllMode();
+          } else {
+            this.showErrorMessage(
+              "Une erreue est survenue pendant la suppression.",
+              response.message
+            );
+          }
         });
     } else {
       this.switchToViewAllMode();
@@ -99,7 +105,6 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
   }
 
   public editObject(object: T): void {
-    console.log("Object to display", object);
     this.switchToEditionMode(object);
   }
 
@@ -119,13 +124,10 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
           this.showSuccessMessage(
             this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès."
           );
-
           this.switchToViewAllMode();
         } else {
           this.showErrorMessage(
-            "Une erreur est survenue pendant la sauvegarde de " +
-              this.getTheEntityLabel() +
-              ".",
+            "Une erreur est survenue pendant la sauvegarde.",
             response.message
           );
         }

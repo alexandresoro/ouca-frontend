@@ -10,6 +10,7 @@ import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { Observable } from "rxjs";
+import { PostResponse } from "basenaturaliste-model/post-response.object";
 
 @Injectable()
 export class BackendApiService {
@@ -167,14 +168,14 @@ export class BackendApiService {
   public saveEntity<T extends EntiteSimple>(
     entityName: string,
     entityToSave: T
-  ) {
+  ): Observable<PostResponse> {
     return this.httpPost(entityName + "/" + this.SAVE, entityToSave);
   }
 
   public deleteEntity(
     entityName: string,
     id: number
-  ): Observable<DbUpdateResult> {
+  ): Observable<PostResponse> {
     return this.httpGet(entityName + "/" + this.DELETE + "?id=" + id);
   }
 
