@@ -68,7 +68,7 @@ export class TableDonneesComponent {
 
   public applyFilter(): void {
     this.filteringOnGoing = true;
-    if (!!this.dataSource) {
+    if (this.dataSource) {
       this.dataSource.filter = this.filterValue.trim().toLowerCase();
 
       if (this.dataSource.paginator) {
@@ -78,11 +78,11 @@ export class TableDonneesComponent {
     this.filteringOnGoing = false;
   }
 
-  public onRowClicked(object: any): void {
+  public onRowClicked = (object: any): void => {
     if (!!this.selectedDonnee && this.selectedDonnee.id === object.id) {
       this.selectedDonnee = null;
     } else {
       this.selectedDonnee = object;
     }
-  }
+  };
 }

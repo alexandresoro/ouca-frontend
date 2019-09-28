@@ -38,7 +38,7 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
       this.objects,
       "code",
       code
-    );
+    ) as Departement;
 
     const valueIsAnExistingEntity: boolean =
       !!foundDepartementByCode && id !== foundDepartementByCode.id;
