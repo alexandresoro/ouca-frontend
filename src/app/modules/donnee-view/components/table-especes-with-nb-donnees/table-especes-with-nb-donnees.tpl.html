@@ -1,14 +1,5 @@
 <div class="panel-table-donnees">
-  <div *ngIf="filteringOnGoing">Veuillez patienter...</div>
-
-  <div
-    *ngIf="
-      !filteringOnGoing &&
-      !!dataSource &&
-      !!dataSource.data &&
-      dataSource.data.length > 0
-    "
-  >
+  <div>
     <mat-form-field class="table-donnees-filter">
       <input
         matInput
@@ -38,7 +29,7 @@
         *matHeaderCellDef
         class="bn-table-view-classe"
       >
-        Classe espèce
+        Classe
       </th>
       <td mat-cell *matCellDef="let element">
         {{ element.classe }}
@@ -46,13 +37,8 @@
     </ng-container>
 
     <ng-container matColumnDef="code">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-code-espece"
-      >
-        Code espèce
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Code
       </th>
       <td mat-cell *matCellDef="let element">
         {{ element.code }}
@@ -60,12 +46,7 @@
     </ng-container>
 
     <ng-container matColumnDef="nom_francais">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-nom-francais"
-      >
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
         Nom français
       </th>
       <td mat-cell *matCellDef="let element">
@@ -74,12 +55,7 @@
     </ng-container>
 
     <ng-container matColumnDef="nom_latin">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-nom-latin"
-      >
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
         Nom latin
       </th>
       <td mat-cell *matCellDef="let element">
@@ -88,12 +64,7 @@
     </ng-container>
 
     <ng-container matColumnDef="nb_donnees">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-nombre"
-      >
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
         Nombre de fiches espèces
       </th>
       <td mat-cell *matCellDef="let element">
@@ -107,9 +78,7 @@
       mat-row
       *matRowDef="let row; columns: displayedColumns"
       class="donnee-row"
-      [class.donnee-expanded-row]="
-        !!selectedEspece && selectedEspece.code === row.code
-      "
+      [class.selected-row]="selectedEspece && selectedEspece.code === row.code"
       (click)="onRowClicked(row)"
     ></tr>
   </table>

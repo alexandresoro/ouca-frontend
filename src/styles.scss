@@ -695,6 +695,10 @@ body.base-naturaliste {
       background: mat-color($mat-cyan, 100);
     }
 
+    tr.selected-row {
+      background: mat-color($mat-cyan, 100);
+    }
+
     tr.donnee-row:not(.donnee-expanded-row):active {
       background: #efefef;
     }

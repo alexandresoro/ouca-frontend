@@ -1,10 +1,3 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from "@angular/animations";
 import { Component, Input, SimpleChanges, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -13,17 +6,7 @@ import { EspeceWithNbDonnees } from "./espece-with-nb-donnees.object";
 
 @Component({
   selector: "table-especes-with-nb-donnees",
-  templateUrl: "./table-especes-with-nb-donnees.tpl.html",
-  animations: [
-    trigger("detailExpand", [
-      state("collapsed", style({ height: "0px", minHeight: "0" })),
-      state("expanded", style({ height: "*" })),
-      transition(
-        "expanded <=> collapsed",
-        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      )
-    ])
-  ]
+  templateUrl: "./table-especes-with-nb-donnees.tpl.html"
 })
 export class TableEspecesWithNbDonneesComponent {
   public displayedColumns: string[] = [
@@ -46,8 +29,6 @@ export class TableEspecesWithNbDonneesComponent {
 
   public filterValue: string = "";
 
-  public filteringOnGoing: boolean = false;
-
   public selectedEspece: EspeceWithNbDonnees;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -59,7 +40,6 @@ export class TableEspecesWithNbDonneesComponent {
   }
 
   public applyFilter(): void {
-    this.filteringOnGoing = true;
     if (this.dataSource) {
       this.dataSource.filter = this.filterValue.trim().toLowerCase();
 
@@ -67,7 +47,6 @@ export class TableEspecesWithNbDonneesComponent {
         this.dataSource.paginator.firstPage();
       }
     }
-    this.filteringOnGoing = false;
   }
 
   public onRowClicked = (espece: EspeceWithNbDonnees): void => {
