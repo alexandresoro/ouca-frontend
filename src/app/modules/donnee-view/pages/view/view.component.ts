@@ -169,11 +169,33 @@ export class ViewComponent extends PageComponent {
           (response: any) => {
             this.displayWaitPanel = false;
             this.donneesToDisplay = [];
-            saveFile(
-              response.body,
-              "donnees.xlsx",
-              getContentTypeFromResponse(response)
-            );
+
+            // This is an ugly "bidouille"
+            // The export can exceed tha maximum supported number of data (set in backend)
+            // If so, instead of returning the Excel file, it will return an error object
+            // So, as this is returned as a blob, we first parse the received blob to check if this is a JSON
+            // If this is a JSON, it means that it is not the Excel file, and we display what went wrong (in reason)
+            // If this is the excel file, the JSON.parse will fail, so we can safely download it
+            // This is really an ugly bidouille :-D
+            const reader = new FileReader();
+            reader.onload = (): void => {
+              let isErrorCase = false;
+              try {
+                this.showErrorMessage(JSON.parse(reader.result as string).reason);
+                isErrorCase = true;
+              }
+              catch (e) {
+                //
+              }
+              if (!isErrorCase) {
+                saveFile(
+                  response.body,
+                  "donnees.xlsx",
+                  getContentTypeFromResponse(response)
+                );
+              }
+            }
+            reader.readAsText(response.body);
           },
           (error: any) => {
             this.showErrorMessage(
