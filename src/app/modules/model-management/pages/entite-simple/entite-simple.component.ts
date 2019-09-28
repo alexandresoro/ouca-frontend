@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { PostResponse } from "basenaturaliste-model/post-response.object";
 import {
   getContentTypeFromResponse,
   saveFile
@@ -45,15 +46,12 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
   }
 
   public getAll(): void {
-    this.backendApiService.getAllEntities(this.getEntityName()).subscribe(
-      (result: T[]) => {
+    this.backendApiService
+      .getAllEntities(this.getEntityName())
+      .subscribe((result: T[]) => {
         this.objects = result;
         console.log(this.objects);
-      },
-      (error: Response) => {
-        this.showErrorMessage("Impossible de trouver les objets.", error);
-      }
-    );
+      });
   }
 
   public getEntityName(): string {
@@ -88,21 +86,13 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
     if (!!isConfirmed && !!this.objectToRemove) {
       this.backendApiService
         .deleteEntity(this.getEntityName(), this.objectToRemove.id)
-        .subscribe(
-          (result: DbUpdateResult) => {
-            this.showSuccessMessage(
-              this.getTheEntityLabel(true) + " a été supprimé(e) avec succès"
-            );
+        .subscribe((result: DbUpdateResult) => {
+          this.showSuccessMessage(
+            this.getTheEntityLabel(true) + " a été supprimé(e) avec succès"
+          );
 
-            this.switchToViewAllMode();
-          },
-          (error: Response) => {
-            this.showErrorMessage(
-              "Echec de la suppression de " + this.getTheEntityLabel(),
-              error
-            );
-          }
-        );
+          this.switchToViewAllMode();
+        });
     } else {
       this.switchToViewAllMode();
     }
@@ -124,46 +114,34 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
   public saveObject(objectToSave: T): void {
     this.backendApiService
       .saveEntity(this.getEntityName(), objectToSave)
-      .subscribe(
-        (result: DbUpdateResult) => {
-          if (!!result && (!!result.insertId || !!result.affectedRows)) {
-            this.showSuccessMessage(
-              this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès"
-            );
+      .subscribe((response: PostResponse) => {
+        if (response.isSuccess) {
+          this.showSuccessMessage(
+            this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès."
+          );
 
-            this.switchToViewAllMode();
-          } else {
-            this.showErrorMessage(
-              "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
-              result
-            );
-          }
-        },
-        (error: Response) => {
+          this.switchToViewAllMode();
+        } else {
           this.showErrorMessage(
-            "Erreur lors de la sauvegarde de " + this.getTheEntityLabel(),
-            error
+            "Une erreur est survenue pendant la sauvegarde de " +
+              this.getTheEntityLabel() +
+              ".",
+            response.message
           );
         }
-      );
+      });
   }
 
   public exportObjects(): void {
-    this.backendApiService.exportData(this.getEntityName()).subscribe(
-      (response: any) => {
+    this.backendApiService
+      .exportData(this.getEntityName())
+      .subscribe((response: any) => {
         saveFile(
           response.body,
           this.getEntityName() + ".xlsx",
           getContentTypeFromResponse(response)
         );
-      },
-      (error: Response) => {
-        this.showErrorMessage(
-          "Erreur lors de l'export de " + this.getTheEntityLabel(),
-          error
-        );
-      }
-    );
+      });
   }
 
   public cancelEdition(): void {
