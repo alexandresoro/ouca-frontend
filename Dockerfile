@@ -6,7 +6,7 @@ RUN apk add git
 
 WORKDIR /app/frontend
 
-COPY package.json yarn.lock .yarnrc /app/frontend/
+COPY package.json yarn.lock /app/frontend/
 
 # Set up the dependencies of the project
 RUN yarn install --frozen-lockfile

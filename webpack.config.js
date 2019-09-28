@@ -2,7 +2,7 @@
 // We need this plugin to detect a `--watch` mode. It may be removed later
 // after https://github.com/webpack/webpack/issues/3460 will be resolved.
 const webpack = require("webpack");
-const { CheckerPlugin } = require("awesome-typescript-loader");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -49,7 +49,15 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.tsx?$/,
-          loaders: ["awesome-typescript-loader", "angular2-template-loader"]
+          loaders: [
+            {
+              loader: "ts-loader",
+              options: {
+                transpileOnly: true
+              }
+            },
+            "angular2-template-loader"
+          ]
         },
         {
           test: /\.html$/,
@@ -86,7 +94,7 @@ module.exports = (env, argv) => {
         path.join(__dirname, "src"), // location of your src
         {} // a map of your routes
       ),
-      new CheckerPlugin(),
+      new ForkTsCheckerWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: "src/index.html"
       }),
