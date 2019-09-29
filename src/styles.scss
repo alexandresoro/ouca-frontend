@@ -146,22 +146,36 @@ body.base-naturaliste {
     flex: 1 1 auto;
   }
 
-  .bn-creation-body {
-    div.bn-creation-buttons {
-      .top-left-creation-buttons {
+  .creation-page {
+    div.creation-page-header {
+      margin-top: 20px;
+    }
+
+    div.creation-page-header,
+    div.creation-page-footer {
+      display: flex;
+      flex: 0 0 auto;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      background-color: mat-color($mat-grey, 400);
+      min-height: 30px;
+
+      .creation-page-left-buttons {
         button {
           margin-right: 10px;
         }
       }
 
-      .top-right-creation-buttons {
+      .creation-page-right-buttons {
         button {
           margin-left: 10px;
         }
       }
     }
 
-    .bn-creation-form {
+    .creation-page-form {
       background-color: mat-color($mat-grey, 300);
       padding-left: 50px;
       padding-right: 50px;
@@ -171,7 +185,7 @@ body.base-naturaliste {
       grid-template-columns: 1fr 2fr;
       column-gap: 50px;
 
-      .creation-inventaire-titre {
+      .creation-page-inventaire-header {
         display: flex;
         button {
           height: 32px;
@@ -282,17 +296,6 @@ body.base-naturaliste {
         }
       }
     }
-  }
-
-  div.bn-creation-buttons {
-    display: flex;
-    flex: 0 0 auto;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    background-color: mat-color($mat-grey, 400);
-    min-height: 30px;
   }
 
   .comportements-container > input-code-libelle:not(:last-child),
