@@ -24,6 +24,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { PageComponent } from "../../../shared/pages/page.component";
 import * as _ from "lodash";
 import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
+import { DonneeFlat } from "basenaturaliste-model/donnee-flat.object";
 
 @Component({
   templateUrl: "./view.tpl.html"
@@ -81,7 +82,7 @@ export class ViewComponent extends PageComponent {
 
   public displayWaitPanel: boolean = false;
 
-  public donneesToDisplay: any[] = [];
+  public donneesToDisplay: DonneeFlat[] = [];
 
   public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
 
@@ -141,19 +142,19 @@ export class ViewComponent extends PageComponent {
           Meteo[]
         ]
       ) => {
-        this.classes$.next(!!result[0] ? result[0] : []);
-        this.especes$.next(!!result[1] ? result[1] : []);
-        this.departements$.next(!!result[2] ? result[2] : []);
-        this.communes$.next(!!result[3] ? result[3] : []);
-        this.lieuxdits$.next(!!result[4] ? result[4] : []);
-        this.observateurs = !!result[5] ? result[5] : [];
-        this.sexes = !!result[6] ? result[6] : [];
-        this.ages = !!result[7] ? result[7] : [];
-        this.estimationsNombre = !!result[8] ? result[8] : [];
-        this.estimationsDistance = !!result[9] ? result[9] : [];
-        this.comportements = !!result[10] ? result[10] : [];
-        this.milieux = !!result[11] ? result[11] : [];
-        this.meteos = !!result[12] ? result[12] : [];
+        this.classes$.next(result[0] ? result[0] : []);
+        this.especes$.next(result[1] ? result[1] : []);
+        this.departements$.next(result[2] ? result[2] : []);
+        this.communes$.next(result[3] ? result[3] : []);
+        this.lieuxdits$.next(result[4] ? result[4] : []);
+        this.observateurs = result[5] ? result[5] : [];
+        this.sexes = result[6] ? result[6] : [];
+        this.ages = result[7] ? result[7] : [];
+        this.estimationsNombre = result[8] ? result[8] : [];
+        this.estimationsDistance = result[9] ? result[9] : [];
+        this.comportements = result[10] ? result[10] : [];
+        this.milieux = result[11] ? result[11] : [];
+        this.meteos = result[12] ? result[12] : [];
       },
       (error: HttpErrorResponse) => {
         console.error(
@@ -169,51 +170,40 @@ export class ViewComponent extends PageComponent {
     if (this.searchForm.controls.excelMode.value) {
       this.backendApiService
         .exportDonneesByCustomizedFilters(this.searchForm.value)
-        .subscribe(
-          (response: any) => {
-            this.displayWaitPanel = false;
-            this.donneesToDisplay = [];
+        .subscribe((response: any) => {
+          this.displayWaitPanel = false;
+          this.donneesToDisplay = [];
 
-            // This is an ugly "bidouille"
-            // The export can exceed tha maximum supported number of data (set in backend)
-            // If so, instead of returning the Excel file, it will return an error object
-            // So, as this is returned as a blob, we first parse the received blob to check if this is a JSON
-            // If this is a JSON, it means that it is not the Excel file, and we display what went wrong (in reason)
-            // If this is the excel file, the JSON.parse will fail, so we can safely download it
-            // This is really an ugly bidouille :-D
-            const reader = new FileReader();
-            reader.onload = (): void => {
-              let isErrorCase = false;
-              try {
-                this.showErrorMessage(
-                  JSON.parse(reader.result as string).reason
-                );
-                isErrorCase = true;
-              } catch (e) {
-                //
-              }
-              if (!isErrorCase) {
-                saveFile(
-                  response.body,
-                  "donnees.xlsx",
-                  getContentTypeFromResponse(response)
-                );
-              }
-            };
-            reader.readAsText(response.body);
-          },
-          (error: any) => {
-            this.showErrorMessage(
-              "Impossible de récupérer les fiches espèces.",
-              error
-            );
-            this.displayWaitPanel = false;
-          }
-        );
+          // This is an ugly "bidouille"
+          // The export can exceed tha maximum supported number of data (set in backend)
+          // If so, instead of returning the Excel file, it will return an error object
+          // So, as this is returned as a blob, we first parse the received blob to check if this is a JSON
+          // If this is a JSON, it means that it is not the Excel file, and we display what went wrong (in reason)
+          // If this is the excel file, the JSON.parse will fail, so we can safely download it
+          // This is really an ugly bidouille :-D
+          const reader = new FileReader();
+          reader.onload = (): void => {
+            let isErrorCase = false;
+            try {
+              this.showErrorMessage(JSON.parse(reader.result as string).reason);
+              isErrorCase = true;
+            } catch (e) {
+              //
+            }
+            if (!isErrorCase) {
+              saveFile(
+                response.body,
+                "donnees.xlsx",
+                getContentTypeFromResponse(response)
+              );
+            }
+          };
+          reader.readAsText(response.body);
+        });
     } else {
       this.backendApiService
         .getDonneesByCustomizedFilters(this.searchForm.value)
-        .subscribe((results: any) => {
+        .subscribe((results: DonneeFlat[]) => {
           this.displayWaitPanel = false;
           this.donneesToDisplay = results;
           this.setEspecesWithNbDonnees(this.donneesToDisplay);
@@ -224,7 +214,7 @@ export class ViewComponent extends PageComponent {
   /**
    * Counts number of donnees by code espece
    */
-  private setEspecesWithNbDonnees = (donnees: any[]): void => {
+  private setEspecesWithNbDonnees = (donnees: DonneeFlat[]): void => {
     const nbDonneesByEspeceMap: { [key: string]: number } = _.countBy(
       donnees,
       (donnee) => {
