@@ -23,6 +23,7 @@ export class BackendApiService {
   private DONNEE: string = "donnee/";
   private EXPORT: string = "export";
   private FIND: string = "find";
+  private FIND_ID: string = "find_id";
   private FIND_WITH_CONTEXT: string = "find_with_context";
 
   private IMPORT: string = "import";
@@ -130,8 +131,18 @@ export class BackendApiService {
     return this.httpGet(this.DONNEE + this.PREVIOUS_DONNEE + "?id=" + id);
   }
 
-  public deleteDonnee(id: number): Observable<DbUpdateResult> {
-    return this.httpGet(this.DONNEE + this.DELETE + "?id=" + id);
+  public deleteDonnee(
+    donneeId: number,
+    inventaireId: number
+  ): Observable<PostResponse> {
+    return this.httpGet(
+      this.DONNEE +
+        this.DELETE +
+        "?donneeId=" +
+        donneeId +
+        "&inventaireId=" +
+        inventaireId
+    );
   }
 
   public getDonneeByIdWithContext(id: number): Observable<any> {
@@ -156,8 +167,12 @@ export class BackendApiService {
     return this.httpPost(this.INVENTAIRE + this.SAVE, inventaireToSave);
   }
 
-  public getInventaireById(id: number): Observable<any> {
+  public getInventaireById(id: number): Observable<Inventaire> {
     return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
+  }
+
+  public getInventaireIdById(id: number): Observable<number> {
+    return this.httpGet(this.INVENTAIRE + this.FIND_ID + "?id=" + id);
   }
 
   public getEntityInitialPageModel(

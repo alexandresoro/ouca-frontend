@@ -26,6 +26,7 @@ import { NavigationService } from "../../services/navigation.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { StatusMessageSeverity } from "../../../shared/components/status-message/status-message.component";
 import { PageComponent } from "../../../shared/pages/page.component";
+import { PostResponse } from "basenaturaliste-model/post-response.object";
 
 @Component({
   templateUrl: "./creation.tpl.html"
@@ -76,14 +77,11 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Call the back-end to get the initial creation page model
    */
   private initCreationPage(): void {
-    this.backendApiService.getCreationInitialPageModel().subscribe(
-      (creationPage: CreationPage) => {
+    this.backendApiService
+      .getCreationInitialPageModel()
+      .subscribe((creationPage: CreationPage) => {
         this.onInitCreationPageSucces(creationPage);
-      },
-      (error: any) => {
-        this.onInitCreationPageError(error);
-      }
-    );
+      });
   }
 
   private onInitCreationPageError(error: any): void {
@@ -215,14 +213,11 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.inventaireForm
     );
 
-    this.backendApiService.saveInventaire(inventaireToBeSaved).subscribe(
-      (saveInventaireResult: DbUpdateResult) => {
+    this.backendApiService
+      .saveInventaire(inventaireToBeSaved)
+      .subscribe((saveInventaireResult: DbUpdateResult) => {
         this.onCreateInventaireSuccess(saveInventaireResult, saveDonnee);
-      },
-      (error: any) => {
-        this.onCreateInventaireError(error);
-      }
-    );
+      });
   }
 
   private onCreateInventaireError(error: any): void {
@@ -276,14 +271,11 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.donneeForm
     );
 
-    this.backendApiService.saveDonnee(donneeToBeSaved).subscribe(
-      (saveResult: Donnee) => {
+    this.backendApiService
+      .saveDonnee(donneeToBeSaved)
+      .subscribe((saveResult: Donnee) => {
         this.onSaveDonneeSuccess(saveResult);
-      },
-      (saveError: any) => {
-        this.onSaveDonneeError(saveError);
-      }
-    );
+      });
   }
 
   private onSaveDonneeError(saveError: any): void {
@@ -296,7 +288,7 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onSaveDonneeSuccess(savedDonnee: Donnee): void {
     if (!!savedDonnee && !!savedDonnee.id) {
-      this.showErrorMessage("La fiche espèce a été créée avec succès.");
+      this.showSuccessMessage("La fiche espèce a été créée avec succès.");
       this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
 
       this.updateNextRegroupement();
@@ -311,18 +303,11 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when a donnee is saved to get the next regroupement number
    */
   private updateNextRegroupement(): void {
-    this.backendApiService.getNextRegroupement().subscribe(
-      (regroupement: number) => {
+    this.backendApiService
+      .getNextRegroupement()
+      .subscribe((regroupement: number) => {
         this.nextRegroupement = regroupement;
-      },
-      (error: any) => {
-        this.showErrorMessage(
-          "La fiche espèce a été sauvegardée" +
-            " mais échec lors de la récupération du prochain numéro de regroupement utilisable.",
-          error
-        );
-      }
-    );
+      });
   }
 
   /**
@@ -403,8 +388,9 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
     donneeToSave.inventaireId = inventaireToSave.id;
 
-    this.backendApiService.saveInventaire(inventaireToSave).subscribe(
-      (saveInventaireResult: DbUpdateResult) => {
+    this.backendApiService
+      .saveInventaire(inventaireToSave)
+      .subscribe((saveInventaireResult: DbUpdateResult) => {
         if (
           !!saveInventaireResult &&
           (saveInventaireResult.affectedRows > 0 ||
@@ -425,11 +411,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         } else {
           this.onUpdateInventaireError(saveInventaireResult);
         }
-      },
-      (saveInventaireError: any) => {
-        this.onUpdateInventaireError(saveInventaireError);
-      }
-    );
+      });
   }
 
   private onUpdateInventaireError(error: any): void {
@@ -540,32 +522,45 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public onDeleteConfirmButtonClicked(): void {
-    this.deleteDonnee(DonneeHelper.getDisplayedDonneeId());
-  }
-
-  public deleteDonnee(donneeId: number): void {
-    this.backendApiService.deleteDonnee(donneeId).subscribe(
-      (deleteResult: DbUpdateResult) => {
-        this.onDeleteDonneeSuccess(deleteResult);
-      },
-      (deleteError: any) => {
-        this.onDeleteDonneeError(deleteError);
-      }
+    this.deleteDonnee(
+      DonneeHelper.getDisplayedDonneeId(),
+      InventaireHelper.getDisplayedInventaireId()
     );
   }
 
-  private onDeleteDonneeError(error: any): void {
-    this.showErrorMessage("Echec de la suppression de la fiche espèce.", error);
+  public deleteDonnee(donneeId: number, inventaireId: number): void {
+    this.backendApiService
+      .deleteDonnee(donneeId, inventaireId)
+      .subscribe((response: PostResponse) => {
+        if (response.isSuccess) {
+          this.onDeleteDonneeSuccess();
+        } else {
+          this.onDeleteDonneeError(response.message);
+        }
+      });
   }
 
-  private onDeleteDonneeSuccess(deleteResult: any): void {
-    if (!!deleteResult && !!deleteResult.affectedRows) {
-      this.showSuccessMessage("La fiche espèce a été supprimée avec succès.");
+  private onDeleteDonneeError(errorMessage: string): void {
+    this.showErrorMessage(
+      "Une erreur est survenue pendant la suppression de la fiche espèce.",
+      errorMessage
+    );
+  }
 
-      this.displayNextDonnee();
-      this.navigationService.updateNavigationAfterADonneeWasDeleted();
-    } else {
-      this.onDeleteDonneeError(deleteResult);
+  private onDeleteDonneeSuccess(): void {
+    this.showSuccessMessage("La fiche espèce a été supprimée avec succès.");
+    this.displayNextDonnee();
+    this.navigationService.updateNavigationAfterADonneeWasDeleted();
+
+    // Check if the current inventaire is still existing
+    if (InventaireHelper.getDisplayedInventaireId()) {
+      this.backendApiService
+        .getInventaireIdById(InventaireHelper.getDisplayedInventaireId())
+        .subscribe((responseId: number) => {
+          if (!responseId) {
+            InventaireHelper.setDisplayedInventaireId(null);
+          }
+        });
     }
   }
 
@@ -622,8 +617,9 @@ export class CreationComponent extends PageComponent implements OnInit {
           this.saveCurrentContext(this.getCurrentDonneeFromForm());
         }
 
-        this.backendApiService.getDonneeByIdWithContext(idToFind).subscribe(
-          (result: any) => {
+        this.backendApiService
+          .getDonneeByIdWithContext(idToFind)
+          .subscribe((result: any) => {
             if (!!result && !!result.donnee) {
               InventaireHelper.setInventaireFormFromInventaire(
                 this.inventaireForm,
@@ -646,16 +642,7 @@ export class CreationComponent extends PageComponent implements OnInit {
                 "Aucune fiche espèce trouvée avec l'ID " + idToFind + "."
               );
             }
-          },
-          (error: any) => {
-            this.showErrorMessage(
-              "Echec de la récupération de la fiche espèce avec l'ID " +
-                idToFind +
-                ".",
-              error
-            );
-          }
-        );
+          });
       }
     });
   }
