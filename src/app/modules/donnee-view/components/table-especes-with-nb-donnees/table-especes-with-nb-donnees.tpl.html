@@ -19,16 +19,11 @@
     mat-table
     matSort
     [dataSource]="dataSource"
-    class="bn-table-view mat-elevation-z8"
+    class="view-page-table mat-elevation-z8"
     multiTemplateDataRows
   >
     <ng-container matColumnDef="classe">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-classe"
-      >
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
         Classe
       </th>
       <td mat-cell *matCellDef="let element">

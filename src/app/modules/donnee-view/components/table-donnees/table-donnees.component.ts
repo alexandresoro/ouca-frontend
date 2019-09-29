@@ -29,14 +29,14 @@ export class TableDonneesComponent {
   public MILIEUX_INDEXES: number[] = [1, 2, 3, 4];
 
   public displayedColumns: string[] = [
-    "code_espece",
-    "nom_francais",
+    "codeEspece",
+    "nomFrancais",
     "nombre",
     "sexe",
     "age",
     "departement",
-    "code_commune",
-    "nom_commune",
+    "codeCommune",
+    "nomCommune",
     "lieudit",
     "date",
     "heure",

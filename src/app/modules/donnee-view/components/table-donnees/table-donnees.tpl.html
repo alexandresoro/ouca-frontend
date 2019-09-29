@@ -1,56 +1,33 @@
 <div class="panel-table-donnees">
-  <div *ngIf="filteringOnGoing">Veuillez patienter...</div>
-
-  <div
-    *ngIf="
-      !filteringOnGoing &&
-      !!dataSource &&
-      !!dataSource.data &&
-      dataSource.data.length > 0
-    "
-  >
-    <mat-form-field class="table-donnees-filter">
-      <input
-        matInput
-        type="text"
-        placeholder="Filtre"
-        id="input-filtre"
-        name="filtre"
-        [(ngModel)]="filterValue"
-      />
-    </mat-form-field>
-    <button mat-raised-button color="primary" (click)="applyFilter()">
-      Filtrer les résultats
-    </button>
-  </div>
+  <!-- TABLE FILTER -->
+  <mat-form-field class="table-donnees-filter">
+    <input
+      matInput
+      type="text"
+      placeholder="Filtre"
+      id="input-filtre"
+      name="filtre"
+      [(ngModel)]="filterValue"
+    />
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="applyFilter()">
+    Filtrer les résultats
+  </button>
 
   <table
     mat-table
     matSort
     [dataSource]="dataSource"
-    class="bn-table-view mat-elevation-z8"
+    class="view-page-table mat-elevation-z8"
     multiTemplateDataRows
   >
-    <ng-container matColumnDef="id">
-      <th
-        mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-        class="bn-table-view-id"
-      >
-        ID
-      </th>
-      <td mat-cell *matCellDef="let element" class="bn-table-view-id">
-        {{ element.id }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="observateur" class="bn-table-view-id">
+    <!-- COLUMN OBSERVATEUR -->
+    <ng-container matColumnDef="observateur">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-observateur"
+        class="table-donnee-column-observateur"
       >
         Observateur
       </th>
@@ -59,26 +36,13 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="associes">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-associes"
-      >
-        Observateurs associés
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.associes }}
-      </td>
-    </ng-container>
-
+    <!-- COLUMN DATE -->
     <ng-container matColumnDef="date">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-date"
+        class="table-donnee-column-date"
       >
         Date
       </th>
@@ -87,12 +51,13 @@
       </td>
     </ng-container>
 
+    <!-- COLUMN HEURE -->
     <ng-container matColumnDef="heure">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-heure"
+        class="table-donnee-column-heure"
       >
         Heure
       </th>
@@ -101,12 +66,13 @@
       </td>
     </ng-container>
 
+    <!-- COLUMN DUREE -->
     <ng-container matColumnDef="duree">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-duree"
+        class="table-donnee-column-duree"
       >
         Durée
       </th>
@@ -115,12 +81,13 @@
       </td>
     </ng-container>
 
+    <!-- COLUMN DEPARTEMENT -->
     <ng-container matColumnDef="departement">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-departement"
+        class="table-donnee-column-departement"
       >
         Département
       </th>
@@ -129,12 +96,13 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="code_commune">
+    <!-- COLUMN CODE COMMUNE -->
+    <ng-container matColumnDef="codeCommune">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-code-commune"
+        class="table-donnee-column-code-commune"
       >
         Code commune
       </th>
@@ -143,12 +111,13 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="nom_commune">
+    <!-- COLUMN NOM COMMUNE -->
+    <ng-container matColumnDef="nomCommune">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-nom-commune"
+        class="table-donnee-column-nom-commune"
       >
         Nom commune
       </th>
@@ -157,12 +126,13 @@
       </td>
     </ng-container>
 
+    <!-- COLUMN LIEUDIT -->
     <ng-container matColumnDef="lieudit">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-lieudit"
+        class="table-donnee-column-lieudit"
       >
         Lieu-dit
       </th>
@@ -171,108 +141,13 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="altitude">
+    <!-- COLUMN CODE ESPECE -->
+    <ng-container matColumnDef="codeEspece">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-altitude"
-      >
-        Altitude
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{
-          !!element.customizedAltitude
-            ? element.customizedAltitude
-            : element.altitude
-        }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="longitude">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-longitude"
-      >
-        Longitude
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{
-          !!element.customizedLongitude
-            ? element.customizedLongitude
-            : element.longitude
-        }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="latitude">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-latitude"
-      >
-        Latitude
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{
-          !!element.customizedLatitude
-            ? element.customizedLatitude
-            : element.latitude
-        }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="temperature">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-temperature"
-      >
-        Température
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.temperature }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="meteos">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-meteos"
-      >
-        Météos
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.meteos }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="classe">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-classe"
-      >
-        Classe espèce
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.classe }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="code_espece">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-code-espece"
+        class="table-donnee-column-code-espece"
       >
         Code espèce
       </th>
@@ -281,12 +156,13 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="nom_francais">
+    <!-- COLUMN NOM FRANCAIS -->
+    <ng-container matColumnDef="nomFrancais">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-nom-francais"
+        class="table-donnee-column-nom-francais"
       >
         Nom français
       </th>
@@ -295,26 +171,13 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="nom_latin">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-nom-latin"
-      >
-        Nom latin
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.nomLatin }}
-      </td>
-    </ng-container>
-
+    <!-- COLUMN NOMBRE -->
     <ng-container matColumnDef="nombre">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-nombre"
+        class="table-donnee-column-nombre"
       >
         Nombre
       </th>
@@ -323,26 +186,13 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="estimation_nombre">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-estimation-nombre"
-      >
-        Estimation du nombre
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.estimationNombre }}
-      </td>
-    </ng-container>
-
+    <!-- COLUMN SEXE -->
     <ng-container matColumnDef="sexe">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-sexe"
+        class="table-donnee-column-sexe"
       >
         Sexe
       </th>
@@ -351,12 +201,13 @@
       </td>
     </ng-container>
 
+    <!-- COLUMN AGE -->
     <ng-container matColumnDef="age">
       <th
         mat-header-cell
         mat-sort-header
         *matHeaderCellDef
-        class="bn-table-view-age"
+        class="table-donnee-column-age"
       >
         Âge
       </th>
@@ -365,138 +216,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="estimation_distance">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-estimation-distance"
-      >
-        Estimation de la distance
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.estimationDistance }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="distance">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-distance"
-      >
-        Distance (m)
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.distance }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="regroupement">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-regroupement"
-      >
-        Regroupement
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.regroupement }}
-      </td>
-    </ng-container>
-
-    <ng-container *ngFor="let index of COMPORTEMENTS_INDEXES">
-      <ng-container matColumnDef="code_comportement_{{ index }}">
-        <th
-          mat-header-cell
-          mat-sort-header
-          *matHeaderCellDef
-          class="bn-table-view-code-comportement"
-        >
-          Code comportement {{ index }}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{
-            element.comportements.length >= index
-              ? element.comportements[index - 1].code
-              : ""
-          }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="libelle_comportement_{{ index }}">
-        <th
-          mat-header-cell
-          mat-sort-header
-          *matHeaderCellDef
-          class="bn-table-view-libelle-comportement"
-        >
-          Libellé comportement {{ index }}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{
-            element.comportements.length >= index
-              ? element.comportements[index - 1].libelle
-              : ""
-          }}
-        </td>
-      </ng-container>
-    </ng-container>
-
-    <ng-container *ngFor="let index of MILIEUX_INDEXES">
-      <ng-container matColumnDef="code_milieu_{{ index }}">
-        <th
-          mat-header-cell
-          mat-sort-header
-          *matHeaderCellDef
-          class="bn-table-view-code-milieu"
-        >
-          Code milieu {{ index }}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{
-            element.milieux.length >= index
-              ? element.milieux[index - 1].code
-              : ""
-          }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="libelle_milieu_{{ index }}">
-        <th
-          mat-header-cell
-          mat-sort-header
-          *matHeaderCellDef
-          class="bn-table-view-libelle-milieu"
-        >
-          Libellé milieu {{ index }}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{
-            element.milieux.length >= index
-              ? element.milieux[index - 1].libelle
-              : ""
-          }}
-        </td>
-      </ng-container>
-    </ng-container>
-
-    <ng-container matColumnDef="commentaire">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="bn-table-view-commentaire"
-      >
-        Commentaires
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.commentaire }}
-      </td>
-    </ng-container>
-
+    <!-- EXPANDED DONNEE -->
     <ng-container matColumnDef="expandedDonnee">
       <td
         mat-cell
@@ -645,8 +365,10 @@
       </td>
     </ng-container>
 
+    <!-- HEADER TABLE DONNEE -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
+    <!-- LINE FOR A DONNEE -->
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
@@ -657,6 +379,7 @@
       (click)="onRowClicked(row)"
     ></tr>
 
+    <!-- LINE FOR THE EXPANDED DONNEE -->
     <tr
       mat-row
       *matRowDef="let row; columns: ['expandedDonnee']"

@@ -85,7 +85,7 @@ body.base-naturaliste {
   .classe-table,
   .espece-table,
   .estimation-nombre-table,
-  .bn-table-view {
+  .view-page-table {
     tr.mat-row {
       height: 20px;
     }
@@ -388,7 +388,7 @@ body.base-naturaliste {
     padding-bottom: 20px;
   }
 
-  .bn-view-page {
+  .view-page {
     padding-top: 20px;
     padding-bottom: 20px;
     padding-right: 50px;
@@ -555,7 +555,7 @@ body.base-naturaliste {
     list-style-type: none;
   }
 
-  table.bn-table-view {
+  table.view-page-table {
     table-layout: fixed;
 
     th,
@@ -564,121 +564,58 @@ body.base-naturaliste {
       padding-right: 5px;
     }
 
-    th.bn-table-view-id,
-    td.bn-table-view-id {
-      padding-left: 5px;
-    }
-
-    th.bn-table-view-id {
-      min-width: 50px;
-    }
-
-    th.bn-table-view-observateur {
+    th.table-donnee-column-observateur {
       min-width: 120px;
     }
 
-    th.bn-table-view-associes {
-      min-width: 150px;
-    }
-
-    th.bn-table-view-date {
+    th.table-donnee-column-date {
       min-width: 82px;
     }
 
-    th.bn-table-view-heure,
-    th.bn-table-view-duree {
+    th.table-donnee-column-heure,
+    th.table-donnee-column-duree {
       min-width: 55px;
     }
 
-    th.bn-table-view-departement {
+    th.table-donnee-column-departement {
       min-width: 90px;
     }
 
-    th.bn-table-view-code-commune {
+    th.table-donnee-column-code-commune {
       min-width: 75px;
     }
 
-    th.bn-table-view-nom-commune {
+    th.table-donnee-column-nom-commune {
       min-width: 200px;
     }
 
-    th.bn-table-view-lieudit {
+    th.table-donnee-column-lieudit {
       min-width: 200px;
     }
 
-    th.bn-table-view-altitude,
-    th.bn-table-view-longitude,
-    th.bn-table-view-latitude {
-      min-width: 80px;
-    }
-
-    th.bn-table-view-temperature {
-      min-width: 90px;
-    }
-
-    th.bn-table-view-meteos {
-      min-width: 100px;
-    }
-
-    th.bn-table-view-classe {
-      min-width: 90px;
-    }
-
-    th.bn-table-view-code-espece {
+    th.table-donnee-column-code-espece {
       min-width: 70px;
     }
 
-    th.bn-table-view-nom-francais,
-    th.bn-table-view-nom-latin {
+    th.table-donnee-column-nom-francais,
+    th.view-page-table-nom-latin {
       min-width: 200px;
     }
 
-    th.bn-table-view-nombre {
+    th.table-donnee-column-nombre {
       min-width: 65px;
     }
 
-    th.bn-table-view-estimation-nombre {
+    th.view-page-table-estimation-nombre {
       min-width: 80px;
     }
 
-    th.bn-table-view-sexe {
+    th.table-donnee-column-sexe {
       min-width: 50px;
     }
 
-    th.bn-table-view-age {
+    th.table-donnee-column-age {
       min-width: 50px;
-    }
-
-    th.bn-table-view-estimation-distance {
-      min-width: 80px;
-    }
-
-    th.bn-table-view-distance {
-      min-width: 70px;
-    }
-
-    th.bn-table-view-regroupement {
-      min-width: 100px;
-    }
-
-    th.bn-table-view-code-comportement {
-      min-width: 100px;
-    }
-
-    th.bn-table-view-libelle-comportement {
-      min-width: 200px;
-    }
-
-    th.bn-table-view-code-milieu {
-      min-width: 75px;
-    }
-
-    th.bn-table-view-libelle-milieu {
-      min-width: 200px;
-    }
-
-    th.bn-table-view-commentaire {
-      min-width: 200px;
     }
 
     tr.donnee-detail-row {
