@@ -149,30 +149,13 @@ export class NavigationService {
   };
 
   private populatePreviousDonnee = (id: number): void => {
-    this.backendApiService.getPreviousDonnee(id).subscribe(
-      (previousDonnee: Donnee) => {
+    this.backendApiService
+      .getPreviousDonnee(id)
+      .subscribe((previousDonnee: Donnee) => {
         if (!!previousDonnee && !!previousDonnee.id) {
           this.previousDonnee = previousDonnee;
-          /*PageStatusHelper.setInfoStatus(
-            "ID de la donnée précédente: " + previousDonnee.id,
-            previousDonnee
-          );*/
-        } else {
-          this.onPopulatePreviousDonneeError(previousDonnee);
         }
-      },
-      (error: any) => {
-        this.onPopulatePreviousDonneeError(error);
-      }
-    );
-  };
-
-  private onPopulatePreviousDonneeError = (error: any): void => {
-    this.previousDonnee = null;
-    /*PageStatusHelper.setWarningStatus(
-      "Impossible de récupérer la donnée précédente",
-      error
-    );*/
+      });
   };
 
   public populateNextDonnee(id: number): void {
@@ -180,23 +163,8 @@ export class NavigationService {
       if (!!nextDonnee && !!nextDonnee.id) {
         this.nextDonnee = nextDonnee;
         this.nextMode = CreationModeEnum.UPDATE;
-        /*PageStatusHelper.setInfoStatus(
-            "ID de la donnée suivante: " + nextDonnee.id,
-            nextDonnee
-          );*/
-      } else {
-        this.onPopulateNextDonneeError(nextDonnee);
       }
     });
-  }
-
-  private onPopulateNextDonneeError(error: any): void {
-    this.nextDonnee = null;
-    this.nextMode = null;
-    /*PageStatusHelper.setWarningStatus(
-      "Impossible de récupérer la donnée suivante",
-      error
-    );*/
   }
 
   public getNextMode(): CreationModeEnum {
