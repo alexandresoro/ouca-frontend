@@ -12,6 +12,7 @@ import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
 import { Observable } from "rxjs";
 import { PostResponse } from "basenaturaliste-model/post-response.object";
+import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
 
 @Injectable()
 export class BackendApiService {
@@ -145,7 +146,9 @@ export class BackendApiService {
     );
   }
 
-  public getDonneeByIdWithContext(id: number): Observable<any> {
+  public getDonneeByIdWithContext(
+    id: number
+  ): Observable<DonneeWithNavigationData> {
     return this.httpGet(this.DONNEE + this.FIND_WITH_CONTEXT + "?id=" + id);
   }
 
@@ -195,7 +198,7 @@ export class BackendApiService {
     return this.httpGet(entityName + "/" + this.DELETE + "?id=" + id);
   }
 
-  public getAllEntities(entityName: string): Observable<any[]> {
+  public getAllEntities(entityName: string): Observable<EntiteSimple[]> {
     return this.httpGet(entityName + "/" + this.ALL);
   }
 

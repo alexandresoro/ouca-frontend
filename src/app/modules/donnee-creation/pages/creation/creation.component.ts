@@ -25,6 +25,7 @@ import { NavigationService } from "../../services/navigation.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { PageComponent } from "../../../shared/pages/page.component";
 import { PostResponse } from "basenaturaliste-model/post-response.object";
+import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
 
 @Component({
   templateUrl: "./creation.tpl.html"
@@ -82,10 +83,6 @@ export class CreationComponent extends PageComponent implements OnInit {
       });
   }
 
-  private onInitCreationPageError(error: any): void {
-    this.showErrorMessage("Impossible de charger la page de création.", error);
-  }
-
   /**
    * If back-end call is successful, use the initial creation page model to build the page
    * @param creationPage: CreationPage
@@ -114,7 +111,9 @@ export class CreationComponent extends PageComponent implements OnInit {
       // Page model is ready, initalize the page to create a first inventaire
       this.switchToNewInventaireMode();
     } else {
-      this.onInitCreationPageError(creationPage);
+      this.showErrorMessage(
+        "Impossible de charger le contenu la page de Saisie des observations."
+      );
     }
   }
 
@@ -218,13 +217,6 @@ export class CreationComponent extends PageComponent implements OnInit {
       });
   }
 
-  private onCreateInventaireError(error: any): void {
-    this.showErrorMessage(
-      "Echec de la création de la fiche inventaire.",
-      error
-    );
-  }
-
   private onCreateInventaireSuccess(
     saveInventaireResult: DbUpdateResult,
     saveDonnee?: boolean
@@ -249,7 +241,9 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.switchToEditionDonneeMode();
       }
     } else {
-      this.onCreateInventaireError(saveInventaireResult);
+      this.showErrorMessage(
+        "Une erreur est survenue pendant la sauvegarde de l'inventaire."
+      );
     }
   }
 
@@ -598,23 +592,23 @@ export class CreationComponent extends PageComponent implements OnInit {
 
         this.backendApiService
           .getDonneeByIdWithContext(idToFind)
-          .subscribe((result: any) => {
-            if (!!result && !!result.donnee) {
+          .subscribe((response: DonneeWithNavigationData) => {
+            if (!!response && !!response.donnee) {
               InventaireHelper.setInventaireFormFromInventaire(
                 this.inventaireForm,
-                result.donnee.inventaire as Inventaire,
+                response.donnee.inventaire,
                 this.pageModel
               );
               DonneeHelper.setDonneeFormFromDonnee(
                 this.donneeForm,
-                result.donnee as Donnee,
+                response.donnee,
                 this.pageModel
               );
               this.switchToUpdateMode();
               this.navigationService.updateNavigationAfterSearchDonneeById(
-                +result.indexDonnee,
-                result.previousDonnee,
-                result.nextDonnee
+                +response.indexDonnee,
+                response.previousDonnee,
+                response.nextDonnee
               );
             } else {
               this.showErrorMessage(
