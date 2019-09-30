@@ -22,7 +22,7 @@ export class NavigationService {
   private savedCommune: Commune;
   private savedClasse: Classe;
 
-  constructor(public backendApiService: BackendApiService) { }
+  constructor(public backendApiService: BackendApiService) {}
 
   public init(lastDonnee: Donnee, numberOfDonnees: number): void {
     this.lastDonnee = lastDonnee;
@@ -55,13 +55,15 @@ export class NavigationService {
     this.savedClasse = currentClasse;
   }
 
-  public updateNavigationAfterADonneeWasSaved(savedDonnee: Donnee) {
+  public updateNavigationAfterADonneeWasCreated = (
+    savedDonnee: Donnee
+  ): void => {
     this.numberOfDonnees++;
     this.previousDonnee = savedDonnee;
     this.lastDonnee = savedDonnee;
-  }
+  };
 
-  public updateNavigationAfterADonneeWasDeleted() {
+  public updateNavigationAfterADonneeWasDeleted = (): void => {
     if (this.isLastDonneeCurrentlyDisplayed()) {
       // Last donnee was deleted
       this.lastDonnee = this.previousDonnee;
@@ -72,7 +74,7 @@ export class NavigationService {
 
     this.numberOfDonnees--;
 
-    if (!!this.currentDonneeIndex) {
+    if (this.currentDonneeIndex) {
       if (!this.isLastDonneeCurrentlyDisplayed()) {
         // We should find the new next donnee
         this.populateNextDonnee(this.nextDonnee.id);
@@ -81,9 +83,11 @@ export class NavigationService {
         this.nextMode = this.savedMode;
       }
     }
-  }
+  };
 
-  public updateNavigationAfterPreviousDonneeIsDisplayed(newNextDonnee: Donnee) {
+  public updateNavigationAfterPreviousDonneeIsDisplayed = (
+    newNextDonnee: Donnee
+  ): void => {
     if (!this.currentDonneeIndex) {
       // We are displaying the creation form so the next donnee is the saved donnee
       this.nextDonnee = this.savedDonnee;
@@ -101,9 +105,11 @@ export class NavigationService {
     } else {
       this.populatePreviousDonnee(this.previousDonnee.id);
     }
-  }
+  };
 
-  public updateNavigationAfterNextDonneeIsDisplayed(newPreviousDonnee: Donnee) {
+  public updateNavigationAfterNextDonneeIsDisplayed = (
+    newPreviousDonnee: Donnee
+  ): void => {
     this.previousDonnee = newPreviousDonnee;
 
     // We have displayed the next donnee
@@ -125,13 +131,13 @@ export class NavigationService {
         this.populateNextDonnee(this.nextDonnee.id);
       }
     }
-  }
+  };
 
-  public updateNavigationAfterSearchDonneeById(
+  public updateNavigationAfterSearchDonneeById = (
     index: number,
     previousDonnee: Donnee,
     nextDonnee: Donnee
-  ) {
+  ): void => {
     this.currentDonneeIndex = index;
     this.previousDonnee = previousDonnee;
     this.nextDonnee = nextDonnee;
@@ -140,9 +146,9 @@ export class NavigationService {
       this.nextDonnee = this.savedDonnee;
       this.nextMode = this.savedMode;
     }
-  }
+  };
 
-  private populatePreviousDonnee(id: number): void {
+  private populatePreviousDonnee = (id: number): void => {
     this.backendApiService.getPreviousDonnee(id).subscribe(
       (previousDonnee: Donnee) => {
         if (!!previousDonnee && !!previousDonnee.id) {
@@ -159,34 +165,29 @@ export class NavigationService {
         this.onPopulatePreviousDonneeError(error);
       }
     );
-  }
+  };
 
-  private onPopulatePreviousDonneeError(error: any): void {
+  private onPopulatePreviousDonneeError = (error: any): void => {
     this.previousDonnee = null;
     /*PageStatusHelper.setWarningStatus(
       "Impossible de récupérer la donnée précédente",
       error
     );*/
-  }
+  };
 
   public populateNextDonnee(id: number): void {
-    this.backendApiService.getNextDonnee(id).subscribe(
-      (nextDonnee: Donnee) => {
-        if (!!nextDonnee && !!nextDonnee.id) {
-          this.nextDonnee = nextDonnee;
-          this.nextMode = CreationModeEnum.UPDATE;
-          /*PageStatusHelper.setInfoStatus(
+    this.backendApiService.getNextDonnee(id).subscribe((nextDonnee: Donnee) => {
+      if (!!nextDonnee && !!nextDonnee.id) {
+        this.nextDonnee = nextDonnee;
+        this.nextMode = CreationModeEnum.UPDATE;
+        /*PageStatusHelper.setInfoStatus(
             "ID de la donnée suivante: " + nextDonnee.id,
             nextDonnee
           );*/
-        } else {
-          this.onPopulateNextDonneeError(nextDonnee);
-        }
-      },
-      (error: any) => {
-        this.onPopulateNextDonneeError(error);
+      } else {
+        this.onPopulateNextDonneeError(nextDonnee);
       }
-    );
+    });
   }
 
   private onPopulateNextDonneeError(error: any): void {

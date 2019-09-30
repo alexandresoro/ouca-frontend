@@ -15,7 +15,6 @@ import { ConfirmationDialogData } from "../../../shared/components/confirmation-
 import { ConfirmationDialogComponent } from "../../../shared/components/confirmation-dialog/confirmation-dialog.component";
 import { MultipleOptionsDialogData } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog-data.object";
 import { MultipleOptionsDialogComponent } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog.component";
-
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { CreationModeEnum } from "../../helpers/creation-mode.enum";
@@ -24,7 +23,6 @@ import { DonneeHelper } from "../../helpers/donnee.helper";
 import { InventaireHelper } from "../../helpers/inventaire.helper";
 import { NavigationService } from "../../services/navigation.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { StatusMessageSeverity } from "../../../shared/components/status-message/status-message.component";
 import { PageComponent } from "../../../shared/pages/page.component";
 import { PostResponse } from "basenaturaliste-model/post-response.object";
 
@@ -273,30 +271,27 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     this.backendApiService
       .saveDonnee(donneeToBeSaved)
-      .subscribe((saveResult: Donnee) => {
-        this.onSaveDonneeSuccess(saveResult);
+      .subscribe((response: PostResponse) => {
+        if (response.isSuccess) {
+          if (!donneeToBeSaved.id) {
+            donneeToBeSaved.id = response.insertId;
+          }
+          this.onSaveDonneeSuccess(donneeToBeSaved);
+        } else {
+          this.showErrorMessage(response.message);
+        }
       });
   }
 
-  private onSaveDonneeError(saveError: any): void {
-    StatusMessageSeverity.SUCCESS;
-    this.showErrorMessage(
-      "Echec de la création de la fiche espèce.",
-      saveError
-    );
-  }
-
   private onSaveDonneeSuccess(savedDonnee: Donnee): void {
-    if (!!savedDonnee && !!savedDonnee.id) {
-      this.showSuccessMessage("La fiche espèce a été créée avec succès.");
-      this.navigationService.updateNavigationAfterADonneeWasSaved(savedDonnee);
+    this.showSuccessMessage("La fiche espèce a été créée avec succès.");
 
-      this.updateNextRegroupement();
-
-      DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
-    } else {
-      this.onSaveDonneeError(savedDonnee);
-    }
+    savedDonnee.inventaire = InventaireHelper.getInventaireFromInventaireForm(
+      this.inventaireForm
+    );
+    this.navigationService.updateNavigationAfterADonneeWasCreated(savedDonnee);
+    this.updateNextRegroupement();
+    DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
   }
 
   /**
@@ -400,45 +395,29 @@ export class CreationComponent extends PageComponent implements OnInit {
             donneeToSave.inventaireId = saveInventaireResult.insertId;
           }
 
-          this.backendApiService.saveDonnee(donneeToSave).subscribe(
-            (saveDonneeResult: Donnee) => {
-              this.onUpdateDonneeAndInventaireSuccess(saveDonneeResult);
-            },
-            (saveDonneeError: any) => {
-              this.onUpdateDonneeError(saveDonneeError);
-            }
-          );
+          this.backendApiService
+            .saveDonnee(donneeToSave)
+            .subscribe((response: PostResponse) => {
+              if (response.isSuccess) {
+                this.onUpdateDonneeAndInventaireSuccess(donneeToSave);
+              } else {
+                this.showErrorMessage("ERREUR: " + response.message);
+              }
+            });
         } else {
-          this.onUpdateInventaireError(saveInventaireResult);
+          this.showErrorMessage(
+            "Une erreur est survenue pendant la sauvegarde de l'inventaire"
+          );
         }
       });
   }
 
-  private onUpdateInventaireError(error: any): void {
-    this.showErrorMessage(
-      "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
-      error
-    );
-  }
-
-  private onUpdateDonneeError(error: any): void {
-    this.showErrorMessage(
-      "Impossible de mettre à jour la fiche inventaire et la fiche espèce.",
-      error
-    );
-  }
-
   private onUpdateDonneeAndInventaireSuccess(savedDonnee: Donnee): void {
-    if (!!savedDonnee && !!savedDonnee.id) {
-      this.showSuccessMessage(
-        "La fiche espèce et sa fiche inventaire ont été mises-à-jour avec succès."
-      );
-      InventaireHelper.setDisplayedInventaireId(savedDonnee.inventaireId);
-
-      this.updateNextRegroupement();
-    } else {
-      this.onUpdateDonneeError(savedDonnee);
-    }
+    this.showSuccessMessage(
+      "La fiche espèce et sa fiche inventaire ont été mises à jour avec succès."
+    );
+    InventaireHelper.setDisplayedInventaireId(savedDonnee.inventaireId);
+    this.updateNextRegroupement();
   }
 
   /**
