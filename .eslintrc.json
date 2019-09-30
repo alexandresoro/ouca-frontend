@@ -17,7 +17,6 @@
     "@typescript-eslint/no-use-before-define": "warn",
     "@typescript-eslint/prefer-includes": "warn",
     "@typescript-eslint/unbound-method": "warn",
-    "no-extra-boolean-cast": "warn",
     "no-useless-escape": "warn"
   }
 }
