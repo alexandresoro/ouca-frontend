@@ -9,10 +9,10 @@ import { FormControl } from "@angular/forms";
 export class InputCommentaireComponent {
   @Input() public control: FormControl;
 
-  public commentaireKeyPress(event: any) {
+  public commentaireKeyPress(event: KeyboardEvent): void {
     const pattern = new RegExp(";");
     const inputChar = String.fromCharCode(event.charCode);
-    if (pattern.test(inputChar)) {
+    if (inputChar.includes(";")) {
       // invalid character, prevent input
       event.preventDefault();
     }

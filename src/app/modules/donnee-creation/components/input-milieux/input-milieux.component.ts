@@ -80,6 +80,6 @@ export class InputMilieuxComponent implements OnInit {
   }
 
   public displayMilieuFormat = (milieu: Milieu): string => {
-    return !!milieu ? milieu.code + " - " + milieu.libelle : null;
-  }
+    return milieu ? milieu.code + " - " + milieu.libelle : null;
+  };
 }

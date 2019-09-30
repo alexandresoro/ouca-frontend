@@ -38,14 +38,14 @@ export class InputNombreComponent {
     }
   ];
 
-  private onEstimationNombreChanged(estimation: EstimationNombre) {
+  private onEstimationNombreChanged(estimation: EstimationNombre): void {
     if (!!estimation && !!estimation.nonCompte) {
       this.controlGroup.controls.nombre.disable();
       this.controlGroup.controls.nombre.setValue(null);
     } else {
       this.controlGroup.controls.nombre.enable();
 
-      if (!!!this.controlGroup.controls.nombre.value) {
+      if (!this.controlGroup.controls.nombre.value) {
         // Set default value
         this.controlGroup.controls.nombre.setValue(this.defaultNombre);
       }
@@ -55,6 +55,6 @@ export class InputNombreComponent {
   public displayEstimationNombreFormat = (
     estimation: EstimationNombre
   ): string => {
-    return !!estimation ? estimation.libelle : null;
-  }
+    return estimation ? estimation.libelle : null;
+  };
 }

@@ -91,7 +91,7 @@ export class InputComportementsComponent implements OnInit {
   }
 
   public displayComportementFormat = (comportement: Comportement): string => {
-    return !!comportement
+    return comportement
       ? comportement.code + " - " + comportement.libelle
       : null;
   }

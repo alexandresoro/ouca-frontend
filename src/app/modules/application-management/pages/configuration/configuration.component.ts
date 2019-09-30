@@ -183,14 +183,9 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   public saveAppConfiguration = (): void => {
     this.backendApiService
       .saveAppConfiguration(this.configurationToSave)
-      .subscribe(
-        (dbResults: DbUpdateResult[]) => {
-          this.onSaveAppConfigurationSuccess(dbResults);
-        },
-        (error: any) => {
-          this.onSaveAppConfigurationError(error);
-        }
-      );
+      .subscribe((dbResults: DbUpdateResult[]) => {
+        this.onSaveAppConfigurationSuccess(dbResults);
+      });
   };
 
   public cancelEdition = (): void => {
@@ -198,14 +193,11 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   };
 
   private getCurrentConfiguration = (): void => {
-    this.backendApiService.getConfigurationInitialPageModel().subscribe(
-      (configurationPage: ConfigurationPage) => {
+    this.backendApiService
+      .getConfigurationInitialPageModel()
+      .subscribe((configurationPage: ConfigurationPage) => {
         this.onInitConfigurationPageSuccess(configurationPage);
-      },
-      (error: any) => {
-        this.onInitConfigurationPageError(error);
-      }
-    );
+      });
   };
 
   private onInitConfigurationPageSuccess = (
@@ -214,13 +206,6 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     this.pageModel = configurationPage;
     this.configurationToSave = configurationPage.appConfiguration;
     this.buildDataSource();
-  };
-
-  private onInitConfigurationPageError = (error: any): void => {
-    this.showErrorMessage(
-      "Impossible de charger le contenu de la page de configuration.",
-      error
-    );
   };
 
   private onSaveAppConfigurationSuccess = (
@@ -248,13 +233,6 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
       isSuccess = isSuccess || dbResult.affectedRows === 1;
     }
     return isSuccess;
-  };
-
-  private onSaveAppConfigurationError = (error: any): void => {
-    this.showErrorMessage(
-      "Impossible de sauvegarder la configuration de l'application.",
-      error
-    );
   };
 
   private switchToEditionMode = (): void => {

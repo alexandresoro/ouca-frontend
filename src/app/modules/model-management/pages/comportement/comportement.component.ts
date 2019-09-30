@@ -16,6 +16,6 @@ export class ComportementComponent extends EntiteAvecLibelleEtCodeComponent<
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "Le comportement" : "le comportement";
+    return uppercase ? "Le comportement" : "le comportement";
   }
 }

@@ -83,7 +83,7 @@ export class InputEspeceComponent implements OnInit {
                 return especes;
               }
             } else {
-              if (!!selection.id) {
+              if (selection.id) {
                 return especes.filter((espece) => {
                   return (
                     espece.classeId === selection.id ||
@@ -120,12 +120,12 @@ export class InputEspeceComponent implements OnInit {
   }
 
   public displayClasseFormat = (classe: Classe): string => {
-    return !!classe ? classe.libelle : "";
-  }
+    return classe ? classe.libelle : "";
+  };
 
   public displayEspeceFormat = (espece: Espece): string => {
-    return !!espece
+    return espece
       ? espece.code + " - " + espece.nomFrancais + " - " + espece.nomLatin
       : "";
-  }
+  };
 }

@@ -15,6 +15,6 @@ export class SexeComponent extends EntiteAvecLibelleComponent<Sexe> {
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "Le sexe" : "le sexe";
+    return uppercase ? "Le sexe" : "le sexe";
   }
 }

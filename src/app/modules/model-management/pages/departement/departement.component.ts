@@ -60,7 +60,7 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "Le département" : "le département";
+    return uppercase ? "Le département" : "le département";
   }
 
   public getFormType(): any {

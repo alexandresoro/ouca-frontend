@@ -15,6 +15,6 @@ export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "Le milieu" : "le milieu";
+    return uppercase ? "Le milieu" : "le milieu";
   }
 }

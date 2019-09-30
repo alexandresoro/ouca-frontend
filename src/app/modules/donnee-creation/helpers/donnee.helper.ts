@@ -368,7 +368,7 @@ export class DonneeHelper {
    * @param id id to add
    */
   private static addId(ids: number[], id: number): void {
-    if (!!id && ids.indexOf(id) < 0) {
+    if (!!id && !ids.includes(id)) {
       ids.push(id);
     }
   }

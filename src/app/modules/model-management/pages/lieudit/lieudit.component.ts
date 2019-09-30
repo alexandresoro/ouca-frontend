@@ -74,7 +74,7 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "Le lieu-dit" : "le lieu-dit";
+    return uppercase ? "Le lieu-dit" : "le lieu-dit";
   }
 
   public getFormType(): any {

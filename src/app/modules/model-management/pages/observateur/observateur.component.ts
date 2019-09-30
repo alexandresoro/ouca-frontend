@@ -16,6 +16,6 @@ export class ObservateurComponent extends EntiteAvecLibelleComponent<
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "L'observateur" : "l'observateur";
+    return uppercase ? "L'observateur" : "l'observateur";
   }
 }

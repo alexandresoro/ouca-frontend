@@ -36,7 +36,7 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "L'estimation du nombre" : "l'estimation du nombre";
+    return uppercase ? "L'estimation du nombre" : "l'estimation du nombre";
   }
 
   public getDetailsData(): EntityDetailsData[] {

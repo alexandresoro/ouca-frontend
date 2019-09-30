@@ -61,7 +61,7 @@ export class EntityFormComponent implements OnInit {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
-    (componentRef.instance as EntitySubFormComponent).entityForm = this.entityForm;
+    (componentRef.instance).entityForm = this.entityForm;
   }
 
   public save(): void {

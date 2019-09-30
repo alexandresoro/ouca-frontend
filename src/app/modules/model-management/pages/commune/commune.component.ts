@@ -62,7 +62,7 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     const departement = formGroup.controls.departementId.value;
     const id = formGroup.controls.id.value;
 
-    const foundEntityByCode: Commune = !!nom
+    const foundEntityByCode: Commune = nom
       ? _.find(this.objects, (object: any) => {
           return (
             diacritics.remove(object.nom.trim().toLowerCase()) ===
@@ -94,7 +94,7 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "La commune" : "la commune";
+    return uppercase ? "La commune" : "la commune";
   }
 
   public getFormType(): any {

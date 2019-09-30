@@ -26,6 +26,6 @@ export class InputDistanceComponent {
   public displayEstimationDistanceFormat = (
     estimation: EstimationDistance
   ): string => {
-    return !!estimation ? estimation.libelle : null;
-  }
+    return estimation ? estimation.libelle : null;
+  };
 }

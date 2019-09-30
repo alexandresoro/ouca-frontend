@@ -17,7 +17,7 @@ export class EstimationDistanceComponent extends EntiteAvecLibelleComponent<
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase
+    return uppercase
       ? "L'estimation de la distance"
       : "l'estimation de la distance";
   }

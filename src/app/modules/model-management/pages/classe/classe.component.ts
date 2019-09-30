@@ -30,7 +30,7 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
-    return !!uppercase ? "La classe" : "la classe";
+    return uppercase ? "La classe" : "la classe";
   }
 
   public getDetailsData(): EntityDetailsData[] {

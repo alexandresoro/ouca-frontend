@@ -202,14 +202,14 @@ export class InputLieuditComponent implements OnInit {
   }
 
   public displayCommuneFormat = (commune: Commune): string => {
-    return !!commune ? commune.code + " - " + commune.nom : "";
-  }
+    return commune ? commune.code + " - " + commune.nom : "";
+  };
 
   public displayDepartementFormat = (departement: Departement): string => {
-    return !!departement ? departement.code : null;
-  }
+    return departement ? departement.code : null;
+  };
 
   public displayLieuDitFormat = (lieuDit: Lieudit): string => {
-    return !!lieuDit ? lieuDit.nom : null;
-  }
+    return lieuDit ? lieuDit.nom : null;
+  };
 }

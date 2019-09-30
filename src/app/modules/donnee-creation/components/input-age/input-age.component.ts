@@ -22,6 +22,6 @@ export class InputAgeComponent {
   ];
 
   public displayAgeFormat = (age: Age): string => {
-    return !!age ? age.libelle : null;
-  }
+    return age ? age.libelle : null;
+  };
 }

@@ -22,6 +22,6 @@ export class InputSexeComponent {
   ];
 
   public displaySexeFormat = (sexe: Sexe): string => {
-    return !!sexe ? sexe.libelle : null;
-  }
+    return sexe ? sexe.libelle : null;
+  };
 }
