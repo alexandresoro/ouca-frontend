@@ -24,7 +24,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { PageComponent } from "../../../shared/pages/page.component";
 import * as _ from "lodash";
 import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
-import { DonneeFlat } from "basenaturaliste-model/donnee-flat.object";
+import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
 
 @Component({
   templateUrl: "./view.tpl.html"
@@ -82,7 +82,7 @@ export class ViewComponent extends PageComponent {
 
   public displayWaitPanel: boolean = false;
 
-  public donneesToDisplay: DonneeFlat[] = [];
+  public donneesToDisplay: FlatDonnee[] = [];
 
   public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
 
@@ -203,7 +203,7 @@ export class ViewComponent extends PageComponent {
     } else {
       this.backendApiService
         .getDonneesByCustomizedFilters(this.searchForm.value)
-        .subscribe((results: DonneeFlat[]) => {
+        .subscribe((results: FlatDonnee[]) => {
           this.displayWaitPanel = false;
           this.donneesToDisplay = results;
           this.setEspecesWithNbDonnees(this.donneesToDisplay);
@@ -214,7 +214,7 @@ export class ViewComponent extends PageComponent {
   /**
    * Counts number of donnees by code espece
    */
-  private setEspecesWithNbDonnees = (donnees: DonneeFlat[]): void => {
+  private setEspecesWithNbDonnees = (donnees: FlatDonnee[]): void => {
     const nbDonneesByEspeceMap: { [key: string]: number } = _.countBy(
       donnees,
       (donnee) => {

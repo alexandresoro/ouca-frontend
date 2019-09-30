@@ -9,7 +9,7 @@ import { Donnee } from "basenaturaliste-model/donnee.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
-import { DonneeFlat } from "basenaturaliste-model/donnee-flat.object";
+import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
 import { Observable } from "rxjs";
 import { PostResponse } from "basenaturaliste-model/post-response.object";
 
@@ -205,7 +205,7 @@ export class BackendApiService {
 
   public getDonneesByCustomizedFilters(
     parameters: any
-  ): Observable<DonneeFlat[]> {
+  ): Observable<FlatDonnee[]> {
     return this.httpPost(this.DONNEE + this.SEARCH, parameters);
   }
 
