@@ -13,6 +13,7 @@ import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
 import { Observable } from "rxjs";
 import { PostResponse } from "basenaturaliste-model/post-response.object";
 import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
+import { DonneesFilter } from "basenaturaliste-model/donnees-filter.object";
 
 @Injectable()
 export class BackendApiService {
@@ -85,7 +86,10 @@ export class BackendApiService {
     return this.http.post<any>(requestPath, objectToPost, httpOptions);
   }
 
-  private httpPost<T>(relativePath: string, objectToPost: any): Observable<T> {
+  private httpPost<T>(
+    relativePath: string,
+    objectToPost: object
+  ): Observable<T> {
     const requestPath: string = this.getApiUrl() + relativePath;
     console.log("POST", requestPath, objectToPost);
     return this.http.post<T>(requestPath, objectToPost);
@@ -207,13 +211,13 @@ export class BackendApiService {
   }
 
   public getDonneesByCustomizedFilters(
-    parameters: any
+    parameters: DonneesFilter
   ): Observable<FlatDonnee[]> {
     return this.httpPost(this.DONNEE + this.SEARCH, parameters);
   }
 
   public exportDonneesByCustomizedFilters(
-    parameters: any
+    parameters: DonneesFilter
   ): Observable<HttpResponse<any>> {
     return this.httpPostObserveResponse(this.DONNEE + this.EXPORT, parameters);
   }

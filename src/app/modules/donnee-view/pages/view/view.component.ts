@@ -170,7 +170,7 @@ export class ViewComponent extends PageComponent {
     if (this.searchForm.controls.excelMode.value) {
       this.backendApiService
         .exportDonneesByCustomizedFilters(this.searchForm.value)
-        .subscribe((response: any) => {
+        .subscribe((response) => {
           this.displayWaitPanel = false;
           this.donneesToDisplay = [];
 
