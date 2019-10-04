@@ -212,38 +212,38 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     this.backendApiService
       .saveInventaire(inventaireToBeSaved)
-      .subscribe((saveInventaireResult: DbUpdateResult) => {
-        this.onCreateInventaireSuccess(saveInventaireResult, saveDonnee);
+      .subscribe((response: PostResponse) => {
+        if (response.isSuccess) {
+          this.onCreateInventaireSuccess(response.insertId, saveDonnee);
+        } else {
+          this.showErrorMessage(
+            "Unse erreur est survenue pendant la sauvegarde de l'inventaire"
+          );
+        }
       });
   }
 
   private onCreateInventaireSuccess(
-    saveInventaireResult: DbUpdateResult,
+    savedId: number,
     saveDonnee?: boolean
   ): void {
-    if (
-      !!saveInventaireResult &&
-      (!!saveInventaireResult.insertId || !!saveInventaireResult.affectedRows)
-    ) {
-      if (saveInventaireResult.insertId) {
-        this.showSuccessMessage("La fiche inventaire a été créée avec succès.");
-        InventaireHelper.setDisplayedInventaireId(
-          saveInventaireResult.insertId
-        );
+    this.showSuccessMessage(
+      "La fiche inventaire a été sauvegardée avec succès."
+    );
 
-        if (saveDonnee) {
-          this.saveDonnee();
-        }
-      } else {
-        this.showSuccessMessage(
-          "La fiche inventaire a été mise-à-jour avec succès."
-        );
-        this.switchToEditionDonneeMode();
-      }
-    } else {
-      this.showErrorMessage(
-        "Une erreur est survenue pendant la sauvegarde de l'inventaire."
-      );
+    // To know if we were updating an existing inventaire
+    const oldInventaireId: number = InventaireHelper.getDisplayedInventaireId();
+
+    if (savedId) {
+      // The inventaire ID has been created or updated, we display it
+      InventaireHelper.setDisplayedInventaireId(savedId);
+    }
+
+    if (saveDonnee) {
+      this.saveDonnee();
+    } else if (oldInventaireId) {
+      // We were updating an existing inventaire, we switch to donnee mode
+      this.switchToEditionDonneeMode();
     }
   }
 
@@ -252,8 +252,10 @@ export class CreationComponent extends PageComponent implements OnInit {
    */
   public onSaveDonneeButtonClicked(): void {
     if (InventaireHelper.getDisplayedInventaireId()) {
+      // The inventaire is already saved, we only create the donnee
       this.saveDonnee();
     } else {
+      // The inventaire is not yet saved, we create both the inventaire and donnee
       this.saveInventaire(true);
     }
   }
@@ -360,9 +362,13 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   /**
-   * Call the backend to update the fiche inventaire and fiche espece
-   * If the user wants to update the fiche inventaire only for this fiche espece then we create a new inventaire
-   * @param createNewInventaire If we should create a new inventaire for the donnee or just update it
+   * Calls the backend to update the fiche inventaire and fiche espece
+   * If the user wants to update the fiche inventaire only for this fiche
+   * espece then we create a new inventaire
+   * If the fiche inventaire already exists with another ID we remove the
+   * current inventaire to keep only the existing one
+   * @param createNewInventaire If we should create a new inventaire for the
+   * donnee or just update it for all its donnees
    */
   private updateInventaireAndDonnee(createNewInventaire: boolean): void {
     const inventaireToSave: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
@@ -379,39 +385,36 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     this.backendApiService
       .saveInventaire(inventaireToSave)
-      .subscribe((saveInventaireResult: DbUpdateResult) => {
-        if (
-          !!saveInventaireResult &&
-          (saveInventaireResult.affectedRows > 0 ||
-            saveInventaireResult.insertId > 0)
-        ) {
-          if (createNewInventaire) {
-            donneeToSave.inventaireId = saveInventaireResult.insertId;
+      .subscribe((response: PostResponse) => {
+        if (response.isSuccess) {
+          if (response.insertId) {
+            donneeToSave.inventaireId = response.insertId;
+            InventaireHelper.setDisplayedInventaireId(response.insertId);
           }
 
           this.backendApiService
             .saveDonnee(donneeToSave)
             .subscribe((response: PostResponse) => {
               if (response.isSuccess) {
-                this.onUpdateDonneeAndInventaireSuccess(donneeToSave);
+                this.showSuccessMessage(
+                  "La fiche espèce et sa fiche inventaire ont été mises à jour avec succès."
+                );
+                this.updateNextRegroupement();
+                // TO DO update next and previous donnee
               } else {
-                this.showErrorMessage("ERREUR: " + response.message);
+                this.showErrorMessage(
+                  "Une erreur est survenue pendant la sauvegarde de la fiche espèce: " +
+                    response.message
+                );
               }
             });
         } else {
           this.showErrorMessage(
-            "Une erreur est survenue pendant la sauvegarde de l'inventaire"
+            "Une erreur est survenue pendant la sauvegarde de la fiche inventaire:" +
+              response.message
           );
         }
       });
-  }
-
-  private onUpdateDonneeAndInventaireSuccess(savedDonnee: Donnee): void {
-    this.showSuccessMessage(
-      "La fiche espèce et sa fiche inventaire ont été mises à jour avec succès."
-    );
-    InventaireHelper.setDisplayedInventaireId(savedDonnee.inventaireId);
-    this.updateNextRegroupement();
   }
 
   /**

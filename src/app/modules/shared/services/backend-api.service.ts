@@ -170,7 +170,7 @@ export class BackendApiService {
 
   public saveInventaire(
     inventaireToSave: Inventaire
-  ): Observable<DbUpdateResult> {
+  ): Observable<PostResponse> {
     return this.httpPost(this.INVENTAIRE + this.SAVE, inventaireToSave);
   }
 
