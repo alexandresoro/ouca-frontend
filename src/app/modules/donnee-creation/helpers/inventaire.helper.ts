@@ -15,7 +15,7 @@ import * as _ from "lodash";
 import moment = require("moment");
 import { FormValidatorHelper } from "../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../shared/helpers/list-helper";
-import { TimeHelper } from "../../shared/helpers/time.helper";
+import { TimeHelper, interpretDateAsUTCDate } from "../../shared/helpers/time.helper";
 
 export class InventaireHelper {
   private static displayedInventaireId: number = null;
@@ -133,7 +133,7 @@ export class InventaireHelper {
       inventaireFormControls.observateursAssocies.value
     );
 
-    const date: Date = inventaireFormControls.date.value.toDate();
+    const date: Date = new Date(interpretDateAsUTCDate(inventaireFormControls.date.value));
 
     const heure: string = TimeHelper.getFormattedTime(
       inventaireFormControls.heure.value
