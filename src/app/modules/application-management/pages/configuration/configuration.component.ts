@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
 import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
-import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import * as _ from "lodash";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
@@ -183,7 +182,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   public saveAppConfiguration = (): void => {
     this.backendApiService
       .saveAppConfiguration(this.configurationToSave)
-      .subscribe((dbResults: DbUpdateResult[]) => {
+      .subscribe((dbResults: any[]) => {
         this.onSaveAppConfigurationSuccess(dbResults);
       });
   };
@@ -208,9 +207,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     this.buildDataSource();
   };
 
-  private onSaveAppConfigurationSuccess = (
-    dbResults: DbUpdateResult[]
-  ): void => {
+  private onSaveAppConfigurationSuccess = (dbResults: any[]): void => {
     if (this.isSaveConfigurationSuccess(dbResults)) {
       this.showSuccessMessage(
         "La configuration de l'application a été mise à jour."
@@ -225,9 +222,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     }
   };
 
-  private isSaveConfigurationSuccess = (
-    dbResults: DbUpdateResult[]
-  ): boolean => {
+  private isSaveConfigurationSuccess = (dbResults: any[]): boolean => {
     let isSuccess: boolean = true;
     for (const dbResult of dbResults) {
       isSuccess = isSuccess || dbResult.affectedRows === 1;

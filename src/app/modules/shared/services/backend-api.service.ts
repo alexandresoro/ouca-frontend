@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
 import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
 import { CreationPage } from "basenaturaliste-model/creation-page.object";
-import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
@@ -102,7 +101,7 @@ export class BackendApiService {
 
   public saveAppConfiguration = (
     appConfigurationToSave: AppConfiguration
-  ): Observable<DbUpdateResult[]> => {
+  ): Observable<any[]> => {
     return this.httpPost(
       this.CONFIGURATION + this.UPDATE,
       appConfigurationToSave

@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { PostResponse } from "basenaturaliste-model/post-response.object";
 import {
