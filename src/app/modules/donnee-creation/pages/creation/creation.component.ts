@@ -443,11 +443,15 @@ export class CreationComponent extends PageComponent implements OnInit {
       this.switchToUpdateMode();
     }
 
-    this.displayPreviousDonnne();
+    this.navigationService
+      .getPreviousDonnee()
+      .then((previousDonnee: Donnee) => {
+        this.displayPreviousDonnne(previousDonnee);
 
-    this.navigationService.updateNavigationAfterPreviousDonneeIsDisplayed(
-      currentDonnee
-    );
+        this.navigationService.updateNavigationAfterPreviousDonneeIsDisplayed(
+          currentDonnee
+        );
+      });
   }
 
   private getCurrentDonneeFromForm(): Donnee {
@@ -470,26 +474,28 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
 
-  private displayPreviousDonnne(): void {
+  private displayPreviousDonnne(previousDonnee: Donnee): void {
     DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
-      this.navigationService.getPreviousDonnee(),
+      previousDonnee,
       this.pageModel
     );
     InventaireHelper.setInventaireFormFromInventaire(
       this.inventaireForm,
-      this.navigationService.getPreviousDonnee().inventaire,
+      previousDonnee.inventaire,
       this.pageModel
     );
   }
   public onNextDonneeBtnClicked(): void {
     const currentDonnee: Donnee = this.getCurrentDonneeFromForm();
 
-    this.displayNextDonnee();
+    this.navigationService.getNextDonnee().then((nextDonnee: Donnee) => {
+      this.displayNextDonnee(nextDonnee);
 
-    this.navigationService.updateNavigationAfterNextDonneeIsDisplayed(
-      currentDonnee
-    );
+      this.navigationService.updateNavigationAfterNextDonneeIsDisplayed(
+        currentDonnee
+      );
+    });
   }
 
   public onDeleteDonneeBtnClicked(): void {
@@ -539,22 +545,24 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onDeleteDonneeSuccess(): void {
     this.showSuccessMessage("La fiche espèce a été supprimée avec succès.");
-    this.displayNextDonnee();
-    this.navigationService.updateNavigationAfterADonneeWasDeleted();
+    this.navigationService.getNextDonnee().then((nextDonnee: Donnee) => {
+      this.displayNextDonnee(nextDonnee);
+      this.navigationService.updateNavigationAfterADonneeWasDeleted();
 
-    // Check if the current inventaire is still existing
-    if (InventaireHelper.getDisplayedInventaireId()) {
-      this.backendApiService
-        .getInventaireIdById(InventaireHelper.getDisplayedInventaireId())
-        .subscribe((responseId: number) => {
-          if (!responseId) {
-            InventaireHelper.setDisplayedInventaireId(null);
-          }
-        });
-    }
+      // Check if the current inventaire is still existing
+      if (InventaireHelper.getDisplayedInventaireId()) {
+        this.backendApiService
+          .getInventaireIdById(InventaireHelper.getDisplayedInventaireId())
+          .subscribe((responseId: number) => {
+            if (!responseId) {
+              InventaireHelper.setDisplayedInventaireId(null);
+            }
+          });
+      }
+    });
   }
 
-  private displayNextDonnee(): void {
+  private displayNextDonnee = (nextDonnee: Donnee): void => {
     CreationModeHelper.updateCreationMode(this.navigationService.getNextMode());
     if (CreationModeHelper.isInventaireMode()) {
       this.switchToInventaireMode();
@@ -564,18 +572,18 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     InventaireHelper.setInventaireFormFromInventaire(
       this.inventaireForm,
-      this.navigationService.getNextDonnee().inventaire,
+      nextDonnee.inventaire,
       this.pageModel,
       this.navigationService.getSavedDepartement(),
       this.navigationService.getSavedCommune()
     );
     DonneeHelper.setDonneeFormFromDonnee(
       this.donneeForm,
-      this.navigationService.getNextDonnee(),
+      nextDonnee,
       this.pageModel,
       this.navigationService.getSavedClasse()
     );
-  }
+  };
 
   /**
    * When clicking on New Inventaire button
