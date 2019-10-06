@@ -7,7 +7,6 @@ import { BackendApiService } from "../../shared/services/backend-api.service";
 import { CreationModeEnum } from "../helpers/creation-mode.enum";
 import { CreationModeHelper } from "../helpers/creation-mode.helper";
 import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
-import { last } from "rxjs/operators";
 
 @Injectable()
 export class NavigationService {
