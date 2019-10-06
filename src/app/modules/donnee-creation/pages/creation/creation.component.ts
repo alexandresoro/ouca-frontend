@@ -4,7 +4,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { CreationPage } from "basenaturaliste-model/creation-page.object";
-import { DbUpdateResult } from "basenaturaliste-model/db-update-result.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
 import { Espece } from "basenaturaliste-model/espece.object";
@@ -205,7 +204,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
   }
 
-  private saveInventaire(saveDonnee?: boolean): void {
+  private saveInventaire(saveDonneeAfterInventaire?: boolean): void {
     const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
       this.inventaireForm
     );
@@ -214,10 +213,14 @@ export class CreationComponent extends PageComponent implements OnInit {
       .saveInventaire(inventaireToBeSaved)
       .subscribe((response: PostResponse) => {
         if (response.isSuccess) {
-          this.onCreateInventaireSuccess(response.insertId, saveDonnee);
+          this.onCreateInventaireSuccess(
+            response.insertId,
+            saveDonneeAfterInventaire
+          );
         } else {
           this.showErrorMessage(
-            "Unse erreur est survenue pendant la sauvegarde de l'inventaire"
+            "Une erreur est survenue pendant la sauvegarde de l'inventaire: " +
+              response.message
           );
         }
       });
@@ -240,7 +243,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     }
 
     if (saveDonnee) {
-      this.saveDonnee();
+      this.createDonnee();
     } else if (oldInventaireId) {
       // We were updating an existing inventaire, we switch to donnee mode
       this.switchToEditionDonneeMode();
@@ -252,15 +255,26 @@ export class CreationComponent extends PageComponent implements OnInit {
    */
   public onSaveDonneeButtonClicked(): void {
     if (InventaireHelper.getDisplayedInventaireId()) {
-      // The inventaire is already saved, we only create the donnee
-      this.saveDonnee();
+      // Check if the inventaire still exists in the database
+      this.backendApiService
+        .getInventaireIdById(InventaireHelper.getDisplayedInventaireId())
+        .subscribe((responseId: number) => {
+          if (!responseId) {
+            // The inventaire is not yet saved, we create both the inventaire and donnee
+            InventaireHelper.setDisplayedInventaireId(null);
+            this.saveInventaire(true);
+          } else {
+            // The inventaire is already saved, we only create the donnee
+            this.createDonnee();
+          }
+        });
     } else {
       // The inventaire is not yet saved, we create both the inventaire and donnee
       this.saveInventaire(true);
     }
   }
 
-  private saveDonnee(): void {
+  private createDonnee(): void {
     const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeForm(
       this.donneeForm
     );
