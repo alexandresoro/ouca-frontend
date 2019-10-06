@@ -445,11 +445,12 @@ export class CreationComponent extends PageComponent implements OnInit {
 
     this.navigationService
       .getPreviousDonnee()
-      .then((previousDonnee: Donnee) => {
-        this.displayPreviousDonnne(previousDonnee);
+      .then((donnee: DonneeWithNavigationData) => {
+        this.displayPreviousDonnne(donnee);
 
         this.navigationService.updateNavigationAfterPreviousDonneeIsDisplayed(
-          currentDonnee
+          donnee.previousDonneeId,
+          donnee.nextDonneeId
         );
       });
   }
@@ -487,15 +488,16 @@ export class CreationComponent extends PageComponent implements OnInit {
     );
   }
   public onNextDonneeBtnClicked(): void {
-    const currentDonnee: Donnee = this.getCurrentDonneeFromForm();
+    this.navigationService
+      .getNextDonnee()
+      .then((donnee: DonneeWithNavigationData) => {
+        this.displayNextDonnee(donnee);
 
-    this.navigationService.getNextDonnee().then((nextDonnee: Donnee) => {
-      this.displayNextDonnee(nextDonnee);
-
-      this.navigationService.updateNavigationAfterNextDonneeIsDisplayed(
-        currentDonnee
-      );
-    });
+        this.navigationService.updateNavigationAfterNextDonneeIsDisplayed(
+          donnee.previousDonneeId,
+          donnee.nextDonneeId
+        );
+      });
   }
 
   public onDeleteDonneeBtnClicked(): void {
@@ -545,21 +547,26 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private onDeleteDonneeSuccess(): void {
     this.showSuccessMessage("La fiche espèce a été supprimée avec succès.");
-    this.navigationService.getNextDonnee().then((nextDonnee: Donnee) => {
-      this.displayNextDonnee(nextDonnee);
-      this.navigationService.updateNavigationAfterADonneeWasDeleted();
+    this.navigationService
+      .getNextDonnee()
+      .then((donnee: DonneeWithNavigationData) => {
+        this.displayNextDonnee(donnee);
+        this.navigationService.updateNavigationAfterADonneeWasDeleted(
+          donnee.previousDonneeId,
+          donnee.nextDonneeId
+        );
 
-      // Check if the current inventaire is still existing
-      if (InventaireHelper.getDisplayedInventaireId()) {
-        this.backendApiService
-          .getInventaireIdById(InventaireHelper.getDisplayedInventaireId())
-          .subscribe((responseId: number) => {
-            if (!responseId) {
-              InventaireHelper.setDisplayedInventaireId(null);
-            }
-          });
-      }
-    });
+        // Check if the current inventaire is still existing
+        if (InventaireHelper.getDisplayedInventaireId()) {
+          this.backendApiService
+            .getInventaireIdById(InventaireHelper.getDisplayedInventaireId())
+            .subscribe((responseId: number) => {
+              if (!responseId) {
+                InventaireHelper.setDisplayedInventaireId(null);
+              }
+            });
+        }
+      });
   }
 
   private displayNextDonnee = (nextDonnee: Donnee): void => {
@@ -617,23 +624,23 @@ export class CreationComponent extends PageComponent implements OnInit {
 
         this.backendApiService
           .getDonneeByIdWithContext(idToFind)
-          .subscribe((response: DonneeWithNavigationData) => {
-            if (!!response && !!response.donnee) {
+          .subscribe((donnee: DonneeWithNavigationData) => {
+            if (donnee) {
               InventaireHelper.setInventaireFormFromInventaire(
                 this.inventaireForm,
-                response.donnee.inventaire,
+                donnee.inventaire,
                 this.pageModel
               );
               DonneeHelper.setDonneeFormFromDonnee(
                 this.donneeForm,
-                response.donnee,
+                donnee,
                 this.pageModel
               );
               this.switchToUpdateMode();
               this.navigationService.updateNavigationAfterSearchDonneeById(
-                +response.indexDonnee,
-                response.previousDonnee,
-                response.nextDonnee
+                donnee.indexDonnee,
+                donnee.previousDonneeId,
+                donnee.nextDonneeId
               );
             } else {
               this.showErrorMessage(

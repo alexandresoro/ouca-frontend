@@ -6,11 +6,12 @@ import { Donnee } from "basenaturaliste-model/donnee.object";
 import { BackendApiService } from "../../shared/services/backend-api.service";
 import { CreationModeEnum } from "../helpers/creation-mode.enum";
 import { CreationModeHelper } from "../helpers/creation-mode.helper";
-import { map } from "rxjs/operators";
+import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
+import { last } from "rxjs/operators";
 
 @Injectable()
 export class NavigationService {
-  private SAVED_DONNEE_ID: number = -1;
+  private CACHED_DONNEE_ID: number = -1;
   private previousDonneeId: number;
   private nextDonneeId: number;
   private nextMode: CreationModeEnum;
@@ -18,11 +19,11 @@ export class NavigationService {
   private lastDonneeId: number;
   private numberOfDonnees: number;
 
-  private savedDonnee: Donnee;
-  private savedMode: CreationModeEnum;
-  private savedDepartement: Departement;
-  private savedCommune: Commune;
-  private savedClasse: Classe;
+  private cachedDonnee: Donnee;
+  private cachedMode: CreationModeEnum;
+  private cachedDepartement: Departement;
+  private cachedCommune: Commune;
+  private cachedClasse: Classe;
 
   constructor(public backendApiService: BackendApiService) {}
 
@@ -37,11 +38,11 @@ export class NavigationService {
     this.nextDonneeId = null;
     this.nextMode = null;
     this.currentDonneeIndex = null;
-    this.savedDonnee = {} as Donnee;
-    this.savedMode = null;
-    this.savedClasse = null;
-    this.savedDepartement = null;
-    this.savedCommune = null;
+    this.cachedDonnee = {} as Donnee;
+    this.cachedMode = null;
+    this.cachedClasse = null;
+    this.cachedDepartement = null;
+    this.cachedCommune = null;
   }
 
   public saveCurrentContext(
@@ -50,11 +51,11 @@ export class NavigationService {
     currentCommune: Commune,
     currentClasse: Classe
   ): void {
-    this.savedDonnee = donneeToSave;
-    this.savedMode = CreationModeHelper.getCreationMode();
-    this.savedDepartement = currentDepartement;
-    this.savedCommune = currentCommune;
-    this.savedClasse = currentClasse;
+    this.cachedDonnee = donneeToSave;
+    this.cachedMode = CreationModeHelper.getCreationMode();
+    this.cachedDepartement = currentDepartement;
+    this.cachedCommune = currentCommune;
+    this.cachedClasse = currentClasse;
   }
 
   public updateNavigationAfterADonneeWasCreated = (
@@ -65,9 +66,14 @@ export class NavigationService {
     this.lastDonneeId = savedDonnee.id;
   };
 
-  public updateNavigationAfterADonneeWasDeleted = (): void => {
+  public updateNavigationAfterADonneeWasDeleted = (
+    newPreviousDonneeId: number,
+    newNextDonneeId: number
+  ): void => {
+    this.previousDonneeId = newPreviousDonneeId;
+
     if (this.isLastDonneeCurrentlyDisplayed()) {
-      // Last donnee was deleted
+      // Last donnee was deleted, we go back to creation mode
       this.lastDonneeId = this.previousDonneeId;
       this.currentDonneeIndex = null;
       this.nextDonneeId = null;
@@ -79,25 +85,27 @@ export class NavigationService {
     if (this.currentDonneeIndex) {
       if (!this.isLastDonneeCurrentlyDisplayed()) {
         // We should find the new next donnee
-        this.populateNextDonnee(this.nextDonneeId);
+        this.nextDonneeId = newNextDonneeId;
       } else {
-        this.nextDonneeId = this.SAVED_DONNEE_ID;
-        this.nextMode = this.savedMode;
+        // We are displaying the last donnee
+        this.nextDonneeId = this.CACHED_DONNEE_ID;
+        this.nextMode = this.cachedMode;
       }
     }
   };
 
   public updateNavigationAfterPreviousDonneeIsDisplayed = (
-    newNextDonnee: Donnee
+    newPreviousDonneeId: number,
+    newNextDonneeId: number
   ): void => {
     if (!this.currentDonneeIndex) {
       // We are displaying the creation form so the next donnee is the saved donnee
-      this.nextDonneeId = this.SAVED_DONNEE_ID;
-      this.nextMode = this.savedMode;
+      this.nextDonneeId = this.CACHED_DONNEE_ID;
+      this.nextMode = this.cachedMode;
       this.currentDonneeIndex = this.numberOfDonnees;
     } else {
       this.currentDonneeIndex--;
-      this.nextDonneeId = newNextDonnee ? newNextDonnee.id : null;
+      this.nextDonneeId = newNextDonneeId;
       this.nextMode = CreationModeEnum.UPDATE;
     }
 
@@ -105,14 +113,15 @@ export class NavigationService {
       // We are displaying the first donnee
       this.previousDonneeId = null;
     } else {
-      this.populatePreviousDonnee(this.previousDonneeId);
+      this.previousDonneeId = newPreviousDonneeId;
     }
   };
 
   public updateNavigationAfterNextDonneeIsDisplayed = (
-    newPreviousDonnee: Donnee
+    newPreviousDonneeId: number,
+    newNextDonneeId: number
   ): void => {
-    this.previousDonneeId = newPreviousDonnee ? newPreviousDonnee.id : null;
+    this.previousDonneeId = newPreviousDonneeId;
 
     // We have displayed the next donnee
     if (this.isLastDonneeCurrentlyDisplayed()) {
@@ -126,81 +135,78 @@ export class NavigationService {
 
       if (this.isLastDonneeCurrentlyDisplayed()) {
         // Now last donnee is displayed so next donnee is the donnee saved from the creation form
-        this.nextDonneeId = this.SAVED_DONNEE_ID;
-        this.nextMode = this.savedMode;
+        this.nextDonneeId = this.CACHED_DONNEE_ID;
+        this.nextMode = this.cachedMode;
       } else {
         // It is still not the last donnee so we call the back-end to find the next donnee
-        this.populateNextDonnee(this.nextDonneeId);
+        this.nextDonneeId = newNextDonneeId;
       }
     }
   };
 
   public updateNavigationAfterSearchDonneeById = (
     index: number,
-    previousDonnee: Donnee,
-    nextDonnee: Donnee
+    previousDonneeId: number,
+    nextDonneeId: number
   ): void => {
     this.currentDonneeIndex = index;
-    this.previousDonneeId = previousDonnee ? previousDonnee.id : null;
-    this.nextDonneeId = nextDonnee ? nextDonnee.id : null;
+    this.previousDonneeId = previousDonneeId;
+    this.nextDonneeId = nextDonneeId;
     if (this.nextDonneeId == null) {
-      this.nextDonneeId = this.SAVED_DONNEE_ID;
-      this.nextMode = this.savedMode;
+      this.nextDonneeId = this.CACHED_DONNEE_ID;
+      this.nextMode = this.cachedMode;
     }
   };
-
-  private populatePreviousDonnee = (id: number): void => {
-    this.backendApiService
-      .getPreviousDonnee(id)
-      .subscribe((previousDonnee: Donnee) => {
-        if (!!previousDonnee && !!previousDonnee.id) {
-          this.previousDonneeId = previousDonnee ? previousDonnee.id : null;
-        }
-      });
-  };
-
-  public populateNextDonnee(id: number): void {
-    this.backendApiService.getNextDonnee(id).subscribe((nextDonnee: Donnee) => {
-      if (!!nextDonnee && !!nextDonnee.id) {
-        this.nextDonneeId = nextDonnee ? nextDonnee.id : null;
-        this.nextMode = CreationModeEnum.UPDATE;
-      }
-    });
-  }
 
   public getNextMode(): CreationModeEnum {
     return this.nextMode;
   }
 
-  public getNextDonnee(): Promise<Donnee> {
-    if (this.nextDonneeId === this.SAVED_DONNEE_ID) {
-      return Promise.resolve(this.savedDonnee);
+  public getNextDonnee(): Promise<DonneeWithNavigationData> {
+    const idToRetrieve: number = this.nextDonneeId;
+    this.previousDonneeId = null;
+    this.nextDonneeId = null;
+
+    if (idToRetrieve === this.CACHED_DONNEE_ID) {
+      return this.getLastDonneeId().then((lastDonneeId: number) => {
+        this.lastDonneeId = lastDonneeId;
+        return Promise.resolve({
+          ...this.cachedDonnee,
+          previousDonneeId: lastDonneeId,
+          nextDonneeId: null,
+          indexDonnee: null
+        });
+      });
     } else {
-      //return Promise.resolve(this.nextDonnee);
       return this.backendApiService
-        .getDonneeByIdWithContext(this.nextDonneeId)
-        .pipe(map((donnee) => donnee.donnee))
+        .getDonneeByIdWithContext(idToRetrieve)
         .toPromise();
     }
   }
 
-  public getPreviousDonnee(): Promise<Donnee> {
+  public getPreviousDonnee(): Promise<DonneeWithNavigationData> {
+    const idToRetrieve: number = this.previousDonneeId;
+    this.previousDonneeId = null;
+    this.nextDonneeId = null;
     return this.backendApiService
-      .getDonneeByIdWithContext(this.previousDonneeId)
-      .pipe(map((donnee) => donnee.donnee))
+      .getDonneeByIdWithContext(idToRetrieve)
       .toPromise();
   }
 
+  public getLastDonneeId(): Promise<number> {
+    return this.backendApiService.getLastDonneeId().toPromise();
+  }
+
   public getSavedDepartement(): Departement {
-    return this.savedDepartement;
+    return this.cachedDepartement;
   }
 
   public getSavedCommune(): Commune {
-    return this.savedCommune;
+    return this.cachedCommune;
   }
 
   public getSavedClasse(): Classe {
-    return this.savedClasse;
+    return this.cachedClasse;
   }
 
   private isLastDonneeCurrentlyDisplayed(): boolean {
@@ -208,12 +214,10 @@ export class NavigationService {
   }
 
   public hasPreviousDonnee(): boolean {
-    // return !!this.previousDonnee;
     return !!this.previousDonneeId;
   }
 
   public hasNextDonnee(): boolean {
-    // return !!this.nextDonnee;
     return !!this.nextDonneeId;
   }
 

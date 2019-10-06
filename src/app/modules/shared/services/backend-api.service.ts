@@ -37,6 +37,7 @@ export class BackendApiService {
   private PREVIOUS_DONNEE: string = "previous_donnee";
   private UPDATE: string = "update";
   private SAVE: string = "save";
+  private LAST: string = "last";
   private SEARCH: string = "search";
   private SEARCH_BY_COMMUNE: string = "search_by_commune/";
 
@@ -154,6 +155,10 @@ export class BackendApiService {
     id: number
   ): Observable<DonneeWithNavigationData> {
     return this.httpGet(this.DONNEE + this.FIND_WITH_CONTEXT + "?id=" + id);
+  }
+
+  public getLastDonneeId(): Observable<number> {
+    return this.httpGet(this.DONNEE + this.LAST);
   }
 
   public getNextRegroupement(): Observable<number> {
