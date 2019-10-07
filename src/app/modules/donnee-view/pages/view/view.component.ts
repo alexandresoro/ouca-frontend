@@ -25,6 +25,8 @@ import { PageComponent } from "../../../shared/pages/page.component";
 import * as _ from "lodash";
 import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
 import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
+import { DonneesFilter } from "basenaturaliste-model/donnees-filter.object";
+import { interpretDateAsUTCDate } from "../../../shared/helpers/time.helper";
 
 @Component({
   templateUrl: "./view.tpl.html"
@@ -167,9 +169,18 @@ export class ViewComponent extends PageComponent {
   public onSearchButtonClicked(): void {
     this.displayWaitPanel = true;
 
+    const filters: DonneesFilter = this.searchForm.value;
+    // Send the dates in UTC
+    filters.fromDate = new Date(
+      interpretDateAsUTCDate(this.searchForm.controls.fromDate.value)
+    );
+    filters.toDate = new Date(
+      interpretDateAsUTCDate(this.searchForm.controls.toDate.value)
+    );
+
     if (this.searchForm.controls.excelMode.value) {
       this.backendApiService
-        .exportDonneesByCustomizedFilters(this.searchForm.value)
+        .exportDonneesByCustomizedFilters(filters)
         .subscribe((response) => {
           this.displayWaitPanel = false;
           this.donneesToDisplay = [];
@@ -202,7 +213,7 @@ export class ViewComponent extends PageComponent {
         });
     } else {
       this.backendApiService
-        .getDonneesByCustomizedFilters(this.searchForm.value)
+        .getDonneesByCustomizedFilters(filters)
         .subscribe((results: FlatDonnee[]) => {
           this.displayWaitPanel = false;
           this.donneesToDisplay = results;
