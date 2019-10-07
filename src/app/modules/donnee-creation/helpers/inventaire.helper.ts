@@ -15,7 +15,10 @@ import * as _ from "lodash";
 import moment = require("moment");
 import { FormValidatorHelper } from "../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../shared/helpers/list-helper";
-import { TimeHelper, interpretDateAsUTCDate } from "../../shared/helpers/time.helper";
+import {
+  TimeHelper,
+  interpretDateAsUTCDate
+} from "../../shared/helpers/time.helper";
 
 export class InventaireHelper {
   private static displayedInventaireId: number = null;
@@ -70,6 +73,17 @@ export class InventaireHelper {
       meteos: new FormControl("", [this.meteosValidator()])
     });
   }
+
+  public static updateFormState = (
+    form: FormGroup,
+    toEnable: boolean
+  ): void => {
+    if (toEnable) {
+      form.enable();
+    } else {
+      form.disable();
+    }
+  };
 
   /**
    * Initialize the inventaire form
@@ -133,7 +147,9 @@ export class InventaireHelper {
       inventaireFormControls.observateursAssocies.value
     );
 
-    const date: Date = new Date(interpretDateAsUTCDate(inventaireFormControls.date.value));
+    const date: Date = new Date(
+      interpretDateAsUTCDate(inventaireFormControls.date.value)
+    );
 
     const heure: string = TimeHelper.getFormattedTime(
       inventaireFormControls.heure.value

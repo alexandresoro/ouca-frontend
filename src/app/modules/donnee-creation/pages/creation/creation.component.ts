@@ -654,39 +654,23 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   private switchToInventaireMode(): void {
     CreationModeHelper.updateCreationMode(CreationModeEnum.NEW_INVENTAIRE);
-    this.handleInventaireFormState(true);
-    this.handleDonneeFormState(false);
+    InventaireHelper.updateFormState(this.inventaireForm, true);
+    DonneeHelper.updateFormState(this.donneeForm, false);
     document.getElementById("input-Observateur").focus();
   }
 
   private switchToEditionDonneeMode(): void {
     CreationModeHelper.updateCreationMode(CreationModeEnum.NEW_DONNEE);
-    this.handleInventaireFormState(false);
-    this.handleDonneeFormState(true);
+    InventaireHelper.updateFormState(this.inventaireForm, false);
+    DonneeHelper.updateFormState(this.donneeForm, true);
     document.getElementById("input-Espèce").focus();
   }
 
   private switchToUpdateMode(): void {
     CreationModeHelper.updateCreationMode(CreationModeEnum.UPDATE);
-    this.handleInventaireFormState(true);
-    this.handleDonneeFormState(true);
+    InventaireHelper.updateFormState(this.inventaireForm, true);
+    DonneeHelper.updateFormState(this.donneeForm, true);
     document.getElementById("input-Observateur").focus();
-  }
-
-  private handleInventaireFormState(toEnable: boolean): void {
-    if (toEnable) {
-      this.inventaireForm.enable();
-    } else {
-      this.inventaireForm.disable();
-    }
-  }
-
-  private handleDonneeFormState(toEnable: boolean): void {
-    if (toEnable) {
-      this.donneeForm.enable();
-    } else {
-      this.donneeForm.disable();
-    }
   }
 
   public getDisplayedInventaireId(): number {
