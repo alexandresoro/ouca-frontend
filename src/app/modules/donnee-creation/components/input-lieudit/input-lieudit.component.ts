@@ -94,27 +94,23 @@ export class InputLieuditComponent implements OnInit {
     this.filteredCommunes$ = combineLatest(
       departementControl.valueChanges,
       this.communes,
-      (selection, communes) => {
-        if (communes) {
-          if (selection) {
-            if (this.isMultipleSelectMode) {
-              return communes.filter((commune) => {
-                return (
-                  selection.indexOf(commune.departementId) > -1 ||
-                  selection.indexOf(commune.departement.id) > -1
-                );
-              });
-            } else {
-              return communes.filter((commune) => {
-                return (
-                  commune.departementId === selection.id ||
-                  (commune.departement &&
-                    commune.departement.id === selection.id)
-                );
-              });
-            }
+      (selection: string | number[] | Departement, communes) => {
+        if (communes && selection) {
+          if (this.isMultipleSelectMode) {
+            return communes.filter((commune) => {
+              return (
+                (selection as number[]).includes(commune.departementId) ||
+                (selection as number[]).includes(commune.departement.id)
+              );
+            });
           } else {
-            return communes;
+            return communes.filter((commune) => {
+              return (
+                commune.departementId === (selection as Departement).id ||
+                (commune.departement &&
+                  commune.departement.id === (selection as Departement).id)
+              );
+            });
           }
         } else {
           return [];
@@ -125,26 +121,22 @@ export class InputLieuditComponent implements OnInit {
     this.filteredLieuxdits$ = combineLatest(
       communeControl.valueChanges,
       this.lieuxdits,
-      (selection, lieuxdits) => {
-        if (lieuxdits) {
-          if (selection) {
-            if (this.isMultipleSelectMode) {
-              return lieuxdits.filter((lieudit) => {
-                return (
-                  selection.indexOf(lieudit.communeId) > -1 ||
-                  selection.indexOf(lieudit.commune.id) > -1
-                );
-              });
-            } else {
-              return lieuxdits.filter((lieudit) => {
-                return (
-                  lieudit.communeId === selection.id ||
-                  (lieudit.commune && lieudit.commune.id === selection.id)
-                );
-              });
-            }
+      (selection: string | number[] | Commune, lieuxdits) => {
+        if (lieuxdits && selection) {
+          if (this.isMultipleSelectMode) {
+            return lieuxdits.filter((lieudit) => {
+              return (
+                (selection as number[]).includes(lieudit.communeId) ||
+                (selection as number[]).includes(lieudit.commune.id)
+              );
+            });
           } else {
-            return lieuxdits;
+            return lieuxdits.filter((lieudit) => {
+              return (
+                lieudit.communeId === (selection as Commune).id ||
+                (lieudit.commune && lieudit.commune.id === (selection as Commune).id)
+              );
+            });
           }
         } else {
           return [];
