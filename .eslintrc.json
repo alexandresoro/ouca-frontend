@@ -11,11 +11,15 @@
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "rules": {
-    "@typescript-eslint/camelcase": "warn",
-    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/array-type": "error",
+    "@typescript-eslint/no-inferrable-types": [
+      "warn",
+      {
+        "ignoreProperties": true
+      }
+    ],
     "@typescript-eslint/no-unnecessary-type-assertion": "warn",
-    "@typescript-eslint/no-use-before-define": "warn",
-    "@typescript-eslint/prefer-includes": "warn",
+    "@typescript-eslint/prefer-for-of": "error",
     "@typescript-eslint/unbound-method": "warn",
     "no-useless-escape": "warn"
   }
