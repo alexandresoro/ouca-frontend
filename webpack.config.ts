@@ -1,7 +1,4 @@
-// `CheckerPlugin` is optional. Use it if you want async error reporting.
-// We need this plugin to detect a `--watch` mode. It may be removed later
-// after https://github.com/webpack/webpack/issues/3460 will be resolved.
-const webpack = require("webpack");
+import webpack = require("webpack");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -9,7 +6,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const WebappWebpackPlugin = require("webapp-webpack-plugin");
 const path = require("path");
 
-module.exports = (env, argv) => {
+module.exports = (env: any, argv: any): webpack.Configuration => {
   const isProductionMode = argv && argv.mode === "production";
 
   return {
