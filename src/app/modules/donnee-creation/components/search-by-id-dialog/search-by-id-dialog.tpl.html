@@ -2,19 +2,23 @@
 <mat-dialog-content>
   <!-- ID -->
   <mat-form-field>
-    <input matInput
+    <input
+      matInput
       type="number"
+      min="0"
+      max="16777215"
       placeholder="ID de la fiche espèce"
       id="input-id"
-      [(ngModel)]="idToSearch" />
+      [(ngModel)]="idToSearch"
+    />
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button
-    color="accent"
-    [mat-dialog-close]="null">Annuler</button>
-  <button mat-raised-button
-    color="primary"
-    [mat-dialog-close]="idToSearch">Chercher la fiche espèce</button>
+  <button mat-raised-button color="accent" [mat-dialog-close]="null">
+    Annuler
+  </button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="idToSearch">
+    Chercher la fiche espèce
+  </button>
 </mat-dialog-actions>
