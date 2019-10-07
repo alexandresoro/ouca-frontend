@@ -171,12 +171,14 @@ export class ViewComponent extends PageComponent {
 
     const filters: DonneesFilter = this.searchForm.value;
     // Send the dates in UTC
-    filters.fromDate = new Date(
-      interpretDateAsUTCDate(this.searchForm.controls.fromDate.value)
-    );
-    filters.toDate = new Date(
-      interpretDateAsUTCDate(this.searchForm.controls.toDate.value)
-    );
+    filters.fromDate = filters.fromDate
+      ? new Date(
+          interpretDateAsUTCDate(this.searchForm.controls.fromDate.value)
+        )
+      : null;
+    filters.toDate = filters.toDate
+      ? new Date(interpretDateAsUTCDate(this.searchForm.controls.toDate.value))
+      : null;
 
     if (this.searchForm.controls.excelMode.value) {
       this.backendApiService
