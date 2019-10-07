@@ -59,7 +59,6 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
   };
 
   private codeNumberValidator(): ValidatorFn {
-    console.log("la");
     return FormValidatorHelper.isAnIntegerValidator(0, 65535);
   }
 

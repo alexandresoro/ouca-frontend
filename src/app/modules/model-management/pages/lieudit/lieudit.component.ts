@@ -26,9 +26,18 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
         commune: new FormControl("", []),
         communeId: new FormControl("", [Validators.required]),
         nom: new FormControl("", [Validators.required]),
-        altitude: new FormControl("", [Validators.required]),
-        longitude: new FormControl("", [Validators.required]),
-        latitude: new FormControl("", [Validators.required])
+        altitude: new FormControl("", [
+          Validators.required,
+          this.altitudeNumberValidator()
+        ]),
+        longitude: new FormControl("", [
+          Validators.required,
+          this.longitudeNumberValidator()
+        ]),
+        latitude: new FormControl("", [
+          Validators.required,
+          this.latitudeNumberValidator()
+        ])
       },
       [this.nomValidator]
     );
@@ -64,6 +73,18 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
         )
       : null;
   };
+
+  private altitudeNumberValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnIntegerValidator(0, 65535);
+  }
+
+  private longitudeNumberValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnIntegerValidator(0, 16777215);
+  }
+
+  private latitudeNumberValidator(): ValidatorFn {
+    return FormValidatorHelper.isAnIntegerValidator(0, 16777215);
+  }
 
   getEntityName(): string {
     return "lieudit";

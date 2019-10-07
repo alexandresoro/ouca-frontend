@@ -99,6 +99,9 @@
   <mat-error *ngIf="entityForm.controls['altitude'].hasError('required')">
     Le champ "Altitude" ne peut pas être vide.
   </mat-error>
+  <mat-error *ngIf="entityForm.controls['altitude'].hasError('forbiddenValue')">
+    L'altitude doit être un entier compris entre 0 et 65535.
+  </mat-error>
 </mat-form-field>
 
 <!-- Longitude -->
@@ -118,6 +121,11 @@
   <mat-error *ngIf="entityForm.controls['longitude'].hasError('required')">
     Le champ "Longitude" ne peut pas être vide.
   </mat-error>
+  <mat-error
+    *ngIf="entityForm.controls['longitude'].hasError('forbiddenValue')"
+  >
+    La longitude doit être un entier compris entre 0 et 16777215.
+  </mat-error>
 </mat-form-field>
 
 <!-- Latitude -->
@@ -136,5 +144,8 @@
 
   <mat-error *ngIf="entityForm.controls['latitude'].hasError('required')">
     Le champ "Latitude" ne peut pas être vide.
+  </mat-error>
+  <mat-error *ngIf="entityForm.controls['latitude'].hasError('forbiddenValue')">
+    La latitude doit être un entier compris entre 0 et 16777215.
   </mat-error>
 </mat-form-field>
