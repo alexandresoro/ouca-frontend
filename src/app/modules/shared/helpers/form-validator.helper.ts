@@ -28,10 +28,7 @@ export class FormValidatorHelper {
     };
   }
 
-  public static isAnIntegerValidator(
-    shouldBePositive?: boolean,
-    restrictiveCondition?: boolean
-  ): ValidatorFn {
+  public static isAnIntegerValidator(min?: number, max?: number): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (!control.value) {
         return null;
@@ -39,16 +36,19 @@ export class FormValidatorHelper {
 
       const valueIsNotAnInteger: boolean = !Number.isInteger(control.value);
 
-      let valueHasWrongSign: boolean = false;
-      if (!valueIsNotAnInteger && !!shouldBePositive) {
-        if (!restrictiveCondition) {
-          valueHasWrongSign = !(control.value >= 0);
-        } else {
-          valueHasWrongSign = !(control.value > 0);
+      let valueIsBelowMinimum: boolean = false;
+      let valueIsAboveMaximum: boolean = false;
+      if (!valueIsNotAnInteger) {
+        if (Number.isInteger(min)) {
+          valueIsBelowMinimum = !(control.value >= min);
+        }
+
+        if (Number.isInteger(max)) {
+          valueIsAboveMaximum = !(control.value <= max);
         }
       }
 
-      return valueIsNotAnInteger || valueHasWrongSign
+      return valueIsNotAnInteger || valueIsBelowMinimum || valueIsAboveMaximum
         ? { forbiddenValue: { value: control.value } }
         : null;
     };

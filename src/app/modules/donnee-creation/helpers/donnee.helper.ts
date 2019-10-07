@@ -475,7 +475,7 @@ export class DonneeHelper {
   }
 
   private static nombreValidator(): ValidatorFn {
-    return FormValidatorHelper.isAnIntegerValidator(true, true);
+    return FormValidatorHelper.isAnIntegerValidator(1, 65535);
   }
 
   private static estimationNombreValidator(): ValidatorFn {
@@ -491,7 +491,7 @@ export class DonneeHelper {
   }
 
   private static distanceValidator(): ValidatorFn {
-    return FormValidatorHelper.isAnIntegerValidator(true);
+    return FormValidatorHelper.isAnIntegerValidator(0, 65535);
   }
 
   private static estimationDistanceValidator(): ValidatorFn {
@@ -499,7 +499,7 @@ export class DonneeHelper {
   }
 
   private static regroupementValidator(): ValidatorFn {
-    return FormValidatorHelper.isAnIntegerValidator();
+    return FormValidatorHelper.isAnIntegerValidator(1, 65535);
   }
 
   private static comportementValidator(): ValidatorFn {

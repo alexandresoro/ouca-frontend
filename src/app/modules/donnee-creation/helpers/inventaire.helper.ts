@@ -395,35 +395,35 @@ export class InventaireHelper {
    * The altitude should be filled and should be an integer
    */
   private static altitudeValidator(): ValidatorFn {
-    return this.coordinatesValidator();
+    return this.coordinatesValidator(0, 65535);
   }
 
   /**
    * The longitude should be filled and should be an integer
    */
   private static longitudeValidator(): ValidatorFn {
-    return this.coordinatesValidator();
+    return this.coordinatesValidator(0, 16777215);
   }
 
   /**
    * The latitude should be filled and should be an integer
    */
   private static latitudeValidator(): ValidatorFn {
-    return this.coordinatesValidator();
+    return this.coordinatesValidator(0, 16777215);
   }
 
   /**
    * The coordinates should be integer
    */
-  private static coordinatesValidator(): ValidatorFn {
-    return FormValidatorHelper.isAnIntegerValidator();
+  private static coordinatesValidator(min: number, max: number): ValidatorFn {
+    return FormValidatorHelper.isAnIntegerValidator(min, max);
   }
 
   /**
    * The temperature should be empty or filled and an integer
    */
   private static temperatureValidator(): ValidatorFn {
-    return FormValidatorHelper.isAnIntegerValidator();
+    return FormValidatorHelper.isAnIntegerValidator(-128, 127);
   }
 
   /**
