@@ -39,6 +39,9 @@
   <mat-error *ngIf="entityForm.hasError('alreadyExistingCode')">
     {{ entityForm.getError("alreadyExistingCode").message }}
   </mat-error>
+  <mat-error *ngIf="entityForm.controls['code'].hasError('forbiddenValue')">
+    Le code de la commune doit être un entier compris entre 0 et 65535.
+  </mat-error>
 </mat-form-field>
 
 <!-- Nom -->

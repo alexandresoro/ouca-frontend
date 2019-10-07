@@ -24,7 +24,10 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
         id: new FormControl("", []),
         departement: new FormControl("", []),
         departementId: new FormControl("", [Validators.required]),
-        code: new FormControl("", [Validators.required]),
+        code: new FormControl("", [
+          Validators.required,
+          this.codeNumberValidator()
+        ]),
         nom: new FormControl("", [Validators.required])
       },
       [this.codeValidator, this.nomValidator]
@@ -53,6 +56,11 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
             " avec ce code dans ce département."
         )
       : null;
+  };
+
+  private codeNumberValidator(): ValidatorFn {
+    console.log("la");
+    return FormValidatorHelper.isAnIntegerValidator(0, 65535);
   }
 
   public nomValidator: ValidatorFn = (
@@ -83,7 +91,7 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
             " avec ce nom dans ce département."
         )
       : null;
-  }
+  };
 
   getEntityName(): string {
     return "commune";

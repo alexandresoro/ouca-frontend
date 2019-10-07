@@ -63,7 +63,7 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
             " avec ce nom dans cette commune."
         )
       : null;
-  }
+  };
 
   getEntityName(): string {
     return "lieudit";
