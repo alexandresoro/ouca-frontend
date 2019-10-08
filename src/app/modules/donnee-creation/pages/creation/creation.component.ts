@@ -60,7 +60,11 @@ export class CreationComponent extends PageComponent implements OnInit {
   ) {
     super(snackbar);
     const navigation = this.router.getCurrentNavigation();
-    if (navigation.extras && navigation.extras.state && (navigation.extras.state as { id: number }).id) {
+    if (
+      navigation.extras &&
+      navigation.extras.state &&
+      (navigation.extras.state as { id: number }).id
+    ) {
       this.requestedEspeceId = (navigation.extras.state as { id: number }).id;
     }
   }
@@ -90,7 +94,6 @@ export class CreationComponent extends PageComponent implements OnInit {
       });
   }
 
-
   private displayDonneeById = (idToFind: number): void => {
     this.backendApiService
       .getDonneeByIdWithContext(idToFind)
@@ -118,7 +121,7 @@ export class CreationComponent extends PageComponent implements OnInit {
           );
         }
       });
-  }
+  };
 
   /**
    * If back-end call is successful, use the initial creation page model to build the page
@@ -145,7 +148,6 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.pageModel.numberOfDonnees
       );
 
-
       // If the user navigated to this page with a defined id, retrieve this id
       if (this.requestedEspeceId != null) {
         this.displayDonneeById(this.requestedEspeceId);
@@ -154,7 +156,6 @@ export class CreationComponent extends PageComponent implements OnInit {
         // Otherwise call, the normal initialization of the page
         this.switchToNewInventaireMode();
       }
-
     } else {
       this.showErrorMessage(
         "Impossible de charger le contenu la page de Saisie des observations."
@@ -266,7 +267,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         } else {
           this.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de l'inventaire: " +
-            response.message
+              response.message
           );
         }
       });
@@ -381,9 +382,9 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private displayInventaireDialog(): void {
-    const ALL_DONNEES_OPTION: number = 1;
-    const ONLY_CURRENT_DONNEE_OPTION: number = 2;
-    const CANCEL_OPTION: number = 3;
+    const ALL_DONNEES_OPTION = 1;
+    const ONLY_CURRENT_DONNEE_OPTION = 2;
+    const CANCEL_OPTION = 3;
 
     const updateInventaireDialogData: MultipleOptionsDialogData = {
       title: "Confirmation de mise-à-jour",
@@ -464,14 +465,14 @@ export class CreationComponent extends PageComponent implements OnInit {
               } else {
                 this.showErrorMessage(
                   "Une erreur est survenue pendant la sauvegarde de la fiche espèce: " +
-                  response.message
+                    response.message
                 );
               }
             });
         } else {
           this.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de la fiche inventaire:" +
-            response.message
+              response.message
           );
         }
       });
@@ -691,10 +692,6 @@ export class CreationComponent extends PageComponent implements OnInit {
     InventaireHelper.updateFormState(this.inventaireForm, true);
     DonneeHelper.updateFormState(this.donneeForm, true);
     document.getElementById("input-Observateur").focus();
-  }
-
-  public getDisplayedInventaireId(): number {
-    return InventaireHelper.getDisplayedInventaireId();
   }
 
   public getDisplayedDonneeId(): number {
