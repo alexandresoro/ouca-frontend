@@ -98,7 +98,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.backendApiService
       .getDonneeByIdWithContext(idToFind)
       .subscribe((donnee: DonneeWithNavigationData) => {
-        if (donnee) {
+        if (donnee && donnee.inventaireId) {
           InventaireHelper.setInventaireFormFromInventaire(
             this.inventaireForm,
             donnee.inventaire,
