@@ -702,5 +702,12 @@ body.base-naturaliste {
     mat-paginator {
       margin-top: 20px;
     }
+
+    .edit-donnee-button {
+      height: 20px;
+      mat-icon {
+        margin-bottom: 5px;
+      }
+    }
   }
 }

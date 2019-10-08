@@ -235,11 +235,12 @@
             <div>
               <strong>ID:</strong> {{ element.id }}
               <button
-                mat-raised-button
+                mat-icon-button
                 color="primary"
                 (click)="editDonnee(element.id)"
+                class="edit-donnee-button"
               >
-                Voir
+                <mat-icon>search</mat-icon>
               </button>
               <br />
 
