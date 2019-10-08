@@ -9,6 +9,7 @@ import { Component, Input, SimpleChanges, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "table-donnees",
@@ -58,6 +59,11 @@ export class TableDonneesComponent {
 
   public selectedDonnee: any;
 
+  constructor(
+    private router: Router
+  ) {
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.donneesToDisplay && !!changes.donneesToDisplay.currentValue) {
       this.dataSource.data = changes.donneesToDisplay.currentValue;
@@ -84,5 +90,9 @@ export class TableDonneesComponent {
     } else {
       this.selectedDonnee = object;
     }
+  };
+
+  public editDonnee = (id: number): void => {
+    this.router.navigate(["/creation"], { state: { id: id } });
   };
 }

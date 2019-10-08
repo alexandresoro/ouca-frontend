@@ -234,6 +234,13 @@
           <div class="donnee-details-panel">
             <div>
               <strong>ID:</strong> {{ element.id }}
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="editDonnee(element.id)"
+              >
+                Voir
+              </button>
               <br />
 
               <strong>Observateur:</strong> {{ element.observateur }}

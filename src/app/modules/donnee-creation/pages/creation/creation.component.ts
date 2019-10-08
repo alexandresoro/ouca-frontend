@@ -25,6 +25,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { PageComponent } from "../../../shared/pages/page.component";
 import { PostResponse } from "basenaturaliste-model/post-response.object";
 import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
+import { Router } from "@angular/router";
 
 @Component({
   templateUrl: "./creation.tpl.html"
@@ -48,13 +49,20 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public donneeForm: FormGroup;
 
+  private requestedEspeceId: number;
+
   constructor(
     private backendApiService: BackendApiService,
     public dialog: MatDialog,
     protected snackbar: MatSnackBar,
-    public navigationService: NavigationService
+    public navigationService: NavigationService,
+    private router: Router
   ) {
     super(snackbar);
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation.extras && navigation.extras.state && (navigation.extras.state as { id: number }).id) {
+      this.requestedEspeceId = (navigation.extras.state as { id: number }).id;
+    }
   }
 
   public ngOnInit(): void {
@@ -79,6 +87,36 @@ export class CreationComponent extends PageComponent implements OnInit {
       .getCreationInitialPageModel()
       .subscribe((creationPage: CreationPage) => {
         this.onInitCreationPageSucces(creationPage);
+      });
+  }
+
+
+  private displayDonneeById = (idToFind: number): void => {
+    this.backendApiService
+      .getDonneeByIdWithContext(idToFind)
+      .subscribe((donnee: DonneeWithNavigationData) => {
+        if (donnee) {
+          InventaireHelper.setInventaireFormFromInventaire(
+            this.inventaireForm,
+            donnee.inventaire,
+            this.pageModel
+          );
+          DonneeHelper.setDonneeFormFromDonnee(
+            this.donneeForm,
+            donnee,
+            this.pageModel
+          );
+          this.switchToUpdateMode();
+          this.navigationService.updateNavigationAfterSearchDonneeById(
+            donnee.indexDonnee,
+            donnee.previousDonneeId,
+            donnee.nextDonneeId
+          );
+        } else {
+          this.showErrorMessage(
+            "Aucune fiche espèce trouvée avec l'ID " + idToFind + "."
+          );
+        }
       });
   }
 
@@ -107,8 +145,16 @@ export class CreationComponent extends PageComponent implements OnInit {
         this.pageModel.numberOfDonnees
       );
 
-      // Page model is ready, initalize the page to create a first inventaire
-      this.switchToNewInventaireMode();
+
+      // If the user navigated to this page with a defined id, retrieve this id
+      if (this.requestedEspeceId != null) {
+        this.displayDonneeById(this.requestedEspeceId);
+        this.requestedEspeceId = null;
+      } else {
+        // Otherwise call, the normal initialization of the page
+        this.switchToNewInventaireMode();
+      }
+
     } else {
       this.showErrorMessage(
         "Impossible de charger le contenu la page de Saisie des observations."
@@ -220,7 +266,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         } else {
           this.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de l'inventaire: " +
-              response.message
+            response.message
           );
         }
       });
@@ -418,14 +464,14 @@ export class CreationComponent extends PageComponent implements OnInit {
               } else {
                 this.showErrorMessage(
                   "Une erreur est survenue pendant la sauvegarde de la fiche espèce: " +
-                    response.message
+                  response.message
                 );
               }
             });
         } else {
           this.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de la fiche inventaire:" +
-              response.message
+            response.message
           );
         }
       });
@@ -621,33 +667,7 @@ export class CreationComponent extends PageComponent implements OnInit {
         if (!CreationModeHelper.isUpdateMode()) {
           this.saveCurrentContext(this.getCurrentDonneeFromForm());
         }
-
-        this.backendApiService
-          .getDonneeByIdWithContext(idToFind)
-          .subscribe((donnee: DonneeWithNavigationData) => {
-            if (donnee) {
-              InventaireHelper.setInventaireFormFromInventaire(
-                this.inventaireForm,
-                donnee.inventaire,
-                this.pageModel
-              );
-              DonneeHelper.setDonneeFormFromDonnee(
-                this.donneeForm,
-                donnee,
-                this.pageModel
-              );
-              this.switchToUpdateMode();
-              this.navigationService.updateNavigationAfterSearchDonneeById(
-                donnee.indexDonnee,
-                donnee.previousDonneeId,
-                donnee.nextDonneeId
-              );
-            } else {
-              this.showErrorMessage(
-                "Aucune fiche espèce trouvée avec l'ID " + idToFind + "."
-              );
-            }
-          });
+        this.displayDonneeById(idToFind);
       }
     });
   }
