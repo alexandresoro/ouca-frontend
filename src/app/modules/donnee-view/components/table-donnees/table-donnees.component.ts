@@ -5,11 +5,21 @@ import {
   transition,
   trigger
 } from "@angular/animations";
-import { Component, Input, SimpleChanges, ViewChild } from "@angular/core";
+import {
+  Component,
+  Input,
+  SimpleChanges,
+  ViewChild,
+  OnChanges,
+  OnInit
+} from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
+import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
+import * as _ from "lodash";
+import moment = require("moment");
 
 @Component({
   selector: "table-donnees",
@@ -25,7 +35,7 @@ import { Router } from "@angular/router";
     ])
   ]
 })
-export class TableDonneesComponent {
+export class TableDonneesComponent implements OnChanges, OnInit {
   public COMPORTEMENTS_INDEXES: number[] = [1, 2, 3, 4, 5, 6];
   public MILIEUX_INDEXES: number[] = [1, 2, 3, 4];
 
@@ -47,7 +57,7 @@ export class TableDonneesComponent {
 
   @Input() public donneesToDisplay: any[];
 
-  public dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<FlatDonnee> = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -59,16 +69,76 @@ export class TableDonneesComponent {
 
   public selectedDonnee: any;
 
-  constructor(
-    private router: Router
-  ) {
+  constructor(private router: Router) {}
+
+  private filterData = (data: FlatDonnee, filterValue: string): boolean => {
+    const otherData = _.difference(_.keys(data), [
+      "date",
+      "comportements",
+      "milieux"
+    ]);
+
+    const otherDataFilter = _.some(otherData, (dataField) => {
+      if (_.isNumber(data[dataField])) {
+        return "" + data[dataField] === filterValue;
+      }
+
+      return ("" + data[dataField])
+        .trim()
+        .toLowerCase()
+        .includes(filterValue);
+    });
+    if (otherDataFilter) {
+      return true;
+    }
+
+    const comportementsFilter = _.some(data.comportements, (comportement) => {
+      return (
+        _.toNumber(comportement.code) === _.toNumber(filterValue) ||
+        comportement.libelle
+          .trim()
+          .toLowerCase()
+          .includes(filterValue)
+      );
+    });
+    if (comportementsFilter) {
+      return true;
+    }
+
+    const milieuxFilter = _.some(data.milieux, (milieu) => {
+      return (
+        _.toNumber(milieu.code) === _.toNumber(filterValue) ||
+        milieu.libelle
+          .trim()
+          .toLowerCase()
+          .includes(filterValue)
+      );
+    });
+    if (milieuxFilter) {
+      return true;
+    }
+
+    console.log(moment.utc(data.date).format("dd/MM/YYYY"));
+    if (
+      moment(data.date)
+        .format("DD/MM/YYYY")
+        .includes(filterValue)
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.filterPredicate = this.filterData;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.donneesToDisplay && !!changes.donneesToDisplay.currentValue) {
       this.dataSource.data = changes.donneesToDisplay.currentValue;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
     }
   }
 
