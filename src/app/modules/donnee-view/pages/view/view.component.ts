@@ -84,6 +84,8 @@ export class ViewComponent extends PageComponent {
 
   public displayWaitPanel: boolean = false;
 
+  public displayNoDataPanel: boolean = false;
+
   public donneesToDisplay: FlatDonnee[] = [];
 
   public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
@@ -168,6 +170,9 @@ export class ViewComponent extends PageComponent {
 
   public onSearchButtonClicked(): void {
     this.displayWaitPanel = true;
+    this.displayNoDataPanel = false;
+    this.donneesToDisplay = [];
+    this.especesWithNbDonnees = [];
 
     const filters: DonneesFilter = this.searchForm.value;
     // Send the dates in UTC
@@ -185,7 +190,6 @@ export class ViewComponent extends PageComponent {
         .exportDonneesByCustomizedFilters(filters)
         .subscribe((response) => {
           this.displayWaitPanel = false;
-          this.donneesToDisplay = [];
 
           // This is an ugly "bidouille"
           // The export can exceed tha maximum supported number of data (set in backend)
@@ -220,6 +224,7 @@ export class ViewComponent extends PageComponent {
           this.displayWaitPanel = false;
           this.donneesToDisplay = results;
           this.setEspecesWithNbDonnees(this.donneesToDisplay);
+          this.displayNoDataPanel = this.donneesToDisplay.length === 0;
         });
     }
   }
