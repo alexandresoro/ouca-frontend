@@ -286,25 +286,16 @@
               <strong>Lieu-dit:</strong> {{ element.lieudit }}
               <br />
               <strong>Altitude:</strong>
-              {{
-                !!element.customizedAltitude
-                  ? element.customizedAltitude
-                  : element.altitude
-              }}
+              {{ (!!element.customizedAltitude || element.customizedAltitude ===
+              0) ? element.customizedAltitude : element.altitude }}
               <br />
               <strong>Longitude:</strong>
-              {{
-                !!element.customizedLongitude
-                  ? element.customizedLongitude
-                  : element.longitude
-              }}
+              {{ (!!element.customizedLongitude || element.customizedLongitude
+              === 0) ? element.customizedLongitude : element.longitude }}
               <br />
               <strong>Latitude:</strong>
-              {{
-                !!element.customizedLatitude
-                  ? element.customizedLatitude
-                  : element.latitude
-              }}
+              {{ (!!element.customizedLatitude || element.customizedLatitude ===
+              0)? element.customizedLatitude : element.latitude }}
             </div>
             <div>
               <strong>Classe:</strong> {{ element.classe }}

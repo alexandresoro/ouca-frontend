@@ -274,19 +274,19 @@ export class InventaireHelper {
     lieuditFormControls.commune.setValue(commune);
     lieuditFormControls.lieudit.setValue(lieudit);
     if (
-      !!inventaire.altitude &&
-      !!inventaire.longitude &&
-      !!inventaire.latitude
+      _.isNil(inventaire.altitude) &&
+      _.isNil(inventaire.longitude) &&
+      _.isNil(inventaire.latitude)
     ) {
-      lieuditFormControls.altitude.setValue(inventaire.altitude);
-      lieuditFormControls.longitude.setValue(inventaire.longitude);
-      lieuditFormControls.latitude.setValue(inventaire.latitude);
-    } else {
       lieuditFormControls.altitude.setValue(lieudit ? lieudit.altitude : null);
       lieuditFormControls.longitude.setValue(
         lieudit ? lieudit.longitude : null
       );
       lieuditFormControls.latitude.setValue(lieudit ? lieudit.latitude : null);
+    } else {
+      lieuditFormControls.altitude.setValue(inventaire.altitude);
+      lieuditFormControls.longitude.setValue(inventaire.longitude);
+      lieuditFormControls.latitude.setValue(inventaire.latitude);
     }
     inventaireFormControls.temperature.setValue(inventaire.temperature);
     inventaireFormControls.meteos.setValue(meteos);

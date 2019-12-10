@@ -11,6 +11,7 @@ import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+import * as _ from "lodash";
 
 @Component({
   selector: "input-lieudit",
@@ -134,7 +135,8 @@ export class InputLieuditComponent implements OnInit {
             return lieuxdits.filter((lieudit) => {
               return (
                 lieudit.communeId === (selection as Commune).id ||
-                (lieudit.commune && lieudit.commune.id === (selection as Commune).id)
+                (lieudit.commune &&
+                  lieudit.commune.id === (selection as Commune).id)
               );
             });
           }
@@ -166,17 +168,17 @@ export class InputLieuditComponent implements OnInit {
   /**
    * When selecting a lieu-dit, update coordinates
    */
-  public updateCoordinates(lieuDit: Lieudit): void {
+  public updateCoordinates(lieudit: Lieudit): void {
     if (
-      !!lieuDit &&
-      !!lieuDit.altitude &&
-      !!lieuDit.longitude &&
-      !!lieuDit.latitude
+      !!lieudit &&
+      !_.isNil(lieudit.altitude) &&
+      !_.isNil(lieudit.longitude) &&
+      !_.isNil(lieudit.latitude)
     ) {
       this.setSelectedCoordinates(
-        lieuDit.altitude,
-        lieuDit.longitude,
-        lieuDit.latitude
+        lieudit.altitude,
+        lieudit.longitude,
+        lieudit.latitude
       );
     } else {
       this.setSelectedCoordinates(null, null, null);

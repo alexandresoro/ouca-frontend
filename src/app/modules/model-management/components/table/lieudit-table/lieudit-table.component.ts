@@ -59,7 +59,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     };
   }
 
-  public onRowLieuditClicked(id: number) {
+  public onRowLieuditClicked(id: number): void {
     if (!!this.selectedObject && this.selectedObject.id === id) {
       this.selectedObject = undefined;
     } else {
