@@ -286,9 +286,8 @@
               <strong>Lieu-dit:</strong> {{ element.lieudit }}
               <br />
               <strong>Altitude:</strong>
-              {{ (!!element.customizedAltitudeL2E ||
-              element.customizedAltitudeL2E === 0) ?
-              element.customizedAltitudeL2E : element.altitudeL2E }}
+              {{ (!!element.customizedAltitude || element.customizedAltitude ===
+              0) ? element.customizedAltitude : element.altitude }}
               <br />
               <strong>Longitude (Lambert II étendu):</strong>
               {{ (!!element.customizedLongitudeL2E ||
