@@ -19,7 +19,9 @@ export class PageComponent {
         severity: severity,
         error: error
       },
-      duration: 5000
+      duration: 5000,
+      panelClass:
+        severity === StatusMessageSeverity.ERROR ? "status-message-error" : ""
     } as MatSnackBarConfig<StatusMessageParameters>);
   };
 

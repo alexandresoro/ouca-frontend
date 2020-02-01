@@ -712,4 +712,12 @@ body.base-naturaliste {
       }
     }
   }
+
+  .mat-snack-bar-container {
+    color: white;
+  }
+
+  .status-message-error {
+    background: mat-color($mat-pink, 400);
+  }
 }
