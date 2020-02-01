@@ -1,9 +1,8 @@
 import { Component } from "@angular/core";
 
 @Component({
-    selector: "base-naturaliste",
-    templateUrl: "./app.tpl.html",
+  selector: "base-naturaliste",
+  styleUrls: ["./app.component.scss"],
+  templateUrl: "./app.tpl.html"
 })
-export class AppComponent {
-
-}
+export class AppComponent {}

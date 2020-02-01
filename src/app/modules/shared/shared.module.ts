@@ -52,7 +52,6 @@ import { AutocompleteComponent } from "./components/autocomplete/autocomplete.co
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { MultipleSelectComponent } from "./components/form/multiple-select/multiple-select.component";
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
-import { BackendApiService } from "./services/backend-api.service";
 import { StatusMessageComponent } from "./components/status-message/status-message.component";
 import { MatTabsModule } from "@angular/material/tabs";
 
@@ -162,8 +161,7 @@ import { MatTabsModule } from "@angular/material/tabs";
       deps: [MAT_DATE_LOCALE]
     },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    BackendApiService
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
   ]
 })
 export class SharedModule {}

@@ -10,6 +10,7 @@ import { NotFoundComponent } from "./modules/shared/components/not-found/not-fou
 import { ServerErrorComponent } from "./modules/shared/components/server-error/server-error.component";
 import { HttpRequestInterceptor } from "./modules/shared/services/http-request-interceptor";
 import { SharedModule } from "./modules/shared/shared.module";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 const routes: Routes = [
   { path: "error", component: ServerErrorComponent },
@@ -22,7 +23,8 @@ const routes: Routes = [
     ApplicationManagementModule,
     DonneeCreationModule,
     DonneeViewModule,
-    ModelManagementModule
+    ModelManagementModule,
+    FlexLayoutModule
   ],
   exports: [],
   declarations: [AppComponent, NotFoundComponent, ServerErrorComponent],

@@ -5,6 +5,9 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const WebappWebpackPlugin = require("webapp-webpack-plugin");
 const path = require("path");
 const AngularCompilerPlugin = require("@ngtools/webpack").AngularCompilerPlugin;
+const TerserJSPlugin = require("terser-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MomentLocalesPlugin = require("moment-locales-webpack-plugin");
 
 module.exports = (env, argv) => {
   return {
@@ -36,22 +39,20 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.scss$/,
-          use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+          exclude: [/styles\.scss$/],
+          use: ["to-string-loader", "css-loader", "sass-loader"]
         },
         {
-          test: /\.css$/,
-          use: [MiniCssExtractPlugin.loader, "css-loader"]
+          test: /styles\.scss$/,
+          exclude: /node_modules/,
+          use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
         }
       ]
     },
     plugins: [
       new AngularCompilerPlugin({
         tsConfigPath: path.join(process.cwd(), "tsconfig.aot.json"),
-        entryModule: path.join(
-          process.cwd(),
-          "src/app/app.module.ts#AppModule"
-        ),
-        sourceMap: true
+        entryModule: path.join(process.cwd(), "src/app/app.module.ts#AppModule")
       }),
       new CleanWebpackPlugin({}),
       new WebappWebpackPlugin("./src/assets/img/logo.svg"),
@@ -60,23 +61,21 @@ module.exports = (env, argv) => {
       }),
       new MiniCssExtractPlugin({
         filename: "[name].[hash].css",
-        chunkFilename: "[id].[hash].css"
+        chunkFilename: "[name].[id].[hash].css"
+      }),
+      new MomentLocalesPlugin({
+        localesToKeep: ["fr"]
       })
     ],
 
     optimization: {
+      minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
       splitChunks: {
         cacheGroups: {
           commons: {
             test: /[\\/]node_modules[\\/]/,
             name: "vendors",
             chunks: "all"
-          },
-          styles: {
-            name: "styles",
-            test: /\.css$/,
-            chunks: "all",
-            enforce: true
           }
         }
       }
@@ -85,7 +84,7 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "[name].[hash].js",
-      chunkFilename: "[id].[hash].chunk.js"
+      chunkFilename: "[name].[id].[hash].chunk.js"
     }
   };
 };

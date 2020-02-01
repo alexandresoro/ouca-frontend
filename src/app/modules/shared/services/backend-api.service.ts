@@ -14,7 +14,9 @@ import { PostResponse } from "basenaturaliste-model/post-response.object";
 import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
 import { DonneesFilter } from "basenaturaliste-model/donnees-filter.object";
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class BackendApiService {
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";

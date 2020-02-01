@@ -11,6 +11,8 @@ $material-design-icons-font-directory-path: "~material-design-icons-iconfont/dis
   src: url("assets/fonts/showg.ttf") format("truetype");
 }
 
+@import "../node_modules/typeface-roboto/index.css";
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
@@ -102,48 +104,6 @@ body.base-naturaliste {
   mat-card.mat-card-override {
     padding: 12px;
     padding-bottom: 0;
-  }
-
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  mat-toolbar.base-naturaliste-header {
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
-      rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
-    flex: 0 0 auto;
-    height: auto;
-    z-index: 1000;
-
-    .icon-header {
-      margin-bottom: -10px;
-    }
-
-    .title-header {
-      font-family: Showcard Gothic;
-      font-size: 26px;
-      margin-left: 10px;
-      vertical-align: bottom;
-      text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-    }
-  }
-
-  .base-naturaliste-content {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    margin-bottom: 10px;
-
-    .base-naturaliste-body {
-      max-width: 1600px;
-      margin: 0 auto;
-    }
-  }
-
-  .header-spacer {
-    flex: 1 1 auto;
   }
 
   .creation-page {

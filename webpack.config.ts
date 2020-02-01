@@ -66,18 +66,13 @@ module.exports = (env: any, argv: any): webpack.Configuration => {
         },
         {
           test: /\.scss$/,
-          use: [
-            // fallback to style-loader in development
-            process.env.NODE_ENV !== "production"
-              ? "style-loader"
-              : MiniCssExtractPlugin.loader,
-            "css-loader",
-            "sass-loader"
-          ]
+          exclude: [/styles\.scss$/],
+          use: ["to-string-loader", "css-loader", "sass-loader"]
         },
         {
-          test: /\.css$/,
-          use: [MiniCssExtractPlugin.loader, "css-loader"]
+          test: /styles\.scss$/,
+          exclude: /node_modules/,
+          use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
         }
       ]
     },

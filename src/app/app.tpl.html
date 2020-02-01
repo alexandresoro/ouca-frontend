@@ -1,5 +1,10 @@
-<div class="wrapper">
-  <mat-toolbar class="base-naturaliste-header" color="primary">
+<div fxLayout="column" class="wrapper">
+  <mat-toolbar
+    fxLayout="row"
+    fxFlex="0 0 auto"
+    class="base-naturaliste-header"
+    color="primary"
+  >
     <a mat-button routerLink="/">
       <img
         src="../assets/img/logo.svg"
@@ -9,7 +14,7 @@
       />
       <span class="title-header">oùça?</span>
     </a>
-    <span class="header-spacer"></span>
+    <span fxFlex="1 1 auto"></span>
     <a mat-button routerLink="creation">
       <mat-icon>add</mat-icon>
       Saisie des observations</a
@@ -97,7 +102,7 @@
     </mat-menu>
   </mat-toolbar>
 
-  <div class="base-naturaliste-content">
+  <div fxFlex="1 1 auto" class="base-naturaliste-content">
     <div class="base-naturaliste-body">
       <router-outlet></router-outlet>
     </div>
