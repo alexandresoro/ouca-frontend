@@ -285,17 +285,20 @@
               <br />
               <strong>Lieu-dit:</strong> {{ element.lieudit }}
               <br />
-              <strong>Altitude:</strong>
-              {{ (!!element.customizedAltitude || element.customizedAltitude ===
-              0) ? element.customizedAltitude : element.altitude }}
+              <strong>Altitude (Lambert II étendu):</strong>
+              {{ (!!element.customizedAltitudeL2E ||
+              element.customizedAltitudeL2E === 0) ?
+              element.customizedAltitudeL2E : element.altitudeL2E }}
               <br />
-              <strong>Longitude:</strong>
-              {{ (!!element.customizedLongitude || element.customizedLongitude
-              === 0) ? element.customizedLongitude : element.longitude }}
+              <strong>Longitude (Lambert II étendu):</strong>
+              {{ (!!element.customizedLongitudeL2E ||
+              element.customizedLongitudeL2E === 0) ?
+              element.customizedLongitudeL2E : element.longitudeL2E }}
               <br />
-              <strong>Latitude:</strong>
-              {{ (!!element.customizedLatitude || element.customizedLatitude ===
-              0)? element.customizedLatitude : element.latitude }}
+              <strong>Latitude (Lambert II étendu):</strong>
+              {{ (!!element.customizedLatitudeL2E ||
+              element.customizedLatitudeL2E === 0)?
+              element.customizedLatitudeL2E : element.latitudeL2E }}
             </div>
             <div>
               <strong>Classe:</strong> {{ element.classe }}

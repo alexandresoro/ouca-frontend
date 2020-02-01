@@ -7,12 +7,12 @@ import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple
 interface LieuditRow {
   id: number;
   departement: string;
-  codeCommune: string;
+  codeCommune: number;
   nomCommune: string;
   nom: string;
-  altitude: number;
-  longitude: number;
-  latitude: number;
+  altitudeL2E: number;
+  longitudeL2E: number;
+  latitudeL2E: number;
   nbDonnees: number;
 }
 
@@ -27,9 +27,9 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "codeCommune",
     "nomCommune",
     "nom",
-    "altitude",
-    "longitude",
-    "latitude",
+    "altitudeL2E",
+    "longitudeL2E",
+    "latitudeL2E",
     "nbDonnees"
   ];
 
@@ -52,9 +52,9 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       codeCommune: lieudit.commune.code,
       nomCommune: lieudit.commune.nom,
       nom: lieudit.nom,
-      altitude: lieudit.altitude,
-      longitude: lieudit.longitude,
-      latitude: lieudit.latitude,
+      altitudeL2E: lieudit.coordinatesL2E.altitude,
+      longitudeL2E: lieudit.coordinatesL2E.longitude,
+      latitudeL2E: lieudit.coordinatesL2E.latitude,
       nbDonnees: lieudit.nbDonnees
     };
   }

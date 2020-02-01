@@ -26,18 +26,20 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
         commune: new FormControl("", []),
         communeId: new FormControl("", [Validators.required]),
         nom: new FormControl("", [Validators.required]),
-        altitude: new FormControl("", [
-          Validators.required,
-          this.altitudeNumberValidator()
-        ]),
-        longitude: new FormControl("", [
-          Validators.required,
-          this.longitudeNumberValidator()
-        ]),
-        latitude: new FormControl("", [
-          Validators.required,
-          this.latitudeNumberValidator()
-        ])
+        coordinatesL2E: new FormGroup({
+          altitude: new FormControl("", [
+            Validators.required,
+            this.altitudeNumberValidator()
+          ]),
+          longitude: new FormControl("", [
+            Validators.required,
+            this.longitudeNumberValidator()
+          ]),
+          latitude: new FormControl("", [
+            Validators.required,
+            this.latitudeNumberValidator()
+          ])
+        })
       },
       [this.nomValidator]
     );
@@ -122,16 +124,16 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
       this.currentObject.nom
     );
     detailsData[5] = new EntityDetailsData(
-      "Altitude",
-      this.currentObject.altitude
+      "Altitude (Lambert II étendu)",
+      this.currentObject.coordinatesL2E.altitude
     );
     detailsData[6] = new EntityDetailsData(
-      "Longitude",
-      this.currentObject.longitude
+      "Longitude (Lambert II étendu)",
+      this.currentObject.coordinatesL2E.longitude
     );
     detailsData[7] = new EntityDetailsData(
-      "Latitude",
-      this.currentObject.latitude
+      "Latitude (Lambert II étendu)",
+      this.currentObject.coordinatesL2E.latitude
     );
     detailsData[8] = new EntityDetailsData(
       "Nombre de fiches espèces",

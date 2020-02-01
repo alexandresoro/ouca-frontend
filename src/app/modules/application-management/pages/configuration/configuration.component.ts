@@ -18,7 +18,8 @@ export enum ConfigurationParameterID {
   DISPLAY_ASSOCIES,
   DISPLAY_METEO,
   DISPLAY_REGROUPEMENT,
-  DISPLAY_DISTANCE
+  DISPLAY_DISTANCE,
+  COORDINATES_SYSTEM
 }
 
 export interface ConfigurationParameter {
@@ -103,6 +104,11 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
         id: ConfigurationParameterID.DISPLAY_REGROUPEMENT,
         label: "Afficher le numéro de regroupement",
         value: "Non"
+      },
+      {
+        id: ConfigurationParameterID.COORDINATES_SYSTEM,
+        label: "Système de coordonnées",
+        value: ""
       }
     ];
     this.switchToViewAllMode();
@@ -122,6 +128,11 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
           case ConfigurationParameterID.DEFAULT_DEPARTEMENT:
             value = this.configurationToSave.defaultDepartement
               ? this.configurationToSave.defaultDepartement.code
+              : "";
+            break;
+          case ConfigurationParameterID.COORDINATES_SYSTEM:
+            value = this.configurationToSave.coordinatesSystem
+              ? this.configurationToSave.coordinatesSystem.libelle
               : "";
             break;
           case ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE:

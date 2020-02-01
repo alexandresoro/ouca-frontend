@@ -49,7 +49,6 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
       .getAllEntities(this.getEntityName())
       .subscribe((result: T[]) => {
         this.objects = result;
-        console.log(this.objects);
       });
   }
 

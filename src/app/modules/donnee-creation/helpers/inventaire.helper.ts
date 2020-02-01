@@ -184,6 +184,7 @@ export class InventaireHelper {
       altitude,
       longitude,
       latitude,
+      customizedCoordinatesL2E: { altitude, longitude, latitude },
       temperature,
       meteosIds
     };
@@ -191,14 +192,14 @@ export class InventaireHelper {
     if (
       !this.areCoordinatesCustomized(
         lieudit,
-        inventaire.altitude,
-        inventaire.longitude,
-        inventaire.latitude
+        inventaire.customizedCoordinatesL2E.altitude,
+        inventaire.customizedCoordinatesL2E.longitude,
+        inventaire.customizedCoordinatesL2E.latitude
       )
     ) {
-      inventaire.altitude = null;
-      inventaire.longitude = null;
-      inventaire.latitude = null;
+      inventaire.customizedCoordinatesL2E.altitude = null;
+      inventaire.customizedCoordinatesL2E.longitude = null;
+      inventaire.customizedCoordinatesL2E.latitude = null;
     }
 
     console.log("Inventaire généré depuis le formulaire:", inventaire);
@@ -274,19 +275,30 @@ export class InventaireHelper {
     lieuditFormControls.commune.setValue(commune);
     lieuditFormControls.lieudit.setValue(lieudit);
     if (
-      _.isNil(inventaire.altitude) &&
-      _.isNil(inventaire.longitude) &&
-      _.isNil(inventaire.latitude)
+      !inventaire.customizedCoordinatesL2E ||
+      (_.isNil(inventaire.customizedCoordinatesL2E.altitude) &&
+        _.isNil(inventaire.customizedCoordinatesL2E.longitude) &&
+        _.isNil(inventaire.customizedCoordinatesL2E.latitude))
     ) {
-      lieuditFormControls.altitude.setValue(lieudit ? lieudit.altitude : null);
-      lieuditFormControls.longitude.setValue(
-        lieudit ? lieudit.longitude : null
+      lieuditFormControls.altitude.setValue(
+        lieudit ? lieudit.coordinatesL2E.altitude : null
       );
-      lieuditFormControls.latitude.setValue(lieudit ? lieudit.latitude : null);
+      lieuditFormControls.longitude.setValue(
+        lieudit ? lieudit.coordinatesL2E.longitude : null
+      );
+      lieuditFormControls.latitude.setValue(
+        lieudit ? lieudit.coordinatesL2E.latitude : null
+      );
     } else {
-      lieuditFormControls.altitude.setValue(inventaire.altitude);
-      lieuditFormControls.longitude.setValue(inventaire.longitude);
-      lieuditFormControls.latitude.setValue(inventaire.latitude);
+      lieuditFormControls.altitude.setValue(
+        inventaire.customizedCoordinatesL2E.altitude
+      );
+      lieuditFormControls.longitude.setValue(
+        inventaire.customizedCoordinatesL2E.longitude
+      );
+      lieuditFormControls.latitude.setValue(
+        inventaire.customizedCoordinatesL2E.latitude
+      );
     }
     inventaireFormControls.temperature.setValue(inventaire.temperature);
     inventaireFormControls.meteos.setValue(meteos);
@@ -300,9 +312,10 @@ export class InventaireHelper {
   ): boolean {
     return (
       !!lieudit &&
-      (altitude !== lieudit.altitude ||
-        longitude !== lieudit.longitude ||
-        latitude !== lieudit.latitude)
+      !!lieudit.coordinatesL2E &&
+      (altitude !== lieudit.coordinatesL2E.altitude ||
+        longitude !== lieudit.coordinatesL2E.longitude ||
+        latitude !== lieudit.coordinatesL2E.latitude)
     );
   }
 
@@ -316,9 +329,12 @@ export class InventaireHelper {
       inventaireFromDB.heure !== inventaireFromForm.heure ||
       inventaireFromDB.duree !== inventaireFromForm.duree ||
       inventaireFromDB.lieuditId !== inventaireFromForm.lieuditId ||
-      inventaireFromDB.altitude !== inventaireFromForm.altitude ||
-      inventaireFromDB.longitude !== inventaireFromForm.longitude ||
-      inventaireFromDB.latitude !== inventaireFromForm.latitude ||
+      inventaireFromDB.customizedCoordinatesL2E.altitude !==
+        inventaireFromForm.customizedCoordinatesL2E.altitude ||
+      inventaireFromDB.customizedCoordinatesL2E.longitude !==
+        inventaireFromForm.customizedCoordinatesL2E.longitude ||
+      inventaireFromDB.customizedCoordinatesL2E.latitude !==
+        inventaireFromForm.customizedCoordinatesL2E.latitude ||
       inventaireFromDB.temperature !== inventaireFromForm.temperature ||
       !_.isEqual(
         _.sortBy(inventaireFromDB.associesIds),

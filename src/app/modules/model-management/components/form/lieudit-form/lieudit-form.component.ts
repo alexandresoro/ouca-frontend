@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { FormControl, Validators, FormGroup } from "@angular/forms";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
 import { combineLatest, Observable, Subject } from "rxjs";
@@ -26,6 +26,8 @@ export class LieuditFormComponent extends EntitySubFormComponent
 
   public nomCommuneControl: FormControl;
 
+  public coordinatesL2EFormGroup: FormGroup;
+
   private initialSetting: boolean;
 
   constructor(private backendApiService: BackendApiService) {
@@ -34,6 +36,9 @@ export class LieuditFormComponent extends EntitySubFormComponent
 
   ngOnInit(): void {
     this.initialSetting = true;
+
+    this.coordinatesL2EFormGroup = this.entityForm.controls
+      .coordinatesL2E as FormGroup;
 
     this.departementControl = new FormControl("", [Validators.required]);
     this.nomCommuneControl = new FormControl("", [Validators.required]);
@@ -75,10 +80,12 @@ export class LieuditFormComponent extends EntitySubFormComponent
         this.communes$.next(result[1] ? result[1] : []);
 
         if (this.entityForm.controls.commune.value) {
-          this.departementControl.setValue(ListHelper.findEntityInListByID(
-            result[0],
-            this.entityForm.controls.commune.value.departement.id
-          ) as Departement);
+          this.departementControl.setValue(
+            ListHelper.findEntityInListByID(
+              result[0],
+              this.entityForm.controls.commune.value.departement.id
+            ) as Departement
+          );
 
           this.entityForm.controls.communeId.setValue(
             this.entityForm.controls.commune.value.id

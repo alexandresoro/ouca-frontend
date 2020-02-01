@@ -49,11 +49,13 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
     };
   }
 
-  public onRowEspeceClicked(id: number) {
+  public onRowEspeceClicked = (id: number): void => {
     if (!!this.selectedObject && this.selectedObject.id === id) {
       this.selectedObject = undefined;
     } else {
-      this.selectedObject = this.objects.filter((espece) => espece.id === id)[0];
+      this.selectedObject = this.objects.filter(
+        (espece) => espece.id === id
+      )[0];
     }
-  }
+  };
 }

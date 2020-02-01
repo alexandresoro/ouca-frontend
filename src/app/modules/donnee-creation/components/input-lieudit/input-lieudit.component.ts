@@ -171,14 +171,15 @@ export class InputLieuditComponent implements OnInit {
   public updateCoordinates(lieudit: Lieudit): void {
     if (
       !!lieudit &&
-      !_.isNil(lieudit.altitude) &&
-      !_.isNil(lieudit.longitude) &&
-      !_.isNil(lieudit.latitude)
+      !!lieudit.coordinatesL2E &&
+      !_.isNil(lieudit.coordinatesL2E.altitude) &&
+      !_.isNil(lieudit.coordinatesL2E.longitude) &&
+      !_.isNil(lieudit.coordinatesL2E.latitude)
     ) {
       this.setSelectedCoordinates(
-        lieudit.altitude,
-        lieudit.longitude,
-        lieudit.latitude
+        lieudit.coordinatesL2E.altitude,
+        lieudit.coordinatesL2E.longitude,
+        lieudit.coordinatesL2E.latitude
       );
     } else {
       this.setSelectedCoordinates(null, null, null);
@@ -203,7 +204,7 @@ export class InputLieuditComponent implements OnInit {
     return departement ? departement.code : null;
   };
 
-  public displayLieuDitFormat = (lieuDit: Lieudit): string => {
-    return lieuDit ? lieuDit.nom : null;
+  public displayLieuDitFormat = (lieudit: Lieudit): string => {
+    return lieudit ? lieudit.nom : null;
   };
 }

@@ -6,7 +6,7 @@ import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple
 interface CommunetRow {
   id: number;
   departement: string;
-  code: string;
+  code: number;
   nom: string;
   nbLieuxdits: number;
   nbDonnees: number;
@@ -48,7 +48,7 @@ export class CommuneTableComponent extends EntiteSimpleTableComponent<Commune> {
     };
   }
 
-  public onRowCommuneClicked(id: number) {
+  public onRowCommuneClicked(id: number): void {
     if (!!this.selectedObject && this.selectedObject.id === id) {
       this.selectedObject = undefined;
     } else {

@@ -6,6 +6,7 @@ import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object
 import { Observateur } from "basenaturaliste-model/observateur.object";
 import { Sexe } from "basenaturaliste-model/sexe.object";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { CoordinatesSystem } from "basenaturaliste-model/coordinates-system.object";
 
 @Component({
   selector: "configuration-form",
@@ -15,6 +16,8 @@ export class ConfigurationFormComponent {
   @Input() public observateurs: Observateur[];
 
   @Input() public departements: Departement[];
+
+  @Input() public coordinatesSystems: CoordinatesSystem[];
 
   @Input() public estimationsNombre: EstimationNombre[];
 
