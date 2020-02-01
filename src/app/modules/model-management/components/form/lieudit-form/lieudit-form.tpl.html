@@ -82,29 +82,25 @@
   </mat-error>
 </mat-form-field>
 
-<!-- Altitude Lambert II étendu -->
+<!-- Altitude -->
 <mat-form-field>
   <input
     [errorStateMatcher]="matcher"
-    [formControl]="coordinatesL2EFormGroup.controls['altitude']"
+    [formControl]="entityForm.controls['altitude']"
     id="input-altitude"
     matInput
     min="0"
     max="65535"
     name="altitude"
-    placeholder="Altitude (Lambert II étendu)"
+    placeholder="Altitude"
     type="number"
   />
 
-  <mat-error
-    *ngIf="coordinatesL2EFormGroup.controls['altitude'].hasError('required')"
-  >
-    Le champ "Altitude (Lambert II étendu)" ne peut pas être vide.
+  <mat-error *ngIf="entityForm.controls['altitude'].hasError('required')">
+    Le champ "Altitude" ne peut pas être vide.
   </mat-error>
-  <mat-error
-    *ngIf="coordinatesL2EFormGroup.controls['altitude'].hasError('forbiddenValue')"
-  >
-    L'altitude (Lambert II étendu) doit être un entier compris entre 0 et 65535.
+  <mat-error *ngIf="entityForm.controls['altitude'].hasError('forbiddenValue')">
+    L'altitude doit être un entier compris entre 0 et 65535.
   </mat-error>
 </mat-form-field>
 

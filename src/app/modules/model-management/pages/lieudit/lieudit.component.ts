@@ -26,11 +26,11 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
         commune: new FormControl("", []),
         communeId: new FormControl("", [Validators.required]),
         nom: new FormControl("", [Validators.required]),
+        altitude: new FormControl("", [
+          Validators.required,
+          this.altitudeNumberValidator()
+        ]),
         coordinatesL2E: new FormGroup({
-          altitude: new FormControl("", [
-            Validators.required,
-            this.altitudeNumberValidator()
-          ]),
           longitude: new FormControl("", [
             Validators.required,
             this.longitudeNumberValidator()
@@ -124,7 +124,7 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
       this.currentObject.nom
     );
     detailsData[5] = new EntityDetailsData(
-      "Altitude (Lambert II étendu)",
+      "Altitude",
       this.currentObject.altitude
     );
     detailsData[6] = new EntityDetailsData(

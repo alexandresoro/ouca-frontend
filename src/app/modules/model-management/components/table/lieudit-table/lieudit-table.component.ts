@@ -27,7 +27,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "codeCommune",
     "nomCommune",
     "nom",
-    "altitudeL2E",
+    "altitude",
     "longitudeL2E",
     "latitudeL2E",
     "nbDonnees"
