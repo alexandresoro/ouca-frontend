@@ -181,10 +181,8 @@ export class InventaireHelper {
       heure,
       duree,
       lieuditId: lieudit ? lieudit.id : null,
-      altitude,
-      longitude,
-      latitude,
-      customizedCoordinatesL2E: { altitude, longitude, latitude },
+      customizedAltitude: altitude,
+      customizedCoordinatesL2E: { longitude, latitude },
       temperature,
       meteosIds
     };
@@ -192,12 +190,12 @@ export class InventaireHelper {
     if (
       !this.areCoordinatesCustomized(
         lieudit,
-        inventaire.customizedCoordinatesL2E.altitude,
+        inventaire.customizedAltitude,
         inventaire.customizedCoordinatesL2E.longitude,
         inventaire.customizedCoordinatesL2E.latitude
       )
     ) {
-      inventaire.customizedCoordinatesL2E.altitude = null;
+      inventaire.customizedAltitude = null;
       inventaire.customizedCoordinatesL2E.longitude = null;
       inventaire.customizedCoordinatesL2E.latitude = null;
     }
@@ -276,13 +274,11 @@ export class InventaireHelper {
     lieuditFormControls.lieudit.setValue(lieudit);
     if (
       !inventaire.customizedCoordinatesL2E ||
-      (_.isNil(inventaire.customizedCoordinatesL2E.altitude) &&
+      (_.isNil(inventaire.customizedAltitude) &&
         _.isNil(inventaire.customizedCoordinatesL2E.longitude) &&
         _.isNil(inventaire.customizedCoordinatesL2E.latitude))
     ) {
-      lieuditFormControls.altitude.setValue(
-        lieudit ? lieudit.coordinatesL2E.altitude : null
-      );
+      lieuditFormControls.altitude.setValue(lieudit ? lieudit.altitude : null);
       lieuditFormControls.longitude.setValue(
         lieudit ? lieudit.coordinatesL2E.longitude : null
       );
@@ -290,9 +286,7 @@ export class InventaireHelper {
         lieudit ? lieudit.coordinatesL2E.latitude : null
       );
     } else {
-      lieuditFormControls.altitude.setValue(
-        inventaire.customizedCoordinatesL2E.altitude
-      );
+      lieuditFormControls.altitude.setValue(inventaire.customizedAltitude);
       lieuditFormControls.longitude.setValue(
         inventaire.customizedCoordinatesL2E.longitude
       );
@@ -313,7 +307,7 @@ export class InventaireHelper {
     return (
       !!lieudit &&
       !!lieudit.coordinatesL2E &&
-      (altitude !== lieudit.coordinatesL2E.altitude ||
+      (altitude !== lieudit.altitude ||
         longitude !== lieudit.coordinatesL2E.longitude ||
         latitude !== lieudit.coordinatesL2E.latitude)
     );
@@ -329,8 +323,8 @@ export class InventaireHelper {
       inventaireFromDB.heure !== inventaireFromForm.heure ||
       inventaireFromDB.duree !== inventaireFromForm.duree ||
       inventaireFromDB.lieuditId !== inventaireFromForm.lieuditId ||
-      inventaireFromDB.customizedCoordinatesL2E.altitude !==
-        inventaireFromForm.customizedCoordinatesL2E.altitude ||
+      inventaireFromDB.customizedAltitude !==
+        inventaireFromForm.customizedAltitude ||
       inventaireFromDB.customizedCoordinatesL2E.longitude !==
         inventaireFromForm.customizedCoordinatesL2E.longitude ||
       inventaireFromDB.customizedCoordinatesL2E.latitude !==

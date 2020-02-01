@@ -10,7 +10,7 @@ interface LieuditRow {
   codeCommune: number;
   nomCommune: string;
   nom: string;
-  altitudeL2E: number;
+  altitude: number;
   longitudeL2E: number;
   latitudeL2E: number;
   nbDonnees: number;
@@ -52,7 +52,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       codeCommune: lieudit.commune.code,
       nomCommune: lieudit.commune.nom,
       nom: lieudit.nom,
-      altitudeL2E: lieudit.coordinatesL2E.altitude,
+      altitude: lieudit.altitude,
       longitudeL2E: lieudit.coordinatesL2E.longitude,
       latitudeL2E: lieudit.coordinatesL2E.latitude,
       nbDonnees: lieudit.nbDonnees

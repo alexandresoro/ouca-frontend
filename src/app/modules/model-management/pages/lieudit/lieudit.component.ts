@@ -125,7 +125,7 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     );
     detailsData[5] = new EntityDetailsData(
       "Altitude (Lambert II étendu)",
-      this.currentObject.coordinatesL2E.altitude
+      this.currentObject.altitude
     );
     detailsData[6] = new EntityDetailsData(
       "Longitude (Lambert II étendu)",

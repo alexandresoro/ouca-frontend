@@ -172,12 +172,12 @@ export class InputLieuditComponent implements OnInit {
     if (
       !!lieudit &&
       !!lieudit.coordinatesL2E &&
-      !_.isNil(lieudit.coordinatesL2E.altitude) &&
+      !_.isNil(lieudit.altitude) &&
       !_.isNil(lieudit.coordinatesL2E.longitude) &&
       !_.isNil(lieudit.coordinatesL2E.latitude)
     ) {
       this.setSelectedCoordinates(
-        lieudit.coordinatesL2E.altitude,
+        lieudit.altitude,
         lieudit.coordinatesL2E.longitude,
         lieudit.coordinatesL2E.latitude
       );
