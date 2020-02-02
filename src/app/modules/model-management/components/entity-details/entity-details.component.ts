@@ -4,7 +4,8 @@ import { EntityDetailsData } from "./entity-details-data.object";
 
 @Component({
   selector: "entity-details",
-  templateUrl: "./entity-details.tpl.html"
+  styleUrls: ["./entity-details.component.scss"],
+  templateUrl: "./entity-details.component.html"
 })
 export class EntityDetailsComponent<T extends EntiteSimple> {
   @Input() detailsData: EntityDetailsData[];
