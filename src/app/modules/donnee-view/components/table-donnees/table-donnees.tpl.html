@@ -1,6 +1,6 @@
-<div class="panel-table-donnees">
+<div class="view-table-container">
   <!-- TABLE FILTER -->
-  <mat-form-field class="table-donnees-filter">
+  <mat-form-field class="view-table-filter">
     <input
       matInput
       type="text"
@@ -18,7 +18,7 @@
     mat-table
     matSort
     [dataSource]="dataSource"
-    class="view-page-table mat-elevation-z8"
+    class="view-table mat-elevation-z8"
     multiTemplateDataRows
   >
     <!-- COLUMN OBSERVATEUR -->
@@ -374,7 +374,7 @@
       mat-row
       *matRowDef="let row; columns: displayedColumns"
       class="donnee-row"
-      [class.donnee-expanded-row]="
+      [class.selected-row]="
         !!selectedDonnee && selectedDonnee.id === row.id
       "
       (click)="onRowClicked(row)"

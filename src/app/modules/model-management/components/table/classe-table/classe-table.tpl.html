@@ -43,7 +43,7 @@
       *matRowDef="let row; columns: displayedColumns"
       (click)="onRowClicked(row)"
       [ngClass]="{
-        'mat-row-selected': !!selectedObject && selectedObject.id == row.id
+        'selected-row': !!selectedObject && selectedObject.id == row.id
       }"
     ></tr>
   </table>

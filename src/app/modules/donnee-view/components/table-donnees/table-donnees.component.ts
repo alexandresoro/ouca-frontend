@@ -23,6 +23,7 @@ import moment = require("moment");
 
 @Component({
   selector: "table-donnees",
+  styleUrls: ["./table-donnees.component.scss"],
   templateUrl: "./table-donnees.tpl.html",
   animations: [
     trigger("detailExpand", [
