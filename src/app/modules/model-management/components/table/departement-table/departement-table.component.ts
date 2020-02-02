@@ -4,6 +4,7 @@ import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple
 
 @Component({
   selector: "departement-table",
+  styleUrls: ["./departement-table.component.scss"],
   templateUrl: "./departement-table.tpl.html"
 })
 export class DepartementTableComponent extends EntiteSimpleTableComponent<

@@ -13,6 +13,7 @@ interface EstimationNombreRow {
 
 @Component({
   selector: "estimation-nombre-table",
+  styleUrls: ["./estimation-nombre-table.component.scss"],
   templateUrl: "./estimation-nombre-table.tpl.html"
 })
 export class EstimationNombreTableComponent extends EntiteSimpleTableComponent<

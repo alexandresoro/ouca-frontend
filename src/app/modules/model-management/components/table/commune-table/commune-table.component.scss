@@ -1,0 +1,21 @@
+@use "src/styles/mixins";
+
+table.commune-table {
+  @include mixins.gestion-base-table;
+
+  th.departement {
+    width: 150px;
+  }
+
+  th.code {
+    width: 200px;
+  }
+
+  th.nom {
+    width: 300px;
+  }
+
+  th.nb-lieuxdits {
+    width: 200px;
+  }
+}

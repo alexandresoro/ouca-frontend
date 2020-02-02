@@ -1,0 +1,13 @@
+@use "src/styles/mixins";
+
+table.estimation-nombre-table {
+  @include mixins.gestion-base-table;
+
+  th.libelle {
+    width: 400px;
+  }
+
+  th.non-compte {
+    width: 200px;
+  }
+}

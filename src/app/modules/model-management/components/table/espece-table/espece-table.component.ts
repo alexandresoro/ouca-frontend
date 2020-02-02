@@ -15,6 +15,7 @@ interface EspeceRow {
 
 @Component({
   selector: "espece-table",
+  styleUrls: ["./espece-table.component.scss"],
   templateUrl: "./espece-table.tpl.html"
 })
 export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {

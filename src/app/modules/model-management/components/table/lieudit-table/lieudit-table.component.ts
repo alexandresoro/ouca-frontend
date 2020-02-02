@@ -18,6 +18,7 @@ interface LieuditRow {
 
 @Component({
   selector: "lieudit-table",
+  styleUrls: ["./lieudit-table.component.scss"],
   templateUrl: "./lieudit-table.tpl.html"
 })
 export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>

@@ -14,6 +14,7 @@ interface CommunetRow {
 
 @Component({
   selector: "commune-table",
+  styleUrls: ["./commune-table.component.scss"],
   templateUrl: "./commune-table.tpl.html"
 })
 export class CommuneTableComponent extends EntiteSimpleTableComponent<Commune> {

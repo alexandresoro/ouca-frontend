@@ -1,0 +1,27 @@
+@use "src/styles/mixins";
+
+table.lieudit-table {
+  @include mixins.gestion-base-table;
+
+  th.departement {
+    width: 100px;
+  }
+
+  th.code-commune {
+    width: 150px;
+  }
+
+  th.nom-commune {
+    width: 300px;
+  }
+
+  th.nom-lieu-dit {
+    width: 300px;
+  }
+
+  th.altitude,
+  th.longitude,
+  th.latitude {
+    width: 100px;
+  }
+}
