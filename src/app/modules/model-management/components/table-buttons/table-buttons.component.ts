@@ -3,7 +3,8 @@ import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 
 @Component({
   selector: "table-buttons",
-  templateUrl: "./table-buttons.tpl.html"
+  styleUrls: ["./table-buttons.component.scss"],
+  templateUrl: "./table-buttons.component.html"
 })
 export class TableButtonsComponent {
   @Input() public object: EntiteSimple;
