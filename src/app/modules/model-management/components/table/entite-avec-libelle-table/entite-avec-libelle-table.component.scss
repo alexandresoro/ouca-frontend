@@ -1,0 +1,9 @@
+@use "src/styles/mixins";
+
+table.entite-avec-libelle-table {
+  @include mixins.gestion-base-table;
+
+  th.libelle {
+    width: 500px;
+  }
+}

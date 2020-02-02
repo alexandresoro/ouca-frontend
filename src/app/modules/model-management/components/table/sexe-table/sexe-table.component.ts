@@ -4,6 +4,9 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
 
 @Component({
   selector: "sexe-table",
+  styleUrls: [
+    "../entite-avec-libelle-table/entite-avec-libelle-table.component.scss"
+  ],
   templateUrl: "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html"
 })
 export class SexeTableComponent extends EntiteAvecLibelleTableComponent<Sexe> {}

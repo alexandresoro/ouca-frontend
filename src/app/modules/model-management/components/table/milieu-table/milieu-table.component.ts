@@ -4,6 +4,9 @@ import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et
 
 @Component({
   selector: "milieu-table",
+  styleUrls: [
+    "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component.scss"
+  ],
   templateUrl:
     "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.tpl.html"
 })

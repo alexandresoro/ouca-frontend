@@ -1,0 +1,13 @@
+@use "src/styles/mixins";
+
+table.entite-avec-libelle-et-code-table {
+  @include mixins.gestion-base-table;
+
+  th.code {
+    width: 200px;
+  }
+
+  th.libelle {
+    width: 500px;
+  }
+}
