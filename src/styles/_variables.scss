@@ -1,0 +1,7 @@
+@use "~@angular/material/theming" as mat;
+
+$main-color: mat.mat-color(mat.$mat-cyan, 800);
+$main-light-color: mat.mat-color(mat.$mat-cyan, 100);
+$accent-color: mat.mat-color(mat.$mat-pink, 400);
+$light-grey-color: mat.mat-color(mat.$mat-grey, 100);
+$dark-grey-color: mat.mat-color(mat.$mat-grey, 800);

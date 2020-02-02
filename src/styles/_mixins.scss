@@ -1,0 +1,39 @@
+@mixin default-form {
+  width: 500px;
+
+  mat-form-field.mat-form-field {
+    width: 100%;
+  }
+
+  .mat-checkbox-label {
+    width: 500px;
+  }
+
+  label.mat-checkbox-layout {
+    padding-bottom: 20px;
+  }
+}
+
+@mixin view-table-container {
+  margin-top: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+
+  .view-table-filter {
+    width: 400px;
+    margin-right: 20px;
+  }
+
+  mat-paginator {
+    margin-top: 20px;
+  }
+}
+
+@mixin view-table-body-wrapper {
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+@mixin gestion-base-table {
+  width: 100%;
+}
