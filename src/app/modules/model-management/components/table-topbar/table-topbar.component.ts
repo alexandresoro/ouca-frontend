@@ -9,7 +9,8 @@ import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 
 @Component({
   selector: "table-topbar",
-  templateUrl: "./table-topbar.tpl.html"
+  styleUrls: ["./table-topbar.component.scss"],
+  templateUrl: "./table-topbar.component.html"
 })
 export class TableTopbarComponent {
   @Input() public selectedObject: EntiteSimple;
