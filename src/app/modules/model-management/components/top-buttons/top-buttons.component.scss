@@ -1,0 +1,11 @@
+.entity-page-header {
+  display: flex;
+  flex: 0 0 auto;
+  margin-bottom: 40px;
+
+  .entity-top-buttons {
+    button {
+      margin-left: 20px;
+    }
+  }
+}
