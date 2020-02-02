@@ -1,0 +1,104 @@
+@use "src/styles/variables";
+@use "src/styles/mixins";
+
+.view-table-container {
+  @include mixins.view-table-container;
+}
+
+table.view-table {
+  th.table-donnee-column-observateur {
+    min-width: 120px;
+  }
+
+  th.table-donnee-column-date {
+    min-width: 82px;
+  }
+
+  th.table-donnee-column-heure,
+  th.table-donnee-column-duree {
+    min-width: 55px;
+  }
+
+  th.table-donnee-column-departement {
+    min-width: 90px;
+  }
+
+  th.table-donnee-column-code-commune {
+    min-width: 75px;
+  }
+
+  th.table-donnee-column-nom-commune {
+    min-width: 200px;
+  }
+
+  th.table-donnee-column-lieudit {
+    min-width: 200px;
+  }
+
+  th.table-donnee-column-code-espece {
+    min-width: 70px;
+  }
+
+  th.table-donnee-column-nom-francais,
+  th.view-page-table-nom-latin {
+    min-width: 200px;
+  }
+
+  th.table-donnee-column-nombre {
+    min-width: 65px;
+  }
+
+  th.view-page-table-estimation-nombre {
+    min-width: 80px;
+  }
+
+  th.table-donnee-column-sexe {
+    min-width: 50px;
+  }
+
+  th.table-donnee-column-age {
+    min-width: 50px;
+  }
+
+  tr.donnee-detail-row {
+    height: 0;
+    td {
+      background: variables.$light-grey-color;
+    }
+  }
+
+  tr.selected-row {
+    td {
+      border-bottom-width: 0;
+    }
+  }
+
+  tr.donnee-row:not(.selected-row):active {
+    background: #efefef;
+  }
+
+  .donnee-detail {
+    overflow: hidden;
+    display: flex;
+  }
+}
+
+.donnee-details-panel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 20% 28% 24% 28%;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  background: variables.$light-grey-color;
+
+  div {
+    padding-right: 20px;
+  }
+}
+
+.edit-donnee-button {
+  height: 20px;
+  mat-icon {
+    margin-bottom: 5px;
+  }
+}
