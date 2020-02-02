@@ -10,6 +10,7 @@ import { CoordinatesSystem } from "basenaturaliste-model/coordinates-system.obje
 
 @Component({
   selector: "configuration-form",
+  styleUrls: ["./configuration-form.component.scss"],
   templateUrl: "./configuration-form.tpl.html"
 })
 export class ConfigurationFormComponent {

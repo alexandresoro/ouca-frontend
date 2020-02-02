@@ -1,0 +1,5 @@
+@use "src/styles/mixins";
+
+form.entity-form {
+  @include mixins.default-form;
+}

@@ -1,12 +1,12 @@
-<div class="view-page">
+<div class="view-page-container">
   <h1>Consultation des données</h1>
 
   <!-- SEARCH PANEL -->
   <div class="search-filters-panel">
     <form [formGroup]="searchForm">
-      <div class="search-filters-form">
+      <div class="search-filters-form" fxLayout="row" fxLayoutGap="30px">
         <!-- FIRST COLUMN -->
-        <div>
+        <div fxFlex="25%">
           <!-- ID -->
           <mat-form-field>
             <input
@@ -80,7 +80,7 @@
         </div>
 
         <!-- SECOND COLUMN -->
-        <div>
+        <div fxFlex="25%">
           <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
           <input-lieudit
             formGroupName="lieuditGroup"
@@ -118,7 +118,7 @@
         </div>
 
         <!-- THIRD COLUMN-->
-        <div>
+        <div fxFlex="25%">
           <!-- CLASSE / ESPECE -->
           <input-espece
             formGroupName="especeGroup"
@@ -157,7 +157,7 @@
         </div>
 
         <!-- FOURTH COLUMN-->
-        <div>
+        <div fxFlex="25%">
           <!-- ESTIMATION DISTANCE / DISTANCE -->
           <input-distance
             [controlGroup]="searchForm.controls['distanceGroup']"
@@ -230,7 +230,7 @@
       (donneesToDisplay.length > 0 || especesWithNbDonnees.length > 0)
     "
   >
-    <mat-tab-group>
+    <mat-tab-group class="view-tab-group">
       <!-- DONNEES TABLE -->
       <mat-tab label="Données">
         <table-donnees [donneesToDisplay]="donneesToDisplay"></table-donnees>

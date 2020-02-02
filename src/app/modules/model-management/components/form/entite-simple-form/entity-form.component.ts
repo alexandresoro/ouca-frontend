@@ -16,6 +16,7 @@ import { EntitySubFormDirective } from "./entity-sub-form.directive";
 
 @Component({
   selector: "entity-form",
+  styleUrls: ["./entity-form.component.scss"],
   templateUrl: "./entity-form.tpl.html"
 })
 export class EntityFormComponent implements OnInit {
@@ -61,7 +62,7 @@ export class EntityFormComponent implements OnInit {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
-    (componentRef.instance).entityForm = this.entityForm;
+    componentRef.instance.entityForm = this.entityForm;
   }
 
   public save(): void {

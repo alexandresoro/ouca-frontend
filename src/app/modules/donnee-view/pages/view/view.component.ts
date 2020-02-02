@@ -29,7 +29,8 @@ import { DonneesFilter } from "basenaturaliste-model/donnees-filter.object";
 import { interpretDateAsUTCDate } from "../../../shared/helpers/time.helper";
 
 @Component({
-  templateUrl: "./view.tpl.html"
+  styleUrls: ["./view.component.scss"],
+  templateUrl: "./view.component.html"
 })
 export class ViewComponent extends PageComponent {
   public searchForm: FormGroup = new FormGroup({

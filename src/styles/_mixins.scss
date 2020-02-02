@@ -1,10 +1,6 @@
 @mixin default-form {
   width: 500px;
 
-  mat-form-field {
-    display: block;
-  }
-
   mat-checkbox {
     display: block;
     margin-bottom: 20px;

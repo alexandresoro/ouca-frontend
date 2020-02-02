@@ -1,3 +1,6 @@
+@use "src/styles/mixins";
+@use "src/styles/variables";
+
 $material-design-icons-font-directory-path: "~material-design-icons-iconfont/dist/fonts/";
 
 @import "~material-design-icons-iconfont/src/material-design-icons";
@@ -60,34 +63,18 @@ $custom-typography: mat-typography-config(
 
 @include angular-material-theme($candy-app-theme);
 
-$standardColumnGap: 20px;
-
-$temperatureFieldWidth: 100px;
-
+// Common styles
 body.base-naturaliste {
   margin: 0;
-}
 
-.base-naturaliste {
   .default-tooltip {
-    background-color: mat-color($mat-grey, 800);
+    background-color: variables.$dark-grey-color;
     font-size: mat-font-size($defaultConfig, body-1);
   }
 
-  .mat-menu-item {
-    line-height: 30px;
-    height: 30px;
-  }
+  table.mat-table {
+    table-layout: fixed;
 
-  .entite-avec-libelle-table,
-  .entite-avec-libelle-et-code-table,
-  .departement-table,
-  .commune-table,
-  .lieudit-table,
-  .classe-table,
-  .espece-table,
-  .estimation-nombre-table,
-  .view-page-table {
     tr.mat-row {
       height: 20px;
     }
@@ -95,179 +82,16 @@ body.base-naturaliste {
     td.mat-cell {
       font-size: 14px;
     }
-  }
 
-  .mat-row-selected {
-    background: mat-color($mat-cyan, 100);
-  }
-
-  mat-card.mat-card-override {
-    padding: 12px;
-    padding-bottom: 0;
-  }
-
-  .creation-page {
-    div.creation-page-header {
-      margin-top: 20px;
+    th,
+    td {
+      padding-left: 5px;
+      padding-right: 5px;
     }
 
-    div.creation-page-header,
-    div.creation-page-footer {
-      display: flex;
-      flex: 0 0 auto;
-      padding-left: 50px;
-      padding-right: 50px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      background-color: mat-color($mat-grey, 400);
-      min-height: 30px;
-
-      .creation-page-left-buttons {
-        button {
-          margin-right: 10px;
-        }
-      }
-
-      .creation-page-right-buttons {
-        button {
-          margin-left: 10px;
-        }
-      }
+    tr.selected-row {
+      background: variables.$main-light-color;
     }
-
-    .creation-page-form {
-      background-color: mat-color($mat-grey, 300);
-      padding-left: 50px;
-      padding-right: 50px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      column-gap: 50px;
-
-      .creation-page-inventaire-header {
-        display: flex;
-        button {
-          height: 32px;
-        }
-      }
-
-      .inventaire-form,
-      .espece-form {
-        mat-card:not(:last-child) {
-          margin-bottom: 8px;
-        }
-      }
-
-      .card-espece {
-        display: grid;
-        grid-column-gap: $standardColumnGap;
-        grid-template-columns: 180px auto;
-      }
-
-      .bn-creation-date {
-        display: flex;
-        flex-wrap: wrap;
-
-        .date-creation-input {
-          flex: 1 0 auto;
-        }
-
-        .time-input {
-          width: 70px;
-        }
-      }
-
-      .bn-creation-date > *:not(:last-child) {
-        margin-right: $standardColumnGap;
-      }
-
-      .bn-creation-meteo {
-        display: grid;
-        grid-template-columns: $temperatureFieldWidth auto;
-        grid-column-gap: $standardColumnGap;
-        .temperature-container {
-          mat-form-field {
-            width: $temperatureFieldWidth;
-          }
-        }
-        .meteo-container {
-          mat-form-field {
-            width: 100%;
-          }
-        }
-      }
-
-      .coordonnees-form {
-        display: flex;
-        flex-wrap: wrap;
-        & > mat-form-field {
-          flex: 1 0 auto;
-          width: 120px;
-        }
-        & > *:not(:last-child) {
-          margin-right: $standardColumnGap;
-        }
-      }
-
-      .bn-creation-quoi {
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .combien-de-container {
-        .nombre-espece {
-          margin-right: $standardColumnGap;
-        }
-
-        .estimation-nombre-espece {
-          margin-right: 4 * $standardColumnGap;
-        }
-
-        .sexe-espece {
-          margin-right: 4 * $standardColumnGap;
-          mat-form-field {
-            width: 120px;
-          }
-        }
-
-        .age-espece {
-          mat-form-field {
-            width: 120px;
-          }
-        }
-      }
-      .distance-regroupement-container {
-        .distance-container {
-          display: inline-block;
-
-          .estimation-distance-container {
-            margin-right: $standardColumnGap;
-          }
-        }
-
-        mat-form-field.regroupement-container {
-          width: 220px;
-        }
-
-        .distance-regroupement-separator {
-          display: inline-block;
-          width: 4 * $standardColumnGap;
-        }
-      }
-    }
-  }
-
-  .comportements-container > input-code-libelle:not(:last-child),
-  .milieux-container > input-code-libelle:not(:last-child) {
-    margin-right: 3 * $standardColumnGap;
-  }
-
-  input-comportements,
-  input-milieux {
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-column-gap: $standardColumnGap;
   }
 
   .full-width-container > * {
@@ -277,23 +101,12 @@ body.base-naturaliste {
     }
   }
 
-  .configuration-container {
-    mat-row {
-      min-height: 36px;
-    }
+  .full-width {
+    width: 100%;
+  }
 
-    .configuration-container-header {
-      display: flex;
-      flex: 0 0 auto;
-
-      .refresh-button {
-        min-width: 110px;
-      }
-
-      .edit-button {
-        min-width: 220px;
-      }
-    }
+  mat-form-field {
+    width: 100%;
   }
 
   .flex-spacer {
@@ -312,50 +125,12 @@ body.base-naturaliste {
     margin-right: 0px;
   }
 
-  .table-topbar {
-    display: flex;
-    flex: 0 0 auto;
-
-    .table-filter-field {
-      width: 500px;
-    }
+  .mat-snack-bar-container {
+    color: white;
   }
 
-  .table-top-buttons {
-    button {
-      margin-left: 20px;
-    }
-  }
-
-  .entity-page-header {
-    display: flex;
-    flex: 0 0 auto;
-    margin-bottom: 40px;
-
-    .entity-top-buttons {
-      button {
-        margin-left: 20px;
-      }
-    }
-  }
-
-  .bn-entity-page,
-  .configuration-container,
-  .import-page,
-  .error-page,
-  .save-page,
-  .default-page {
-    padding-right: 50px;
-    padding-left: 50px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .view-page {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-right: 50px;
-    padding-left: 50px;
+  .status-message-error {
+    background: variables.$accent-color;
   }
 
   .cancel-submit-buttons {
@@ -364,320 +139,15 @@ body.base-naturaliste {
     margin-top: 20px;
   }
 
-  .entite-form,
-  .configuration-form {
-    width: 500px;
-    mat-form-field.mat-form-field {
-      width: 100%;
-    }
-
-    .mat-checkbox-label {
-      width: 500px;
-    }
-
-    label.mat-checkbox-layout {
-      padding-bottom: 20px;
-    }
-  }
-
-  .bn-entity-page {
-    .entite-simple-details {
-      margin-top: 10px;
-    }
-
-    table.mat-table {
-      table-layout: fixed;
-      width: 100%;
-
-      th,
-      td {
-        padding-left: 5px;
-        padding-right: 5px;
-      }
-    }
-
-    table.entite-avec-libelle-table {
-      th.libelle {
-        width: 500px;
-      }
-    }
-
-    table.entite-avec-libelle-et-code-table {
-      th.code {
-        width: 200px;
-      }
-
-      th.libelle {
-        width: 500px;
-      }
-    }
-
-    table.departement-table {
-      th.code {
-        width: 200px;
-      }
-
-      th.nb-communes {
-        width: 200px;
-      }
-
-      th.nb-lieuxdits {
-        width: 200px;
-      }
-    }
-
-    table.commune-table {
-      th.departement {
-        width: 150px;
-      }
-
-      th.code {
-        width: 200px;
-      }
-
-      th.nom {
-        width: 300px;
-      }
-
-      th.nb-lieuxdits {
-        width: 200px;
-      }
-    }
-
-    table.lieudit-table {
-      th.departement {
-        width: 100px;
-      }
-
-      th.code-commune {
-        width: 150px;
-      }
-
-      th.nom-commune {
-        width: 300px;
-      }
-
-      th.nom-lieu-dit {
-        width: 300px;
-      }
-
-      th.altitude,
-      th.longitude,
-      th.latitude {
-        width: 100px;
-      }
-    }
-
-    table.estimation-nombre-table {
-      th.libelle {
-        width: 400px;
-      }
-
-      th.non-compte {
-        width: 200px;
-      }
-    }
-
-    table.classe-table {
-      th.libelle {
-        width: 400px;
-      }
-
-      th.nb-especes {
-        width: 200px;
-      }
-    }
-
-    table.espece-table {
-      th.classe {
-        width: 200px;
-      }
-
-      th.code {
-        width: 200px;
-      }
-
-      th.nom-francais {
-        width: 350px;
-      }
-
-      th.nom-latin {
-        width: 350px;
-      }
-    }
-  }
-
-  .tree-invisible {
-    display: none;
-  }
-
-  .tree ul,
-  .tree li {
-    margin-top: 0;
-    margin-bottom: 0;
-    list-style-type: none;
-  }
-
-  table.view-page-table {
-    table-layout: fixed;
-
-    th,
-    td {
-      padding-left: 5px;
-      padding-right: 5px;
-    }
-
-    th.table-donnee-column-observateur {
-      min-width: 120px;
-    }
-
-    th.table-donnee-column-date {
-      min-width: 82px;
-    }
-
-    th.table-donnee-column-heure,
-    th.table-donnee-column-duree {
-      min-width: 55px;
-    }
-
-    th.table-donnee-column-departement {
-      min-width: 90px;
-    }
-
-    th.table-donnee-column-code-commune {
-      min-width: 75px;
-    }
-
-    th.table-donnee-column-nom-commune {
-      min-width: 200px;
-    }
-
-    th.table-donnee-column-lieudit {
-      min-width: 200px;
-    }
-
-    th.table-donnee-column-code-espece {
-      min-width: 70px;
-    }
-
-    th.table-donnee-column-nom-francais,
-    th.view-page-table-nom-latin {
-      min-width: 200px;
-    }
-
-    th.table-donnee-column-nombre {
-      min-width: 65px;
-    }
-
-    th.view-page-table-estimation-nombre {
-      min-width: 80px;
-    }
-
-    th.table-donnee-column-sexe {
-      min-width: 50px;
-    }
-
-    th.table-donnee-column-age {
-      min-width: 50px;
-    }
-
-    tr.donnee-detail-row {
-      height: 0;
-      td {
-        background: mat-color($mat-grey, 100);
-      }
-    }
-
-    tr.donnee-expanded-row {
-      td {
-        border-bottom-width: 0;
-      }
-      background: mat-color($mat-cyan, 100);
-    }
-
-    tr.selected-row {
-      background: mat-color($mat-cyan, 100);
-    }
-
-    tr.donnee-row:not(.donnee-expanded-row):active {
-      background: #efefef;
-    }
-
-    .donnee-detail {
-      overflow: hidden;
-      display: flex;
-    }
-  }
-
-  .donnee-details-panel {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 20% 28% 24% 28%;
-    padding-bottom: 20px;
-    padding-top: 20px;
-    background: mat-color($mat-grey, 100);
-
-    div {
-      padding-right: 20px;
-    }
-  }
-
-  .search-filters-panel {
-    padding-left: 30px;
+  .page-container {
+    padding-right: 50px;
+    padding-left: 50px;
     padding-top: 20px;
     padding-bottom: 20px;
-    margin-bottom: 40px;
-    border: 3px solid mat-color($mat-cyan, 800);
-
-    .search-filters-form {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 25% 25% 25% 25%;
-
-      div {
-        mat-form-field {
-          width: 90%;
-        }
-      }
-    }
   }
 
-  #input-excel {
-    margin-left: 20px;
-  }
-
+  // TO DO -> see view.component.scss
   div.mat-tab-body-wrapper {
-    margin-left: -20px;
-    margin-right: -20px;
-  }
-
-  .panel-table-donnees {
-    margin-top: 30px;
-    margin-left: 20px;
-    margin-right: 20px;
-
-    .table-donnees-filter {
-      width: 400px;
-      margin-right: 20px;
-    }
-
-    mat-paginator {
-      margin-top: 20px;
-    }
-
-    .edit-donnee-button {
-      height: 20px;
-      mat-icon {
-        margin-bottom: 5px;
-      }
-    }
-  }
-
-  .mat-snack-bar-container {
-    color: white;
-  }
-
-  .status-message-error {
-    background: mat-color($mat-pink, 400);
+    @include mixins.view-table-body-wrapper;
   }
 }

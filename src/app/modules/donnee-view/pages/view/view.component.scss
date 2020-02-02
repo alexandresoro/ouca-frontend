@@ -1,0 +1,28 @@
+@use "src/styles/mixins";
+@use "src/styles/variables";
+
+.view-page-container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 50px;
+  padding-left: 50px;
+}
+
+.search-filters-panel {
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+  border: 3px solid variables.$main-color;
+}
+
+#input-excel {
+  margin-left: 20px;
+}
+
+.view-tab-group {
+  div.mat-tab-body-wrapper {
+    @include mixins.view-table-body-wrapper;
+  }
+}
