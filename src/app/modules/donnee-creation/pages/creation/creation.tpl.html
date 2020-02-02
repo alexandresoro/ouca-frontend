@@ -106,8 +106,8 @@
   </div>
 
   <!-- FORM TO CREATE DONNEES -->
-  <div class="creation-page-form">
-    <div>
+  <div fxLayout="row" fxLayoutGap="50px" class="creation-page-form">
+    <div fxFlex="33">
       <div class="creation-page-inventaire-header">
         <h2>
           Fiche inventaire
@@ -156,14 +156,20 @@
           <!-- END CARD OBSERVATEUR + ASSOCIES -->
 
           <!-- CARD DATE + HEURE + DUREE -->
-          <mat-card class="mat-card-override bn-creation-date">
+          <mat-card
+            fxLayout="row wrap"
+            fxLayoutGap="20px"
+            class="mat-card-override"
+          >
             <!-- DATE -->
             <input-date
+              fxFlex="2 0 100px"
               [control]="inventaireForm.controls['date']"
             ></input-date>
 
             <!-- HEURE -->
             <input-time
+              fxFlex="1 0 70px"
               [control]="inventaireForm.controls['heure']"
               id="heure"
               label="Heure"
@@ -171,6 +177,7 @@
 
             <!-- DUREE -->
             <input-time
+              fxFlex="1 0 70px"
               [control]="inventaireForm.controls['duree']"
               id="duree"
               label="Durée"
@@ -193,23 +200,23 @@
 
           <!-- CARD TEMPERATURE + METEO -->
           <mat-card
-            class="mat-card-override bn-creation-meteo"
+            fxLayout="row wrap"
+            fxLayoutGap="20px"
+            class="mat-card-override"
             *ngIf="pageModel.isMeteoDisplayed"
           >
             <!-- TEMPERATURE -->
-            <span class="temperature-container">
-              <input-temperature
-                [control]="inventaireForm.controls['temperature']"
-              ></input-temperature>
-            </span>
+            <input-temperature
+              fxFlex="100px"
+              [control]="inventaireForm.controls['temperature']"
+            ></input-temperature>
 
             <!-- METEOS -->
-            <span class="meteo-container">
-              <input-meteos
-                [meteos]="pageModel.meteos"
-                [control]="inventaireForm.controls['meteos']"
-              ></input-meteos>
-            </span>
+            <input-meteos
+              fxFlex="1 0 120px"
+              [meteos]="pageModel.meteos"
+              [control]="inventaireForm.controls['meteos']"
+            ></input-meteos>
           </mat-card>
           <!-- END CARD TEMPERATURE + METEO -->
         </div>
@@ -218,12 +225,11 @@
     </div>
 
     <!-- FICHE ESPECE  -->
-    <div>
+    <div fxFlex="67">
       <h2>
         Fiche espèce
         <span *ngIf="getCurrentDonneeIndex()"
-          >n°{{ getCurrentDonneeIndex() }} (ID={{
-            getDisplayedDonneeId()
+          >n°{{ getCurrentDonneeIndex() }} (ID={{ getDisplayedDonneeId()
           }})</span
         >
       </h2>

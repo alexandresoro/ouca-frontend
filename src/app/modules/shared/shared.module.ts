@@ -54,12 +54,14 @@ import { MultipleSelectComponent } from "./components/form/multiple-select/multi
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
 import { StatusMessageComponent } from "./components/status-message/status-message.component";
 import { MatTabsModule } from "@angular/material/tabs";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     CommonModule,
+    FlexLayoutModule,
     FormsModule,
     HttpClientModule,
     MatAutocompleteModule,
@@ -115,6 +117,7 @@ import { MatTabsModule } from "@angular/material/tabs";
     BrowserModule,
     CommonModule,
     ConfirmationDialogComponent,
+    FlexLayoutModule,
     FormsModule,
     HttpClientModule,
     InputAgeComponent,

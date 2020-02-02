@@ -1,16 +1,13 @@
 @mixin default-form {
   width: 500px;
 
-  mat-form-field.mat-form-field {
-    width: 100%;
+  mat-form-field {
+    display: block;
   }
 
-  .mat-checkbox-label {
-    width: 500px;
-  }
-
-  label.mat-checkbox-layout {
-    padding-bottom: 20px;
+  mat-checkbox {
+    display: block;
+    margin-bottom: 20px;
   }
 }
 

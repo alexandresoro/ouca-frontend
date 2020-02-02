@@ -28,6 +28,7 @@ import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navi
 import { Router } from "@angular/router";
 
 @Component({
+  styleUrls: ["./creation.component.scss"],
   templateUrl: "./creation.tpl.html"
 })
 export class CreationComponent extends PageComponent implements OnInit {

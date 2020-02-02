@@ -1,0 +1,127 @@
+@use "~@angular/material/theming" as mat;
+
+$creation-header-footer-color: mat.mat-color(mat.$mat-grey, 400);
+$creation-body-color: mat.mat-color(mat.$mat-grey, 300);
+$standardColumnGap: 20px;
+$temperatureFieldWidth: 100px;
+
+mat-card.mat-card-override {
+  padding: 12px;
+  padding-bottom: 0;
+}
+
+.creation-page {
+  div.creation-page-header {
+    margin-top: 20px;
+  }
+
+  div.creation-page-header,
+  div.creation-page-footer {
+    display: flex;
+    flex: 0 0 auto;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: $creation-header-footer-color;
+    min-height: 30px;
+
+    .creation-page-left-buttons {
+      button {
+        margin-right: 10px;
+      }
+    }
+
+    .creation-page-right-buttons {
+      button {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .creation-page-form {
+    background-color: $creation-body-color;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .creation-page-inventaire-header {
+      display: flex;
+      button {
+        height: 32px;
+      }
+    }
+
+    .inventaire-form,
+    .espece-form {
+      mat-card:not(:last-child) {
+        margin-bottom: 8px;
+      }
+    }
+
+    .card-espece {
+      display: grid;
+      grid-column-gap: $standardColumnGap;
+      grid-template-columns: 180px auto;
+    }
+
+    .bn-creation-quoi {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .combien-de-container {
+      .nombre-espece {
+        margin-right: $standardColumnGap;
+      }
+
+      .estimation-nombre-espece {
+        margin-right: 4 * $standardColumnGap;
+      }
+
+      .sexe-espece {
+        margin-right: 4 * $standardColumnGap;
+        mat-form-field {
+          width: 120px;
+        }
+      }
+
+      .age-espece {
+        mat-form-field {
+          width: 120px;
+        }
+      }
+    }
+    .distance-regroupement-container {
+      .distance-container {
+        display: inline-block;
+
+        .estimation-distance-container {
+          margin-right: $standardColumnGap;
+        }
+      }
+
+      mat-form-field.regroupement-container {
+        width: 220px;
+      }
+
+      .distance-regroupement-separator {
+        display: inline-block;
+        width: 4 * $standardColumnGap;
+      }
+    }
+  }
+}
+
+.comportements-container > input-code-libelle:not(:last-child),
+.milieux-container > input-code-libelle:not(:last-child) {
+  margin-right: 3 * $standardColumnGap;
+}
+
+input-comportements,
+input-milieux {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: $standardColumnGap;
+}
