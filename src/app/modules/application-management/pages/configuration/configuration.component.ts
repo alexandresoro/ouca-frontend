@@ -30,7 +30,8 @@ export interface ConfigurationParameter {
 
 @Component({
   selector: "configuration",
-  templateUrl: "./configuration.tpl.html"
+  styleUrls: ["./configuration.component.scss"],
+  templateUrl: "./configuration.component.html"
 })
 export class ConfigurationComponent extends PageComponent implements OnInit {
   private configurationParametersToDisplay: ConfigurationParameter[];
@@ -117,7 +118,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   public buildDataSource = (): void => {
     _.forEach(this.configurationParametersToDisplay, (parameter) => {
-      let value: string = "";
+      let value = "";
       if (this.configurationToSave) {
         switch (parameter.id) {
           case ConfigurationParameterID.DEFAULT_OBSERVATEUR:
@@ -234,7 +235,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   };
 
   private isSaveConfigurationSuccess = (dbResults: any[]): boolean => {
-    let isSuccess: boolean = true;
+    let isSuccess = true;
     for (const dbResult of dbResults) {
       isSuccess = isSuccess || dbResult.affectedRows === 1;
     }

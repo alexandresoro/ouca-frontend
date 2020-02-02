@@ -1,0 +1,16 @@
+mat-row {
+  min-height: 36px;
+}
+
+.configuration-container-header {
+  display: flex;
+  flex: 0 0 auto;
+
+  .refresh-button {
+    min-width: 110px;
+  }
+
+  .edit-button {
+    min-width: 220px;
+  }
+}
