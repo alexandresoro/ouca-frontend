@@ -1,6 +1,6 @@
-<div class="panel-table-donnees">
+<div class="view-table-container">
   <div>
-    <mat-form-field class="table-donnees-filter">
+    <mat-form-field class="view-table-filter">
       <input
         matInput
         type="text"
@@ -19,7 +19,7 @@
     mat-table
     matSort
     [dataSource]="dataSource"
-    class="view-page-table mat-elevation-z8"
+    class="mat-elevation-z8"
     multiTemplateDataRows
   >
     <ng-container matColumnDef="classe">
@@ -72,7 +72,6 @@
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
-      class="donnee-row"
       [class.selected-row]="selectedEspece && selectedEspece.code === row.code"
       (click)="onRowClicked(row)"
     ></tr>

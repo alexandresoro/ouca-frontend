@@ -1,0 +1,5 @@
+@use "src/styles/mixins";
+
+.view-table-container {
+  @include mixins.view-table-container;
+}

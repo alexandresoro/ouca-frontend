@@ -6,7 +6,8 @@ import { EspeceWithNbDonnees } from "./espece-with-nb-donnees.object";
 
 @Component({
   selector: "table-especes-with-nb-donnees",
-  templateUrl: "./table-especes-with-nb-donnees.tpl.html"
+  styleUrls: ["./table-especes-with-nb-donnees.component.scss"],
+  templateUrl: "./table-especes-with-nb-donnees.component.html"
 })
 export class TableEspecesWithNbDonneesComponent {
   public displayedColumns: string[] = [
