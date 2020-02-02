@@ -1,0 +1,13 @@
+@use "src/styles/mixins";
+
+table.classe-table {
+  @include mixins.gestion-base-table;
+
+  th.libelle {
+    width: 400px;
+  }
+
+  th.nb-especes {
+    width: 200px;
+  }
+}

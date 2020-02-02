@@ -4,6 +4,10 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
 
 @Component({
   selector: "classe-table",
+  styleUrls: [
+    "../entite-avec-libelle-table/entite-avec-libelle-table.component.scss",
+    "./classe-table.component.scss"
+  ],
   templateUrl: "./classe-table.tpl.html"
 })
 export class ClasseTableComponent extends EntiteAvecLibelleTableComponent<
