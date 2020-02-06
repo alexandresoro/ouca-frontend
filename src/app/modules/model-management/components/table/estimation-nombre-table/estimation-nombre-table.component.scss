@@ -1,7 +1,7 @@
 @use "src/styles/mixins";
 
 table.estimation-nombre-table {
-  @include mixins.gestion-base-table;
+  @include mixins.full-width-table;
 
   th.libelle {
     width: 400px;

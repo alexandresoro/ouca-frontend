@@ -1,7 +1,7 @@
 @use "src/styles/mixins";
 
 table.espece-table {
-  @include mixins.gestion-base-table;
+  @include mixins.full-width-table;
 
   th.classe {
     width: 200px;

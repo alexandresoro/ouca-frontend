@@ -1,7 +1,7 @@
 @use "src/styles/mixins";
 
 table.departement-table {
-  @include mixins.gestion-base-table;
+  @include mixins.full-width-table;
 
   th.code {
     width: 200px;
