@@ -3,22 +3,8 @@
     <h1>Configuration</h1>
     <span class="flex-spacer"></span>
     <ng-container *ngIf="getIsAllViewMode()">
-      <button
-        mat-raised-button
-        class="refresh-button"
-        color="primary"
-        (click)="refresh()"
-      >
-        <mat-icon>refresh</mat-icon>
-        <span>Rafraîchir</span>
-      </button>
       <span class="button-spacer"></span>
-      <button
-        mat-raised-button
-        class="edit-button"
-        color="primary"
-        (click)="editConfigurations()"
-      >
+      <button mat-raised-button color="primary" (click)="editConfigurations()">
         <mat-icon>create</mat-icon>
         <span>Modifier la configuration</span>
       </button>

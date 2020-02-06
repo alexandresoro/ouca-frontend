@@ -27,8 +27,4 @@ export class TopButtonsComponent {
   public exportObjects(): void {
     this.onClickExportObjects.emit();
   }
-
-  public refresh(): void {
-    this.onClickRefresh.emit();
-  }
 }

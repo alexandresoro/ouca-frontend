@@ -183,10 +183,6 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
     );
   };
 
-  public refresh = (): void => {
-    this.initConfigurationPage();
-  };
-
   public editConfigurations = (): void => {
     this.switchToEditionMode();
   };

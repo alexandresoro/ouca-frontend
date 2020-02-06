@@ -67,6 +67,10 @@ $custom-typography: mat-typography-config(
 body.base-naturaliste {
   margin: 0;
 
+  button {
+    height: 36px;
+  }
+
   .default-tooltip {
     background-color: variables.$dark-grey-color;
     font-size: mat-font-size($defaultConfig, body-1);
