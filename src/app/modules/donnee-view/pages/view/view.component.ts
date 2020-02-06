@@ -91,6 +91,14 @@ export class ViewComponent extends PageComponent {
 
   public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
 
+  public nombreGroup: FormGroup = this.searchForm.controls[
+    "nombreGroup"
+  ] as FormGroup;
+
+  public distanceGroup: FormGroup = this.searchForm.controls[
+    "distanceGroup"
+  ] as FormGroup;
+
   constructor(
     private backendApiService: BackendApiService,
     protected snackbar: MatSnackBar

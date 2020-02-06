@@ -129,13 +129,28 @@
           ></input-espece>
 
           <!-- ESTIMATION NOMBRE / NOMBRE -->
-          <input-nombre
-            [controlGroup]="searchForm.controls['nombreGroup']"
-            [estimationsNombre]="estimationsNombre"
-            formGroupName="nombreGroup"
-            [isMultipleSelectMode]="true"
-          >
-          </input-nombre>
+          <multiple-select
+            [attributesToDisplay]="['libelle']"
+            [control]="nombreGroup.controls['estimationsNombre']"
+            [id]="'estimations-nombre'"
+            [options]="estimationsNombre"
+            [placeholder]="'Estimations du nombre'"
+          ></multiple-select>
+
+          <!-- NOMBRE -->
+          <mat-form-field>
+            <input
+              #input
+              matInput
+              [formControl]="nombreGroup.controls['nombre']"
+              placeholder="Nombre d'individus"
+              id="input-nombre"
+              min="1"
+              max="65535"
+              name="nombre"
+              type="number"
+            />
+          </mat-form-field>
 
           <!-- SEXE -->
           <multiple-select
@@ -159,13 +174,27 @@
         <!-- FOURTH COLUMN-->
         <div fxFlex="25%">
           <!-- ESTIMATION DISTANCE / DISTANCE -->
-          <input-distance
-            [controlGroup]="searchForm.controls['distanceGroup']"
-            [estimationsDistance]="estimationsDistance"
-            formGroupName="distanceGroup"
-            [isMultipleSelectMode]="true"
-          >
-          </input-distance>
+          <multiple-select
+            [attributesToDisplay]="['libelle']"
+            [control]="distanceGroup.controls['estimationsDistance']"
+            [id]="'estimations-distance'"
+            [options]="estimationsDistance"
+            [placeholder]="'Estimations de la distance'"
+          ></multiple-select>
+
+          <mat-form-field>
+            <input
+              #input
+              matInput
+              [formControl]="distanceGroup.controls['distance']"
+              placeholder="Distance de contact (m)"
+              id="input-distance"
+              min="0"
+              max="65535"
+              name="distance"
+              type="number"
+            />
+          </mat-form-field>
 
           <!-- REGROUPEMENT -->
           <input-regroupement
