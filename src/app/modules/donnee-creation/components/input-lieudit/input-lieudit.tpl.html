@@ -65,9 +65,9 @@
     ></multiple-select>
   </div>
 
-  <div *ngIf="!hideCoordinates" fxLayout="row" fxLayoutGap="20px">
+  <div *ngIf="!hideCoordinates" fxLayout="row wrap" fxLayoutGap="20px">
     <!-- ALTITUDE -->
-    <mat-form-field fxFlex="calc(100%/3-20px)">
+    <mat-form-field fxFlex="1 0 100px">
       <input
         [formControl]="controlGroup.controls['altitude']"
         matInput
@@ -81,7 +81,7 @@
     </mat-form-field>
 
     <!-- LONGITUDE -->
-    <mat-form-field fxFlex="calc(100%/3-20px)">
+    <mat-form-field fxFlex="1 0 100px">
       <input
         [formControl]="controlGroup.controls['longitude']"
         matInput
@@ -95,7 +95,7 @@
     </mat-form-field>
 
     <!-- LATITUDE -->
-    <mat-form-field fxFlex="calc(100%/3-20px)">
+    <mat-form-field fxFlex="1 0 100px">
       <input
         [formControl]="controlGroup.controls['latitude']"
         matInput

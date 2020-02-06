@@ -238,7 +238,7 @@
         <form [formGroup]="donneeForm">
           <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
           <mat-card
-            class="mat-card-override bn-creation-quoi full-width-container"
+            class="mat-card-override creation-espece-card full-width-container"
           >
             <input-espece
               class="card-espece"
@@ -252,9 +252,11 @@
 
           <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
           <mat-card class="mat-card-override">
-            <div class="combien-de-container">
+            <div fxLayout="row wrap" fxLayoutGap="10%">
               <input-nombre
-                class="estimation-nombre-espece"
+                fxFlex="auto"
+                fxLayout="row"
+                fxLayoutGap="20px"
                 [controlGroup]="donneeForm.controls['nombreGroup']"
                 [defaultNombre]="pageModel.defaultNombre"
                 [estimationsNombre]="pageModel.estimationsNombre"
@@ -264,14 +266,14 @@
 
               <!-- SEXE -->
               <input-sexe
-                class="sexe-espece"
+                fxFlex="1 0 120px"
                 [control]="donneeForm.controls['sexe']"
                 [sexes]="pageModel.sexes"
               ></input-sexe>
 
               <!-- AGE  -->
               <input-age
-                class="age-espece"
+                fxFlex="1 0 120px"
                 [control]="donneeForm.controls['age']"
                 [ages]="pageModel.ages"
               ></input-age>
@@ -283,36 +285,28 @@
                 pageModel.isDistanceDisplayed ||
                 pageModel.isRegroupementDisplayed
               "
-              class="distance-regroupement-container"
+              fxLayout="row wrap"
             >
-              <ng-container *ngIf="pageModel.isDistanceDisplayed">
-                <span class="distance-container">
-                  <!-- ESTIMATION DISTANCE -->
-                  <input-distance
-                    [controlGroup]="donneeForm.controls['distanceGroup']"
-                    [estimationsDistance]="pageModel.estimationsDistance"
-                    formGroupName="distanceGroup"
-                  >
-                  </input-distance>
-                </span>
-              </ng-container>
-
-              <span
-                *ngIf="
-                  pageModel.isDistanceDisplayed &&
-                  pageModel.isRegroupementDisplayed
-                "
-                class="distance-regroupement-separator"
+              <!-- ESTIMATION DISTANCE -->
+              <input-distance
+                *ngIf="pageModel.isDistanceDisplayed"
+                fxFlex="auto"
+                fxLayout="row"
+                fxLayoutGap="20px"
+                [controlGroup]="donneeForm.controls['distanceGroup']"
+                [estimationsDistance]="pageModel.estimationsDistance"
+                formGroupName="distanceGroup"
               >
-              </span>
+              </input-distance>
 
               <!-- REGROUPEMENT-->
-              <ng-container *ngIf="pageModel.isRegroupementDisplayed">
-                <input-regroupement
-                  [control]="donneeForm.controls['regroupement']"
-                  [nextRegroupement]="nextRegroupement"
-                ></input-regroupement>
-              </ng-container>
+              <input-regroupement
+                *ngIf="pageModel.isRegroupementDisplayed"
+                fxFlex="1 0 220px"
+                fxFlexOffset="10%"
+                [control]="donneeForm.controls['regroupement']"
+                [nextRegroupement]="nextRegroupement"
+              ></input-regroupement>
             </div>
           </mat-card>
           <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->

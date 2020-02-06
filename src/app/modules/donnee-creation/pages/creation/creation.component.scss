@@ -66,50 +66,9 @@ mat-card.mat-card-override {
       grid-template-columns: 180px auto;
     }
 
-    .bn-creation-quoi {
+    .creation-espece-card {
       display: flex;
       flex-wrap: wrap;
-    }
-
-    .combien-de-container {
-      .nombre-espece {
-        margin-right: $standardColumnGap;
-      }
-
-      .estimation-nombre-espece {
-        margin-right: 4 * $standardColumnGap;
-      }
-
-      .sexe-espece {
-        margin-right: 4 * $standardColumnGap;
-        mat-form-field {
-          width: 120px;
-        }
-      }
-
-      .age-espece {
-        mat-form-field {
-          width: 120px;
-        }
-      }
-    }
-    .distance-regroupement-container {
-      .distance-container {
-        display: inline-block;
-
-        .estimation-distance-container {
-          margin-right: $standardColumnGap;
-        }
-      }
-
-      mat-form-field.regroupement-container {
-        width: 220px;
-      }
-
-      .distance-regroupement-separator {
-        display: inline-block;
-        width: 4 * $standardColumnGap;
-      }
     }
   }
 }

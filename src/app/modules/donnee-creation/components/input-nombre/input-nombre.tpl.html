@@ -1,5 +1,5 @@
 <!-- NOMBRE -->
-<mat-form-field class="nombre-espece">
+<mat-form-field fxFlex="1 0 100px">
   <input
     #input
     matInput
@@ -16,6 +16,7 @@
 <!-- ESTIMATION NOMBRE -->
 <autocomplete
   *ngIf="!isMultipleSelectMode"
+  fxFlex="1 0 100px"
   [type]="'Estimation du nombre'"
   [values]="estimationsNombre"
   [control]="controlGroup.controls['estimationNombre']"
@@ -26,6 +27,7 @@
 
 <multiple-select
   *ngIf="isMultipleSelectMode"
+  fxFlex="1 0 100px"
   [attributesToDisplay]="['libelle']"
   [control]="controlGroup.controls['estimationsNombre']"
   [id]="'estimations-nombre'"
