@@ -3,3 +3,23 @@
 .view-table-container {
   @include mixins.view-table-container;
 }
+
+table {
+  @include mixins.full-width-table;
+
+  th.classe {
+    width: 200px;
+  }
+
+  th.code {
+    width: 200px;
+  }
+
+  th.nom-francais {
+    width: 350px;
+  }
+
+  th.nom-latin {
+    width: 350px;
+  }
+}

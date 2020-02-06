@@ -23,7 +23,7 @@
     multiTemplateDataRows
   >
     <ng-container matColumnDef="classe">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+      <th mat-header-cell mat-sort-header *matHeaderCellDef class="classe">
         Classe
       </th>
       <td mat-cell *matCellDef="let element">
@@ -32,7 +32,7 @@
     </ng-container>
 
     <ng-container matColumnDef="code">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+      <th mat-header-cell mat-sort-header *matHeaderCellDef class="code">
         Code
       </th>
       <td mat-cell *matCellDef="let element">
@@ -41,7 +41,12 @@
     </ng-container>
 
     <ng-container matColumnDef="nomFrancais">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        class="nom-francais"
+      >
         Nom français
       </th>
       <td mat-cell *matCellDef="let element">
@@ -50,7 +55,7 @@
     </ng-container>
 
     <ng-container matColumnDef="nomLatin">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+      <th mat-header-cell mat-sort-header *matHeaderCellDef class="nom-latin">
         Nom latin
       </th>
       <td mat-cell *matCellDef="let element">
