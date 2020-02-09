@@ -6,6 +6,7 @@ export const deg2rad = (degrees: number): number => {
 
 /**
  * Transform longitude and latitude from WGS84 to Lambert 93
+ * Rounded to 1 decimal place
  * @param longitude in degrees
  * @param latitude in degrees
  */
@@ -99,13 +100,14 @@ export const transformWGS84toLambert93 = (
   const y93 = ys - c * Math.exp(-1 * n * gl) * Math.cos(n * (l - constants.LC));
 
   return {
-    longitude: x93,
-    latitude: y93
+    longitude: Math.round(x93 * 10) / 10,
+    latitude: Math.round(y93 * 10) / 10
   };
 };
 
 /**
  * Transform coordinates in Lambert 93 to WGS84
+ * Rounded to 5 decimal places
  * @param coordinatesL93
  */
 export const transformLambert93toWGS84 = (
@@ -164,7 +166,7 @@ export const transformLambert93toWGS84 = (
   const latitude = (longRad / Math.PI) * 180;
 
   return {
-    longitude,
-    latitude
+    longitude: Math.round(longitude * 100000) / 100000,
+    latitude: Math.round(latitude * 100000) / 100000
   };
 };
