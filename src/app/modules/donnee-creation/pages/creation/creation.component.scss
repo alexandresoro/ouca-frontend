@@ -84,3 +84,18 @@ input-milieux {
   grid-template-columns: auto auto;
   grid-column-gap: $standardColumnGap;
 }
+
+.update-fiche-inventaire-button {
+  mat-icon {
+    font-size: 18px;
+    padding-bottom: 8px;
+  }
+}
+
+.new-fiche-inventaire-button {
+  mat-icon {
+    font-size: 30px;
+    margin-right: 0px;
+    padding-bottom: 8px;
+  }
+}

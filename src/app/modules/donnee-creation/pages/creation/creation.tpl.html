@@ -111,23 +111,28 @@
       <div class="creation-page-inventaire-header">
         <h2>
           Fiche inventaire
+          <button
+            *ngIf="isUpdateInventaireBtnDisplayed()"
+            mat-icon-button
+            class="update-fiche-inventaire-button"
+            matTooltip="Corriger la fiche inventaire actuelle"
+            matTooltipClass="default-tooltip"
+            (click)="onEditInventaireBtnClicked()"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
         </h2>
         <span class="flex-spacer"></span>
         <button
-          mat-button
-          color="primary"
           *ngIf="isNewInventaireBtnDisplayed()"
+          mat-icon-button
+          color="primary"
+          class="new-fiche-inventaire-button"
+          matTooltip="Créer une nouvelle fiche inventaire"
+          matTooltipClass="default-tooltip"
           (click)="onNewInventaireBtnClicked()"
         >
-          Nouveau
-        </button>
-        <button
-          mat-button
-          color="primary"
-          *ngIf="isUpdateInventaireBtnDisplayed()"
-          (click)="onEditInventaireBtnClicked()"
-        >
-          Modifier
+          <mat-icon>note_add</mat-icon>
         </button>
       </div>
 
