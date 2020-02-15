@@ -14,379 +14,383 @@
     Filtrer les résultats
   </button>
 
-  <table
-    mat-table
-    matSort
-    [dataSource]="dataSource"
-    class="view-table mat-elevation-z8"
-    multiTemplateDataRows
-  >
-    <!-- COLUMN OBSERVATEUR -->
-    <ng-container matColumnDef="observateur">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-observateur"
-      >
-        Observateur
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.observateur }}
-      </td>
-    </ng-container>
+  <div class="mat-elevation-z8 overflow">
+    <table
+      mat-table
+      matSort
+      [dataSource]="dataSource"
+      class="view-table"
+      multiTemplateDataRows
+    >
+      <!-- COLUMN OBSERVATEUR -->
+      <ng-container matColumnDef="observateur">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-observateur"
+        >
+          Observateur
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.observateur }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN DATE -->
-    <ng-container matColumnDef="date">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-date"
-      >
-        Date
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.date | date: "dd/MM/yyyy" }}
-      </td>
-    </ng-container>
+      <!-- COLUMN DATE -->
+      <ng-container matColumnDef="date">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-date"
+        >
+          Date
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.date | date: "dd/MM/yyyy" }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN HEURE -->
-    <ng-container matColumnDef="heure">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-heure"
-      >
-        Heure
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.heure }}
-      </td>
-    </ng-container>
+      <!-- COLUMN HEURE -->
+      <ng-container matColumnDef="heure">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-heure"
+        >
+          Heure
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.heure }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN DUREE -->
-    <ng-container matColumnDef="duree">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-duree"
-      >
-        Durée
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.duree }}
-      </td>
-    </ng-container>
+      <!-- COLUMN DUREE -->
+      <ng-container matColumnDef="duree">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-duree"
+        >
+          Durée
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.duree }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN DEPARTEMENT -->
-    <ng-container matColumnDef="departement">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-departement"
-      >
-        Département
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.departement }}
-      </td>
-    </ng-container>
+      <!-- COLUMN DEPARTEMENT -->
+      <ng-container matColumnDef="departement">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-departement"
+        >
+          Département
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.departement }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN CODE COMMUNE -->
-    <ng-container matColumnDef="codeCommune">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-code-commune"
-      >
-        Code commune
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.codeCommune }}
-      </td>
-    </ng-container>
+      <!-- COLUMN CODE COMMUNE -->
+      <ng-container matColumnDef="codeCommune">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-code-commune"
+        >
+          Code commune
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.codeCommune }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN NOM COMMUNE -->
-    <ng-container matColumnDef="nomCommune">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-nom-commune"
-      >
-        Nom commune
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.nomCommune }}
-      </td>
-    </ng-container>
+      <!-- COLUMN NOM COMMUNE -->
+      <ng-container matColumnDef="nomCommune">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-nom-commune"
+        >
+          Nom commune
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.nomCommune }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN LIEUDIT -->
-    <ng-container matColumnDef="lieudit">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-lieudit"
-      >
-        Lieu-dit
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.lieudit }}
-      </td>
-    </ng-container>
+      <!-- COLUMN LIEUDIT -->
+      <ng-container matColumnDef="lieudit">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-lieudit"
+        >
+          Lieu-dit
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.lieudit }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN CODE ESPECE -->
-    <ng-container matColumnDef="codeEspece">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-code-espece"
-      >
-        Code espèce
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.codeEspece }}
-      </td>
-    </ng-container>
+      <!-- COLUMN CODE ESPECE -->
+      <ng-container matColumnDef="codeEspece">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-code-espece"
+        >
+          Code espèce
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.codeEspece }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN NOM FRANCAIS -->
-    <ng-container matColumnDef="nomFrancais">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-nom-francais"
-      >
-        Nom français
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.nomFrancais }}
-      </td>
-    </ng-container>
+      <!-- COLUMN NOM FRANCAIS -->
+      <ng-container matColumnDef="nomFrancais">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-nom-francais"
+        >
+          Nom français
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.nomFrancais }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN NOMBRE -->
-    <ng-container matColumnDef="nombre">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-nombre"
-      >
-        Nombre
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.nombre }}
-      </td>
-    </ng-container>
+      <!-- COLUMN NOMBRE -->
+      <ng-container matColumnDef="nombre">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-nombre"
+        >
+          Nombre
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.nombre }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN SEXE -->
-    <ng-container matColumnDef="sexe">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-sexe"
-      >
-        Sexe
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.sexe }}
-      </td>
-    </ng-container>
+      <!-- COLUMN SEXE -->
+      <ng-container matColumnDef="sexe">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-sexe"
+        >
+          Sexe
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.sexe }}
+        </td>
+      </ng-container>
 
-    <!-- COLUMN AGE -->
-    <ng-container matColumnDef="age">
-      <th
-        mat-header-cell
-        mat-sort-header
-        *matHeaderCellDef
-        class="table-donnee-column-age"
-      >
-        Âge
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.age }}
-      </td>
-    </ng-container>
+      <!-- COLUMN AGE -->
+      <ng-container matColumnDef="age">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          class="table-donnee-column-age"
+        >
+          Âge
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.age }}
+        </td>
+      </ng-container>
 
-    <!-- EXPANDED DONNEE -->
-    <ng-container matColumnDef="expandedDonnee">
-      <td
-        mat-cell
-        *matCellDef="let element"
-        [attr.colspan]="displayedColumns.length"
-      >
-        <div
-          class="donnee-detail"
-          [@detailExpand]="
+      <!-- EXPANDED DONNEE -->
+      <ng-container matColumnDef="expandedDonnee">
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [attr.colspan]="displayedColumns.length"
+        >
+          <div
+            class="donnee-detail"
+            [@detailExpand]="
             !!selectedDonnee && element.id === selectedDonnee.id
               ? 'expanded'
               : 'collapsed'
           "
-        >
-          <div class="donnee-details-panel">
-            <div>
-              <strong>ID:</strong> {{ element.id }}
-              <button
-                mat-icon-button
-                color="primary"
-                (click)="editDonnee(element.id)"
-                class="edit-donnee-button"
-              >
-                <mat-icon>search</mat-icon>
-              </button>
-              <br />
-
-              <strong>Observateur:</strong> {{ element.observateur }}
-              <br />
-
-              <span *ngIf="element.associes"
-                ><strong>Observateurs associés:</strong>
-                {{ element.associes }}
-                <br />
-              </span>
-
-              <strong>Date:</strong> {{ element.date | date: "dd/MM/yyyy" }}
-              <br />
-
-              <span *ngIf="element.heure">
-                <strong>Heure:</strong> {{ element.heure }}
-                <br />
-              </span>
-
-              <span *ngIf="element.duree">
-                <strong>Durée:</strong> {{ element.duree }}
-                <br />
-              </span>
-
-              <span *ngIf="element.temperature">
-                <strong>Température:</strong> {{ element.temperature }}
-                <br />
-              </span>
-
-              <span *ngIf="element.meteos.length > 0">
-                <strong>Météos:</strong>
-                {{ element.meteos }}
-              </span>
-            </div>
-            <div>
-              <strong>Département:</strong> {{ element.departement }}
-              <br />
-              <strong>Code commune:</strong> {{ element.codeCommune }}
-              <br />
-              <strong>Nom commune:</strong> {{ element.nomCommune }}
-              <br />
-              <strong>Lieu-dit:</strong> {{ element.lieudit }}
-              <br />
-              <strong>Altitude:</strong>
-              {{ (!!element.customizedAltitude || element.customizedAltitude ===
-              0) ? element.customizedAltitude : element.altitude }}
-              <br />
-              <strong>Longitude (Lambert II étendu):</strong>
-              {{ (!!element.customizedLongitudeL2E ||
-              element.customizedLongitudeL2E === 0) ?
-              element.customizedLongitudeL2E : element.longitudeL2E }}
-              <br />
-              <strong>Latitude (Lambert II étendu):</strong>
-              {{ (!!element.customizedLatitudeL2E ||
-              element.customizedLatitudeL2E === 0)?
-              element.customizedLatitudeL2E : element.latitudeL2E }}
-            </div>
-            <div>
-              <strong>Classe:</strong> {{ element.classe }}
-              <br />
-
-              <strong>Code espèce:</strong> {{ element.codeEspece }}
-              <br />
-
-              <strong>Nom français:</strong> {{ element.nomFrancais }}
-              <br />
-
-              <strong>Nom latin:</strong> {{ element.nomLatin }}
-              <br />
-
-              <strong>Nombre:</strong>
-              <span *ngIf="element.nombre"> {{ element.nombre }} -</span>
-              {{ element.estimationNombre }}
-              <br />
-
-              <strong>Sexe:</strong> {{ element.sexe }}
-              <br />
-
-              <strong>Âge:</strong> {{ element.age }}
-              <br />
-
-              <span *ngIf="element.distance || element.estimationDistance">
-                <strong>Distance:</strong
-                ><span *ngIf="element.estimationDistance">
-                  {{ element.estimationDistance }} -</span
+          >
+            <div class="donnee-details-panel">
+              <div>
+                <strong>ID:</strong> {{ element.id }}
+                <button
+                  mat-icon-button
+                  color="primary"
+                  (click)="editDonnee(element.id)"
+                  class="edit-donnee-button"
                 >
-                <span *ngIf="element.distance"> {{ element.distance }} m</span>
+                  <mat-icon>search</mat-icon>
+                </button>
                 <br />
-              </span>
 
-              <span *ngIf="element.regroupement">
-                <strong>Regroupement:</strong> {{ element.regroupement }}
-              </span>
-            </div>
-            <div>
-              <span *ngIf="element.comportements.length > 0">
-                <strong>Comportements:</strong>
+                <strong>Observateur:</strong> {{ element.observateur }}
                 <br />
-                <span *ngFor="let c of element.comportements; last as last">
-                  {{ c.code }} - {{ c.libelle }}
-                  <br *ngIf="!last" />
+
+                <span *ngIf="element.associes"
+                  ><strong>Observateurs associés:</strong>
+                  {{ element.associes }}
+                  <br />
                 </span>
-                <br />
-              </span>
 
-              <span *ngIf="element.milieux.length > 0">
-                <strong>Milieux:</strong>
+                <strong>Date:</strong> {{ element.date | date: "dd/MM/yyyy" }}
                 <br />
-                <span *ngFor="let m of element.milieux; last as last">
-                  {{ m.code }} - {{ m.libelle }}
-                  <br *ngIf="!last" />
+
+                <span *ngIf="element.heure">
+                  <strong>Heure:</strong> {{ element.heure }}
+                  <br />
                 </span>
-                <br />
-              </span>
 
-              <span *ngIf="element.commentaire">
-                <strong>Commentaires:</strong> {{ element.commentaire }}
-              </span>
+                <span *ngIf="element.duree">
+                  <strong>Durée:</strong> {{ element.duree }}
+                  <br />
+                </span>
+
+                <span *ngIf="element.temperature">
+                  <strong>Température:</strong> {{ element.temperature }}
+                  <br />
+                </span>
+
+                <span *ngIf="element.meteos.length > 0">
+                  <strong>Météos:</strong>
+                  {{ element.meteos }}
+                </span>
+              </div>
+              <div>
+                <strong>Département:</strong> {{ element.departement }}
+                <br />
+                <strong>Code commune:</strong> {{ element.codeCommune }}
+                <br />
+                <strong>Nom commune:</strong> {{ element.nomCommune }}
+                <br />
+                <strong>Lieu-dit:</strong> {{ element.lieudit }}
+                <br />
+                <strong>Altitude:</strong>
+                {{ (!!element.customizedAltitude || element.customizedAltitude
+                === 0) ? element.customizedAltitude : element.altitude }}
+                <br />
+                <strong>Longitude (Lambert II étendu):</strong>
+                {{ (!!element.customizedLongitudeL2E ||
+                element.customizedLongitudeL2E === 0) ?
+                element.customizedLongitudeL2E : element.longitudeL2E }}
+                <br />
+                <strong>Latitude (Lambert II étendu):</strong>
+                {{ (!!element.customizedLatitudeL2E ||
+                element.customizedLatitudeL2E === 0)?
+                element.customizedLatitudeL2E : element.latitudeL2E }}
+              </div>
+              <div>
+                <strong>Classe:</strong> {{ element.classe }}
+                <br />
+
+                <strong>Code espèce:</strong> {{ element.codeEspece }}
+                <br />
+
+                <strong>Nom français:</strong> {{ element.nomFrancais }}
+                <br />
+
+                <strong>Nom latin:</strong> {{ element.nomLatin }}
+                <br />
+
+                <strong>Nombre:</strong>
+                <span *ngIf="element.nombre"> {{ element.nombre }} -</span>
+                {{ element.estimationNombre }}
+                <br />
+
+                <strong>Sexe:</strong> {{ element.sexe }}
+                <br />
+
+                <strong>Âge:</strong> {{ element.age }}
+                <br />
+
+                <span *ngIf="element.distance || element.estimationDistance">
+                  <strong>Distance:</strong
+                  ><span *ngIf="element.estimationDistance">
+                    {{ element.estimationDistance }} -</span
+                  >
+                  <span *ngIf="element.distance">
+                    {{ element.distance }} m</span
+                  >
+                  <br />
+                </span>
+
+                <span *ngIf="element.regroupement">
+                  <strong>Regroupement:</strong> {{ element.regroupement }}
+                </span>
+              </div>
+              <div>
+                <span *ngIf="element.comportements.length > 0">
+                  <strong>Comportements:</strong>
+                  <br />
+                  <span *ngFor="let c of element.comportements; last as last">
+                    {{ c.code }} - {{ c.libelle }}
+                    <br *ngIf="!last" />
+                  </span>
+                  <br />
+                </span>
+
+                <span *ngIf="element.milieux.length > 0">
+                  <strong>Milieux:</strong>
+                  <br />
+                  <span *ngFor="let m of element.milieux; last as last">
+                    {{ m.code }} - {{ m.libelle }}
+                    <br *ngIf="!last" />
+                  </span>
+                  <br />
+                </span>
+
+                <span *ngIf="element.commentaire">
+                  <strong>Commentaires:</strong> {{ element.commentaire }}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </td>
-    </ng-container>
+        </td>
+      </ng-container>
 
-    <!-- HEADER TABLE DONNEE -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- HEADER TABLE DONNEE -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
-    <!-- LINE FOR A DONNEE -->
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      class="donnee-row"
-      [class.selected-row]="
+      <!-- LINE FOR A DONNEE -->
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="donnee-row"
+        [class.selected-row]="
         !!selectedDonnee && selectedDonnee.id === row.id
       "
-      (click)="onRowClicked(row)"
-    ></tr>
+        (click)="onRowClicked(row)"
+      ></tr>
 
-    <!-- LINE FOR THE EXPANDED DONNEE -->
-    <tr
-      mat-row
-      *matRowDef="let row; columns: ['expandedDonnee']"
-      class="donnee-detail-row"
-    ></tr>
-  </table>
+      <!-- LINE FOR THE EXPANDED DONNEE -->
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDonnee']"
+        class="donnee-detail-row"
+      ></tr>
+    </table>
+  </div>
 
   <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
 </div>

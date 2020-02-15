@@ -5,6 +5,10 @@
   @include mixins.view-table-container;
 }
 
+.overflow {
+  overflow-x: auto;
+}
+
 table.view-table {
   th.table-donnee-column-observateur {
     min-width: 120px;
@@ -73,8 +77,14 @@ table.view-table {
     }
   }
 
+  tr.donnee-row {
+    td {
+      border-bottom: 0px;
+    }
+  }
+
   tr.donnee-row:not(.selected-row):active {
-    background: #efefef;
+    background: variables.$light-grey-color;
   }
 
   .donnee-detail {
