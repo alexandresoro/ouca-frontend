@@ -29,7 +29,7 @@ export class AutocompleteComponent implements OnInit {
 
   @Input() public displayFn: ((value: any) => string) | null;
 
-  @ViewChild(MatAutocompleteTrigger, { static: false })
+  @ViewChild(MatAutocompleteTrigger)
   trigger: MatAutocompleteTrigger;
 
   filteredValues: Observable<EntiteSimple[]>;
