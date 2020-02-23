@@ -8,10 +8,10 @@ import {
 import {
   Component,
   Input,
-  SimpleChanges,
-  ViewChild,
   OnChanges,
-  OnInit
+  OnInit,
+  SimpleChanges,
+  ViewChild
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -19,7 +19,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
 import * as _ from "lodash";
-import moment = require("moment");
+import moment from "moment";
 
 @Component({
   selector: "table-donnees",
@@ -79,7 +79,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
       "milieux"
     ]);
 
-    const otherDataFilter = _.some(otherData, (dataField) => {
+    const otherDataFilter = _.some(otherData, dataField => {
       if (_.isNumber(data[dataField])) {
         return "" + data[dataField] === filterValue;
       }
@@ -93,7 +93,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
       return true;
     }
 
-    const comportementsFilter = _.some(data.comportements, (comportement) => {
+    const comportementsFilter = _.some(data.comportements, comportement => {
       return (
         _.toNumber(comportement.code) === _.toNumber(filterValue) ||
         comportement.libelle
@@ -106,7 +106,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
       return true;
     }
 
-    const milieuxFilter = _.some(data.milieux, (milieu) => {
+    const milieuxFilter = _.some(data.milieux, milieu => {
       return (
         _.toNumber(milieu.code) === _.toNumber(filterValue) ||
         milieu.libelle

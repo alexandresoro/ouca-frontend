@@ -1,7 +1,7 @@
 import { FormGroup } from "@angular/forms";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import * as _ from "lodash";
-import moment = require("moment");
+import moment from "moment";
 
 export class InventaireHelper {
   public static updateFormState = (

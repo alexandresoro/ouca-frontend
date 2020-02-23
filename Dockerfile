@@ -12,10 +12,12 @@ COPY package.json yarn.lock /app/frontend/
 RUN yarn install --frozen-lockfile
 
 # Copy the source files for the transpile
-COPY tsconfig.aot.json webpack.aot.config.js /app/frontend/
+COPY .eslintrc.json angular.json browserslist tsconfig.app.json tsconfig.json /app/frontend/
 COPY src/ /app/frontend/src
 
-RUN yarn build:aot
+RUN yarn lint
+
+RUN yarn build:prod
 
 # 2. Build the nginx image along with the built project
 FROM nginx:alpine

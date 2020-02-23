@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "webpack",
-    "build:aot": "webpack --config webpack.aot.config.js",
-    "build:prod": "webpack --mode=production",
-    "start": "webpack-dev-server"
+    "build": "ng build",
+    "build:prod": "ng build --prod",
+    "lint": "eslint 'src/**/*.ts'",
+    "start": "ng serve"
   },
   "keywords": [],
   "author": "Camille Carrier",
@@ -39,37 +39,17 @@
     "@angular-devkit/build-angular": "*",
     "@angular/cli": "*",
     "@angular/compiler-cli": "9.0.2",
-    "@ngtools/webpack": "9",
     "@types/file-saver": "*",
     "@types/lodash": "*",
-    "@types/node": "12",
-    "@types/webpack": "*",
-    "@types/webpack-dev-server": "*",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
-    "angular2-template-loader": "^0.6.2",
     "basenaturaliste-model": "https://github.com/alexandresoro/basenaturaliste-model#master",
-    "clean-webpack-plugin": "*",
-    "css-loader": "*",
     "eslint": "*",
-    "eslint-loader": "*",
-    "file-loader": "*",
-    "fork-ts-checker-webpack-plugin": "*",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "mini-css-extract-plugin": "*",
-    "moment-locales-webpack-plugin": "*",
-    "optimize-css-assets-webpack-plugin": "*",
-    "sass": "*",
-    "sass-loader": "*",
-    "to-string-loader": "*",
-    "ts-loader": "*",
     "ts-node": "*",
-    "typescript": "3.7.5",
-    "webapp-webpack-plugin": "*",
-    "webpack": "4",
-    "webpack-cli": "*",
-    "webpack-dev-server": "*"
+    "typescript": "3.7.5"
   },
-  "repository": {}
+  "engines": {
+    "node": ">=12",
+    "yarn": ">=1 <2"
+  }
 }

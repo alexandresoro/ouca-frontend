@@ -1,18 +1,28 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "dist",
-    "target": "es2015",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "emitDecoratorMetadata": true,
+    "declaration": false,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "lib": ["es2015", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"],
+    "emitDecoratorMetadata": true,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "src/main.aot.ts"]
+  "exclude": ["node_modules", "src/main.aot.ts"],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }
