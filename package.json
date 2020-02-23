@@ -35,11 +35,13 @@
     "zone.js": "0.9"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "*",
+    "@angular/cli": "*",
     "@angular/compiler-cli": "8",
     "@ngtools/webpack": "8",
     "@types/file-saver": "*",
     "@types/lodash": "*",
-    "@types/node": "10",
+    "@types/node": "12",
     "@types/webpack": "*",
     "@types/webpack-dev-server": "*",
     "@typescript-eslint/eslint-plugin": "*",
