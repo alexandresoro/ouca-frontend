@@ -41,7 +41,7 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
       this.objects,
       "nomFrancais",
       nomFrancais
-    ) as Espece;
+    );
 
     const valueIsAnExistingEntity: boolean =
       !!foundEspeceByCode && id !== foundEspeceByCode.id;
@@ -64,7 +64,7 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
       this.objects,
       "nomLatin",
       nomLatin
-    ) as Espece;
+    );
 
     const valueIsAnExistingEntity: boolean =
       !!foundEspeceByCode && id !== foundEspeceByCode.id;

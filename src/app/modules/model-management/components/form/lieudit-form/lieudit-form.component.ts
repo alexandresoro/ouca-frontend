@@ -59,7 +59,7 @@ export class LieuditFormComponent extends EntitySubFormComponent
       this.communes$,
       (selectedDepartement, communes) => {
         return communes && selectedDepartement && selectedDepartement.id
-          ? communes.filter((commune) => {
+          ? communes.filter(commune => {
               return (
                 commune.departement &&
                 commune.departement.id === selectedDepartement.id
@@ -84,7 +84,7 @@ export class LieuditFormComponent extends EntitySubFormComponent
             ListHelper.findEntityInListByID(
               result[0],
               this.entityForm.controls.commune.value.departement.id
-            ) as Departement
+            )
           );
 
           this.entityForm.controls.communeId.setValue(

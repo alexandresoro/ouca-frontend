@@ -9,7 +9,6 @@ import { InputObservateursAssociesComponent } from "./components/input-observate
 import { SearchByIdDialogComponent } from "./components/search-by-id-dialog/search-by-id-dialog.component";
 import { DonneeCreationRoutingModule } from "./donnee-creation-routing.module";
 import { CreationComponent } from "./pages/creation/creation.component";
-import { NavigationService } from "./services/navigation.service";
 
 @NgModule({
   imports: [SharedModule, DonneeCreationRoutingModule],
@@ -25,6 +24,6 @@ import { NavigationService } from "./services/navigation.service";
   ],
   entryComponents: [SearchByIdDialogComponent],
   exports: [],
-  providers: [NavigationService]
+  providers: []
 })
 export class DonneeCreationModule {}

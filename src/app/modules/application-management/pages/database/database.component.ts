@@ -1,36 +1,33 @@
 import { Component } from "@angular/core";
+import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
   getFileNameFromResponseContentDisposition,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { PageComponent } from "../../../shared/pages/page.component";
-import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   templateUrl: "./database.tpl.html"
 })
-export class DatabaseComponent extends PageComponent {
+export class DatabaseComponent {
   public isWaitPanelDisplayed: boolean = false;
 
   constructor(
     private backendApiService: BackendApiService,
-    protected snackbar: MatSnackBar
-  ) {
-    super(snackbar);
-  }
+    private statusMessageService: StatusMessageService
+  ) {}
 
   public onSaveDatabaseClicked = (): void => {
     this.displayWaitPanel();
-    this.backendApiService.saveDatabase().subscribe((response) => {
+    this.backendApiService.saveDatabase().subscribe(response => {
       saveFile(
         response.body,
         getFileNameFromResponseContentDisposition(response),
         getContentTypeFromResponse(response)
       );
       this.hideWaitPanel();
-      this.showSuccessMessage(
+      this.statusMessageService.showSuccessMessage(
         "La sauvegarde de la base de données est terminée."
       );
     });

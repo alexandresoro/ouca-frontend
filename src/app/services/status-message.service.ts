@@ -1,11 +1,15 @@
+import { Injectable } from "@angular/core";
 import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
 import {
-  StatusMessageSeverity,
   StatusMessageComponent,
-  StatusMessageParameters
-} from "../components/status-message/status-message.component";
+  StatusMessageParameters,
+  StatusMessageSeverity
+} from "../modules/shared/components/status-message/status-message.component";
 
-export class PageComponent {
+@Injectable({
+  providedIn: "root"
+})
+export class StatusMessageService {
   constructor(protected snackbar: MatSnackBar) {}
 
   private showStatusMessage = (
@@ -25,12 +29,12 @@ export class PageComponent {
     } as MatSnackBarConfig<StatusMessageParameters>);
   };
 
-  protected showErrorMessage = (message: string, error?: any): void => {
+  public showErrorMessage = (message: string, error?: any): void => {
     this.showStatusMessage(message, StatusMessageSeverity.ERROR, error);
     console.error(message, error);
   };
 
-  protected showSuccessMessage = (message: string): void => {
+  public showSuccessMessage = (message: string): void => {
     this.showStatusMessage(message, StatusMessageSeverity.SUCCESS);
   };
 }

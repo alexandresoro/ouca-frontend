@@ -8,6 +8,7 @@
   "eslint.validate": ["typescript", "javascript"],
   "eslint.packageManager": "yarn",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
   }
 }

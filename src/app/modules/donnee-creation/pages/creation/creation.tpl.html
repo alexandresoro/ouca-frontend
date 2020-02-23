@@ -9,7 +9,7 @@
         matTooltip="Donnée précédente"
         matTooltipClass="default-tooltip"
         color="primary"
-        [disabled]="!isPreviousDonneeBtnDisplayed()"
+        [disabled]="!(isPreviousDonneeBtnDisplayed$() | async)"
         (click)="onPreviousDonneeBtnClicked()"
       >
         <mat-icon>navigate_before</mat-icon>
@@ -21,7 +21,7 @@
         matTooltip="Donnée suivante"
         matTooltipClass="default-tooltip"
         color="primary"
-        [disabled]="!isNextDonneeBtnDisplayed()"
+        [disabled]="!(isNextDonneeBtnDisplayed$() | async)"
         (click)="onNextDonneeBtnClicked()"
       >
         <mat-icon>navigate_next</mat-icon>
@@ -44,7 +44,7 @@
         matTooltip="Nouvelle donnée"
         matTooltipClass="default-tooltip"
         color="primary"
-        *ngIf="isNewDonneeBtnDisplayed()"
+        *ngIf="isNewDonneeBtnDisplayed$() | async"
         (click)="onNewDonneeBtnClicked()"
       >
         <mat-icon>add</mat-icon>
@@ -61,7 +61,7 @@
         color="primary"
         matTooltip="Enregistrer la fiche inventaire"
         matTooltipClass="default-tooltip"
-        *ngIf="isSaveInventaireBtnDisplayed()"
+        *ngIf="isSaveInventaireBtnDisplayed$() | async"
         [disabled]="!inventaireForm.valid"
         (click)="onSaveInventaireButtonClicked()"
       >
@@ -73,7 +73,7 @@
         matTooltip="Enregistrer la fiche espèce"
         matTooltipClass="default-tooltip"
         color="primary"
-        *ngIf="isSaveDonneeBtnDisplayed()"
+        *ngIf="isSaveDonneeBtnDisplayed$() | async"
         [disabled]="!donneeForm.valid"
         (click)="onSaveDonneeButtonClicked()"
       >
@@ -81,7 +81,7 @@
       </button>
       <button
         class="no-text-button"
-        *ngIf="isUpdateDonneeBtnDisplayed()"
+        *ngIf="isUpdateDonneeBtnDisplayed$() | async"
         mat-raised-button
         matTooltip="Mettre à jour les fiches inventaire et espèce"
         matTooltipClass="default-tooltip"
@@ -97,7 +97,7 @@
         matTooltip="Supprimer la fiche espèce"
         matTooltipClass="default-tooltip"
         color="primary"
-        *ngIf="isDeleteDonneeBtnDisplayed()"
+        *ngIf="isDeleteDonneeBtnDisplayed$() | async"
         (click)="onDeleteDonneeBtnClicked()"
       >
         <mat-icon>delete</mat-icon>
@@ -112,7 +112,7 @@
         <h2>
           Fiche inventaire
           <button
-            *ngIf="isUpdateInventaireBtnDisplayed()"
+            *ngIf="isUpdateInventaireBtnDisplayed$() | async"
             mat-icon-button
             class="update-fiche-inventaire-button"
             matTooltip="Corriger la fiche inventaire actuelle"
@@ -124,7 +124,7 @@
         </h2>
         <span class="flex-spacer"></span>
         <button
-          *ngIf="isNewInventaireBtnDisplayed()"
+          *ngIf="isNewInventaireBtnDisplayed$() | async"
           mat-icon-button
           color="primary"
           class="new-fiche-inventaire-button"
@@ -144,16 +144,16 @@
             <div>
               <input-observateur
                 [control]="inventaireForm.controls['observateur']"
-                [observateurs]="pageModel.observateurs"
+                [observateurs]="(pageModel$ | async)?.observateurs"
               >
               </input-observateur>
             </div>
 
             <!-- ASSOCIES -->
-            <div *ngIf="pageModel.areAssociesDisplayed">
+            <div *ngIf="(pageModel$ | async)?.areAssociesDisplayed">
               <input-observateurs-associes
                 [control]="inventaireForm.controls['observateursAssocies']"
-                [observateurs]="pageModel.observateurs"
+                [observateurs]="(pageModel$ | async)?.observateurs"
               >
               </input-observateurs-associes>
             </div>
@@ -208,7 +208,7 @@
             fxLayout="row wrap"
             fxLayoutGap="20px"
             class="mat-card-override"
-            *ngIf="pageModel.isMeteoDisplayed"
+            *ngIf="(pageModel$ | async)?.isMeteoDisplayed"
           >
             <!-- TEMPERATURE -->
             <input-temperature
@@ -219,7 +219,7 @@
             <!-- METEOS -->
             <input-meteos
               fxFlex="1 0 120px"
-              [meteos]="pageModel.meteos"
+              [meteos]="(pageModel$ | async)?.meteos"
               [control]="inventaireForm.controls['meteos']"
             ></input-meteos>
           </mat-card>
@@ -234,11 +234,11 @@
       <h2>
         Fiche espèce
         <span
-          *ngIf="getCurrentDonneeIndex()"
-          matTooltip="ID = {{ getDisplayedDonneeId()}}"
+          *ngIf="getCurrentDonneeIndex$() | async"
+          matTooltip="ID = {{ getDisplayedDonneeId$() | async}}"
           matTooltipClass="default-tooltip"
         >
-          n°{{ getCurrentDonneeIndex() }}
+          n°{{ getCurrentDonneeIndex$() | async }}
         </span>
       </h2>
 
@@ -266,8 +266,8 @@
                 fxLayout="row"
                 fxLayoutGap="20px"
                 [controlGroup]="donneeForm.controls['nombreGroup']"
-                [defaultNombre]="pageModel.defaultNombre"
-                [estimationsNombre]="pageModel.estimationsNombre"
+                [defaultNombre]="(pageModel$ | async)?.defaultNombre"
+                [estimationsNombre]="(pageModel$ | async)?.estimationsNombre"
                 formGroupName="nombreGroup"
               >
               </input-nombre>
@@ -276,44 +276,44 @@
               <input-sexe
                 fxFlex="1 0 120px"
                 [control]="donneeForm.controls['sexe']"
-                [sexes]="pageModel.sexes"
+                [sexes]="(pageModel$ | async)?.sexes"
               ></input-sexe>
 
               <!-- AGE  -->
               <input-age
                 fxFlex="1 0 120px"
                 [control]="donneeForm.controls['age']"
-                [ages]="pageModel.ages"
+                [ages]="(pageModel$ | async)?.ages"
               ></input-age>
             </div>
 
             <!-- DISTANCE AND ESTIMATION DISTANCE -->
             <div
               *ngIf="
-                pageModel.isDistanceDisplayed ||
-                pageModel.isRegroupementDisplayed
+                (pageModel$ | async)?.isDistanceDisplayed ||
+                (pageModel$ | async)?.isRegroupementDisplayed
               "
               fxLayout="row wrap"
             >
               <!-- ESTIMATION DISTANCE -->
               <input-distance
-                *ngIf="pageModel.isDistanceDisplayed"
+                *ngIf="(pageModel$ | async)?.isDistanceDisplayed"
                 fxFlex="auto"
                 fxLayout="row"
                 fxLayoutGap="20px"
                 [controlGroup]="donneeForm.controls['distanceGroup']"
-                [estimationsDistance]="pageModel.estimationsDistance"
+                [estimationsDistance]="(pageModel$ | async)?.estimationsDistance"
                 formGroupName="distanceGroup"
               >
               </input-distance>
 
               <!-- REGROUPEMENT-->
               <input-regroupement
-                *ngIf="pageModel.isRegroupementDisplayed"
+                *ngIf="(pageModel$ | async)?.isRegroupementDisplayed"
                 fxFlex="1 0 220px"
                 fxFlexOffset="10%"
                 [control]="donneeForm.controls['regroupement']"
-                [nextRegroupement]="nextRegroupement"
+                [nextRegroupement]="nextRegroupement$ | async"
               ></input-regroupement>
             </div>
           </mat-card>
@@ -328,7 +328,7 @@
                 formGroupName="comportementsGroup"
                 [donneeForm]="donneeForm"
                 [controlGroup]="donneeForm.controls['comportementsGroup']"
-                [comportements]="pageModel.comportements"
+                [comportements]="(pageModel$ | async)?.comportements"
               ></input-comportements>
             </mat-card-content>
           </mat-card>
@@ -341,7 +341,7 @@
                 formGroupName="milieuxGroup"
                 [donneeForm]="donneeForm"
                 [controlGroup]="donneeForm.controls['milieuxGroup']"
-                [milieux]="pageModel.milieux"
+                [milieux]="(pageModel$ | async)?.milieux"
               ></input-milieux>
             </mat-card-content>
           </mat-card>
@@ -372,7 +372,7 @@
         matTooltip="Enregistrer la fiche inventaire"
         matTooltipClass="default-tooltip"
         color="primary"
-        *ngIf="isSaveInventaireBtnDisplayed()"
+        *ngIf="isSaveInventaireBtnDisplayed$() | async"
         [disabled]="!inventaireForm.valid"
         (click)="onSaveInventaireButtonClicked()"
       >
@@ -384,7 +384,7 @@
         matTooltip="Enregistrer la fiche espèce"
         matTooltipClass="default-tooltip"
         color="primary"
-        *ngIf="isSaveDonneeBtnDisplayed()"
+        *ngIf="isSaveDonneeBtnDisplayed$() | async"
         [disabled]="!donneeForm.valid"
         (click)="onSaveDonneeButtonClicked()"
       >
@@ -396,7 +396,7 @@
         matTooltip="Mettre à jour les fiches inventaire et espèce"
         matTooltipClass="default-tooltip"
         color="primary"
-        *ngIf="isUpdateDonneeBtnDisplayed()"
+        *ngIf="isUpdateDonneeBtnDisplayed$() | async"
         (click)="saveInventaireAndDonnee()"
         [disabled]="!inventaireForm.valid || !donneeForm.valid"
       >
@@ -408,7 +408,7 @@
         matTooltip="Supprimer la fiche espèce"
         matTooltipClass="default-tooltip"
         color="primary"
-        *ngIf="isDeleteDonneeBtnDisplayed()"
+        *ngIf="isDeleteDonneeBtnDisplayed$() | async"
         (click)="onDeleteDonneeBtnClicked()"
       >
         <mat-icon>delete</mat-icon>

@@ -1,5 +1,5 @@
 export interface MultipleOptionsDialogOption {
-  value: number;
+  value?: number;
   label: string;
   color: string;
 }

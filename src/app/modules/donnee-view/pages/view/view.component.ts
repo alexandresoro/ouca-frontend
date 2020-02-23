@@ -6,33 +6,32 @@ import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Comportement } from "basenaturaliste-model/comportement.object";
 import { Departement } from "basenaturaliste-model/departement.object";
+import { DonneesFilter } from "basenaturaliste-model/donnees-filter.object";
 import { Espece } from "basenaturaliste-model/espece.object";
 import { EstimationDistance } from "basenaturaliste-model/estimation-distance.object";
 import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
+import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { Meteo } from "basenaturaliste-model/meteo.object";
 import { Milieu } from "basenaturaliste-model/milieu.object";
 import { Observateur } from "basenaturaliste-model/observateur.object";
 import { Sexe } from "basenaturaliste-model/sexe.object";
-import { combineLatest, Observable, Subject, BehaviorSubject } from "rxjs";
+import * as _ from "lodash";
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
-import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { PageComponent } from "../../../shared/pages/page.component";
-import * as _ from "lodash";
-import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
-import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
-import { DonneesFilter } from "basenaturaliste-model/donnees-filter.object";
 import { interpretDateAsUTCDate } from "../../../shared/helpers/time.helper";
+import { BackendApiService } from "../../../shared/services/backend-api.service";
+import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
 
 @Component({
   styleUrls: ["./view.component.scss"],
   templateUrl: "./view.component.html"
 })
-export class ViewComponent extends PageComponent {
+export class ViewComponent {
   public searchForm: FormGroup = new FormGroup({
     id: new FormControl(),
     observateurs: new FormControl(),
@@ -101,10 +100,8 @@ export class ViewComponent extends PageComponent {
 
   constructor(
     private backendApiService: BackendApiService,
-    protected snackbar: MatSnackBar
-  ) {
-    super(snackbar);
-  }
+    private statusMessageService: StatusMessageService
+  ) {}
 
   public ngOnInit(): void {
     this.classes$ = new Subject();
@@ -197,7 +194,7 @@ export class ViewComponent extends PageComponent {
     if (this.searchForm.controls.excelMode.value) {
       this.backendApiService
         .exportDonneesByCustomizedFilters(filters)
-        .subscribe((response) => {
+        .subscribe(response => {
           this.displayWaitPanel = false;
 
           // This is an ugly "bidouille"
@@ -211,7 +208,9 @@ export class ViewComponent extends PageComponent {
           reader.onload = (): void => {
             let isErrorCase = false;
             try {
-              this.showErrorMessage(JSON.parse(reader.result as string).reason);
+              this.statusMessageService.showErrorMessage(
+                JSON.parse(reader.result as string).reason
+              );
               isErrorCase = true;
             } catch (e) {
               //
@@ -244,13 +243,13 @@ export class ViewComponent extends PageComponent {
   private setEspecesWithNbDonnees = (donnees: FlatDonnee[]): void => {
     const nbDonneesByEspeceMap: { [key: string]: number } = _.countBy(
       donnees,
-      (donnee) => {
+      donnee => {
         return donnee.codeEspece;
       }
     );
 
     this.especesWithNbDonnees = _.map(nbDonneesByEspeceMap, (value, key) => {
-      const espece: Espece = _.find(this.especes$.getValue(), (espece) => {
+      const espece: Espece = _.find(this.especes$.getValue(), espece => {
         return espece.code === key;
       });
 

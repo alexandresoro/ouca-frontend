@@ -3,25 +3,25 @@ import * as _ from "lodash";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 
 export class ListHelper {
-  private static findEntityInListByAttribute(
-    entities: EntiteSimple[],
+  private static findEntityInListByAttribute<T extends EntiteSimple>(
+    entities: T[],
     comparedAttributeName: string,
     searchedValue: number | string
-  ): EntiteSimple | null {
+  ): T | null {
     if (!searchedValue) {
       return null;
     }
 
     return entities.find(
-      (entity) => entity[comparedAttributeName] === searchedValue
+      entity => entity[comparedAttributeName] === searchedValue
     );
   }
 
-  public static findEntityInListByNumberAttribute(
-    entities: EntiteSimple[],
+  public static findEntityInListByNumberAttribute<T extends EntiteSimple>(
+    entities: T[],
     comparedAttributeName: string,
     searchedValue: number
-  ): EntiteSimple | null {
+  ): T | null {
     return this.findEntityInListByAttribute(
       entities,
       comparedAttributeName,
@@ -29,12 +29,12 @@ export class ListHelper {
     );
   }
 
-  public static findEntityInListByStringAttribute(
-    entities: EntiteSimple[],
+  public static findEntityInListByStringAttribute<T extends EntiteSimple>(
+    entities: T[],
     comparedAttributeName: string,
     searchedValue: string,
     exactSearch?: boolean
-  ): EntiteSimple {
+  ): T {
     if (exactSearch) {
       return this.findEntityInListByAttribute(
         entities,
@@ -47,7 +47,7 @@ export class ListHelper {
       return null;
     }
 
-    return _.find(entities, (entity: EntiteSimple) => {
+    return _.find(entities, (entity: T) => {
       return (
         diacritics.remove(
           entity[comparedAttributeName].trim().toLowerCase()
@@ -56,10 +56,10 @@ export class ListHelper {
     });
   }
 
-  public static findEntityInListByID(
-    entities: EntiteSimple[],
+  public static findEntityInListByID<T extends EntiteSimple>(
+    entities: T[],
     id: number
-  ): EntiteSimple | null {
+  ): T | null {
     return this.findEntityInListByAttribute(entities, "id", id);
   }
 
@@ -73,7 +73,7 @@ export class ListHelper {
     allEntities: EntiteSimple[],
     idsToGet: number[]
   ): EntiteSimple[] {
-    return _.map(idsToGet, (id) => {
+    return _.map(idsToGet, id => {
       return ListHelper.findEntityInListByNumberAttribute(
         allEntities,
         "id",

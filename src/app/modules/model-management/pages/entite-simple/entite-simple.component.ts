@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
 import { PostResponse } from "basenaturaliste-model/post-response.object";
+import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
   saveFile
@@ -11,14 +12,11 @@ import { ListHelper } from "../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { PageComponent } from "../../../shared/pages/page.component";
 
 @Component({
   template: ""
 })
-export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
-  implements OnInit {
+export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   public objects: T[];
 
   public currentObject: T;
@@ -35,10 +33,8 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
 
   constructor(
     private backendApiService: BackendApiService,
-    protected snackbar: MatSnackBar
-  ) {
-    super(snackbar);
-  }
+    private statusMessageService: StatusMessageService
+  ) {}
 
   public ngOnInit(): void {
     this.switchToViewAllMode();
@@ -86,12 +82,12 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
         .deleteEntity(this.getEntityName(), this.objectToRemove.id)
         .subscribe((response: PostResponse) => {
           if (response.isSuccess) {
-            this.showSuccessMessage(
+            this.statusMessageService.showSuccessMessage(
               this.getTheEntityLabel(true) + " a été supprimé(e) avec succès."
             );
             this.switchToViewAllMode();
           } else {
-            this.showErrorMessage(
+            this.statusMessageService.showErrorMessage(
               "Une erreue est survenue pendant la suppression.",
               response.message
             );
@@ -119,12 +115,12 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
       .saveEntity(this.getEntityName(), objectToSave)
       .subscribe((response: PostResponse) => {
         if (response.isSuccess) {
-          this.showSuccessMessage(
+          this.statusMessageService.showSuccessMessage(
             this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès."
           );
           this.switchToViewAllMode();
         } else {
-          this.showErrorMessage(
+          this.statusMessageService.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde.",
             response.message
           );
@@ -196,7 +192,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
       this.objects,
       "libelle",
       libelle
-    ) as T;
+    );
 
     const valueIsAnExistingEntity: boolean =
       !!foundEntityByLibelle && id !== foundEntityByLibelle.id;
@@ -219,7 +215,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> extends PageComponent
       this.objects,
       "code",
       code
-    ) as T;
+    );
 
     const valueIsAnExistingEntity: boolean =
       !!foundEntityByCode && id !== foundEntityByCode.id;

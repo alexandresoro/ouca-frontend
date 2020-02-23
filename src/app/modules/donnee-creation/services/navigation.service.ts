@@ -2,21 +2,35 @@ import { Injectable } from "@angular/core";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { Departement } from "basenaturaliste-model/departement.object";
+import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { BackendApiService } from "../../shared/services/backend-api.service";
 import { CreationModeEnum } from "../helpers/creation-mode.enum";
-import { CreationModeHelper } from "../helpers/creation-mode.helper";
-import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
+import { CreationModeService } from "./creation-mode.service";
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class NavigationService {
-  private CACHED_DONNEE_ID: number = -1;
-  private previousDonneeId: number;
-  private nextDonneeId: number;
-  private nextMode: CreationModeEnum;
-  private currentDonneeIndex: number;
-  private lastDonneeId: number;
-  private numberOfDonnees: number;
+  private readonly CACHED_DONNEE_ID: number = -1;
+  private previousDonneeId$: BehaviorSubject<number> = new BehaviorSubject<
+    number
+  >(null);
+  private nextDonneeId$: BehaviorSubject<number> = new BehaviorSubject<number>(
+    null
+  );
+  private nextMode$: BehaviorSubject<CreationModeEnum> = new BehaviorSubject<
+    CreationModeEnum
+  >(null);
+  private currentDonneeIndex$: BehaviorSubject<number> = new BehaviorSubject<
+    number
+  >(null);
+  private lastDonneeId$: BehaviorSubject<number> = new BehaviorSubject<number>(
+    null
+  );
+  private numberOfDonnees$: BehaviorSubject<number> = new BehaviorSubject(null);
 
   private cachedDonnee: Donnee;
   private cachedMode: CreationModeEnum;
@@ -24,19 +38,22 @@ export class NavigationService {
   private cachedCommune: Commune;
   private cachedClasse: Classe;
 
-  constructor(public backendApiService: BackendApiService) {}
+  constructor(
+    public backendApiService: BackendApiService,
+    private creationModeService: CreationModeService
+  ) {}
 
   public init(lastDonnee: Donnee, numberOfDonnees: number): void {
-    this.lastDonneeId = lastDonnee ? lastDonnee.id : null;
-    this.numberOfDonnees = numberOfDonnees;
+    this.lastDonneeId$.next(lastDonnee ? lastDonnee.id : null);
+    this.numberOfDonnees$.next(numberOfDonnees);
     this.resetPreviousAndNextDonnee();
   }
 
   public resetPreviousAndNextDonnee(): void {
-    this.previousDonneeId = this.lastDonneeId;
-    this.nextDonneeId = null;
-    this.nextMode = null;
-    this.currentDonneeIndex = null;
+    this.previousDonneeId$.next(this.lastDonneeId$.value);
+    this.nextDonneeId$.next(null);
+    this.nextMode$.next(null);
+    this.currentDonneeIndex$.next(null);
     this.cachedDonnee = {} as Donnee;
     this.cachedMode = null;
     this.cachedClasse = null;
@@ -51,7 +68,7 @@ export class NavigationService {
     currentClasse: Classe
   ): void {
     this.cachedDonnee = donneeToSave;
-    this.cachedMode = CreationModeHelper.getCreationMode();
+    this.cachedMode = this.creationModeService.getCreationMode();
     this.cachedDepartement = currentDepartement;
     this.cachedCommune = currentCommune;
     this.cachedClasse = currentClasse;
@@ -60,35 +77,35 @@ export class NavigationService {
   public updateNavigationAfterADonneeWasCreated = (
     savedDonnee: Donnee
   ): void => {
-    this.numberOfDonnees++;
-    this.previousDonneeId = savedDonnee.id;
-    this.lastDonneeId = savedDonnee.id;
+    this.numberOfDonnees$.next(this.numberOfDonnees$.value + 1);
+    this.previousDonneeId$.next(savedDonnee.id);
+    this.lastDonneeId$.next(savedDonnee.id);
   };
 
   public updateNavigationAfterADonneeWasDeleted = (
     newPreviousDonneeId: number,
     newNextDonneeId: number
   ): void => {
-    this.previousDonneeId = newPreviousDonneeId;
+    this.previousDonneeId$.next(newPreviousDonneeId);
 
     if (this.isLastDonneeCurrentlyDisplayed()) {
       // Last donnee was deleted, we go back to creation mode
-      this.lastDonneeId = this.previousDonneeId;
-      this.currentDonneeIndex = null;
-      this.nextDonneeId = null;
-      this.nextMode = null;
+      this.lastDonneeId$.next(this.previousDonneeId$.value);
+      this.currentDonneeIndex$.next(null);
+      this.nextDonneeId$.next(null);
+      this.nextMode$.next(null);
     }
 
-    this.numberOfDonnees--;
+    this.numberOfDonnees$.next(this.numberOfDonnees$.value - 1);
 
-    if (this.currentDonneeIndex) {
+    if (this.currentDonneeIndex$.value) {
       if (!this.isLastDonneeCurrentlyDisplayed()) {
         // We should find the new next donnee
-        this.nextDonneeId = newNextDonneeId;
+        this.nextDonneeId$.next(newNextDonneeId);
       } else {
         // We are displaying the last donnee
-        this.nextDonneeId = this.CACHED_DONNEE_ID;
-        this.nextMode = this.cachedMode;
+        this.nextDonneeId$.next(this.CACHED_DONNEE_ID);
+        this.nextMode$.next(this.cachedMode);
       }
     }
   };
@@ -97,22 +114,22 @@ export class NavigationService {
     newPreviousDonneeId: number,
     newNextDonneeId: number
   ): void => {
-    if (!this.currentDonneeIndex) {
+    if (!this.currentDonneeIndex$.value) {
       // We are displaying the creation form so the next donnee is the saved donnee
-      this.nextDonneeId = this.CACHED_DONNEE_ID;
-      this.nextMode = this.cachedMode;
-      this.currentDonneeIndex = this.numberOfDonnees;
+      this.nextDonneeId$.next(this.CACHED_DONNEE_ID);
+      this.nextMode$.next(this.cachedMode);
+      this.currentDonneeIndex$.next(this.numberOfDonnees$.value);
     } else {
-      this.currentDonneeIndex--;
-      this.nextDonneeId = newNextDonneeId;
-      this.nextMode = CreationModeEnum.UPDATE;
+      this.currentDonneeIndex$.next(this.currentDonneeIndex$.value - 1);
+      this.nextDonneeId$.next(newNextDonneeId);
+      this.nextMode$.next(CreationModeEnum.UPDATE);
     }
 
-    if (this.currentDonneeIndex === 1) {
+    if (this.currentDonneeIndex$.value === 1) {
       // We are displaying the first donnee
-      this.previousDonneeId = null;
+      this.previousDonneeId$.next(null);
     } else {
-      this.previousDonneeId = newPreviousDonneeId;
+      this.previousDonneeId$.next(newPreviousDonneeId);
     }
   };
 
@@ -120,25 +137,25 @@ export class NavigationService {
     newPreviousDonneeId: number,
     newNextDonneeId: number
   ): void => {
-    this.previousDonneeId = newPreviousDonneeId;
+    this.previousDonneeId$.next(newPreviousDonneeId);
 
     // We have displayed the next donnee
     if (this.isLastDonneeCurrentlyDisplayed()) {
       // We were displaying the last donnee so we come back to creation mode
-      this.currentDonneeIndex = null;
-      this.nextDonneeId = null;
-      this.nextMode = null;
+      this.currentDonneeIndex$.next(null);
+      this.nextDonneeId$.next(null);
+      this.nextMode$.next(null);
     } else {
       // We weren't displaying the last donnee so we increase the index
-      this.currentDonneeIndex++;
+      this.currentDonneeIndex$.next(this.currentDonneeIndex$.value + 1);
 
       if (this.isLastDonneeCurrentlyDisplayed()) {
         // Now last donnee is displayed so next donnee is the donnee saved from the creation form
-        this.nextDonneeId = this.CACHED_DONNEE_ID;
-        this.nextMode = this.cachedMode;
+        this.nextDonneeId$.next(this.CACHED_DONNEE_ID);
+        this.nextMode$.next(this.cachedMode);
       } else {
         // It is still not the last donnee so we call the back-end to find the next donnee
-        this.nextDonneeId = newNextDonneeId;
+        this.nextDonneeId$.next(newNextDonneeId);
       }
     }
   };
@@ -148,27 +165,28 @@ export class NavigationService {
     previousDonneeId: number,
     nextDonneeId: number
   ): void => {
-    this.currentDonneeIndex = index;
-    this.previousDonneeId = previousDonneeId;
-    this.nextDonneeId = nextDonneeId;
-    if (this.nextDonneeId == null) {
-      this.nextDonneeId = this.CACHED_DONNEE_ID;
-      this.nextMode = this.cachedMode;
+    this.currentDonneeIndex$.next(index);
+    this.previousDonneeId$.next(previousDonneeId);
+    this.nextDonneeId$.next(
+      nextDonneeId ? nextDonneeId : this.CACHED_DONNEE_ID
+    );
+    if (!nextDonneeId) {
+      this.nextMode$.next(this.cachedMode);
     }
   };
 
   public getNextMode(): CreationModeEnum {
-    return this.nextMode;
+    return this.nextMode$.value;
   }
 
   public getNextDonnee(): Promise<DonneeWithNavigationData> {
-    const idToRetrieve: number = this.nextDonneeId;
-    this.previousDonneeId = null;
-    this.nextDonneeId = null;
+    const idToRetrieve: number = this.nextDonneeId$.value;
+    this.previousDonneeId$.next(null);
+    this.nextDonneeId$.next(null);
 
     if (idToRetrieve === this.CACHED_DONNEE_ID) {
       return this.getLastDonneeId().then((lastDonneeId: number) => {
-        this.lastDonneeId = lastDonneeId;
+        this.lastDonneeId$.next(lastDonneeId);
         return Promise.resolve({
           ...this.cachedDonnee,
           previousDonneeId: lastDonneeId,
@@ -184,9 +202,9 @@ export class NavigationService {
   }
 
   public getPreviousDonnee(): Promise<DonneeWithNavigationData> {
-    const idToRetrieve: number = this.previousDonneeId;
-    this.previousDonneeId = null;
-    this.nextDonneeId = null;
+    const idToRetrieve: number = this.previousDonneeId$.value;
+    this.previousDonneeId$.next(null);
+    this.nextDonneeId$.next(null);
     return this.backendApiService
       .getDonneeByIdWithContext(idToRetrieve)
       .toPromise();
@@ -209,18 +227,18 @@ export class NavigationService {
   }
 
   private isLastDonneeCurrentlyDisplayed(): boolean {
-    return this.numberOfDonnees === this.currentDonneeIndex;
+    return this.numberOfDonnees$.value === this.currentDonneeIndex$.value;
   }
 
-  public hasPreviousDonnee(): boolean {
-    return !!this.previousDonneeId;
+  public hasPreviousDonnee$(): Observable<boolean> {
+    return this.previousDonneeId$.pipe(map(previousDonnee => !!previousDonnee));
   }
 
-  public hasNextDonnee(): boolean {
-    return !!this.nextDonneeId;
+  public hasNextDonnee$(): Observable<boolean> {
+    return this.nextDonneeId$.pipe(map(nextDonneeId => !!nextDonneeId));
   }
 
-  public getCurrentDonneeIndex(): number {
-    return this.currentDonneeIndex;
+  public getCurrentDonneeIndex$(): Observable<number> {
+    return this.currentDonneeIndex$;
   }
 }

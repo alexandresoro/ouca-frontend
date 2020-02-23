@@ -1,15 +1,28 @@
-import { Component, HostListener, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  OnInit
+} from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import { Classe } from "basenaturaliste-model/classe.object";
 import { Commune } from "basenaturaliste-model/commune.object";
 import { CreationPage } from "basenaturaliste-model/creation-page.object";
 import { Departement } from "basenaturaliste-model/departement.object";
+import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
 import { Donnee } from "basenaturaliste-model/donnee.object";
 import { Espece } from "basenaturaliste-model/espece.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
-import { Subject } from "rxjs";
+import { PostResponse } from "basenaturaliste-model/post-response.object";
+import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+import { CreationPageService } from "../../../../services/creation-page.service";
+import { DonneeService } from "../../../../services/donnee.service";
+import { InventaireService } from "../../../../services/inventaire.service";
+import { StatusMessageService } from "../../../../services/status-message.service";
 import { ConfirmationDialogData } from "../../../shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../../shared/components/confirmation-dialog/confirmation-dialog.component";
 import { MultipleOptionsDialogData } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog-data.object";
@@ -17,34 +30,30 @@ import { MultipleOptionsDialogComponent } from "../../../shared/components/multi
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import { CreationModeEnum } from "../../helpers/creation-mode.enum";
-import { CreationModeHelper } from "../../helpers/creation-mode.helper";
 import { DonneeHelper } from "../../helpers/donnee.helper";
 import { InventaireHelper } from "../../helpers/inventaire.helper";
+import { CreationModeService } from "../../services/creation-mode.service";
 import { NavigationService } from "../../services/navigation.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { PageComponent } from "../../../shared/pages/page.component";
-import { PostResponse } from "basenaturaliste-model/post-response.object";
-import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
-import { Router } from "@angular/router";
 
 @Component({
   styleUrls: ["./creation.component.scss"],
-  templateUrl: "./creation.tpl.html"
+  templateUrl: "./creation.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreationComponent extends PageComponent implements OnInit {
-  public pageModel: CreationPage = {} as CreationPage;
+export class CreationComponent implements OnInit {
+  public pageModel$: Observable<CreationPage>;
 
-  public nextRegroupement: number;
+  public nextRegroupement$: Subject<number> = new Subject<number>();
 
-  public departements$: Subject<Departement[]>;
+  public departements$: Observable<Departement[]>;
 
-  public communes$: Subject<Commune[]>;
+  public communes$: Observable<Commune[]>;
 
-  public lieuxdits$: Subject<Lieudit[]>;
+  public lieuxdits$: Observable<Lieudit[]>;
 
-  public classes$: Subject<Classe[]>;
+  public classes$: Observable<Classe[]>;
 
-  public especes$: Subject<Espece[]>;
+  public especes$: Observable<Espece[]>;
 
   public inventaireForm: FormGroup;
 
@@ -54,12 +63,15 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   constructor(
     private backendApiService: BackendApiService,
-    public dialog: MatDialog,
-    protected snackbar: MatSnackBar,
-    public navigationService: NavigationService,
-    private router: Router
+    private dialog: MatDialog,
+    private navigationService: NavigationService,
+    private router: Router,
+    private creationPageService: CreationPageService,
+    private inventaireService: InventaireService,
+    private donneeService: DonneeService,
+    private creationModeService: CreationModeService,
+    private statusMessageService: StatusMessageService
   ) {
-    super(snackbar);
     const navigation = this.router.getCurrentNavigation();
     if (
       navigation.extras &&
@@ -71,28 +83,50 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.inventaireForm = InventaireHelper.createInventaireForm();
-    this.donneeForm = DonneeHelper.createDonneeForm();
+    this.inventaireForm = this.inventaireService.createInventaireForm();
+    this.donneeForm = this.donneeService.createDonneeForm();
+    this.pageModel$ = this.creationPageService.getCreationPage$();
 
-    this.departements$ = new Subject();
-    this.communes$ = new Subject();
-    this.lieuxdits$ = new Subject();
-    this.classes$ = new Subject();
-    this.especes$ = new Subject();
+    this.communes$ = this.pageModel$.pipe(
+      map(pageModel => {
+        return pageModel ? pageModel.communes : [];
+      })
+    );
+    this.departements$ = this.pageModel$.pipe(
+      map(pageModel => {
+        return pageModel ? pageModel.departements : [];
+      })
+    );
 
-    this.initCreationPage();
-  }
+    this.lieuxdits$ = this.pageModel$.pipe(
+      map(pageModel => {
+        return pageModel ? pageModel.lieudits : [];
+      })
+    );
 
-  /**
-   * Called when launching the page
-   * Call the back-end to get the initial creation page model
-   */
-  private initCreationPage(): void {
-    this.backendApiService
-      .getCreationInitialPageModel()
-      .subscribe((creationPage: CreationPage) => {
-        this.onInitCreationPageSucces(creationPage);
-      });
+    this.classes$ = this.pageModel$.pipe(
+      map(pageModel => {
+        return pageModel ? pageModel.classes : [];
+      })
+    );
+
+    this.especes$ = this.pageModel$.pipe(
+      map(pageModel => {
+        return pageModel ? pageModel.especes : [];
+      })
+    );
+
+    /**
+     * Called when launching the page
+     * Call the back-end to get the initial creation page model
+     */
+    this.creationPageService.initializeCreationPage();
+
+    const requestedEspeceId = this.requestedEspeceId;
+    this.requestedEspeceId = null;
+    this.pageModel$.subscribe((creationPage: CreationPage) => {
+      this.onInitCreationPageUpdate(creationPage, requestedEspeceId);
+    });
   }
 
   private displayDonneeById = (idToFind: number): void => {
@@ -100,16 +134,11 @@ export class CreationComponent extends PageComponent implements OnInit {
       .getDonneeByIdWithContext(idToFind)
       .subscribe((donnee: DonneeWithNavigationData) => {
         if (donnee && donnee.inventaireId) {
-          InventaireHelper.setInventaireFormFromInventaire(
+          this.inventaireService.setInventaireFormFromInventaire(
             this.inventaireForm,
-            donnee.inventaire,
-            this.pageModel
+            donnee.inventaire
           );
-          DonneeHelper.setDonneeFormFromDonnee(
-            this.donneeForm,
-            donnee,
-            this.pageModel
-          );
+          this.donneeService.setDonneeFormFromDonnee(this.donneeForm, donnee);
           this.switchToUpdateMode();
           this.navigationService.updateNavigationAfterSearchDonneeById(
             donnee.indexDonnee,
@@ -117,7 +146,7 @@ export class CreationComponent extends PageComponent implements OnInit {
             donnee.nextDonneeId
           );
         } else {
-          this.showErrorMessage(
+          this.statusMessageService.showErrorMessage(
             "Aucune fiche espèce trouvée avec l'ID " + idToFind + "."
           );
         }
@@ -128,37 +157,27 @@ export class CreationComponent extends PageComponent implements OnInit {
    * If back-end call is successful, use the initial creation page model to build the page
    * @param creationPage: CreationPage
    */
-  private onInitCreationPageSucces(creationPage: CreationPage): void {
+  private onInitCreationPageUpdate(
+    creationPage: CreationPage,
+    requestedEspeceId: number
+  ): void {
     if (!!creationPage && !!creationPage.observateurs) {
-      this.pageModel = creationPage;
-
-      console.log("Modèle de la page de création", this.pageModel);
-
-      this.communes$.next(this.pageModel ? this.pageModel.communes : []);
-      this.departements$.next(
-        this.pageModel ? this.pageModel.departements : []
-      );
-      this.lieuxdits$.next(this.pageModel ? this.pageModel.lieudits : []);
-      this.classes$.next(this.pageModel ? this.pageModel.classes : []);
-      this.especes$.next(this.pageModel ? this.pageModel.especes : []);
-
-      this.nextRegroupement = this.pageModel.nextRegroupement;
+      this.nextRegroupement$.next(creationPage.nextRegroupement);
 
       this.navigationService.init(
-        this.pageModel.lastDonnee,
-        this.pageModel.numberOfDonnees
+        creationPage.lastDonnee,
+        creationPage.numberOfDonnees
       );
 
       // If the user navigated to this page with a defined id, retrieve this id
-      if (this.requestedEspeceId != null) {
-        this.displayDonneeById(this.requestedEspeceId);
-        this.requestedEspeceId = null;
+      if (requestedEspeceId != null) {
+        this.displayDonneeById(requestedEspeceId);
       } else {
         // Otherwise call, the normal initialization of the page
         this.switchToNewInventaireMode();
       }
     } else {
-      this.showErrorMessage(
+      this.statusMessageService.showErrorMessage(
         "Impossible de charger le contenu la page de Saisie des observations."
       );
     }
@@ -175,12 +194,18 @@ export class CreationComponent extends PageComponent implements OnInit {
       /*event.ctrlKey &&*/ event.key === "Enter" &&
       document.activeElement.tagName.toLowerCase() !== "textarea"
     ) {
-      if (CreationModeHelper.isInventaireMode() && this.inventaireForm.valid) {
+      if (
+        this.creationModeService.isInventaireMode() &&
+        this.inventaireForm.valid
+      ) {
         this.onSaveInventaireButtonClicked();
-      } else if (CreationModeHelper.isDonneeMode() && this.donneeForm.valid) {
+      } else if (
+        this.creationModeService.isDonneeMode() &&
+        this.donneeForm.valid
+      ) {
         this.onSaveDonneeButtonClicked();
       } else if (
-        CreationModeHelper.isUpdateMode() &&
+        this.creationModeService.isUpdateMode() &&
         this.inventaireForm.valid &&
         this.donneeForm.valid
       ) {
@@ -194,55 +219,52 @@ export class CreationComponent extends PageComponent implements OnInit {
    */
   private switchToNewInventaireMode(): void {
     this.navigationService.resetPreviousAndNextDonnee();
-    InventaireHelper.initializeInventaireForm(
-      this.inventaireForm,
-      this.pageModel
-    );
-    DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
+    this.inventaireService.initializeInventaireForm(this.inventaireForm);
+    this.donneeService.initializeDonneeForm(this.donneeForm);
 
     this.switchToInventaireMode();
   }
 
-  public isNewInventaireBtnDisplayed(): boolean {
-    return CreationModeHelper.isDonneeMode();
+  public isNewInventaireBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isDonneeMode$();
   }
 
-  public isUpdateInventaireBtnDisplayed(): boolean {
-    return CreationModeHelper.isDonneeMode();
+  public isUpdateInventaireBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isDonneeMode$();
   }
 
-  public isSaveInventaireBtnDisplayed(): boolean {
-    return CreationModeHelper.isInventaireMode();
+  public isSaveInventaireBtnDisplayed$ = (): Observable<boolean> => {
+    return this.creationModeService.isInventaireMode$();
+  };
+
+  public isUpdateDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isUpdateMode$();
+  }
+  public isSaveDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isDonneeMode$();
   }
 
-  public isUpdateDonneeBtnDisplayed(): boolean {
-    return CreationModeHelper.isUpdateMode();
-  }
-  public isSaveDonneeBtnDisplayed(): boolean {
-    return CreationModeHelper.isDonneeMode();
+  public isNewDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isUpdateMode$();
   }
 
-  public isNewDonneeBtnDisplayed(): boolean {
-    return CreationModeHelper.isUpdateMode();
+  public isDeleteDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isUpdateMode$();
   }
 
-  public isDeleteDonneeBtnDisplayed(): boolean {
-    return CreationModeHelper.isUpdateMode();
+  public isPreviousDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.navigationService.hasPreviousDonnee$();
   }
 
-  public isPreviousDonneeBtnDisplayed(): boolean {
-    return this.navigationService.hasPreviousDonnee();
-  }
-
-  public isNextDonneeBtnDisplayed(): boolean {
-    return this.navigationService.hasNextDonnee();
+  public isNextDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.navigationService.hasNextDonnee$();
   }
 
   /**
    * Called when clicking on Save Inventaire button
    */
   public onSaveInventaireButtonClicked(): void {
-    if (InventaireHelper.getDisplayedInventaireId()) {
+    if (this.inventaireService.getDisplayedInventaireId()) {
       // Update the existing inventaire and switch to donnee mode
       this.saveInventaire();
     } else {
@@ -253,7 +275,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private saveInventaire(saveDonneeAfterInventaire?: boolean): void {
-    const inventaireToBeSaved: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
+    const inventaireToBeSaved: Inventaire = this.inventaireService.getInventaireFromInventaireForm(
       this.inventaireForm
     );
 
@@ -266,7 +288,7 @@ export class CreationComponent extends PageComponent implements OnInit {
             saveDonneeAfterInventaire
           );
         } else {
-          this.showErrorMessage(
+          this.statusMessageService.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de l'inventaire: " +
               response.message
           );
@@ -278,16 +300,16 @@ export class CreationComponent extends PageComponent implements OnInit {
     savedId: number,
     saveDonnee?: boolean
   ): void {
-    this.showSuccessMessage(
+    this.statusMessageService.showSuccessMessage(
       "La fiche inventaire a été sauvegardée avec succès."
     );
 
     // To know if we were updating an existing inventaire
-    const oldInventaireId: number = InventaireHelper.getDisplayedInventaireId();
+    const oldInventaireId: number = this.inventaireService.getDisplayedInventaireId();
 
     if (savedId) {
       // The inventaire ID has been created or updated, we display it
-      InventaireHelper.setDisplayedInventaireId(savedId);
+      this.inventaireService.setDisplayedInventaireId(savedId);
     }
 
     if (saveDonnee) {
@@ -302,14 +324,14 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on Save Donnee button
    */
   public onSaveDonneeButtonClicked(): void {
-    if (InventaireHelper.getDisplayedInventaireId()) {
+    if (this.inventaireService.getDisplayedInventaireId()) {
       // Check if the inventaire still exists in the database
       this.backendApiService
-        .getInventaireIdById(InventaireHelper.getDisplayedInventaireId())
+        .getInventaireIdById(this.inventaireService.getDisplayedInventaireId())
         .subscribe((responseId: number) => {
           if (!responseId) {
             // The inventaire is not yet saved, we create both the inventaire and donnee
-            InventaireHelper.setDisplayedInventaireId(null);
+            this.inventaireService.setDisplayedInventaireId(null);
             this.saveInventaire(true);
           } else {
             // The inventaire is already saved, we only create the donnee
@@ -323,7 +345,7 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private createDonnee(): void {
-    const donneeToBeSaved: Donnee = DonneeHelper.getDonneeFromDonneeForm(
+    const donneeToBeSaved: Donnee = this.donneeService.getDonneeFromDonneeForm(
       this.donneeForm
     );
 
@@ -336,20 +358,22 @@ export class CreationComponent extends PageComponent implements OnInit {
           }
           this.onSaveDonneeSuccess(donneeToBeSaved);
         } else {
-          this.showErrorMessage(response.message);
+          this.statusMessageService.showErrorMessage(response.message);
         }
       });
   }
 
   private onSaveDonneeSuccess(savedDonnee: Donnee): void {
-    this.showSuccessMessage("La fiche espèce a été créée avec succès.");
+    this.statusMessageService.showSuccessMessage(
+      "La fiche espèce a été créée avec succès."
+    );
 
-    savedDonnee.inventaire = InventaireHelper.getInventaireFromInventaireForm(
+    savedDonnee.inventaire = this.inventaireService.getInventaireFromInventaireForm(
       this.inventaireForm
     );
     this.navigationService.updateNavigationAfterADonneeWasCreated(savedDonnee);
     this.updateNextRegroupement();
-    DonneeHelper.initializeDonneeForm(this.donneeForm, this.pageModel);
+    this.donneeService.initializeDonneeForm(this.donneeForm);
   }
 
   /**
@@ -359,7 +383,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     this.backendApiService
       .getNextRegroupement()
       .subscribe((regroupement: number) => {
-        this.nextRegroupement = regroupement;
+        this.nextRegroupement$.next(regroupement);
       });
   }
 
@@ -367,13 +391,13 @@ export class CreationComponent extends PageComponent implements OnInit {
    * Called when clicking on save donnee when in update mode
    */
   public saveInventaireAndDonnee(): void {
-    const inventaireToSave: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
+    const inventaireToSave: Inventaire = this.inventaireService.getInventaireFromInventaireForm(
       this.inventaireForm
     );
 
     this.backendApiService
-      .getInventaireById(InventaireHelper.getDisplayedInventaireId())
-      .subscribe((result) => {
+      .getInventaireById(this.inventaireService.getDisplayedInventaireId())
+      .subscribe(result => {
         if (InventaireHelper.isInventaireUpdated(result, inventaireToSave)) {
           this.displayInventaireDialog();
         } else {
@@ -385,7 +409,6 @@ export class CreationComponent extends PageComponent implements OnInit {
   private displayInventaireDialog(): void {
     const ALL_DONNEES_OPTION = 1;
     const ONLY_CURRENT_DONNEE_OPTION = 2;
-    const CANCEL_OPTION = 3;
 
     const updateInventaireDialogData: MultipleOptionsDialogData = {
       title: "Confirmation de mise-à-jour",
@@ -404,7 +427,7 @@ export class CreationComponent extends PageComponent implements OnInit {
           label: "Pour cette fiche espèce seulement",
           color: "primary"
         },
-        { value: CANCEL_OPTION, label: "Annuler", color: "accent" }
+        { label: "Annuler", color: "accent" }
       ]
     };
     const dialogRef = this.dialog.open(MultipleOptionsDialogComponent, {
@@ -412,7 +435,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       data: updateInventaireDialogData
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       if (result === ALL_DONNEES_OPTION) {
         // We just update the existing inventaire
         this.updateInventaireAndDonnee(false);
@@ -433,14 +456,14 @@ export class CreationComponent extends PageComponent implements OnInit {
    * donnee or just update it for all its donnees
    */
   private updateInventaireAndDonnee(createNewInventaire: boolean): void {
-    const inventaireToSave: Inventaire = InventaireHelper.getInventaireFromInventaireForm(
+    const inventaireToSave: Inventaire = this.inventaireService.getInventaireFromInventaireForm(
       this.inventaireForm
     );
     if (createNewInventaire) {
       inventaireToSave.id = null;
     }
 
-    const donneeToSave: Donnee = DonneeHelper.getDonneeFromDonneeForm(
+    const donneeToSave: Donnee = this.donneeService.getDonneeFromDonneeForm(
       this.donneeForm
     );
     donneeToSave.inventaireId = inventaireToSave.id;
@@ -451,27 +474,27 @@ export class CreationComponent extends PageComponent implements OnInit {
         if (response.isSuccess) {
           if (response.insertId) {
             donneeToSave.inventaireId = response.insertId;
-            InventaireHelper.setDisplayedInventaireId(response.insertId);
+            this.inventaireService.setDisplayedInventaireId(response.insertId);
           }
 
           this.backendApiService
             .saveDonnee(donneeToSave)
             .subscribe((response: PostResponse) => {
               if (response.isSuccess) {
-                this.showSuccessMessage(
+                this.statusMessageService.showSuccessMessage(
                   "La fiche espèce et sa fiche inventaire ont été mises à jour avec succès."
                 );
                 this.updateNextRegroupement();
                 // TO DO update next and previous donnee
               } else {
-                this.showErrorMessage(
+                this.statusMessageService.showErrorMessage(
                   "Une erreur est survenue pendant la sauvegarde de la fiche espèce: " +
                     response.message
                 );
               }
             });
         } else {
-          this.showErrorMessage(
+          this.statusMessageService.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de la fiche inventaire:" +
               response.message
           );
@@ -486,7 +509,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     const currentDonnee: Donnee = this.getCurrentDonneeFromForm();
 
     // Save the current donnee, inventaire and mode
-    if (!CreationModeHelper.isUpdateMode()) {
+    if (!this.creationModeService.isUpdateMode()) {
       this.saveCurrentContext(currentDonnee);
       this.switchToUpdateMode();
     }
@@ -504,10 +527,10 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private getCurrentDonneeFromForm(): Donnee {
-    const currentDonnee: Donnee = DonneeHelper.getDonneeFromDonneeForm(
+    const currentDonnee: Donnee = this.donneeService.getDonneeFromDonneeForm(
       this.donneeForm
     );
-    currentDonnee.inventaire = InventaireHelper.getInventaireFromInventaireForm(
+    currentDonnee.inventaire = this.inventaireService.getInventaireFromInventaireForm(
       this.inventaireForm
     );
     return currentDonnee;
@@ -524,15 +547,10 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private displayPreviousDonnne(previousDonnee: Donnee): void {
-    DonneeHelper.setDonneeFormFromDonnee(
-      this.donneeForm,
-      previousDonnee,
-      this.pageModel
-    );
-    InventaireHelper.setInventaireFormFromInventaire(
+    this.donneeService.setDonneeFormFromDonnee(this.donneeForm, previousDonnee);
+    this.inventaireService.setInventaireFormFromInventaire(
       this.inventaireForm,
-      previousDonnee.inventaire,
-      this.pageModel
+      previousDonnee.inventaire
     );
   }
   public onNextDonneeBtnClicked(): void {
@@ -560,7 +578,7 @@ export class CreationComponent extends PageComponent implements OnInit {
       data: deleteDialogData
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.onDeleteConfirmButtonClicked();
       }
@@ -569,8 +587,8 @@ export class CreationComponent extends PageComponent implements OnInit {
 
   public onDeleteConfirmButtonClicked(): void {
     this.deleteDonnee(
-      DonneeHelper.getDisplayedDonneeId(),
-      InventaireHelper.getDisplayedInventaireId()
+      this.donneeService.getDisplayedDonneeId(),
+      this.inventaireService.getDisplayedInventaireId()
     );
   }
 
@@ -587,14 +605,16 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private onDeleteDonneeError(errorMessage: string): void {
-    this.showErrorMessage(
+    this.statusMessageService.showErrorMessage(
       "Une erreur est survenue pendant la suppression de la fiche espèce.",
       errorMessage
     );
   }
 
   private onDeleteDonneeSuccess(): void {
-    this.showSuccessMessage("La fiche espèce a été supprimée avec succès.");
+    this.statusMessageService.showSuccessMessage(
+      "La fiche espèce a été supprimée avec succès."
+    );
     this.navigationService
       .getNextDonnee()
       .then((donnee: DonneeWithNavigationData) => {
@@ -605,12 +625,14 @@ export class CreationComponent extends PageComponent implements OnInit {
         );
 
         // Check if the current inventaire is still existing
-        if (InventaireHelper.getDisplayedInventaireId()) {
+        if (this.inventaireService.getDisplayedInventaireId()) {
           this.backendApiService
-            .getInventaireIdById(InventaireHelper.getDisplayedInventaireId())
+            .getInventaireIdById(
+              this.inventaireService.getDisplayedInventaireId()
+            )
             .subscribe((responseId: number) => {
               if (!responseId) {
-                InventaireHelper.setDisplayedInventaireId(null);
+                this.inventaireService.setDisplayedInventaireId(null);
               }
             });
         }
@@ -618,24 +640,24 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private displayNextDonnee = (nextDonnee: Donnee): void => {
-    CreationModeHelper.updateCreationMode(this.navigationService.getNextMode());
-    if (CreationModeHelper.isInventaireMode()) {
+    this.creationModeService.updateCreationMode(
+      this.navigationService.getNextMode()
+    );
+    if (this.creationModeService.isInventaireMode()) {
       this.switchToInventaireMode();
-    } else if (CreationModeHelper.isDonneeMode()) {
+    } else if (this.creationModeService.isDonneeMode()) {
       this.switchToEditionDonneeMode();
     }
 
-    InventaireHelper.setInventaireFormFromInventaire(
+    this.inventaireService.setInventaireFormFromInventaire(
       this.inventaireForm,
       nextDonnee.inventaire,
-      this.pageModel,
       this.navigationService.getSavedDepartement(),
       this.navigationService.getSavedCommune()
     );
-    DonneeHelper.setDonneeFormFromDonnee(
+    this.donneeService.setDonneeFormFromDonnee(
       this.donneeForm,
       nextDonnee,
-      this.pageModel,
       this.navigationService.getSavedClasse()
     );
   };
@@ -646,7 +668,7 @@ export class CreationComponent extends PageComponent implements OnInit {
    * but we do not reset the form fields
    */
   public onNewInventaireBtnClicked(): void {
-    InventaireHelper.setDisplayedInventaireId(null);
+    this.inventaireService.setDisplayedInventaireId(null);
     this.switchToInventaireMode();
   }
 
@@ -666,7 +688,7 @@ export class CreationComponent extends PageComponent implements OnInit {
     dialogRef.afterClosed().subscribe((idToFind: number) => {
       if (idToFind) {
         // Save the current donnee, inventaire and mode
-        if (!CreationModeHelper.isUpdateMode()) {
+        if (!this.creationModeService.isUpdateMode()) {
           this.saveCurrentContext(this.getCurrentDonneeFromForm());
         }
         this.displayDonneeById(idToFind);
@@ -675,31 +697,33 @@ export class CreationComponent extends PageComponent implements OnInit {
   }
 
   private switchToInventaireMode(): void {
-    CreationModeHelper.updateCreationMode(CreationModeEnum.NEW_INVENTAIRE);
+    this.creationModeService.updateCreationMode(
+      CreationModeEnum.NEW_INVENTAIRE
+    );
     InventaireHelper.updateFormState(this.inventaireForm, true);
     DonneeHelper.updateFormState(this.donneeForm, false);
     document.getElementById("input-Observateur").focus();
   }
 
   private switchToEditionDonneeMode(): void {
-    CreationModeHelper.updateCreationMode(CreationModeEnum.NEW_DONNEE);
+    this.creationModeService.updateCreationMode(CreationModeEnum.NEW_DONNEE);
     InventaireHelper.updateFormState(this.inventaireForm, false);
     DonneeHelper.updateFormState(this.donneeForm, true);
     document.getElementById("input-Espèce").focus();
   }
 
   private switchToUpdateMode(): void {
-    CreationModeHelper.updateCreationMode(CreationModeEnum.UPDATE);
+    this.creationModeService.updateCreationMode(CreationModeEnum.UPDATE);
     InventaireHelper.updateFormState(this.inventaireForm, true);
     DonneeHelper.updateFormState(this.donneeForm, true);
     document.getElementById("input-Observateur").focus();
   }
 
-  public getDisplayedDonneeId(): number {
-    return DonneeHelper.getDisplayedDonneeId();
+  public getDisplayedDonneeId$(): Observable<number> {
+    return this.donneeService.getDisplayedDonneeId$();
   }
 
-  public getCurrentDonneeIndex(): number {
-    return this.navigationService.getCurrentDonneeIndex();
+  public getCurrentDonneeIndex$(): Observable<number> {
+    return this.navigationService.getCurrentDonneeIndex$();
   }
 }

@@ -3,10 +3,9 @@ import { MatTableDataSource } from "@angular/material/table";
 import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
 import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
 import * as _ from "lodash";
+import { StatusMessageService } from "../../../../services/status-message.service";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { PageComponent } from "../../../shared/pages/page.component";
 
 export enum ConfigurationParameterID {
   DEFAULT_OBSERVATEUR,
@@ -33,7 +32,7 @@ export interface ConfigurationParameter {
   styleUrls: ["./configuration.component.scss"],
   templateUrl: "./configuration.component.html"
 })
-export class ConfigurationComponent extends PageComponent implements OnInit {
+export class ConfigurationComponent implements OnInit {
   private configurationParametersToDisplay: ConfigurationParameter[];
   public pageModel: ConfigurationPage;
 
@@ -45,10 +44,8 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   constructor(
     private backendApiService: BackendApiService,
-    protected snackbar: MatSnackBar
-  ) {
-    super(snackbar);
-  }
+    private statusMessageService: StatusMessageService
+  ) {}
 
   public ngOnInit(): void {
     this.initConfigurationPage();
@@ -117,7 +114,7 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
   };
 
   public buildDataSource = (): void => {
-    _.forEach(this.configurationParametersToDisplay, (parameter) => {
+    _.forEach(this.configurationParametersToDisplay, parameter => {
       let value = "";
       if (this.configurationToSave) {
         switch (parameter.id) {
@@ -217,13 +214,13 @@ export class ConfigurationComponent extends PageComponent implements OnInit {
 
   private onSaveAppConfigurationSuccess = (dbResults: any[]): void => {
     if (this.isSaveConfigurationSuccess(dbResults)) {
-      this.showSuccessMessage(
+      this.statusMessageService.showSuccessMessage(
         "La configuration de l'application a été mise à jour."
       );
       this.getCurrentConfiguration();
       this.switchToViewAllMode();
     } else {
-      this.showErrorMessage(
+      this.statusMessageService.showErrorMessage(
         "Il semble qu'une erreur soit survenue pendant la sauvegarde de la configuration.",
         dbResults
       );

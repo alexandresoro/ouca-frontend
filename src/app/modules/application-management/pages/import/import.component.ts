@@ -1,25 +1,22 @@
 import { Component } from "@angular/core";
+import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
-import { PageComponent } from "../../../shared/pages/page.component";
-import { MatSnackBar } from "@angular/material/snack-bar";
 @Component({
   templateUrl: "./import.tpl.html"
 })
-export class ImportComponent extends PageComponent {
+export class ImportComponent {
   private file: File;
 
   public isWaitPanelDisplayed: boolean = false;
 
   constructor(
     private backendApiService: BackendApiService,
-    protected snackbar: MatSnackBar
-  ) {
-    super(snackbar);
-  }
+    private statusMessageService: StatusMessageService
+  ) {}
 
   public setFile = (event: any): void => {
     this.file = event.target.files[0];
@@ -29,7 +26,7 @@ export class ImportComponent extends PageComponent {
     this.displayWaitPanel();
 
     this.backendApiService.importData(entityName, this.file).subscribe(
-      (response) => {
+      response => {
         saveFile(
           response.body,
           this.file.name.split(".csv")[0] + ".erreurs.csv",
@@ -37,9 +34,9 @@ export class ImportComponent extends PageComponent {
         );
         this.hideWaitPanel();
       },
-      (error) => {
+      error => {
         this.hideWaitPanel();
-        this.showErrorMessage(
+        this.statusMessageService.showErrorMessage(
           "Une erreur est survenue pendant l'import",
           error
         );
