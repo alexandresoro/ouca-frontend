@@ -7,7 +7,6 @@ import {
   Validators
 } from "@angular/forms";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
-import * as diacritics from "diacritics";
 import * as _ from "lodash";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
@@ -56,8 +55,8 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
       nom && communeId
         ? _.find(this.objects, (object: any) => {
             return (
-              diacritics.remove(object.nom.trim().toLowerCase()) ===
-                diacritics.remove(nom.trim().toLowerCase()) &&
+              _.deburr(object.nom.trim().toLowerCase()) ===
+                _.deburr(nom.trim().toLowerCase()) &&
               object.commune.id === communeId
             );
           })

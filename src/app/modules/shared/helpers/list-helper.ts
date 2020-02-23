@@ -1,6 +1,5 @@
-import * as diacritics from "diacritics";
-import * as _ from "lodash";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import * as _ from "lodash";
 
 export class ListHelper {
   private static findEntityInListByAttribute<T extends EntiteSimple>(
@@ -49,9 +48,8 @@ export class ListHelper {
 
     return _.find(entities, (entity: T) => {
       return (
-        diacritics.remove(
-          entity[comparedAttributeName].trim().toLowerCase()
-        ) === diacritics.remove(searchedValue.trim().toLowerCase())
+        _.deburr(entity[comparedAttributeName].trim().toLowerCase()) ===
+        _.deburr(searchedValue.trim().toLowerCase())
       );
     });
   }

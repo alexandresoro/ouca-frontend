@@ -8,7 +8,6 @@ import {
 import { FormControl } from "@angular/forms";
 import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
-import * as diacritics from "diacritics";
 import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -39,25 +38,26 @@ export class AutocompleteComponent implements OnInit {
 
   ngOnInit(): void {
     this.filteredValues = this.control.valueChanges.pipe(
-      map((value) => {
+      map(value => {
         return typeof value === "string" ||
           typeof value === "undefined" ||
           value === null
           ? value
           : "" + value[this.attributesToFilter[0].key];
       }),
-      map((value) => (value ? this._filter(value) : []))
+      map(value => (value ? this._filter(value) : []))
     );
   }
 
   private _filter(value: string): EntiteSimple[] {
-    const filterValue: string = diacritics
-      .remove(value.toLowerCase())
-      .replace(this.CHARACTERS_TO_IGNORE, "");
+    const filterValue: string = _.deburr(value.toLowerCase()).replace(
+      this.CHARACTERS_TO_IGNORE,
+      ""
+    );
 
     if (this.values) {
       // We sort the values by their proority (i.e. the opposite of the weight)
-      const valuesWithPriorities = this.values.map((valueFromList) => {
+      const valuesWithPriorities = this.values.map(valueFromList => {
         const priority: number = this.computePriorityInList(
           valueFromList,
           filterValue
@@ -71,17 +71,17 @@ export class AutocompleteComponent implements OnInit {
       // Keep only the elements that match
       const filteredValuesWithPriorities = _.filter(
         valuesWithPriorities,
-        (valuesWithPriority) => {
+        valuesWithPriority => {
           return valuesWithPriority.priority <= 0;
         }
       );
 
       // Return the elements by priority
       return _.map(
-        _.sortBy(filteredValuesWithPriorities, (filteredValuesWithPriority) => {
+        _.sortBy(filteredValuesWithPriorities, filteredValuesWithPriority => {
           return filteredValuesWithPriority.priority;
         }),
-        (sortedValueWithPriority) => {
+        sortedValueWithPriority => {
           return sortedValueWithPriority.valueFromList;
         }
       );
@@ -92,7 +92,7 @@ export class AutocompleteComponent implements OnInit {
     valueFromList: EntiteSimple,
     filterValue: string
   ): number {
-    let priority: number = 1;
+    let priority = 1;
 
     _.forEach(
       this.attributesToFilter,
@@ -179,15 +179,14 @@ export class AutocompleteComponent implements OnInit {
         ? valueFromList[attributeToFilter]
         : "" + valueFromList[attributeToFilter];
 
-    return diacritics
-      .remove(valueFromListStr)
+    return _.deburr(valueFromListStr)
       .toLowerCase()
       .replace(this.CHARACTERS_TO_IGNORE, "")
       .indexOf(filterValue);
   }
 
   public getDisplayedValue(object: EntiteSimple): string {
-    let displayedValue: string = "";
+    let displayedValue = "";
 
     if (object) {
       displayedValue = object[this.attributesToFilter[0].key];

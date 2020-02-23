@@ -1,5 +1,4 @@
 import { AbstractControl, ValidatorFn } from "@angular/forms";
-import * as diacritics from "diacritics";
 import * as _ from "lodash";
 import { TimeHelper } from "./time.helper";
 
@@ -16,7 +15,7 @@ export class FormValidatorHelper {
 
   public static areExistingEntitiesValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      let oneOfTheValueIsNotAnExistingEntity: boolean = false;
+      let oneOfTheValueIsNotAnExistingEntity = false;
       for (const value of control.value) {
         if (!!value && !value.id) {
           oneOfTheValueIsNotAnExistingEntity = true;
@@ -34,10 +33,10 @@ export class FormValidatorHelper {
         return null;
       }
 
-      const valueIsNotAnInteger: boolean = !Number.isInteger(control.value);
+      const valueIsNotAnInteger = !Number.isInteger(control.value);
 
-      let valueIsBelowMinimum: boolean = false;
-      let valueIsAboveMaximum: boolean = false;
+      let valueIsBelowMinimum = false;
+      let valueIsAboveMaximum = false;
       if (!valueIsNotAnInteger) {
         if (Number.isInteger(min)) {
           valueIsBelowMinimum = !(control.value >= min);
@@ -58,7 +57,7 @@ export class FormValidatorHelper {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const value = TimeHelper.getFormattedTime(control.value);
 
-      const finalDateRegExp: RegExp = new RegExp("^[0-9][0-9][:][0-9][0-9]$");
+      const finalDateRegExp = new RegExp("^[0-9][0-9][:][0-9][0-9]$");
       const isNotMatchingRegExp: boolean =
         !!value && !finalDateRegExp.test(value);
 
@@ -84,8 +83,8 @@ export class FormValidatorHelper {
       !!value &&
       !!_.find(objects, (object: any) => {
         return (
-          diacritics.remove(object[fieldName].trim().toLowerCase()) ===
-            diacritics.remove(value.trim().toLowerCase()) && id !== object.id
+          _.deburr(object[fieldName].trim().toLowerCase()) ===
+            _.deburr(value.trim().toLowerCase()) && id !== object.id
         );
       })
     );

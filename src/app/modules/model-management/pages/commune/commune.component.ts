@@ -7,7 +7,6 @@ import {
   Validators
 } from "@angular/forms";
 import { Commune } from "basenaturaliste-model/commune.object";
-import * as diacritics from "diacritics";
 import * as _ from "lodash";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
@@ -72,8 +71,8 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     const foundEntityByCode: Commune = nom
       ? _.find(this.objects, (object: any) => {
           return (
-            diacritics.remove(object.nom.trim().toLowerCase()) ===
-              diacritics.remove(nom.trim().toLowerCase()) &&
+            _.deburr(object.nom.trim().toLowerCase()) ===
+              _.deburr(nom.trim().toLowerCase()) &&
             object.departement.id === departement
           );
         })

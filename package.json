@@ -25,7 +25,6 @@
     "@angular/platform-browser-dynamic": "8",
     "@angular/router": "8",
     "core-js": "3",
-    "diacritics": "*",
     "file-saver": "*",
     "lodash": "*",
     "material-design-icons-iconfont": "*",
@@ -38,7 +37,6 @@
   "devDependencies": {
     "@angular/compiler-cli": "8",
     "@ngtools/webpack": "8",
-    "@types/diacritics": "*",
     "@types/file-saver": "*",
     "@types/lodash": "*",
     "@types/node": "10",
