@@ -221,6 +221,9 @@ export class CreationComponent implements OnInit {
     this.navigationService.resetPreviousAndNextDonnee();
     this.inventaireService.initializeInventaireForm(this.inventaireForm);
     this.donneeService.initializeDonneeForm(this.donneeForm);
+    if (document.getElementById("input-Espèce")) {
+      document.getElementById("input-Espèce").focus();
+    }
 
     this.switchToInventaireMode();
   }
@@ -374,6 +377,7 @@ export class CreationComponent implements OnInit {
     this.navigationService.updateNavigationAfterADonneeWasCreated(savedDonnee);
     this.updateNextRegroupement();
     this.donneeService.initializeDonneeForm(this.donneeForm);
+    document.getElementById("input-Espèce").focus();
   }
 
   /**
@@ -702,7 +706,9 @@ export class CreationComponent implements OnInit {
     );
     InventaireHelper.updateFormState(this.inventaireForm, true);
     DonneeHelper.updateFormState(this.donneeForm, false);
-    document.getElementById("input-Observateur").focus();
+    if (document.getElementById("input-Observateur")) {
+      document.getElementById("input-Observateur").focus();
+    }
   }
 
   private switchToEditionDonneeMode(): void {

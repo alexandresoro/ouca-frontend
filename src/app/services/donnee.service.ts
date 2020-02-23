@@ -160,7 +160,6 @@ export class DonneeService {
     donneeFormControls.commentaire.setValue(null);
 
     donneeForm.markAsUntouched();
-    document.getElementById("input-Espèce").focus();
   };
 
   /**
