@@ -23,7 +23,7 @@ import {
   getContentTypeFromResponse,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
-import { interpretDateAsUTCDate } from "../../../shared/helpers/time.helper";
+import { setDateAsUTCDate } from "../../../shared/helpers/time.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
 
@@ -183,12 +183,10 @@ export class ViewComponent {
     const filters: DonneesFilter = this.searchForm.value;
     // Send the dates in UTC
     filters.fromDate = filters.fromDate
-      ? new Date(
-          interpretDateAsUTCDate(this.searchForm.controls.fromDate.value)
-        )
+      ? setDateAsUTCDate(this.searchForm.controls.fromDate.value)
       : null;
     filters.toDate = filters.toDate
-      ? new Date(interpretDateAsUTCDate(this.searchForm.controls.toDate.value))
+      ? setDateAsUTCDate(this.searchForm.controls.toDate.value)
       : null;
 
     if (this.searchForm.controls.excelMode.value) {

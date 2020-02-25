@@ -11,13 +11,13 @@ import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { Lieudit } from "basenaturaliste-model/lieudit.object";
 import { Meteo } from "basenaturaliste-model/meteo.object";
 import { Observateur } from "basenaturaliste-model/observateur.object";
+import { set } from "date-fns";
 import * as _ from "lodash";
-import moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
 import {
-  interpretDateAsUTCDate,
+  setDateAsUTCDate,
   TimeHelper
 } from "../modules/shared/helpers/time.helper";
 import { CreationPageService } from "./creation-page.service";
@@ -110,13 +110,13 @@ export class InventaireService {
     inventaireFormControls.observateursAssocies.setValue(
       new Array<Observateur>()
     );
-    inventaireFormControls.date.setValue(
-      moment()
-        .milliseconds(0)
-        .seconds(0)
-        .minutes(0)
-        .hours(0)
-    );
+    const today = set(new Date(), {
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0
+    });
+    inventaireFormControls.date.setValue(today);
     inventaireFormControls.heure.setValue(null);
     inventaireFormControls.duree.setValue(null);
     lieuditFormControls.departement.setValue(defaultDepartement);
@@ -193,7 +193,7 @@ export class InventaireService {
 
     inventaireFormControls.observateur.setValue(observateur);
     inventaireFormControls.observateursAssocies.setValue(associes);
-    inventaireFormControls.date.setValue(moment(inventaire.date));
+    inventaireFormControls.date.setValue(new Date(inventaire.date));
     inventaireFormControls.heure.setValue(inventaire.heure);
     inventaireFormControls.duree.setValue(inventaire.duree);
     lieuditFormControls.departement.setValue(departement);
@@ -238,9 +238,7 @@ export class InventaireService {
       inventaireFormControls.observateursAssocies.value
     );
 
-    const date: Date = new Date(
-      interpretDateAsUTCDate(inventaireFormControls.date.value)
-    );
+    const date: Date = setDateAsUTCDate(inventaireFormControls.date.value);
 
     const heure: string = TimeHelper.getFormattedTime(
       inventaireFormControls.heure.value

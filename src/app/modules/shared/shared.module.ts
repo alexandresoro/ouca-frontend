@@ -1,12 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
+import { FlexLayoutModule } from "@angular/flex-layout";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import {
-  MAT_MOMENT_DATE_FORMATS,
-  MatMomentDateModule,
-  MomentDateAdapter
-} from "@angular/material-moment-adapter";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
@@ -18,8 +14,8 @@ import {
 } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import {
-  MAT_DIALOG_DEFAULT_OPTIONS,
-  MatDialogModule
+  MatDialogModule,
+  MAT_DIALOG_DEFAULT_OPTIONS
 } from "@angular/material/dialog";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -32,11 +28,16 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
+import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatTreeModule } from "@angular/material/tree";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {
+  DateFnsDateAdapter,
+  MAT_DATE_FNS_DATE_FORMATS
+} from "src/app/date-adapter/date-fns-adapter";
 import { InputAgeComponent } from "../donnee-creation/components/input-age/input-age.component";
 import { InputDistanceComponent } from "../donnee-creation/components/input-distance/input-distance.component";
 import { InputEspeceComponent } from "../donnee-creation/components/input-espece/input-espece.component";
@@ -53,8 +54,6 @@ import { ConfirmationDialogComponent } from "./components/confirmation-dialog/co
 import { MultipleSelectComponent } from "./components/form/multiple-select/multiple-select.component";
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
 import { StatusMessageComponent } from "./components/status-message/status-message.component";
-import { MatTabsModule } from "@angular/material/tabs";
-import { FlexLayoutModule } from "@angular/flex-layout";
 
 @NgModule({
   imports: [
@@ -76,7 +75,6 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     MatInputModule,
     MatListModule,
     MatMenuModule,
-    MatMomentDateModule,
     MatPaginatorModule,
     MatSelectModule,
     MatSnackBarModule,
@@ -142,7 +140,6 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     MatInputModule,
     MatListModule,
     MatMenuModule,
-    MatMomentDateModule,
     MatPaginatorModule,
     MatSelectModule,
     MatSnackBarModule,
@@ -160,11 +157,10 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
     {
       provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE]
+      useClass: DateFnsDateAdapter
     },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }
+    { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_DATE_FORMATS }
   ]
 })
 export class SharedModule {}
