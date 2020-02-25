@@ -17,7 +17,8 @@ import { BehaviorSubject } from "rxjs";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
 import {
-  setDateAsUTCDate,
+  interpretBrowserDateAsTimestampDate,
+  interpretDateTimestampAsBrowserDate,
   TimeHelper
 } from "../modules/shared/helpers/time.helper";
 import { CreationPageService } from "./creation-page.service";
@@ -193,7 +194,9 @@ export class InventaireService {
 
     inventaireFormControls.observateur.setValue(observateur);
     inventaireFormControls.observateursAssocies.setValue(associes);
-    inventaireFormControls.date.setValue(new Date(inventaire.date));
+    inventaireFormControls.date.setValue(
+      interpretDateTimestampAsBrowserDate(inventaire.date)
+    );
     inventaireFormControls.heure.setValue(inventaire.heure);
     inventaireFormControls.duree.setValue(inventaire.duree);
     lieuditFormControls.departement.setValue(departement);
@@ -238,7 +241,9 @@ export class InventaireService {
       inventaireFormControls.observateursAssocies.value
     );
 
-    const date: Date = setDateAsUTCDate(inventaireFormControls.date.value);
+    const date: Date = interpretBrowserDateAsTimestampDate(
+      inventaireFormControls.date.value
+    );
 
     const heure: string = TimeHelper.getFormattedTime(
       inventaireFormControls.heure.value
@@ -266,7 +271,7 @@ export class InventaireService {
       id: this.displayedInventaireId$.value,
       observateurId: observateur ? observateur.id : null,
       associesIds,
-      date,
+      date: date.toJSON(),
       heure,
       duree,
       lieuditId: lieudit ? lieudit.id : null,

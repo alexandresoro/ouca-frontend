@@ -20,7 +20,7 @@ import { Router } from "@angular/router";
 import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
 import { format } from "date-fns";
 import * as _ from "lodash";
-import { setDateAsUTCDate } from "src/app/modules/shared/helpers/time.helper";
+import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
 
 @Component({
   selector: "table-donnees",
@@ -121,9 +121,10 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     }
 
     if (
-      format(setDateAsUTCDate(new Date(data.date)), "dd/MM/yyyy").includes(
-        filterValue
-      )
+      format(
+        interpretBrowserDateAsTimestampDate(new Date(data.date)),
+        "dd/MM/yyyy"
+      ).includes(filterValue)
     ) {
       return true;
     }

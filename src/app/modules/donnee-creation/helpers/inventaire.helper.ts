@@ -3,7 +3,7 @@ import { Coordinates } from "basenaturaliste-model/coordinates.object";
 import { Inventaire } from "basenaturaliste-model/inventaire.object";
 import { isSameDay } from "date-fns";
 import * as _ from "lodash";
-import { setDateAsUTCDate } from "../../shared/helpers/time.helper";
+import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";
 
 export class InventaireHelper {
   public static updateFormState = (
@@ -78,8 +78,8 @@ export class InventaireHelper {
     if (
       inventaireFromDB.observateurId !== inventaireFromForm.observateurId ||
       !isSameDay(
-        inventaireFromForm.date,
-        setDateAsUTCDate(new Date(inventaireFromDB.date))
+        interpretBrowserDateAsTimestampDate(new Date(inventaireFromForm.date)),
+        interpretBrowserDateAsTimestampDate(new Date(inventaireFromDB.date))
       ) ||
       inventaireFromDB.heure !== inventaireFromForm.heure ||
       inventaireFromDB.duree !== inventaireFromForm.duree ||
@@ -102,10 +102,6 @@ export class InventaireHelper {
         _.sortBy(inventaireFromForm.meteosIds)
       )
     ) {
-      console.log(
-        inventaireFromDB.customizedAltitude,
-        inventaireFromForm.customizedAltitude
-      );
       return true;
     }
 
