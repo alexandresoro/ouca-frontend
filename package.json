@@ -23,7 +23,6 @@
     "@angular/platform-browser": "9.0.2",
     "@angular/platform-browser-dynamic": "9.0.2",
     "@angular/router": "9.0.2",
-    "core-js": "3",
     "date-fns": "*",
     "date-fns-tz": "*",
     "file-saver": "*",
