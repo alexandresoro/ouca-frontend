@@ -5,7 +5,7 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Comportement } from "basenaturaliste-model/comportement.object";
+import { Comportement } from "ouca-common/comportement.object";
 import { combineLatest, Observable } from "rxjs";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
@@ -69,7 +69,7 @@ export class InputComportementsComponent implements OnInit {
             selectedComportementInPreviousElt
           };
         }
-      ).subscribe((status) => {
+      ).subscribe(status => {
         if (
           !!status.selectedComportementInPreviousElt &&
           status.statusComportementInPreviousElt === "VALID"
@@ -94,5 +94,5 @@ export class InputComportementsComponent implements OnInit {
     return comportement
       ? comportement.code + " - " + comportement.libelle
       : null;
-  }
+  };
 }

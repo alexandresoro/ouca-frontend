@@ -29,6 +29,7 @@
     "lodash": "*",
     "material-design-icons-iconfont": "*",
     "ngx-take-until-destroy": "*",
+    "ouca-common": "*",
     "rxjs": "*",
     "tslib": "^1.11.0",
     "typeface-roboto": "*",
@@ -42,7 +43,6 @@
     "@types/lodash": "*",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
-    "basenaturaliste-model": "https://github.com/alexandresoro/basenaturaliste-model#master",
     "eslint": "*",
     "ts-node": "*",
     "typescript": "3.7.5"

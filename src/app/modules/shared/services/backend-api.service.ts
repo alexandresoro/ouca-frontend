@@ -1,18 +1,18 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
-import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
-import { CreationPage } from "basenaturaliste-model/creation-page.object";
-import { Donnee } from "basenaturaliste-model/donnee.object";
-import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
-import { Inventaire } from "basenaturaliste-model/inventaire.object";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
-import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
+import { AppConfiguration } from "ouca-common/app-configuration.object";
+import { ConfigurationPage } from "ouca-common/configuration-page.object";
+import { CreationPage } from "ouca-common/creation-page.object";
+import { Donnee } from "ouca-common/donnee.object";
+import { EntiteSimple } from "ouca-common/entite-simple.object";
+import { Inventaire } from "ouca-common/inventaire.object";
+import { Lieudit } from "ouca-common/lieudit.object";
+import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { Observable } from "rxjs";
-import { PostResponse } from "basenaturaliste-model/post-response.object";
-import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
-import { DonneesFilter } from "basenaturaliste-model/donnees-filter.object";
+import { PostResponse } from "ouca-common/post-response.object";
+import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
+import { DonneesFilter } from "ouca-common/donnees-filter.object";
 
 @Injectable({
   providedIn: "root"

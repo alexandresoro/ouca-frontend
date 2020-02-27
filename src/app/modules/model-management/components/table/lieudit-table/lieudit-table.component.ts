@@ -1,6 +1,6 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
+import { Lieudit } from "ouca-common/lieudit.object";
 import * as _ from "lodash";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
@@ -65,7 +65,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       this.selectedObject = undefined;
     } else {
       this.selectedObject = this.objects.filter(
-        (lieudit) => lieudit.id === id
+        lieudit => lieudit.id === id
       )[0];
     }
   }

@@ -6,7 +6,7 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Commune } from "basenaturaliste-model/commune.object";
+import { Commune } from "ouca-common/commune.object";
 import * as _ from "lodash";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";

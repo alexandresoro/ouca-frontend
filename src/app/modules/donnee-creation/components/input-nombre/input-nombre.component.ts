@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
+import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { distinctUntilChanged } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 

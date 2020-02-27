@@ -1,6 +1,6 @@
 import { Component, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { Commune } from "basenaturaliste-model/commune.object";
+import { Commune } from "ouca-common/commune.object";
 import * as _ from "lodash";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 interface CommunetRow {
@@ -54,7 +54,7 @@ export class CommuneTableComponent extends EntiteSimpleTableComponent<Commune> {
       this.selectedObject = undefined;
     } else {
       this.selectedObject = this.objects.filter(
-        (commune) => commune.id === id
+        commune => commune.id === id
       )[0];
     }
   }

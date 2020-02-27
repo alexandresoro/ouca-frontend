@@ -1587,12 +1587,6 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-"basenaturaliste-model@https://github.com/alexandresoro/basenaturaliste-model#master":
-  version "1.0.0"
-  resolved "https://github.com/alexandresoro/basenaturaliste-model#d0a82c7ba0b0a0dd56946a0c57393abf53de0bd4"
-  dependencies:
-    "@types/bson" "*"
-
 batch@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
@@ -5480,6 +5474,13 @@ osenv@^0.1.5:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
+
+ouca-common@*:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/ouca-common/-/ouca-common-0.0.3.tgz#06d735d6fbb8e036df850671fda198d4a00b097a"
+  integrity sha512-4wq7fcKFdC5oBkMzZqZe3ExAUqE168yZ9JNds+5ZwYPGIen6KFuabXM4NdGSKTMW1qjZHyK4y8umUSAazM1kwQ==
+  dependencies:
+    "@types/bson" "*"
 
 p-defer@^1.0.0:
   version "1.0.0"

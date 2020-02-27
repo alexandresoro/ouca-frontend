@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
+import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EstimationNombreFormComponent } from "../../components/form/estimation-nombre-form/estimation-nombre-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";

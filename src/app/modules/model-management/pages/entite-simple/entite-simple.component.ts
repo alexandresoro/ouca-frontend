@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
-import { PostResponse } from "basenaturaliste-model/post-response.object";
+import { EntiteSimple } from "ouca-common/entite-simple.object";
+import { PostResponse } from "ouca-common/post-response.object";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,

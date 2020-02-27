@@ -5,8 +5,8 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Classe } from "basenaturaliste-model/classe.object";
-import { Espece } from "basenaturaliste-model/espece.object";
+import { Classe } from "ouca-common/classe.object";
+import { Espece } from "ouca-common/espece.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
@@ -73,7 +73,7 @@ export class InputEspeceComponent implements OnInit {
           if (selection) {
             if (this.isMultipleSelectMode) {
               if (selection.length > 0) {
-                return especes.filter((espece) => {
+                return especes.filter(espece => {
                   return (
                     selection.indexOf(espece.classeId) > -1 ||
                     selection.indexOf(espece.classe.id) > -1
@@ -84,7 +84,7 @@ export class InputEspeceComponent implements OnInit {
               }
             } else {
               if (selection.id) {
-                return especes.filter((espece) => {
+                return especes.filter(espece => {
                   return (
                     espece.classeId === selection.id ||
                     (espece.classe && espece.classe.id === selection.id)

@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Classe } from "basenaturaliste-model/classe.object";
-import { Commune } from "basenaturaliste-model/commune.object";
-import { Departement } from "basenaturaliste-model/departement.object";
-import { DonneeWithNavigationData } from "basenaturaliste-model/donnee-with-navigation-data.object";
-import { Donnee } from "basenaturaliste-model/donnee.object";
+import { Classe } from "ouca-common/classe.object";
+import { Commune } from "ouca-common/commune.object";
+import { Departement } from "ouca-common/departement.object";
+import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
+import { Donnee } from "ouca-common/donnee.object";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { BackendApiService } from "../../shared/services/backend-api.service";

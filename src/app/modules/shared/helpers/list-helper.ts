@@ -1,4 +1,4 @@
-import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { EntiteSimple } from "ouca-common/entite-simple.object";
 import * as _ from "lodash";
 
 export class ListHelper {

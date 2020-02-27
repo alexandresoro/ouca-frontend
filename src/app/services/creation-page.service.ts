@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CreationPage } from "basenaturaliste-model/creation-page.object";
+import { CreationPage } from "ouca-common/creation-page.object";
 import { BehaviorSubject, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
 import { BackendApiService } from "../modules/shared/services/backend-api.service";

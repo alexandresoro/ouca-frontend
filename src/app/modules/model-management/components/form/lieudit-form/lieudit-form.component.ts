@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, Validators, FormGroup } from "@angular/forms";
-import { Commune } from "basenaturaliste-model/commune.object";
-import { Departement } from "basenaturaliste-model/departement.object";
+import { Commune } from "ouca-common/commune.object";
+import { Departement } from "ouca-common/departement.object";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { ListHelper } from "../../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";

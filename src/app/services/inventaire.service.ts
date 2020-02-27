@@ -5,12 +5,12 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Commune } from "basenaturaliste-model/commune.object";
-import { Departement } from "basenaturaliste-model/departement.object";
-import { Inventaire } from "basenaturaliste-model/inventaire.object";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
-import { Meteo } from "basenaturaliste-model/meteo.object";
-import { Observateur } from "basenaturaliste-model/observateur.object";
+import { Commune } from "ouca-common/commune.object";
+import { Departement } from "ouca-common/departement.object";
+import { Inventaire } from "ouca-common/inventaire.object";
+import { Lieudit } from "ouca-common/lieudit.object";
+import { Meteo } from "ouca-common/meteo.object";
+import { Observateur } from "ouca-common/observateur.object";
 import { set } from "date-fns";
 import * as _ from "lodash";
 import { BehaviorSubject } from "rxjs";

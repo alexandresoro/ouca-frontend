@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Meteo } from "basenaturaliste-model/meteo.object";
+import { Meteo } from "ouca-common/meteo.object";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
 
 @Component({

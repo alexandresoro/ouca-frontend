@@ -17,7 +17,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
-import { FlatDonnee } from "basenaturaliste-model/flat-donnee.object";
+import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { format } from "date-fns";
 import * as _ from "lodash";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { EntiteAvecLibelle } from "basenaturaliste-model/entite-avec-libelle.object";
+import { EntiteAvecLibelle } from "ouca-common/entite-avec-libelle.object";
 import * as _ from "lodash";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteAvecLibelleFormComponent } from "../../components/form/entite-avec-libelle-form/entite-avec-libelle-form.component";

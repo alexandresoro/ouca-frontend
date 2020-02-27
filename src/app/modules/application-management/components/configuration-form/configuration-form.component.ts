@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { Age } from "basenaturaliste-model/age.object";
-import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
-import { Departement } from "basenaturaliste-model/departement.object";
-import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
-import { Observateur } from "basenaturaliste-model/observateur.object";
-import { Sexe } from "basenaturaliste-model/sexe.object";
-import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
-import { CoordinatesSystem } from "basenaturaliste-model/coordinates-system.object";
+import { Age } from "ouca-common/age.object";
+import { AppConfiguration } from "ouca-common/app-configuration.object";
+import { CoordinatesSystem } from "ouca-common/coordinates-system";
+import { Departement } from "ouca-common/departement.object";
+import { EntiteSimple } from "ouca-common/entite-simple.object";
+import { EstimationNombre } from "ouca-common/estimation-nombre.object";
+import { Observateur } from "ouca-common/observateur.object";
+import { Sexe } from "ouca-common/sexe.object";
 
 @Component({
   selector: "configuration-form",

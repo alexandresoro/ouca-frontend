@@ -5,16 +5,16 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Age } from "basenaturaliste-model/age.object";
-import { Classe } from "basenaturaliste-model/classe.object";
-import { Comportement } from "basenaturaliste-model/comportement.object";
-import { Donnee } from "basenaturaliste-model/donnee.object";
-import { EntiteAvecLibelleEtCode } from "basenaturaliste-model/entite-avec-libelle-et-code.object";
-import { Espece } from "basenaturaliste-model/espece.object";
-import { EstimationDistance } from "basenaturaliste-model/estimation-distance.object";
-import { EstimationNombre } from "basenaturaliste-model/estimation-nombre.object";
-import { Milieu } from "basenaturaliste-model/milieu.object";
-import { Sexe } from "basenaturaliste-model/sexe.object";
+import { Age } from "ouca-common/age.object";
+import { Classe } from "ouca-common/classe.object";
+import { Comportement } from "ouca-common/comportement.object";
+import { Donnee } from "ouca-common/donnee.object";
+import { EntiteAvecLibelleEtCode } from "ouca-common/entite-avec-libelle-et-code.object";
+import { Espece } from "ouca-common/espece.object";
+import { EstimationDistance } from "ouca-common/estimation-distance.object";
+import { EstimationNombre } from "ouca-common/estimation-nombre.object";
+import { Milieu } from "ouca-common/milieu.object";
+import { Sexe } from "ouca-common/sexe.object";
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";

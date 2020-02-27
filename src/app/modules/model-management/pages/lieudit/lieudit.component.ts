@@ -6,7 +6,7 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
+import { Lieudit } from "ouca-common/lieudit.object";
 import * as _ from "lodash";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";

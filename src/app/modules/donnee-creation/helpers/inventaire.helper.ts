@@ -1,6 +1,6 @@
 import { FormGroup } from "@angular/forms";
-import { Coordinates } from "basenaturaliste-model/coordinates.object";
-import { Inventaire } from "basenaturaliste-model/inventaire.object";
+import { Coordinates } from "ouca-common/coordinates.object";
+import { Inventaire } from "ouca-common/inventaire.object";
 import { isSameDay } from "date-fns";
 import * as _ from "lodash";
 import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";

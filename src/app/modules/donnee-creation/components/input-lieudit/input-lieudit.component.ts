@@ -5,9 +5,9 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Commune } from "basenaturaliste-model/commune.object";
-import { Departement } from "basenaturaliste-model/departement.object";
-import { Lieudit } from "basenaturaliste-model/lieudit.object";
+import { Commune } from "ouca-common/commune.object";
+import { Departement } from "ouca-common/departement.object";
+import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
@@ -98,14 +98,14 @@ export class InputLieuditComponent implements OnInit {
       (selection: string | number[] | Departement, communes) => {
         if (communes && selection) {
           if (this.isMultipleSelectMode) {
-            return communes.filter((commune) => {
+            return communes.filter(commune => {
               return (
                 (selection as number[]).includes(commune.departementId) ||
                 (selection as number[]).includes(commune.departement.id)
               );
             });
           } else {
-            return communes.filter((commune) => {
+            return communes.filter(commune => {
               return (
                 commune.departementId === (selection as Departement).id ||
                 (commune.departement &&
@@ -125,14 +125,14 @@ export class InputLieuditComponent implements OnInit {
       (selection: string | number[] | Commune, lieuxdits) => {
         if (lieuxdits && selection) {
           if (this.isMultipleSelectMode) {
-            return lieuxdits.filter((lieudit) => {
+            return lieuxdits.filter(lieudit => {
               return (
                 (selection as number[]).includes(lieudit.communeId) ||
                 (selection as number[]).includes(lieudit.commune.id)
               );
             });
           } else {
-            return lieuxdits.filter((lieudit) => {
+            return lieuxdits.filter(lieudit => {
               return (
                 lieudit.communeId === (selection as Commune).id ||
                 (lieudit.commune &&

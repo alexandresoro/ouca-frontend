@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Sexe } from "basenaturaliste-model/sexe.object";
+import { Sexe } from "ouca-common/sexe.object";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({

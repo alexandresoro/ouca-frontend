@@ -1,4 +1,4 @@
-import { Coordinates } from "basenaturaliste-model/coordinates.object";
+import { Coordinates } from "ouca-common/coordinates.object";
 
 export const deg2rad = (degrees: number): number => {
   return degrees * (Math.PI / 180);

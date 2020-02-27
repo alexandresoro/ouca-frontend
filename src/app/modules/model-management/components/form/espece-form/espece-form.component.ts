@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { Classe } from "basenaturaliste-model/classe.object";
+import { Classe } from "ouca-common/classe.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 

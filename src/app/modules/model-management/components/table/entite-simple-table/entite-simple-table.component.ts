@@ -10,7 +10,7 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { EntiteSimple } from "basenaturaliste-model/entite-simple.object";
+import { EntiteSimple } from "ouca-common/entite-simple.object";
 
 @Component({
   template: ""

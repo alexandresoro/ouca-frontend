@@ -5,7 +5,7 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Milieu } from "basenaturaliste-model/milieu.object";
+import { Milieu } from "ouca-common/milieu.object";
 import { combineLatest, Observable } from "rxjs";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
@@ -62,7 +62,7 @@ export class InputMilieuxComponent implements OnInit {
             selectedMilieuInPreviousElt
           };
         }
-      ).subscribe((status) => {
+      ).subscribe(status => {
         if (
           !!status.selectedMilieuInPreviousElt &&
           status.statusMilieuInPreviousElt === "VALID"

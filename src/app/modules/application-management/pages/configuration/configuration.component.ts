@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { AppConfiguration } from "basenaturaliste-model/app-configuration.object";
-import { ConfigurationPage } from "basenaturaliste-model/configuration-page.object";
+import { AppConfiguration } from "ouca-common/app-configuration.object";
+import { ConfigurationPage } from "ouca-common/configuration-page.object";
 import * as _ from "lodash";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
