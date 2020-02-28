@@ -19,6 +19,10 @@ import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { format } from "date-fns";
 import * as _ from "lodash";
+import {
+  CoordinatesSystemType,
+  COORDINATES_SYSTEMS_CONFIG
+} from "ouca-common/coordinates-system";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
 
@@ -156,7 +160,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     this.filteringOnGoing = false;
   }
 
-  public onRowClicked = (object: any): void => {
+  public onRowClicked = (object: FlatDonnee): void => {
     if (!!this.selectedDonnee && this.selectedDonnee.id === object.id) {
       this.selectedDonnee = null;
     } else {
@@ -166,5 +170,9 @@ export class TableDonneesComponent implements OnChanges, OnInit {
 
   public editDonnee = (id: number): void => {
     this.router.navigate(["/creation"], { state: { id: id } });
+  };
+
+  public getCoordinatesSystem = (systemType: CoordinatesSystemType): string => {
+    return COORDINATES_SYSTEMS_CONFIG[systemType].name;
   };
 }
