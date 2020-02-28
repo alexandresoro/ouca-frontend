@@ -2,8 +2,15 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Commune } from "ouca-common/commune.object";
+import {
+  CoordinatesSystemType,
+  COORDINATES_SYSTEMS_CONFIG
+} from "ouca-common/coordinates-system";
+import { Coordinates } from "ouca-common/coordinates.object";
 import { Departement } from "ouca-common/departement.object";
+import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable, Subject } from "rxjs";
+import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
 import { ListHelper } from "../../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
@@ -12,7 +19,7 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
   selector: "lieudit-form",
   templateUrl: "./lieudit-form.component.html"
 })
-export class LieuditFormComponent extends EntitySubFormComponent
+export class LieuditFormComponent extends EntitySubFormComponent<Lieudit>
   implements OnInit {
   public departements$: Subject<Departement[]>;
 
@@ -30,6 +37,8 @@ export class LieuditFormComponent extends EntitySubFormComponent
 
   private initialSetting: boolean;
 
+  private coordinatesSystem: CoordinatesSystemType;
+
   constructor(private backendApiService: BackendApiService) {
     super();
   }
@@ -37,8 +46,8 @@ export class LieuditFormComponent extends EntitySubFormComponent
   ngOnInit(): void {
     this.initialSetting = true;
 
-    this.coordinatesFormGroup = this.entityForm.controls
-      .coordinates as FormGroup;
+    const coordinates: Coordinates = getOriginCoordinates(this.entity);
+    this.coordinatesSystem = coordinates.system;
 
     this.departementControl = new FormControl("", [Validators.required]);
     this.nomCommuneControl = new FormControl("", [Validators.required]);
@@ -113,10 +122,35 @@ export class LieuditFormComponent extends EntitySubFormComponent
         });
       }
     );
+
+    this.entityForm.controls.longitude.setValue(coordinates.longitude);
+    this.entityForm.controls.latitude.setValue(coordinates.latitude);
   }
 
-  public resetSelectedCommune(): void {
+  public resetSelectedCommune = (): void => {
     this.entityForm.controls.communeId.setValue(null);
     this.nomCommuneControl.setValue(null);
-  }
+  };
+
+  public getMinimumLatitude = (): number => {
+    return COORDINATES_SYSTEMS_CONFIG[this.coordinatesSystem].latitudeRange.min;
+  };
+
+  public getMaximumLatitude = (): number => {
+    return COORDINATES_SYSTEMS_CONFIG[this.coordinatesSystem].latitudeRange.max;
+  };
+
+  public getMinimumLongitude = (): number => {
+    return COORDINATES_SYSTEMS_CONFIG[this.coordinatesSystem].longitudeRange
+      .min;
+  };
+
+  public getMaximumLongitude = (): number => {
+    return COORDINATES_SYSTEMS_CONFIG[this.coordinatesSystem].longitudeRange
+      .max;
+  };
+
+  public getUnitName = (): string => {
+    return COORDINATES_SYSTEMS_CONFIG[this.coordinatesSystem].unitName;
+  };
 }

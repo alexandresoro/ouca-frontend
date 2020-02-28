@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { Classe } from "ouca-common/classe.object";
+import { Espece } from "ouca-common/espece.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
@@ -8,7 +9,7 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
   selector: "espece-form",
   templateUrl: "./espece-form.tpl.html"
 })
-export class EspeceFormComponent extends EntitySubFormComponent {
+export class EspeceFormComponent extends EntitySubFormComponent<Espece> {
   public classes: Classe[];
 
   constructor(private backendApiService: BackendApiService) {

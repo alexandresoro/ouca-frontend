@@ -7,10 +7,16 @@ import {
   Validators
 } from "@angular/forms";
 import * as _ from "lodash";
-import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
+import {
+  COORDINATES_SYSTEMS_CONFIG,
+  LAMBERT_93
+} from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.object";
-import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
+import {
+  buildCoordinates,
+  getOriginCoordinates
+} from "src/app/modules/shared/helpers/coordinates.helper";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
@@ -32,19 +38,27 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
           Validators.required,
           this.altitudeNumberValidator()
         ]),
-        coordinates: new FormGroup({
-          longitude: new FormControl("", [
-            Validators.required,
-            this.longitudeNumberValidator()
-          ]),
-          latitude: new FormControl("", [
-            Validators.required,
-            this.latitudeNumberValidator()
-          ])
-        })
+        longitude: new FormControl("", [
+          Validators.required,
+          this.longitudeNumberValidator()
+        ]),
+        latitude: new FormControl("", [
+          Validators.required,
+          this.latitudeNumberValidator()
+        ])
       },
       [this.nomValidator]
     );
+  }
+
+  public saveObject(formValue: any): void {
+    // TO DO system
+    const { longitude, latitude, ...otherParams } = formValue;
+    const lieudit: Lieudit = {
+      ...otherParams,
+      coordinates: buildCoordinates(LAMBERT_93, longitude, latitude)
+    };
+    super.saveObject(lieudit);
   }
 
   public nomValidator: ValidatorFn = (

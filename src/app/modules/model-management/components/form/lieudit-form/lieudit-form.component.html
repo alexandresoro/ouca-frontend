@@ -92,7 +92,7 @@
     min="0"
     max="65535"
     name="altitude"
-    placeholder="Altitude"
+    placeholder="Altitude en mètres"
     type="number"
   />
 
@@ -104,54 +104,50 @@
   </mat-error>
 </mat-form-field>
 
-<!-- Longitude Lambert II étendu -->
+<!-- Longitude -->
 <mat-form-field>
   <input
     [errorStateMatcher]="matcher"
-    [formControl]="coordinatesFormGroup.controls['longitude']"
+    [formControl]="entityForm.controls['longitude']"
     id="input-longitude"
     matInput
-    min="0"
-    max="16777215"
+    min="{{ getMinimumLongitude() }}"
+    max="{{ getMaximumLongitude() }}"
     name="longitude"
-    placeholder="Longitude"
+    placeholder="Longitude en {{ getUnitName() }}"
     type="number"
   />
 
-  <mat-error
-    *ngIf="coordinatesFormGroup.controls['longitude'].hasError('required')"
-  >
+  <mat-error *ngIf="entityForm.controls['longitude'].hasError('required')">
     Le champ "Longitude" ne peut pas être vide.
   </mat-error>
   <mat-error
-    *ngIf="coordinatesFormGroup.controls['longitude'].hasError('forbiddenValue')"
+    *ngIf="entityForm.controls['longitude'].hasError('forbiddenValue')"
   >
-    La longitude doit être un entier compris entre 0 et 16777215.
+    La longitude doit être un entier compris entre
+    {{ getMinimumLongitude() }} et {{ getMaximumLongitude() }}.
   </mat-error>
 </mat-form-field>
 
-<!-- Latitude Lambert II étendu -->
+<!-- Latitude -->
 <mat-form-field>
   <input
     [errorStateMatcher]="matcher"
-    [formControl]="coordinatesFormGroup.controls['latitude']"
+    [formControl]="entityForm.controls['latitude']"
     id="input-latitude"
     matInput
-    min="0"
-    max="16777215"
+    min="{{ getMinimumLatitude() }}"
+    max="{{ getMaximumLatitude() }}"
     name="latitude"
-    placeholder="Latitude"
+    placeholder="Latitude en {{ getUnitName() }}"
     type="number"
   />
 
-  <mat-error
-    *ngIf="coordinatesFormGroup.controls['latitude'].hasError('required')"
-  >
+  <mat-error *ngIf="entityForm.controls['latitude'].hasError('required')">
     Le champ "Latitude" ne peut pas être vide.
   </mat-error>
-  <mat-error
-    *ngIf="coordinatesFormGroup.controls['latitude'].hasError('forbiddenValue')"
-  >
-    La latitude doit être un entier compris entre 0 et 16777215.
+  <mat-error *ngIf="entityForm.controls['latitude'].hasError('forbiddenValue')">
+    La latitude doit être un entier compris entre {{ getMinimumLatitude() }} et
+    {{ getMaximumLatitude() }}.
   </mat-error>
 </mat-form-field>

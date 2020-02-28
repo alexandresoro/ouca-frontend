@@ -19,8 +19,8 @@ import { EntitySubFormDirective } from "./entity-sub-form.directive";
   styleUrls: ["./entity-form.component.scss"],
   templateUrl: "./entity-form.tpl.html"
 })
-export class EntityFormComponent implements OnInit {
-  @Input() componentType: Type<EntitySubFormComponent>;
+export class EntityFormComponent<T extends EntiteSimple> implements OnInit {
+  @Input() componentType: Type<EntitySubFormComponent<T>>;
 
   @ViewChild(EntitySubFormDirective, { static: true })
   entitySubFormDirective: EntitySubFormDirective;
@@ -29,7 +29,7 @@ export class EntityFormComponent implements OnInit {
 
   @Input() public editionTitle: string;
 
-  @Input() public object: EntiteSimple;
+  @Input() public object: T;
 
   @Input() public entityForm: FormGroup;
 
@@ -63,6 +63,7 @@ export class EntityFormComponent implements OnInit {
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
     componentRef.instance.entityForm = this.entityForm;
+    componentRef.instance.entity = this.object;
   };
 
   public save = (): void => {

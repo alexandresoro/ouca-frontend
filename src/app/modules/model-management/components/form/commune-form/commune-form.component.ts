@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
+import { Commune } from "ouca-common/commune.object";
 import { Departement } from "ouca-common/departement.object";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
@@ -8,14 +9,14 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
   selector: "commune-form",
   templateUrl: "./commune-form.tpl.html"
 })
-export class CommuneFormComponent extends EntitySubFormComponent {
+export class CommuneFormComponent extends EntitySubFormComponent<Commune> {
   public departements: Departement[];
 
   constructor(private backendApiService: BackendApiService) {
     super();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Get all departements
     this.backendApiService.getAllEntities("departement").subscribe(
       (result: Departement[]) => {
