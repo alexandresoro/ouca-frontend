@@ -184,9 +184,17 @@ export const transformLambert93toWGS84 = (
 export const getOriginCoordinates = (
   object: Lieudit | Inventaire
 ): Coordinates => {
-  return object.coordinates[
-    _.first(_.keys(object.coordinates) as CoordinatesSystemType[])
-  ];
+  if (object && object.id) {
+    return object.coordinates[
+      _.first(_.keys(object.coordinates) as CoordinatesSystemType[])
+    ];
+  } else {
+    return {
+      system: LAMBERT_93,
+      longitude: null,
+      latitude: null
+    };
+  }
 };
 
 export const buildCoordinates = (

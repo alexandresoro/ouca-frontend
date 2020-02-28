@@ -7,6 +7,7 @@ import {
   Validators
 } from "@angular/forms";
 import * as _ from "lodash";
+import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
@@ -128,17 +129,25 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     );
     detailsData[5] = new EntityDetailsData(
       "Altitude",
-      this.currentObject.altitude
+      this.currentObject.altitude + " mètres"
     );
     detailsData[6] = new EntityDetailsData(
-      "Longitude (Lambert II étendu)",
-      coordinates.longitude
+      "Longitude",
+      coordinates.longitude +
+        " " +
+        COORDINATES_SYSTEMS_CONFIG[coordinates.system].unitName
     );
     detailsData[7] = new EntityDetailsData(
-      "Latitude (Lambert II étendu)",
-      coordinates.latitude
+      "Latitude",
+      coordinates.latitude +
+        " " +
+        COORDINATES_SYSTEMS_CONFIG[coordinates.system].unitName
     );
     detailsData[8] = new EntityDetailsData(
+      "Système de coordonnées",
+      COORDINATES_SYSTEMS_CONFIG[coordinates.system].name
+    );
+    detailsData[9] = new EntityDetailsData(
       "Nombre de fiches espèces",
       this.currentObject.nbDonnees
     );

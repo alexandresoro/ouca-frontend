@@ -210,7 +210,7 @@ export class InventaireService {
     lieuditFormControls.lieudit.setValue(lieudit);
     const inventaireCoordinates: Coordinates = getOriginCoordinates(inventaire);
     const lieuditCoordinates: Coordinates = getOriginCoordinates(lieudit);
-    if (_.isNil(inventaire.customizedAltitude)) {
+    if (lieudit && lieudit.id && _.isNil(inventaire.customizedAltitude)) {
       // Coordinates are not updated for the inventaire
       // We display the lieudit coordinates
       lieuditFormControls.altitude.setValue(lieudit.altitude);

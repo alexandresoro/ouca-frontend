@@ -169,7 +169,7 @@ export class InputLieuditComponent implements OnInit {
    * When selecting a lieu-dit, update coordinates
    */
   public updateCoordinates(lieudit: Lieudit): void {
-    if (lieudit) {
+    if (lieudit && lieudit.id) {
       const coordinates = getOriginCoordinates(lieudit);
       this.setSelectedCoordinates(
         lieudit.altitude,

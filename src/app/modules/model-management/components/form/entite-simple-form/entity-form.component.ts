@@ -29,7 +29,7 @@ export class EntityFormComponent implements OnInit {
 
   @Input() public editionTitle: string;
 
-  @Input() public object: any = {};
+  @Input() public object: EntiteSimple;
 
   @Input() public entityForm: FormGroup;
 
@@ -43,7 +43,7 @@ export class EntityFormComponent implements OnInit {
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadComponent();
     if (!!this.object && !!this.object.id) {
       this.entityForm.patchValue(this.object, {
@@ -52,7 +52,7 @@ export class EntityFormComponent implements OnInit {
     }
   }
 
-  loadComponent() {
+  private loadComponent = (): void => {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(
       this.componentType
     );
@@ -63,13 +63,13 @@ export class EntityFormComponent implements OnInit {
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
     componentRef.instance.entityForm = this.entityForm;
-  }
+  };
 
-  public save(): void {
+  public save = (): void => {
     this.confirm.emit(this.entityForm.value);
-  }
+  };
 
-  public cancel(): void {
+  public cancel = (): void => {
     this.back.emit();
-  }
+  };
 }
