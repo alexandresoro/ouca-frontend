@@ -131,10 +131,9 @@
           id="input-coordinates"
           placeholder="Système de coordonnées"
           [(value)]="model.coordinatesSystem"
-          [compareWith]="compareEntities"
         >
-          <mat-option *ngFor="let s of coordinatesSystems" [value]="s">
-            {{ s.libelle }}
+          <mat-option *ngFor="let s of coordinatesSystems" [value]="s.code">
+            {{ s.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>

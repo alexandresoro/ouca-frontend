@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Age } from "ouca-common/age.object";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
-import { CoordinatesSystem } from "ouca-common/coordinates-system";
+import {
+  CoordinatesSystem,
+  COORDINATES_SYSTEMS_CONFIG
+} from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
@@ -18,8 +21,6 @@ export class ConfigurationFormComponent {
 
   @Input() public departements: Departement[];
 
-  @Input() public coordinatesSystems: CoordinatesSystem[];
-
   @Input() public estimationsNombre: EstimationNombre[];
 
   @Input() public sexes: Sexe[];
@@ -31,6 +32,10 @@ export class ConfigurationFormComponent {
   @Output() public confirm: EventEmitter<AppConfiguration> = new EventEmitter();
 
   @Output() public back: EventEmitter<boolean> = new EventEmitter();
+
+  public coordinatesSystems: CoordinatesSystem[] = Object.values(
+    COORDINATES_SYSTEMS_CONFIG
+  );
 
   public save(): void {
     this.confirm.emit(this.model);
