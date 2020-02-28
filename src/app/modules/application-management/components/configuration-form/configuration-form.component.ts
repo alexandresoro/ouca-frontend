@@ -14,7 +14,7 @@ import { Sexe } from "ouca-common/sexe.object";
 @Component({
   selector: "configuration-form",
   styleUrls: ["./configuration-form.component.scss"],
-  templateUrl: "./configuration-form.tpl.html"
+  templateUrl: "./configuration-form.component.html"
 })
 export class ConfigurationFormComponent {
   @Input() public observateurs: Observateur[];

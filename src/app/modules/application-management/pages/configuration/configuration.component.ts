@@ -3,6 +3,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { ConfigurationPage } from "ouca-common/configuration-page.object";
+import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
@@ -130,7 +131,9 @@ export class ConfigurationComponent implements OnInit {
             break;
           case ConfigurationParameterID.COORDINATES_SYSTEM:
             value = this.configurationToSave.coordinatesSystem
-              ? this.configurationToSave.coordinatesSystem
+              ? COORDINATES_SYSTEMS_CONFIG[
+                  this.configurationToSave.coordinatesSystem
+                ].name
               : "";
             break;
           case ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE:

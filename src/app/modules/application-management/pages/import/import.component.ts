@@ -6,7 +6,7 @@ import {
 } from "../../../shared/helpers/file-downloader.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 @Component({
-  templateUrl: "./import.tpl.html"
+  templateUrl: "./import.component.html"
 })
 export class ImportComponent {
   private file: File;
@@ -26,7 +26,7 @@ export class ImportComponent {
     this.displayWaitPanel();
 
     this.backendApiService.importData(entityName, this.file).subscribe(
-      response => {
+      (response) => {
         saveFile(
           response.body,
           this.file.name.split(".csv")[0] + ".erreurs.csv",
@@ -34,7 +34,7 @@ export class ImportComponent {
         );
         this.hideWaitPanel();
       },
-      error => {
+      (error) => {
         this.hideWaitPanel();
         this.statusMessageService.showErrorMessage(
           "Une erreur est survenue pendant l'import",

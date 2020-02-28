@@ -8,7 +8,7 @@ import {
 import { BackendApiService } from "../../../shared/services/backend-api.service";
 
 @Component({
-  templateUrl: "./database.tpl.html"
+  templateUrl: "./database.component.html"
 })
 export class DatabaseComponent {
   public isWaitPanelDisplayed: boolean = false;
@@ -20,7 +20,7 @@ export class DatabaseComponent {
 
   public onSaveDatabaseClicked = (): void => {
     this.displayWaitPanel();
-    this.backendApiService.saveDatabase().subscribe(response => {
+    this.backendApiService.saveDatabase().subscribe((response) => {
       saveFile(
         response.body,
         getFileNameFromResponseContentDisposition(response),
