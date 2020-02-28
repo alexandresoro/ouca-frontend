@@ -83,6 +83,21 @@
       </td>
     </ng-container>
 
+    <!-- Coordinates system -->
+    <ng-container matColumnDef="coordinatesSystem">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="coordinates-system"
+      >
+        Système de coordonnées
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.coordinatesSystem }}
+      </td>
+    </ng-container>
+
     <!-- Nombre de fiches espèces -->
     <ng-container matColumnDef="nbDonnees">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="nb-donnees">

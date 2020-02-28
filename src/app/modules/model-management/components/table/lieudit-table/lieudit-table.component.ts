@@ -1,6 +1,7 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
+import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
@@ -15,6 +16,7 @@ interface LieuditRow {
   altitude: number;
   longitude: number;
   latitude: number;
+  coordinatesSystem: string;
   nbDonnees: number;
 }
 
@@ -33,6 +35,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "altitude",
     "longitude",
     "latitude",
+    "coordinatesSystem",
     "nbDonnees"
   ];
 
@@ -59,6 +62,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       altitude: lieudit.altitude,
       longitude: coordinates.longitude,
       latitude: coordinates.latitude,
+      coordinatesSystem: COORDINATES_SYSTEMS_CONFIG[coordinates.system].name,
       nbDonnees: lieudit.nbDonnees
     };
   }

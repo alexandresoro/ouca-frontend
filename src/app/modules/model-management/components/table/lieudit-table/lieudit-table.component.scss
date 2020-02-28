@@ -4,24 +4,28 @@ table.lieudit-table {
   @include mixins.full-width-table;
 
   th.departement {
-    width: 100px;
+    width: 80px;
   }
 
   th.code-commune {
-    width: 150px;
+    width: 120px;
   }
 
   th.nom-commune {
-    width: 300px;
+    width: 250px;
   }
 
   th.nom-lieu-dit {
-    width: 300px;
+    width: 250px;
   }
 
   th.altitude,
   th.longitude,
   th.latitude {
+    width: 100px;
+  }
+
+  th.coordinates-system {
     width: 100px;
   }
 }
