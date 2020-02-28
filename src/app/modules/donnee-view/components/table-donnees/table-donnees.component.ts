@@ -17,15 +17,15 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
-import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { format } from "date-fns";
 import * as _ from "lodash";
+import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
 
 @Component({
   selector: "table-donnees",
   styleUrls: ["./table-donnees.component.scss"],
-  templateUrl: "./table-donnees.tpl.html",
+  templateUrl: "./table-donnees.component.html",
   animations: [
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0" })),
@@ -80,7 +80,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
       "milieux"
     ]);
 
-    const otherDataFilter = _.some(otherData, dataField => {
+    const otherDataFilter = _.some(otherData, (dataField) => {
       if (_.isNumber(data[dataField])) {
         return "" + data[dataField] === filterValue;
       }
@@ -94,7 +94,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
       return true;
     }
 
-    const comportementsFilter = _.some(data.comportements, comportement => {
+    const comportementsFilter = _.some(data.comportements, (comportement) => {
       return (
         _.toNumber(comportement.code) === _.toNumber(filterValue) ||
         comportement.libelle
@@ -107,7 +107,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
       return true;
     }
 
-    const milieuxFilter = _.some(data.milieux, milieu => {
+    const milieuxFilter = _.some(data.milieux, (milieu) => {
       return (
         _.toNumber(milieu.code) === _.toNumber(filterValue) ||
         milieu.libelle

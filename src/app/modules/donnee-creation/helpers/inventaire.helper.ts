@@ -1,8 +1,9 @@
 import { FormGroup } from "@angular/forms";
-import { Coordinates } from "ouca-common/coordinates.object";
-import { Inventaire } from "ouca-common/inventaire.object";
 import { isSameDay } from "date-fns";
 import * as _ from "lodash";
+import { Coordinates } from "ouca-common/coordinates.object";
+import { Inventaire } from "ouca-common/inventaire.object";
+import { getOriginCoordinates } from "../../shared/helpers/coordinates.helper";
 import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";
 
 export class InventaireHelper {
@@ -44,7 +45,7 @@ export class InventaireHelper {
     secondCoordinates: Coordinates | undefined
   ): boolean {
     if (
-      _.every([firstCoordinates, secondCoordinates], coordinates => {
+      _.every([firstCoordinates, secondCoordinates], (coordinates) => {
         return this.isNullOrEmptyCoordinates(coordinates);
       })
     ) {
@@ -52,7 +53,7 @@ export class InventaireHelper {
     }
 
     if (
-      _.some([firstCoordinates, secondCoordinates], coordinates => {
+      _.some([firstCoordinates, secondCoordinates], (coordinates) => {
         return this.isNullOrEmptyCoordinates(coordinates);
       })
     ) {
@@ -89,8 +90,8 @@ export class InventaireHelper {
         inventaireFromForm.customizedAltitude
       ) ||
       this.areDifferentCoordinates(
-        inventaireFromDB.customizedCoordinatesL2E,
-        inventaireFromForm.customizedCoordinatesL2E
+        getOriginCoordinates(inventaireFromDB),
+        getOriginCoordinates(inventaireFromForm)
       ) ||
       inventaireFromDB.temperature !== inventaireFromForm.temperature ||
       !_.isEqual(

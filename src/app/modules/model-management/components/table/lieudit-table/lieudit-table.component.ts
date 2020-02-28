@@ -1,7 +1,9 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { Lieudit } from "ouca-common/lieudit.object";
 import * as _ from "lodash";
+import { Coordinates } from "ouca-common/coordinates.object";
+import { Lieudit } from "ouca-common/lieudit.object";
+import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface LieuditRow {
@@ -11,15 +13,15 @@ interface LieuditRow {
   nomCommune: string;
   nom: string;
   altitude: number;
-  longitudeL2E: number;
-  latitudeL2E: number;
+  longitude: number;
+  latitude: number;
   nbDonnees: number;
 }
 
 @Component({
   selector: "lieudit-table",
   styleUrls: ["./lieudit-table.component.scss"],
-  templateUrl: "./lieudit-table.tpl.html"
+  templateUrl: "./lieudit-table.component.html"
 })
 export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
   implements OnChanges {
@@ -29,8 +31,8 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "nomCommune",
     "nom",
     "altitude",
-    "longitudeL2E",
-    "latitudeL2E",
+    "longitude",
+    "latitude",
     "nbDonnees"
   ];
 
@@ -47,6 +49,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
   }
 
   private buildRowFromLieudit(lieudit: Lieudit): LieuditRow {
+    const coordinates: Coordinates = getOriginCoordinates(lieudit);
     return {
       id: lieudit.id,
       departement: lieudit.commune.departement.code,
@@ -54,8 +57,8 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       nomCommune: lieudit.commune.nom,
       nom: lieudit.nom,
       altitude: lieudit.altitude,
-      longitudeL2E: lieudit.coordinatesL2E.longitude,
-      latitudeL2E: lieudit.coordinatesL2E.latitude,
+      longitude: coordinates.longitude,
+      latitude: coordinates.latitude,
       nbDonnees: lieudit.nbDonnees
     };
   }
@@ -65,7 +68,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       this.selectedObject = undefined;
     } else {
       this.selectedObject = this.objects.filter(
-        lieudit => lieudit.id === id
+        (lieudit) => lieudit.id === id
       )[0];
     }
   }

@@ -10,8 +10,8 @@ import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
+import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
-import * as _ from "lodash";
 
 @Component({
   selector: "input-lieudit",
@@ -98,14 +98,14 @@ export class InputLieuditComponent implements OnInit {
       (selection: string | number[] | Departement, communes) => {
         if (communes && selection) {
           if (this.isMultipleSelectMode) {
-            return communes.filter(commune => {
+            return communes.filter((commune) => {
               return (
                 (selection as number[]).includes(commune.departementId) ||
                 (selection as number[]).includes(commune.departement.id)
               );
             });
           } else {
-            return communes.filter(commune => {
+            return communes.filter((commune) => {
               return (
                 commune.departementId === (selection as Departement).id ||
                 (commune.departement &&
@@ -125,14 +125,14 @@ export class InputLieuditComponent implements OnInit {
       (selection: string | number[] | Commune, lieuxdits) => {
         if (lieuxdits && selection) {
           if (this.isMultipleSelectMode) {
-            return lieuxdits.filter(lieudit => {
+            return lieuxdits.filter((lieudit) => {
               return (
                 (selection as number[]).includes(lieudit.communeId) ||
                 (selection as number[]).includes(lieudit.commune.id)
               );
             });
           } else {
-            return lieuxdits.filter(lieudit => {
+            return lieuxdits.filter((lieudit) => {
               return (
                 lieudit.communeId === (selection as Commune).id ||
                 (lieudit.commune &&
@@ -169,17 +169,12 @@ export class InputLieuditComponent implements OnInit {
    * When selecting a lieu-dit, update coordinates
    */
   public updateCoordinates(lieudit: Lieudit): void {
-    if (
-      !!lieudit &&
-      !!lieudit.coordinatesL2E &&
-      !_.isNil(lieudit.altitude) &&
-      !_.isNil(lieudit.coordinatesL2E.longitude) &&
-      !_.isNil(lieudit.coordinatesL2E.latitude)
-    ) {
+    if (lieudit) {
+      const coordinates = getOriginCoordinates(lieudit);
       this.setSelectedCoordinates(
         lieudit.altitude,
-        lieudit.coordinatesL2E.longitude,
-        lieudit.coordinatesL2E.latitude
+        coordinates.longitude,
+        coordinates.latitude
       );
     } else {
       this.setSelectedCoordinates(null, null, null);

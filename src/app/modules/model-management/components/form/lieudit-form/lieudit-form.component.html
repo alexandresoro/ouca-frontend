@@ -108,26 +108,25 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="matcher"
-    [formControl]="coordinatesL2EFormGroup.controls['longitude']"
+    [formControl]="coordinatesFormGroup.controls['longitude']"
     id="input-longitude"
     matInput
     min="0"
     max="16777215"
     name="longitude"
-    placeholder="Longitude (Lambert II étendu)"
+    placeholder="Longitude"
     type="number"
   />
 
   <mat-error
-    *ngIf="coordinatesL2EFormGroup.controls['longitude'].hasError('required')"
+    *ngIf="coordinatesFormGroup.controls['longitude'].hasError('required')"
   >
-    Le champ "Longitude (Lambert II étendu)" ne peut pas être vide.
+    Le champ "Longitude" ne peut pas être vide.
   </mat-error>
   <mat-error
-    *ngIf="coordinatesL2EFormGroup.controls['longitude'].hasError('forbiddenValue')"
+    *ngIf="coordinatesFormGroup.controls['longitude'].hasError('forbiddenValue')"
   >
-    La longitude (Lambert II étendu) doit être un entier compris entre 0 et
-    16777215.
+    La longitude doit être un entier compris entre 0 et 16777215.
   </mat-error>
 </mat-form-field>
 
@@ -135,25 +134,24 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="matcher"
-    [formControl]="coordinatesL2EFormGroup.controls['latitude']"
+    [formControl]="coordinatesFormGroup.controls['latitude']"
     id="input-latitude"
     matInput
     min="0"
     max="16777215"
     name="latitude"
-    placeholder="Latitude (Lambert II étendu)"
+    placeholder="Latitude"
     type="number"
   />
 
   <mat-error
-    *ngIf="coordinatesL2EFormGroup.controls['latitude'].hasError('required')"
+    *ngIf="coordinatesFormGroup.controls['latitude'].hasError('required')"
   >
-    Le champ "Latitude (Lambert II étendu)" ne peut pas être vide.
+    Le champ "Latitude" ne peut pas être vide.
   </mat-error>
   <mat-error
-    *ngIf="coordinatesL2EFormGroup.controls['latitude'].hasError('forbiddenValue')"
+    *ngIf="coordinatesFormGroup.controls['latitude'].hasError('forbiddenValue')"
   >
-    La latitude (Lambert II étendu) doit être un entier compris entre 0 et
-    16777215.
+    La latitude doit être un entier compris entre 0 et 16777215.
   </mat-error>
 </mat-form-field>

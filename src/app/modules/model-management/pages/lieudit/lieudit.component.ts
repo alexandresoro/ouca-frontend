@@ -6,8 +6,10 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Lieudit } from "ouca-common/lieudit.object";
 import * as _ from "lodash";
+import { Coordinates } from "ouca-common/coordinates.object";
+import { Lieudit } from "ouca-common/lieudit.object";
+import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
@@ -29,7 +31,7 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
           Validators.required,
           this.altitudeNumberValidator()
         ]),
-        coordinatesL2E: new FormGroup({
+        coordinates: new FormGroup({
           longitude: new FormControl("", [
             Validators.required,
             this.longitudeNumberValidator()
@@ -104,6 +106,8 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
   }
 
   public getDetailsData(): EntityDetailsData[] {
+    const coordinates: Coordinates = getOriginCoordinates(this.currentObject);
+
     const detailsData: EntityDetailsData[] = [];
     detailsData[0] = new EntityDetailsData("ID", this.currentObject.id);
     detailsData[1] = new EntityDetailsData(
@@ -128,11 +132,11 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     );
     detailsData[6] = new EntityDetailsData(
       "Longitude (Lambert II étendu)",
-      this.currentObject.coordinatesL2E.longitude
+      coordinates.longitude
     );
     detailsData[7] = new EntityDetailsData(
       "Latitude (Lambert II étendu)",
-      this.currentObject.coordinatesL2E.latitude
+      coordinates.latitude
     );
     detailsData[8] = new EntityDetailsData(
       "Nombre de fiches espèces",

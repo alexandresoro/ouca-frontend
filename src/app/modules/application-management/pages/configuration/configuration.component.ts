@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
+import * as _ from "lodash";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { ConfigurationPage } from "ouca-common/configuration-page.object";
-import * as _ from "lodash";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
@@ -114,7 +114,7 @@ export class ConfigurationComponent implements OnInit {
   };
 
   public buildDataSource = (): void => {
-    _.forEach(this.configurationParametersToDisplay, parameter => {
+    _.forEach(this.configurationParametersToDisplay, (parameter) => {
       let value = "";
       if (this.configurationToSave) {
         switch (parameter.id) {
@@ -130,7 +130,7 @@ export class ConfigurationComponent implements OnInit {
             break;
           case ConfigurationParameterID.COORDINATES_SYSTEM:
             value = this.configurationToSave.coordinatesSystem
-              ? this.configurationToSave.coordinatesSystem.libelle
+              ? this.configurationToSave.coordinatesSystem
               : "";
             break;
           case ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE:

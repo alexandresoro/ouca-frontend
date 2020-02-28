@@ -1,4 +1,12 @@
+import * as _ from "lodash";
+import {
+  CoordinatesSystemType,
+  GPS,
+  LAMBERT_93
+} from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
+import { Inventaire } from "ouca-common/inventaire.object";
+import { Lieudit } from "ouca-common/lieudit.object";
 
 export const deg2rad = (degrees: number): number => {
   return degrees * (Math.PI / 180);
@@ -100,6 +108,7 @@ export const transformWGS84toLambert93 = (
   const y93 = ys - c * Math.exp(-1 * n * gl) * Math.cos(n * (l - constants.LC));
 
   return {
+    system: LAMBERT_93,
     longitude: Math.round(x93 * 10) / 10,
     latitude: Math.round(y93 * 10) / 10
   };
@@ -166,7 +175,30 @@ export const transformLambert93toWGS84 = (
   const latitude = (longRad / Math.PI) * 180;
 
   return {
+    system: GPS,
     longitude: Math.round(longitude * 100000) / 100000,
     latitude: Math.round(latitude * 100000) / 100000
   };
+};
+
+export const getOriginCoordinates = (
+  object: Lieudit | Inventaire
+): Coordinates => {
+  return object.coordinates[
+    _.first(_.keys(object.coordinates) as CoordinatesSystemType[])
+  ];
+};
+
+export const buildCoordinates = (
+  system: CoordinatesSystemType,
+  longitude: number,
+  latitude: number
+): Partial<Record<CoordinatesSystemType, Coordinates>> => {
+  const coordinates: Partial<Record<CoordinatesSystemType, Coordinates>> = {};
+  coordinates[system] = {
+    longitude: longitude,
+    latitude: latitude,
+    system: system
+  };
+  return coordinates;
 };

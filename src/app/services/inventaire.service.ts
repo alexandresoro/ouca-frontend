@@ -5,15 +5,21 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
+import { set } from "date-fns";
+import * as _ from "lodash";
 import { Commune } from "ouca-common/commune.object";
+import { LAMBERT_93 } from "ouca-common/coordinates-system";
+import { Coordinates } from "ouca-common/coordinates.object";
 import { Departement } from "ouca-common/departement.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { Meteo } from "ouca-common/meteo.object";
 import { Observateur } from "ouca-common/observateur.object";
-import { set } from "date-fns";
-import * as _ from "lodash";
 import { BehaviorSubject } from "rxjs";
+import {
+  buildCoordinates,
+  getOriginCoordinates
+} from "../modules/shared/helpers/coordinates.helper";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
 import {
@@ -202,27 +208,20 @@ export class InventaireService {
     lieuditFormControls.departement.setValue(departement);
     lieuditFormControls.commune.setValue(commune);
     lieuditFormControls.lieudit.setValue(lieudit);
-    if (
-      !inventaire.customizedCoordinatesL2E ||
-      (_.isNil(inventaire.customizedAltitude) &&
-        _.isNil(inventaire.customizedCoordinatesL2E.longitude) &&
-        _.isNil(inventaire.customizedCoordinatesL2E.latitude))
-    ) {
-      lieuditFormControls.altitude.setValue(lieudit ? lieudit.altitude : null);
-      lieuditFormControls.longitude.setValue(
-        lieudit ? lieudit.coordinatesL2E.longitude : null
-      );
-      lieuditFormControls.latitude.setValue(
-        lieudit ? lieudit.coordinatesL2E.latitude : null
-      );
+    const inventaireCoordinates: Coordinates = getOriginCoordinates(inventaire);
+    const lieuditCoordinates: Coordinates = getOriginCoordinates(lieudit);
+    if (_.isNil(inventaire.customizedAltitude)) {
+      // Coordinates are not updated for the inventaire
+      // We display the lieudit coordinates
+      lieuditFormControls.altitude.setValue(lieudit.altitude);
+      lieuditFormControls.longitude.setValue(lieuditCoordinates.longitude);
+      lieuditFormControls.latitude.setValue(lieuditCoordinates.latitude);
     } else {
+      // Coordinates are updated for the inventaire
+      // We display the inventaire coordinates
       lieuditFormControls.altitude.setValue(inventaire.customizedAltitude);
-      lieuditFormControls.longitude.setValue(
-        inventaire.customizedCoordinatesL2E.longitude
-      );
-      lieuditFormControls.latitude.setValue(
-        inventaire.customizedCoordinatesL2E.latitude
-      );
+      lieuditFormControls.longitude.setValue(inventaireCoordinates.longitude);
+      lieuditFormControls.latitude.setValue(inventaireCoordinates.latitude);
     }
     inventaireFormControls.temperature.setValue(inventaire.temperature);
     inventaireFormControls.meteos.setValue(meteos);
@@ -255,16 +254,30 @@ export class InventaireService {
 
     const lieudit: Lieudit = lieuditFormControls.lieudit.value;
 
-    const altitude: number = lieuditFormControls.altitude.value;
+    let altitude: number = lieuditFormControls.altitude.value;
 
-    const longitude: number = lieuditFormControls.longitude.value;
+    let longitude: number = lieuditFormControls.longitude.value;
 
-    const latitude: number = lieuditFormControls.latitude.value;
+    let latitude: number = lieuditFormControls.latitude.value;
 
     const temperature: number = inventaireFormControls.temperature.value;
 
     const meteosIds: number[] = ListHelper.getIDsFromEntities(
       inventaireFormControls.meteos.value
+    );
+
+    if (
+      !this.areCoordinatesCustomized(lieudit, altitude, longitude, latitude)
+    ) {
+      altitude = null;
+      longitude = null;
+      latitude = null;
+    }
+
+    const inventaireCoordinates = buildCoordinates(
+      LAMBERT_93,
+      longitude,
+      latitude
     );
 
     const inventaire: Inventaire = {
@@ -276,23 +289,10 @@ export class InventaireService {
       duree,
       lieuditId: lieudit ? lieudit.id : null,
       customizedAltitude: altitude,
-      customizedCoordinatesL2E: { longitude, latitude },
+      coordinates: inventaireCoordinates,
       temperature,
       meteosIds
     };
-
-    if (
-      !this.areCoordinatesCustomized(
-        lieudit,
-        inventaire.customizedAltitude,
-        inventaire.customizedCoordinatesL2E.longitude,
-        inventaire.customizedCoordinatesL2E.latitude
-      )
-    ) {
-      inventaire.customizedAltitude = null;
-      inventaire.customizedCoordinatesL2E.longitude = null;
-      inventaire.customizedCoordinatesL2E.latitude = null;
-    }
 
     console.log("Inventaire généré depuis le formulaire:", inventaire);
 
@@ -305,13 +305,19 @@ export class InventaireService {
     longitude: number,
     latitude: number
   ): boolean => {
-    return (
-      !!lieudit &&
-      !!lieudit.coordinatesL2E &&
-      (altitude !== lieudit.altitude ||
-        longitude !== lieudit.coordinatesL2E.longitude ||
-        latitude !== lieudit.coordinatesL2E.latitude)
-    );
+    if (lieudit) {
+      const lieuditCoordinates: Coordinates = getOriginCoordinates(lieudit);
+
+      if (
+        lieudit.altitude !== altitude ||
+        lieuditCoordinates.longitude !== longitude ||
+        lieuditCoordinates.latitude !== latitude
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   };
 
   /**

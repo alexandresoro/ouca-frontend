@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
-import { FormControl, Validators, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Commune } from "ouca-common/commune.object";
 import { Departement } from "ouca-common/departement.object";
 import { combineLatest, Observable, Subject } from "rxjs";
@@ -10,7 +10,7 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
 
 @Component({
   selector: "lieudit-form",
-  templateUrl: "./lieudit-form.tpl.html"
+  templateUrl: "./lieudit-form.component.html"
 })
 export class LieuditFormComponent extends EntitySubFormComponent
   implements OnInit {
@@ -26,7 +26,7 @@ export class LieuditFormComponent extends EntitySubFormComponent
 
   public nomCommuneControl: FormControl;
 
-  public coordinatesL2EFormGroup: FormGroup;
+  public coordinatesFormGroup: FormGroup;
 
   private initialSetting: boolean;
 
@@ -37,8 +37,8 @@ export class LieuditFormComponent extends EntitySubFormComponent
   ngOnInit(): void {
     this.initialSetting = true;
 
-    this.coordinatesL2EFormGroup = this.entityForm.controls
-      .coordinatesL2E as FormGroup;
+    this.coordinatesFormGroup = this.entityForm.controls
+      .coordinates as FormGroup;
 
     this.departementControl = new FormControl("", [Validators.required]);
     this.nomCommuneControl = new FormControl("", [Validators.required]);
@@ -59,7 +59,7 @@ export class LieuditFormComponent extends EntitySubFormComponent
       this.communes$,
       (selectedDepartement, communes) => {
         return communes && selectedDepartement && selectedDepartement.id
-          ? communes.filter(commune => {
+          ? communes.filter((commune) => {
               return (
                 commune.departement &&
                 commune.departement.id === selectedDepartement.id
