@@ -20,7 +20,7 @@
     "esModuleInterop": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "src/main.aot.ts"],
+  "exclude": ["node_modules"],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true

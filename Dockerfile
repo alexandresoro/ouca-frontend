@@ -1,9 +1,6 @@
 # 1. Transpile the project
 FROM node:lts-alpine as node
 
-# Add git as we need it to retrieve the model
-RUN apk add git
-
 WORKDIR /app/frontend
 
 COPY package.json yarn.lock /app/frontend/
