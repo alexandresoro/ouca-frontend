@@ -6,8 +6,8 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Commune } from "ouca-common/commune.object";
 import * as _ from "lodash";
+import { Commune } from "ouca-common/commune.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
@@ -40,7 +40,7 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
     const departement = formGroup.controls.departementId.value;
     const id = formGroup.controls.id.value;
 
-    const foundEntityByCode: Commune = _.find(this.objects, (object: any) => {
+    const foundEntityByCode = _.find(this.objects, object => {
       return object.code === code && object.departement.id === departement;
     });
 

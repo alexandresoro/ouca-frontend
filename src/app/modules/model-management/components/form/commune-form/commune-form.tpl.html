@@ -1,7 +1,6 @@
 <!-- Departement -->
 <mat-form-field>
   <mat-select
-    [errorStateMatcher]="matcher"
     [formControl]="entityForm.controls['departementId']"
     id="input-departement"
     name="departement"
@@ -22,7 +21,7 @@
 <!-- Code -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
+    [errorStateMatcher]="communeCodeErrorStateMatcher"
     [formControl]="entityForm.controls['code']"
     id="input-code"
     matInput
@@ -47,7 +46,7 @@
 <!-- Nom -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
+    [errorStateMatcher]="communeNomErrorStateMatcher"
     [formControl]="entityForm.controls['nom']"
     id="input-nom"
     matInput
