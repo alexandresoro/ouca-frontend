@@ -988,9 +988,9 @@
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
 "@types/node@*":
-  version "13.7.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.4.tgz#76c3cb3a12909510f52e5dc04a6298cdf9504ffd"
-  integrity sha512-oVeL12C6gQS/GAExndigSaLxTrKpQPxewx9bOcwfvJiJge4rr7wNaph4J+ns5hrmIV2as5qxqN8YKthn9qh0jw==
+  version "13.7.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.7.tgz#1628e6461ba8cc9b53196dfeaeec7b07fa6eea99"
+  integrity sha512-Uo4chgKbnPNlxQwoFmYIwctkQVkMMmsAoGGU4JKwLuvBefF0pCq4FybNSnfkfRCpC7ZW7kttcC/TrRtAJsvGtg==
 
 "@types/q@^1.5.1":
   version "1.5.2"
@@ -5477,9 +5477,9 @@ osenv@^0.1.5:
     os-tmpdir "^1.0.0"
 
 ouca-common@*:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/ouca-common/-/ouca-common-0.0.3.tgz#06d735d6fbb8e036df850671fda198d4a00b097a"
-  integrity sha512-4wq7fcKFdC5oBkMzZqZe3ExAUqE168yZ9JNds+5ZwYPGIen6KFuabXM4NdGSKTMW1qjZHyK4y8umUSAazM1kwQ==
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/ouca-common/-/ouca-common-0.0.4.tgz#b103831217587a4ea93b7012b2943b296cc88d82"
+  integrity sha512-HJ5e0Yc7XFKphlyrucJwXE2DKq0ImHhgIT4QHVmYB+HpqosXBUUyKUMT1PDNeIVACzg4vN6OUlj4hkp8Xuk6WA==
   dependencies:
     "@types/bson" "*"
 
