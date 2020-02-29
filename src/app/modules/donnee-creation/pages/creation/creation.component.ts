@@ -9,6 +9,11 @@ import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Classe } from "ouca-common/classe.object";
 import { Commune } from "ouca-common/commune.object";
+import {
+  CoordinatesSystem,
+  CoordinatesSystemType,
+  COORDINATES_SYSTEMS_CONFIG
+} from "ouca-common/coordinates-system";
 import { CreationPage } from "ouca-common/creation-page.object";
 import { Departement } from "ouca-common/departement.object";
 import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
@@ -37,7 +42,7 @@ import { NavigationService } from "../../services/navigation.service";
 
 @Component({
   styleUrls: ["./creation.component.scss"],
-  templateUrl: "./creation.tpl.html",
+  templateUrl: "./creation.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreationComponent implements OnInit {
@@ -60,6 +65,8 @@ export class CreationComponent implements OnInit {
   public donneeForm: FormGroup;
 
   private requestedEspeceId: number;
+
+  private coordinatesSystem$: Observable<CoordinatesSystemType>;
 
   constructor(
     private backendApiService: BackendApiService,
@@ -88,32 +95,36 @@ export class CreationComponent implements OnInit {
     this.pageModel$ = this.creationPageService.getCreationPage$();
 
     this.communes$ = this.pageModel$.pipe(
-      map(pageModel => {
+      map((pageModel) => {
         return pageModel ? pageModel.communes : [];
       })
     );
     this.departements$ = this.pageModel$.pipe(
-      map(pageModel => {
+      map((pageModel) => {
         return pageModel ? pageModel.departements : [];
       })
     );
 
     this.lieuxdits$ = this.pageModel$.pipe(
-      map(pageModel => {
+      map((pageModel) => {
         return pageModel ? pageModel.lieudits : [];
       })
     );
 
     this.classes$ = this.pageModel$.pipe(
-      map(pageModel => {
+      map((pageModel) => {
         return pageModel ? pageModel.classes : [];
       })
     );
 
     this.especes$ = this.pageModel$.pipe(
-      map(pageModel => {
+      map((pageModel) => {
         return pageModel ? pageModel.especes : [];
       })
+    );
+
+    this.coordinatesSystem$ = this.pageModel$.pipe(
+      map((model) => model.coordinatesSystem)
     );
 
     /**
@@ -401,7 +412,7 @@ export class CreationComponent implements OnInit {
 
     this.backendApiService
       .getInventaireById(this.inventaireService.getDisplayedInventaireId())
-      .subscribe(result => {
+      .subscribe((result) => {
         if (InventaireHelper.isInventaireUpdated(result, inventaireToSave)) {
           this.displayInventaireDialog();
         } else {
@@ -439,7 +450,7 @@ export class CreationComponent implements OnInit {
       data: updateInventaireDialogData
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result === ALL_DONNEES_OPTION) {
         // We just update the existing inventaire
         this.updateInventaireAndDonnee(false);
@@ -557,7 +568,7 @@ export class CreationComponent implements OnInit {
       previousDonnee.inventaire
     );
   }
-  public onNextDonneeBtnClicked(): void {
+  public onNextDonneeBtnClicked = (): void => {
     this.navigationService
       .getNextDonnee()
       .then((donnee: DonneeWithNavigationData) => {
@@ -568,9 +579,9 @@ export class CreationComponent implements OnInit {
           donnee.nextDonneeId
         );
       });
-  }
+  };
 
-  public onDeleteDonneeBtnClicked(): void {
+  public onDeleteDonneeBtnClicked = (): void => {
     const deleteDialogData = new ConfirmationDialogData(
       "Confirmation de suppression",
       "Êtes-vous certain de vouloir supprimer cette fiche espèce ?",
@@ -582,21 +593,21 @@ export class CreationComponent implements OnInit {
       data: deleteDialogData
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.onDeleteConfirmButtonClicked();
       }
     });
-  }
+  };
 
-  public onDeleteConfirmButtonClicked(): void {
+  public onDeleteConfirmButtonClicked = (): void => {
     this.deleteDonnee(
       this.donneeService.getDisplayedDonneeId(),
       this.inventaireService.getDisplayedInventaireId()
     );
-  }
+  };
 
-  public deleteDonnee(donneeId: number, inventaireId: number): void {
+  public deleteDonnee = (donneeId: number, inventaireId: number): void => {
     this.backendApiService
       .deleteDonnee(donneeId, inventaireId)
       .subscribe((response: PostResponse) => {
@@ -606,16 +617,16 @@ export class CreationComponent implements OnInit {
           this.onDeleteDonneeError(response.message);
         }
       });
-  }
+  };
 
-  private onDeleteDonneeError(errorMessage: string): void {
+  private onDeleteDonneeError = (errorMessage: string): void => {
     this.statusMessageService.showErrorMessage(
       "Une erreur est survenue pendant la suppression de la fiche espèce.",
       errorMessage
     );
-  }
+  };
 
-  private onDeleteDonneeSuccess(): void {
+  private onDeleteDonneeSuccess = (): void => {
     this.statusMessageService.showSuccessMessage(
       "La fiche espèce a été supprimée avec succès."
     );
@@ -641,7 +652,7 @@ export class CreationComponent implements OnInit {
             });
         }
       });
-  }
+  };
 
   private displayNextDonnee = (nextDonnee: Donnee): void => {
     this.creationModeService.updateCreationMode(
@@ -671,20 +682,20 @@ export class CreationComponent implements OnInit {
    * we switch to inventaire mode and reset the current inventaire ID to null
    * but we do not reset the form fields
    */
-  public onNewInventaireBtnClicked(): void {
+  public onNewInventaireBtnClicked = (): void => {
     this.inventaireService.setDisplayedInventaireId(null);
     this.switchToInventaireMode();
-  }
+  };
 
-  public onEditInventaireBtnClicked(): void {
+  public onEditInventaireBtnClicked = (): void => {
     this.switchToInventaireMode();
-  }
+  };
 
-  public onNewDonneeBtnClicked(): void {
+  public onNewDonneeBtnClicked = (): void => {
     this.switchToNewInventaireMode();
-  }
+  };
 
-  public onSearchByIdBtnClicked(): void {
+  public onSearchByIdBtnClicked = (): void => {
     const dialogRef = this.dialog.open(SearchByIdDialogComponent, {
       width: "450px"
     });
@@ -698,9 +709,9 @@ export class CreationComponent implements OnInit {
         this.displayDonneeById(idToFind);
       }
     });
-  }
+  };
 
-  private switchToInventaireMode(): void {
+  private switchToInventaireMode = (): void => {
     this.creationModeService.updateCreationMode(
       CreationModeEnum.NEW_INVENTAIRE
     );
@@ -709,27 +720,33 @@ export class CreationComponent implements OnInit {
     if (document.getElementById("input-Observateur")) {
       document.getElementById("input-Observateur").focus();
     }
-  }
+  };
 
-  private switchToEditionDonneeMode(): void {
+  private switchToEditionDonneeMode = (): void => {
     this.creationModeService.updateCreationMode(CreationModeEnum.NEW_DONNEE);
     InventaireHelper.updateFormState(this.inventaireForm, false);
     DonneeHelper.updateFormState(this.donneeForm, true);
     document.getElementById("input-Espèce").focus();
-  }
+  };
 
-  private switchToUpdateMode(): void {
+  private switchToUpdateMode = (): void => {
     this.creationModeService.updateCreationMode(CreationModeEnum.UPDATE);
     InventaireHelper.updateFormState(this.inventaireForm, true);
     DonneeHelper.updateFormState(this.donneeForm, true);
     document.getElementById("input-Observateur").focus();
-  }
+  };
 
-  public getDisplayedDonneeId$(): Observable<number> {
+  public getDisplayedDonneeId$ = (): Observable<number> => {
     return this.donneeService.getDisplayedDonneeId$();
-  }
+  };
 
-  public getCurrentDonneeIndex$(): Observable<number> {
+  public getCurrentDonneeIndex$ = (): Observable<number> => {
     return this.navigationService.getCurrentDonneeIndex$();
-  }
+  };
+
+  public getCoordinatesSystem$ = (): Observable<CoordinatesSystem> => {
+    return this.coordinatesSystem$.pipe(
+      map((system) => COORDINATES_SYSTEMS_CONFIG[system])
+    );
+  };
 }

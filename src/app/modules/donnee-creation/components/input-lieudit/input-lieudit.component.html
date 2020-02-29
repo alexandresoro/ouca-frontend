@@ -85,8 +85,8 @@
       <input
         [formControl]="controlGroup.controls['longitude']"
         matInput
-        min="0"
-        max="16777215"
+        [min]="coordinatesSystem?.longitudeRange.min"
+        [max]="coordinatesSystem?.longitudeRange.max"
         type="number"
         placeholder="Longitude"
         id="input-longitude"
@@ -99,8 +99,8 @@
       <input
         [formControl]="controlGroup.controls['latitude']"
         matInput
-        min="0"
-        max="16777215"
+        [min]="coordinatesSystem?.latitudeRange.min"
+        [max]="coordinatesSystem?.latitudeRange.max"
         type="number"
         placeholder="Latitude"
         id="input-latitude"

@@ -6,6 +6,7 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Commune } from "ouca-common/commune.object";
+import { CoordinatesSystem } from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
@@ -15,7 +16,7 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
 
 @Component({
   selector: "input-lieudit",
-  templateUrl: "./input-lieudit.tpl.html",
+  templateUrl: "./input-lieudit.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputLieuditComponent implements OnInit {
@@ -27,9 +28,11 @@ export class InputLieuditComponent implements OnInit {
 
   @Input() public controlGroup: FormGroup;
 
-  @Input() public hideCoordinates: boolean = false;
+  @Input() public hideCoordinates?: boolean = false;
 
   @Input() public isMultipleSelectMode?: boolean;
+
+  @Input() public coordinatesSystem?: CoordinatesSystem;
 
   public filteredLieuxdits$: Observable<Lieudit[]>;
 
