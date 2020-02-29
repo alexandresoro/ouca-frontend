@@ -3,7 +3,7 @@ FROM node:lts-alpine as node
 
 WORKDIR /app/frontend
 
-COPY package.json yarn.lock /app/frontend/
+COPY package.json yarn.lock .yarnrc /app/frontend/
 
 # Set up the dependencies of the project
 RUN yarn install --frozen-lockfile
