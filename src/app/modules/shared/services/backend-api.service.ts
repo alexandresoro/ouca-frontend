@@ -3,16 +3,17 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { ConfigurationPage } from "ouca-common/configuration-page.object";
+import { CoordinatesSystemType } from "ouca-common/coordinates-system";
 import { CreationPage } from "ouca-common/creation-page.object";
+import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
 import { Donnee } from "ouca-common/donnee.object";
+import { DonneesFilter } from "ouca-common/donnees-filter.object";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
+import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { Lieudit } from "ouca-common/lieudit.object";
-import { FlatDonnee } from "ouca-common/flat-donnee.object";
-import { Observable } from "rxjs";
 import { PostResponse } from "ouca-common/post-response.object";
-import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
-import { DonneesFilter } from "ouca-common/donnees-filter.object";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root"
@@ -31,6 +32,7 @@ export class BackendApiService {
 
   private IMPORT: string = "import";
   private INIT: string = "init";
+  private COORDINATES_SYSTEM: string = "coordinates_system";
   private INVENTAIRE: string = "inventaire/";
   private LIEUDIT: string = "lieudit/";
   private NEXT_DONNEE: string = "next_donnee";
@@ -109,6 +111,10 @@ export class BackendApiService {
       appConfigurationToSave
     );
   };
+
+  public getAppCoordinatesSystem$(): Observable<CoordinatesSystemType> {
+    return this.httpGet(this.CONFIGURATION + this.COORDINATES_SYSTEM);
+  }
 
   public importData(
     entityName: string,
