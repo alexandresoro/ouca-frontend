@@ -95,6 +95,13 @@
       </th>
       <td mat-cell *matCellDef="let row" [style.color]="row.color">
         {{ row.coordinatesSystem }}
+        <mat-icon
+          *ngIf="row.isTransformed"
+          matTooltip="Ces coordonnées sont converties depuis un autre système de coordonnées."
+          matTooltipClass="default-tooltip"
+          class="is-transformed-icon"
+          >info</mat-icon
+        >
       </td>
     </ng-container>
 

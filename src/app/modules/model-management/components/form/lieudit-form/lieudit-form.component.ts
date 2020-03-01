@@ -4,13 +4,13 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Commune } from "ouca-common/commune.object";
 import {
   CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG
+  COORDINATES_SYSTEMS_CONFIG,
+  getOriginCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable, Subject } from "rxjs";
-import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
 import { ListHelper } from "../../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";

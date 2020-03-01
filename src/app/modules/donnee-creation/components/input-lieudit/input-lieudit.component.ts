@@ -6,12 +6,14 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Commune } from "ouca-common/commune.object";
-import { CoordinatesSystem } from "ouca-common/coordinates-system";
+import {
+  CoordinatesSystem,
+  getOriginCoordinates
+} from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
-import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

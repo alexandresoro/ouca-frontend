@@ -1,10 +1,13 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
-import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
+import {
+  COORDINATES_SYSTEMS_CONFIG,
+  getCoordinates
+} from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.object";
-import { getOriginCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
+import { CoordinatesService } from "../../../../../services/coordinates.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface LieuditRow {
@@ -17,6 +20,7 @@ interface LieuditRow {
   longitude: number;
   latitude: number;
   coordinatesSystem: string;
+  isTransformed: boolean;
   nbDonnees: number;
 }
 
@@ -39,6 +43,11 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "nbDonnees"
   ];
 
+  constructor(private coordinatesService: CoordinatesService) {
+    super();
+    this.coordinatesService.initAppCoordinatesSystem();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.objects && !!changes.objects.currentValue) {
       const rows: LieuditRow[] = [];
@@ -52,7 +61,11 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
   }
 
   private buildRowFromLieudit(lieudit: Lieudit): LieuditRow {
-    const coordinates: Coordinates = getOriginCoordinates(lieudit);
+    const coordinates: Coordinates = getCoordinates(
+      lieudit,
+      this.coordinatesService.getAppCoordinatesSystem()
+    );
+
     return {
       id: lieudit.id,
       departement: lieudit.commune.departement.code,
@@ -63,6 +76,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       longitude: coordinates.longitude,
       latitude: coordinates.latitude,
       coordinatesSystem: COORDINATES_SYSTEMS_CONFIG[coordinates.system].name,
+      isTransformed: coordinates.isTransformed,
       nbDonnees: lieudit.nbDonnees
     };
   }

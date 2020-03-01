@@ -8,7 +8,10 @@ import {
 import { set } from "date-fns";
 import * as _ from "lodash";
 import { Commune } from "ouca-common/commune.object";
-import { LAMBERT_93 } from "ouca-common/coordinates-system";
+import {
+  getOriginCoordinates,
+  LAMBERT_93
+} from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Departement } from "ouca-common/departement.object";
 import { Inventaire } from "ouca-common/inventaire.object";
@@ -16,10 +19,7 @@ import { Lieudit } from "ouca-common/lieudit.object";
 import { Meteo } from "ouca-common/meteo.object";
 import { Observateur } from "ouca-common/observateur.object";
 import { BehaviorSubject } from "rxjs";
-import {
-  buildCoordinates,
-  getOriginCoordinates
-} from "../modules/shared/helpers/coordinates.helper";
+import { buildCoordinates } from "../modules/shared/helpers/coordinates.helper";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
 import {

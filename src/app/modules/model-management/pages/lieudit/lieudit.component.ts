@@ -9,14 +9,12 @@ import {
 import * as _ from "lodash";
 import {
   COORDINATES_SYSTEMS_CONFIG,
+  getOriginCoordinates,
   LAMBERT_93
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.object";
-import {
-  buildCoordinates,
-  getOriginCoordinates
-} from "src/app/modules/shared/helpers/coordinates.helper";
+import { buildCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
