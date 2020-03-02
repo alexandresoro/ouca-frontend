@@ -268,7 +268,7 @@
                 </span>
 
                 <span *ngIf="element.temperature">
-                  <strong>Température:</strong> {{ element.temperature }}
+                  <strong>Température:</strong> {{ element.temperature }} degrès
                   <br />
                 </span>
 
@@ -293,6 +293,7 @@
                     ? element.customizedAltitude
                     : element.altitude
                 }}
+                mètres
                 <br />
                 <strong>Longitude:</strong>
                 {{
@@ -301,6 +302,7 @@
                     ? element.customizedLongitude
                     : element.longitude
                 }}
+                {{ getCoordinatesUnitName(element) }}
                 <br />
                 <strong>Latitude:</strong>
                 {{
@@ -309,13 +311,10 @@
                     ? element.customizedLatitude
                     : element.latitude
                 }}
+                {{ getCoordinatesUnitName(element) }}
                 <br />
                 <strong>Système de coordonnées:</strong>
-                {{
-                  element.customizedCoordinatesSystem
-                    ? getCoordinatesSystem(element.customizedCoordinatesSystem)
-                    : getCoordinatesSystem(element.coordinatesSystem)
-                }}
+                {{ getCoordinatesSystem(element) }}
               </div>
               <div>
                 <strong>Classe:</strong> {{ element.classe }}
@@ -347,7 +346,7 @@
                     {{ element.estimationDistance }} -</span
                   >
                   <span *ngIf="element.distance">
-                    {{ element.distance }} m</span
+                    {{ element.distance }} mètres</span
                   >
                   <br />
                 </span>

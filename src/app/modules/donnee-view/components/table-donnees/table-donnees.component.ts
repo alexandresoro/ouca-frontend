@@ -19,10 +19,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { format } from "date-fns";
 import * as _ from "lodash";
-import {
-  CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG
-} from "ouca-common/coordinates-system";
+import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
 
@@ -61,7 +58,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     "observateur"
   ];
 
-  @Input() public donneesToDisplay: any[];
+  @Input() public donneesToDisplay: FlatDonnee[];
 
   public dataSource: MatTableDataSource<FlatDonnee> = new MatTableDataSource();
 
@@ -73,7 +70,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
 
   public filteringOnGoing: boolean = false;
 
-  public selectedDonnee: any;
+  public selectedDonnee: FlatDonnee;
 
   constructor(private router: Router) {}
 
@@ -172,7 +169,17 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     this.router.navigate(["/creation"], { state: { id: id } });
   };
 
-  public getCoordinatesSystem = (systemType: CoordinatesSystemType): string => {
+  public getCoordinatesSystem = (flatDonnee: FlatDonnee): string => {
+    const systemType = flatDonnee.customizedCoordinatesSystem
+      ? flatDonnee.customizedCoordinatesSystem
+      : flatDonnee.coordinatesSystem;
     return COORDINATES_SYSTEMS_CONFIG[systemType].name;
+  };
+
+  public getCoordinatesUnitName = (flatDonnee: FlatDonnee): string => {
+    const systemType = flatDonnee.customizedCoordinatesSystem
+      ? flatDonnee.customizedCoordinatesSystem
+      : flatDonnee.coordinatesSystem;
+    return COORDINATES_SYSTEMS_CONFIG[systemType].unitName;
   };
 }
