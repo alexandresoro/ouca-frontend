@@ -18,7 +18,7 @@
 <!-- Code espece -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
+    [errorStateMatcher]="especeCodeErrorStateMatcher"
     [formControl]="entityForm.controls['code']"
     id="input-code"
     matInput
@@ -39,7 +39,7 @@
 <!-- Nom francais -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
+    [errorStateMatcher]="especeNomFrancaisErrorStateMatcher"
     [formControl]="entityForm.controls['nomFrancais']"
     id="input-nom-francais"
     matInput
@@ -60,7 +60,7 @@
 <!-- Nom latin -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
+    [errorStateMatcher]="especeNomLatinErrorStateMatcher"
     [formControl]="entityForm.controls['nomLatin']"
     id="input-nom-latin"
     matInput

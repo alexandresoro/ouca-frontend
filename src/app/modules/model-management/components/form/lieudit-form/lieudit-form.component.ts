@@ -11,6 +11,7 @@ import { Coordinates } from "ouca-common/coordinates.object";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable, Subject } from "rxjs";
+import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { ListHelper } from "../../../../shared/helpers/list-helper";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
@@ -38,6 +39,10 @@ export class LieuditFormComponent extends EntitySubFormComponent<Lieudit>
   private initialSetting: boolean;
 
   private coordinatesSystem: CoordinatesSystemType;
+
+  public lieuditNomErrorStateMatcher = new CrossFieldErrorMatcher(
+    "alreadyExistingNom"
+  );
 
   constructor(private backendApiService: BackendApiService) {
     super();

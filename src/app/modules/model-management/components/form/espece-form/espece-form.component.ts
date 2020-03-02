@@ -2,6 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { Classe } from "ouca-common/classe.object";
 import { Espece } from "ouca-common/espece.object";
+import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { BackendApiService } from "../../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
@@ -11,6 +12,18 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
 })
 export class EspeceFormComponent extends EntitySubFormComponent<Espece> {
   public classes: Classe[];
+
+  public especeCodeErrorStateMatcher = new CrossFieldErrorMatcher(
+    "alreadyExistingCode"
+  );
+
+  public especeNomFrancaisErrorStateMatcher = new CrossFieldErrorMatcher(
+    "alreadyExistingNomFrancais"
+  );
+
+  public especeNomLatinErrorStateMatcher = new CrossFieldErrorMatcher(
+    "alreadyExistingNomLatin"
+  );
 
   constructor(private backendApiService: BackendApiService) {
     super();

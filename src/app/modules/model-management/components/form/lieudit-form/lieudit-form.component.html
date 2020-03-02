@@ -1,7 +1,6 @@
 <!-- Departement -->
 <mat-form-field>
   <mat-select
-    [errorStateMatcher]="matcher"
     [formControl]="departementControl"
     id="input-departement"
     name="departement"
@@ -22,7 +21,6 @@
 <!-- Code Commune -->
 <mat-form-field>
   <mat-select
-    [errorStateMatcher]="matcher"
     [formControl]="entityForm.controls['communeId']"
     id="input-code-commune"
     name="code-commune"
@@ -43,7 +41,6 @@
 <!-- Nom Commune -->
 <mat-form-field>
   <mat-select
-    [errorStateMatcher]="matcher"
     [formControl]="nomCommuneControl"
     id="input-nom-commune"
     name="nom-commune"
@@ -64,7 +61,7 @@
 <!-- Nom lieudit -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
+    [errorStateMatcher]="lieuditNomErrorStateMatcher"
     [formControl]="entityForm.controls['nom']"
     id="input-nom"
     matInput
@@ -85,7 +82,6 @@
 <!-- Altitude -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
     [formControl]="entityForm.controls['altitude']"
     id="input-altitude"
     matInput
@@ -107,7 +103,6 @@
 <!-- Longitude -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
     [formControl]="entityForm.controls['longitude']"
     id="input-longitude"
     matInput
@@ -132,7 +127,6 @@
 <!-- Latitude -->
 <mat-form-field>
   <input
-    [errorStateMatcher]="matcher"
     [formControl]="entityForm.controls['latitude']"
     id="input-latitude"
     matInput
