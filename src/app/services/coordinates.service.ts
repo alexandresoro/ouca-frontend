@@ -1,5 +1,10 @@
 import { Injectable } from "@angular/core";
-import { CoordinatesSystemType } from "ouca-common/coordinates-system";
+import { AbstractControl, Validators } from "@angular/forms";
+import {
+  CoordinatesSystem,
+  CoordinatesSystemType,
+  COORDINATES_SYSTEMS_CONFIG
+} from "ouca-common/coordinates-system";
 import { BehaviorSubject, Observable } from "rxjs";
 import { BackendApiService } from "../modules/shared/services/backend-api.service";
 
@@ -25,5 +30,28 @@ export class CoordinatesService {
     this.backendApiService.getAppCoordinatesSystem$().subscribe((system) => {
       this.appCoordinatesSystem$.next(system);
     });
+  };
+
+  public updateCoordinatesValidators = (
+    coordinatesSystemType: CoordinatesSystemType,
+    longitudeControl: AbstractControl,
+    latitudeControl: AbstractControl
+  ): void => {
+    const coordinatesSystem: CoordinatesSystem =
+      COORDINATES_SYSTEMS_CONFIG[coordinatesSystemType];
+
+    longitudeControl.setValidators([
+      Validators.required,
+      Validators.min(coordinatesSystem?.longitudeRange.min),
+      Validators.max(coordinatesSystem?.longitudeRange.max)
+    ]);
+    latitudeControl.setValidators([
+      Validators.required,
+      Validators.min(coordinatesSystem?.latitudeRange.min),
+      Validators.max(coordinatesSystem?.latitudeRange.max)
+    ]);
+
+    longitudeControl.updateValueAndValidity();
+    latitudeControl.updateValueAndValidity();
   };
 }

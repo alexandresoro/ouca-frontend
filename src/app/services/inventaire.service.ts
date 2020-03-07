@@ -55,7 +55,7 @@ export class InventaireService {
   public createInventaireForm = (): FormGroup => {
     this.displayedInventaireId$.next(null);
 
-    return new FormGroup({
+    const form = new FormGroup({
       observateur: new FormControl("", [
         Validators.required,
         this.observateurValidator()
@@ -81,18 +81,24 @@ export class InventaireService {
           Validators.required,
           this.altitudeValidator()
         ]),
-        longitude: new FormControl("", [
-          Validators.required,
-          this.longitudeValidator()
-        ]),
-        latitude: new FormControl("", [
-          Validators.required,
-          this.latitudeValidator()
-        ])
+        longitude: new FormControl(),
+        latitude: new FormControl()
       }),
       temperature: new FormControl("", [this.temperatureValidator()]),
       meteos: new FormControl("", [this.meteosValidator()])
     });
+
+    this.coordinatesService
+      .getAppCoordinatesSystem$()
+      .subscribe((coordinatesSystemType) => {
+        this.coordinatesService.updateCoordinatesValidators(
+          coordinatesSystemType,
+          (form.controls.lieu as FormGroup).controls.longitude,
+          (form.controls.lieu as FormGroup).controls.latitude
+        );
+      });
+
+    return form;
   };
 
   /**

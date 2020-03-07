@@ -7,11 +7,6 @@ import {
   Validators
 } from "@angular/forms";
 import * as _ from "lodash";
-import {
-  CoordinatesSystem,
-  CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG
-} from "ouca-common/coordinates-system";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { buildCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
 import { BackendApiService } from "src/app/modules/shared/services/backend-api.service";
@@ -51,34 +46,7 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
       },
       [this.nomValidator]
     );
-
-    this.coordinatesService
-      .getAppCoordinatesSystem$()
-      .subscribe((coordinatesSystemType) => {
-        this.updateCoordinatesValidators(coordinatesSystemType);
-      });
   }
-
-  private updateCoordinatesValidators = (
-    coordinatesSystemType: CoordinatesSystemType
-  ): void => {
-    const coordinatesSystem: CoordinatesSystem =
-      COORDINATES_SYSTEMS_CONFIG[coordinatesSystemType];
-
-    this.form.controls.longitude.setValidators([
-      Validators.required,
-      Validators.min(coordinatesSystem?.longitudeRange.min),
-      Validators.max(coordinatesSystem?.longitudeRange.max)
-    ]);
-    this.form.controls.latitude.setValidators([
-      Validators.required,
-      Validators.min(coordinatesSystem?.latitudeRange.min),
-      Validators.max(coordinatesSystem?.latitudeRange.max)
-    ]);
-
-    this.form.controls.longitude.updateValueAndValidity();
-    this.form.controls.latitude.updateValueAndValidity();
-  };
 
   public saveObject(formValue: any): void {
     // TO DO system
