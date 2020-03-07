@@ -2,11 +2,13 @@ import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
 import {
+  CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG,
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.object";
+import { combineLatest, Subject } from "rxjs";
 import { CoordinatesService } from "../../../../../services/coordinates.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
@@ -43,26 +45,52 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "nbDonnees"
   ];
 
+  private lieuxdits$: Subject<Lieudit[]> = new Subject<Lieudit[]>();
+
   constructor(private coordinatesService: CoordinatesService) {
     super();
   }
 
+  ngOnInit(): void {
+    this.dataSource = new MatTableDataSource();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    combineLatest(
+      this.lieuxdits$,
+      this.coordinatesService.getAppCoordinatesSystem$(),
+      (lieuxdits, coordinatesSystemType) => {
+        return this.buildLieuxditsRows(lieuxdits, coordinatesSystemType);
+      }
+    ).subscribe((lieuxditsRows) => {
+      this.dataSource.data = lieuxditsRows;
+    });
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.objects && !!changes.objects.currentValue) {
-      const rows: LieuditRow[] = [];
-      _.forEach(changes.objects.currentValue, (value: Lieudit) => {
-        rows.push(this.buildRowFromLieudit(value));
-      });
-      this.dataSource = new MatTableDataSource(rows);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.lieuxdits$.next(changes.objects.currentValue);
     }
   }
 
-  private buildRowFromLieudit(lieudit: Lieudit): LieuditRow {
+  private buildLieuxditsRows = (
+    lieuxdits: Lieudit[],
+    coordinatesSystemType?: CoordinatesSystemType
+  ): LieuditRow[] => {
+    const rows: LieuditRow[] = [];
+    _.forEach(lieuxdits, (lieudit: Lieudit) => {
+      rows.push(this.buildRowFromLieudit(lieudit, coordinatesSystemType));
+    });
+    return rows;
+  };
+
+  private buildRowFromLieudit(
+    lieudit: Lieudit,
+    coordinatesSystemType: CoordinatesSystemType
+  ): LieuditRow {
     const coordinates: Coordinates = getCoordinates(
       lieudit,
-      this.coordinatesService.getAppCoordinatesSystem()
+      coordinatesSystemType
     );
 
     return {
