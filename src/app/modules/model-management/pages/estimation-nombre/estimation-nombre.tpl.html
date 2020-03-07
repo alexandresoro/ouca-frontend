@@ -42,13 +42,4 @@
     (confirm)="confirmObjectRemoval($event)"
   >
   </entity-delete-confirmation>
-
-  <entity-details
-    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
-    [detailsData]="getDetailsData()"
-    detailsTitle="Détails de l'estimation du nombre"
-    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
-    (back)="viewAll()"
-  >
-  </entity-details>
 </div>

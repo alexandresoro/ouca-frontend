@@ -9,7 +9,6 @@ import {
 import { Espece } from "ouca-common/espece.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
-import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EspeceFormComponent } from "../../components/form/espece-form/espece-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
@@ -91,28 +90,5 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
 
   public getFormType(): any {
     return EspeceFormComponent;
-  }
-
-  public getDetailsData(): EntityDetailsData[] {
-    const detailsData: EntityDetailsData[] = [];
-    detailsData[0] = new EntityDetailsData("ID", this.currentObject.id);
-    detailsData[1] = new EntityDetailsData(
-      "Classe",
-      this.currentObject.classe.libelle
-    );
-    detailsData[2] = new EntityDetailsData("Code", this.currentObject.code);
-    detailsData[3] = new EntityDetailsData(
-      "Nom français",
-      this.currentObject.nomFrancais
-    );
-    detailsData[4] = new EntityDetailsData(
-      "Nom latin",
-      this.currentObject.nomLatin
-    );
-    detailsData[5] = new EntityDetailsData(
-      "Nombre de fiches espèces",
-      this.currentObject.nbDonnees
-    );
-    return detailsData;
   }
 }

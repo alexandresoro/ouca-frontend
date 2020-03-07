@@ -40,13 +40,4 @@
     (confirm)="confirmObjectRemoval($event)"
   >
   </entity-delete-confirmation>
-
-  <entity-details
-    *ngIf="entityModeHelper.isViewOneMode() || entityModeHelper.isRemoveMode()"
-    [detailsData]="getDetailsData()"
-    detailsTitle="Détails de la météo"
-    [isBackButtonDisplayed]="entityModeHelper.isViewOneMode()"
-    (back)="viewAll()"
-  >
-  </entity-details>
 </div>

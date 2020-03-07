@@ -9,7 +9,6 @@ import {
 import { Departement } from "ouca-common/departement.object";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
-import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
@@ -65,24 +64,5 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
 
   public getFormType(): any {
     return DepartementFormComponent;
-  }
-
-  public getDetailsData(): EntityDetailsData[] {
-    const detailsData: EntityDetailsData[] = [];
-    detailsData[0] = new EntityDetailsData("ID", this.currentObject.id);
-    detailsData[1] = new EntityDetailsData("Code", this.currentObject.code);
-    detailsData[2] = new EntityDetailsData(
-      "Nombre de communes",
-      this.currentObject.nbCommunes
-    );
-    detailsData[3] = new EntityDetailsData(
-      "Nombre de lieux-dits",
-      this.currentObject.nbLieuxdits
-    );
-    detailsData[4] = new EntityDetailsData(
-      "Nombre de fiches espèces",
-      this.currentObject.nbDonnees
-    );
-    return detailsData;
   }
 }

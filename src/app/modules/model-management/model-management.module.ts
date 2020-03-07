@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "../shared/shared.module";
 import { EntityDeleteConfirmationComponent } from "./components/entity-delete-confirmation/entity-delete-confirmation.component";
-import { EntityDetailsComponent } from "./components/entity-details/entity-details.component";
 import { CommuneFormComponent } from "./components/form/commune-form/commune-form.component";
 import { DepartementFormComponent } from "./components/form/departement-form/departement-form.component";
 import { EntiteAvecLibelleEtCodeFormComponent } from "./components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
@@ -71,7 +70,6 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     EntiteAvecLibelleEtCodeFormComponent,
     EntiteAvecLibelleEtCodeTableComponent,
     EntiteSimpleComponent,
-    EntityDetailsComponent,
     EntityFormComponent,
     EntitySubFormDirective,
     EntitySubFormComponent,
@@ -112,4 +110,4 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
   exports: [],
   providers: []
 })
-export class ModelManagementModule { }
+export class ModelManagementModule {}

@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { EntiteAvecLibelleEtCode } from "ouca-common/entite-avec-libelle-et-code.object";
-import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { EntiteAvecLibelleEtCodeFormComponent } from "../../components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
@@ -25,21 +24,5 @@ export class EntiteAvecLibelleEtCodeComponent<
 
   public getFormType(): any {
     return EntiteAvecLibelleEtCodeFormComponent;
-  }
-
-  public getDetailsData(): EntityDetailsData[] {
-    const detailsData: EntityDetailsData[] = [];
-    detailsData[0] = new EntityDetailsData("ID", this.currentObject.id);
-    detailsData[1] = new EntityDetailsData("Code", this.currentObject.code);
-    detailsData[2] = new EntityDetailsData(
-      "Libellé",
-      this.currentObject.libelle
-    );
-    detailsData[3] = new EntityDetailsData(
-      "Nombre de fiches espèces",
-      this.currentObject.nbDonnees
-    );
-
-    return detailsData;
   }
 }

@@ -1,15 +1,5 @@
 <div class="table-top-buttons">
   <button
-    *ngIf="!hideViewButton"
-    mat-raised-button
-    type="submit"
-    (click)="viewObject()"
-    [disabled]="!object"
-  >
-    <mat-icon>visibility</mat-icon>
-    Visualiser
-  </button>
-  <button
     mat-raised-button
     type="submit"
     (click)="editObject()"
