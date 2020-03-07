@@ -45,7 +45,6 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
 
   constructor(private coordinatesService: CoordinatesService) {
     super();
-    this.coordinatesService.initAppCoordinatesSystem();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

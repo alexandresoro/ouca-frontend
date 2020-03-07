@@ -4,16 +4,18 @@ import {
   Input,
   OnInit
 } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { AbstractControl, FormGroup } from "@angular/forms";
 import { Commune } from "ouca-common/commune.object";
 import {
   CoordinatesSystem,
-  getOriginCoordinates
+  CoordinatesSystemType,
+  getCoordinates
 } from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
+import { CoordinatesService } from "src/app/services/coordinates.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -68,6 +70,8 @@ export class InputLieuditComponent implements OnInit {
     }
   ];
 
+  constructor(private coordinatesService: CoordinatesService) {}
+
   public ngOnInit(): void {
     const departementControl = this.isMultipleSelectMode
       ? this.controlGroup.get("departements")
@@ -75,29 +79,37 @@ export class InputLieuditComponent implements OnInit {
     const communeControl = this.isMultipleSelectMode
       ? this.controlGroup.get("communes")
       : this.controlGroup.get("commune");
-    const lieuDitControl = this.isMultipleSelectMode
+    const lieuditControl = this.isMultipleSelectMode
       ? this.controlGroup.get("lieuxdits")
       : this.controlGroup.get("lieudit");
 
     departementControl.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(() => {
-        this.resetCommunes();
+        communeControl.setValue(null);
       });
 
     communeControl.valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
-      this.resetLieuxDits();
+      lieuditControl.setValue(null);
     });
 
-    lieuDitControl.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe((selectedLieuDit: Lieudit) => {
-        if (!this.hideCoordinates) {
-          this.updateCoordinates(selectedLieuDit);
-        }
-      });
+    this.filteredCommunes$ = this.getCommunesToDisplay$(departementControl);
 
-    this.filteredCommunes$ = combineLatest(
+    this.filteredLieuxdits$ = this.getLieuxditsToDisplay$(communeControl);
+
+    this.getCoordinatesToDisplay$(lieuditControl).subscribe((coordinates) => {
+      this.displayCoordinates(
+        coordinates.altitude,
+        coordinates.longitude,
+        coordinates.latitude
+      );
+    });
+  }
+
+  private getCommunesToDisplay$ = (
+    departementControl: AbstractControl
+  ): Observable<Commune[]> => {
+    return combineLatest(
       departementControl.valueChanges,
       this.communes,
       (selection: string | number[] | Departement, communes) => {
@@ -123,8 +135,12 @@ export class InputLieuditComponent implements OnInit {
         }
       }
     );
+  };
 
-    this.filteredLieuxdits$ = combineLatest(
+  private getLieuxditsToDisplay$ = (
+    communeControl: AbstractControl
+  ): Observable<Lieudit[]> => {
+    return combineLatest(
       communeControl.valueChanges,
       this.lieuxdits,
       (selection: string | number[] | Commune, lieuxdits) => {
@@ -150,51 +166,49 @@ export class InputLieuditComponent implements OnInit {
         }
       }
     );
-  }
+  };
 
-  /**
-   * When selecting a departement, filter the list of communes
-   */
-  public resetCommunes(): void {
-    this.isMultipleSelectMode
-      ? this.controlGroup.controls.communes.setValue(null)
-      : this.controlGroup.controls.commune.setValue(null);
-  }
+  private getCoordinatesToDisplay$ = (
+    lieuditControl: AbstractControl
+  ): Observable<{ altitude: number; longitude: number; latitude: number }> => {
+    return combineLatest(
+      lieuditControl.valueChanges.pipe(distinctUntilChanged()),
+      this.coordinatesService.getAppCoordinatesSystem$(),
+      (
+        selectedLieudit: Lieudit,
+        coordinatesSystemType: CoordinatesSystemType
+      ) => {
+        if (selectedLieudit?.id && coordinatesSystemType) {
+          const coordinates = getCoordinates(
+            selectedLieudit,
+            coordinatesSystemType
+          );
+          return {
+            altitude: selectedLieudit.altitude,
+            longitude: coordinates.longitude,
+            latitude: coordinates.latitude
+          };
+        }
+        return {
+          altitude: null,
+          longitude: null,
+          latitude: null
+        };
+      }
+    );
+  };
 
-  /**
-   * When selecting a commune, filter the list of lieux-dits and reset coordinates
-   */
-  public resetLieuxDits(): void {
-    this.isMultipleSelectMode
-      ? this.controlGroup.controls.lieuxdits.setValue(null)
-      : this.controlGroup.controls.lieudit.setValue(null);
-  }
-
-  /**
-   * When selecting a lieu-dit, update coordinates
-   */
-  public updateCoordinates(lieudit: Lieudit): void {
-    if (lieudit && lieudit.id) {
-      const coordinates = getOriginCoordinates(lieudit);
-      this.setSelectedCoordinates(
-        lieudit.altitude,
-        coordinates.longitude,
-        coordinates.latitude
-      );
-    } else {
-      this.setSelectedCoordinates(null, null, null);
-    }
-  }
-
-  private setSelectedCoordinates(
+  private displayCoordinates = (
     altitude: number,
     longitude: number,
     latitude: number
-  ): void {
-    this.controlGroup.controls.altitude.setValue(altitude);
-    this.controlGroup.controls.longitude.setValue(longitude);
-    this.controlGroup.controls.latitude.setValue(latitude);
-  }
+  ): void => {
+    if (!this.hideCoordinates) {
+      this.controlGroup.controls.altitude.setValue(altitude);
+      this.controlGroup.controls.longitude.setValue(longitude);
+      this.controlGroup.controls.latitude.setValue(latitude);
+    }
+  };
 
   public displayCommuneFormat = (commune: Commune): string => {
     return commune ? commune.code + " - " + commune.nom : "";

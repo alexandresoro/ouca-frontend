@@ -106,10 +106,10 @@
     [formControl]="entityForm.controls['longitude']"
     id="input-longitude"
     matInput
-    min="{{ getMinimumLongitude() }}"
-    max="{{ getMaximumLongitude() }}"
+    min="{{ (coordinatesSystem$ | async)?.longitudeRange.min }}"
+    max="{{ (coordinatesSystem$ | async)?.longitudeRange.max }}"
     name="longitude"
-    placeholder="Longitude en {{ getUnitName() }}"
+    placeholder="Longitude en {{ (coordinatesSystem$ | async)?.unitName }}"
     type="number"
   />
 
@@ -117,10 +117,14 @@
     Le champ "Longitude" ne peut pas être vide.
   </mat-error>
   <mat-error
-    *ngIf="entityForm.controls['longitude'].hasError('forbiddenValue')"
+    *ngIf="
+      entityForm.controls['longitude'].hasError('min') ||
+      entityForm.controls['longitude'].hasError('max')
+    "
   >
-    La longitude doit être un entier compris entre
-    {{ getMinimumLongitude() }} et {{ getMaximumLongitude() }}.
+    La longitude doit être un nombre compris entre
+    {{ (coordinatesSystem$ | async)?.longitudeRange.min }} et
+    {{ (coordinatesSystem$ | async)?.longitudeRange.max }}.
   </mat-error>
 </mat-form-field>
 
@@ -130,18 +134,32 @@
     [formControl]="entityForm.controls['latitude']"
     id="input-latitude"
     matInput
-    min="{{ getMinimumLatitude() }}"
-    max="{{ getMaximumLatitude() }}"
+    min="{{ (coordinatesSystem$ | async)?.latitudeRange.min }}"
+    max="{{ (coordinatesSystem$ | async)?.latitudeRange.max }}"
     name="latitude"
-    placeholder="Latitude en {{ getUnitName() }}"
+    placeholder="Latitude en {{ (coordinatesSystem$ | async)?.unitName }}"
     type="number"
   />
 
   <mat-error *ngIf="entityForm.controls['latitude'].hasError('required')">
     Le champ "Latitude" ne peut pas être vide.
   </mat-error>
-  <mat-error *ngIf="entityForm.controls['latitude'].hasError('forbiddenValue')">
-    La latitude doit être un entier compris entre {{ getMinimumLatitude() }} et
-    {{ getMaximumLatitude() }}.
+  <mat-error
+    *ngIf="
+      entityForm.controls['latitude'].hasError('min') ||
+      entityForm.controls['latitude'].hasError('max')
+    "
+  >
+    La latitude doit être un nombre compris entre
+    {{ (coordinatesSystem$ | async)?.latitudeRange.min }} et
+    {{ (coordinatesSystem$ | async)?.latitudeRange.max }}.
   </mat-error>
 </mat-form-field>
+
+<p
+  *ngIf="(currentCoordinates$ | async).isTransformed"
+  class="coordinates-warning"
+>
+  Attention: les coordonnées de ce lieu-dit ont été converties à partir d'un
+  autre système de coordonnées.
+</p>

@@ -1,0 +1,7 @@
+@use "src/styles/variables";
+
+.coordinates-warning {
+  color: variables.$accent-color;
+  font-weight: 500;
+  margin-bottom: 30px;
+}

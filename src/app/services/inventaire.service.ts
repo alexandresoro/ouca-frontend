@@ -9,6 +9,7 @@ import { set } from "date-fns";
 import * as _ from "lodash";
 import { Commune } from "ouca-common/commune.object";
 import {
+  getCoordinates,
   getOriginCoordinates,
   LAMBERT_93
 } from "ouca-common/coordinates-system";
@@ -27,6 +28,7 @@ import {
   interpretDateTimestampAsBrowserDate,
   TimeHelper
 } from "../modules/shared/helpers/time.helper";
+import { CoordinatesService } from "./coordinates.service";
 import { CreationPageService } from "./creation-page.service";
 
 @Injectable({
@@ -37,7 +39,10 @@ export class InventaireService {
     number
   >(null);
 
-  constructor(private creationPageService: CreationPageService) {}
+  constructor(
+    private coordinatesService: CoordinatesService,
+    private creationPageService: CreationPageService
+  ) {}
 
   public getDisplayedInventaireId = (): number => {
     return this.displayedInventaireId$.value;
@@ -208,8 +213,17 @@ export class InventaireService {
     lieuditFormControls.departement.setValue(departement);
     lieuditFormControls.commune.setValue(commune);
     lieuditFormControls.lieudit.setValue(lieudit);
-    const inventaireCoordinates: Coordinates = getOriginCoordinates(inventaire);
-    const lieuditCoordinates: Coordinates = getOriginCoordinates(lieudit);
+
+    const coordinatesSystem = this.coordinatesService.getAppCoordinatesSystem();
+    const inventaireCoordinates: Coordinates = getCoordinates(
+      inventaire,
+      coordinatesSystem
+    );
+    const lieuditCoordinates: Coordinates = getCoordinates(
+      lieudit,
+      coordinatesSystem
+    );
+
     if (lieudit && lieudit.id && _.isNil(inventaire.customizedAltitude)) {
       // Coordinates are not updated for the inventaire
       // We display the lieudit coordinates
@@ -223,6 +237,7 @@ export class InventaireService {
       lieuditFormControls.longitude.setValue(inventaireCoordinates.longitude);
       lieuditFormControls.latitude.setValue(inventaireCoordinates.latitude);
     }
+
     inventaireFormControls.temperature.setValue(inventaire.temperature);
     inventaireFormControls.meteos.setValue(meteos);
   };

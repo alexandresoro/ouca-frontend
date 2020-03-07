@@ -1,19 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  OnInit
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostListener, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Classe } from "ouca-common/classe.object";
 import { Commune } from "ouca-common/commune.object";
-import {
-  CoordinatesSystem,
-  CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG
-} from "ouca-common/coordinates-system";
+import { CoordinatesSystem, CoordinatesSystemType, COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
 import { CreationPage } from "ouca-common/creation-page.object";
 import { Departement } from "ouca-common/departement.object";
 import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
@@ -739,7 +730,6 @@ export class CreationComponent implements OnInit {
   public getDisplayedDonneeId$ = (): Observable<number> => {
     return this.donneeService.getDisplayedDonneeId$();
   };
-
   public getCurrentDonneeIndex$ = (): Observable<number> => {
     return this.navigationService.getCurrentDonneeIndex$();
   };

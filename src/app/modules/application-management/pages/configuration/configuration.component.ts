@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { ConfigurationPage } from "ouca-common/configuration-page.object";
 import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
+import { CoordinatesService } from "src/app/services/coordinates.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 import { BackendApiService } from "../../../shared/services/backend-api.service";
@@ -45,6 +46,7 @@ export class ConfigurationComponent implements OnInit {
 
   constructor(
     private backendApiService: BackendApiService,
+    private coordinatesService: CoordinatesService,
     private statusMessageService: StatusMessageService
   ) {}
 
@@ -220,6 +222,7 @@ export class ConfigurationComponent implements OnInit {
       this.statusMessageService.showSuccessMessage(
         "La configuration de l'application a été mise à jour."
       );
+      this.coordinatesService.initAppCoordinatesSystem();
       this.getCurrentConfiguration();
       this.switchToViewAllMode();
     } else {

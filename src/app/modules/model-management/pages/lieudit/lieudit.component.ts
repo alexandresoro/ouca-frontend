@@ -8,13 +8,17 @@ import {
 } from "@angular/forms";
 import * as _ from "lodash";
 import {
+  CoordinatesSystem,
+  CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG,
-  getOriginCoordinates,
-  LAMBERT_93
+  getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { buildCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
+import { BackendApiService } from "src/app/modules/shared/services/backend-api.service";
+import { CoordinatesService } from "src/app/services/coordinates.service";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { EntityDetailsData } from "../../components/entity-details/entity-details-data.object";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
@@ -24,8 +28,17 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./lieudit.tpl.html"
 })
 export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
+  constructor(
+    backendApiService: BackendApiService,
+    private coordinatesService: CoordinatesService,
+    statusMessageService: StatusMessageService
+  ) {
+    super(backendApiService, statusMessageService);
+  }
+
   public ngOnInit(): void {
     super.ngOnInit();
+
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
@@ -36,25 +49,50 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
           Validators.required,
           this.altitudeNumberValidator()
         ]),
-        longitude: new FormControl("", [
-          Validators.required,
-          this.longitudeNumberValidator()
-        ]),
-        latitude: new FormControl("", [
-          Validators.required,
-          this.latitudeNumberValidator()
-        ])
+        longitude: new FormControl(),
+        latitude: new FormControl()
       },
       [this.nomValidator]
     );
+
+    this.coordinatesService
+      .getAppCoordinatesSystem$()
+      .subscribe((coordinatesSystemType) => {
+        this.updateCoordinatesValidators(coordinatesSystemType);
+      });
   }
+
+  private updateCoordinatesValidators = (
+    coordinatesSystemType: CoordinatesSystemType
+  ): void => {
+    const coordinatesSystem: CoordinatesSystem =
+      COORDINATES_SYSTEMS_CONFIG[coordinatesSystemType];
+
+    this.form.controls.longitude.setValidators([
+      Validators.required,
+      Validators.min(coordinatesSystem?.longitudeRange.min),
+      Validators.max(coordinatesSystem?.longitudeRange.max)
+    ]);
+    this.form.controls.latitude.setValidators([
+      Validators.required,
+      Validators.min(coordinatesSystem?.latitudeRange.min),
+      Validators.max(coordinatesSystem?.latitudeRange.max)
+    ]);
+
+    this.form.controls.longitude.updateValueAndValidity();
+    this.form.controls.latitude.updateValueAndValidity();
+  };
 
   public saveObject(formValue: any): void {
     // TO DO system
     const { longitude, latitude, ...otherParams } = formValue;
     const lieudit: Lieudit = {
       ...otherParams,
-      coordinates: buildCoordinates(LAMBERT_93, longitude, latitude)
+      coordinates: buildCoordinates(
+        this.coordinatesService.getAppCoordinatesSystem(),
+        longitude,
+        latitude
+      )
     };
     super.saveObject(lieudit);
   }
@@ -94,14 +132,6 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     return FormValidatorHelper.isAnIntegerValidator(0, 65535);
   }
 
-  private longitudeNumberValidator(): ValidatorFn {
-    return FormValidatorHelper.isAnIntegerValidator(0, 16777215);
-  }
-
-  private latitudeNumberValidator(): ValidatorFn {
-    return FormValidatorHelper.isAnIntegerValidator(0, 16777215);
-  }
-
   getEntityName(): string {
     return "lieudit";
   }
@@ -119,7 +149,10 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
   }
 
   public getDetailsData(): EntityDetailsData[] {
-    const coordinates: Coordinates = getOriginCoordinates(this.currentObject);
+    const coordinates: Coordinates = getCoordinates(
+      this.currentObject,
+      this.coordinatesService.getAppCoordinatesSystem()
+    );
 
     const detailsData: EntityDetailsData[] = [];
     detailsData[0] = new EntityDetailsData("ID", this.currentObject.id);
@@ -157,7 +190,10 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
     );
     detailsData[8] = new EntityDetailsData(
       "Système de coordonnées",
-      COORDINATES_SYSTEMS_CONFIG[coordinates.system].name
+      COORDINATES_SYSTEMS_CONFIG[coordinates.system].name +
+        (coordinates.isTransformed
+          ? " (les coordonnées sont converties depuis un autre système de coordonnées)"
+          : "")
     );
     detailsData[9] = new EntityDetailsData(
       "Nombre de fiches espèces",
