@@ -8,11 +8,7 @@ import {
 import { set } from "date-fns";
 import * as _ from "lodash";
 import { Commune } from "ouca-common/commune.object";
-import {
-  getCoordinates,
-  getOriginCoordinates,
-  LAMBERT_93
-} from "ouca-common/coordinates-system";
+import { getCoordinates } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Departement } from "ouca-common/departement.object";
 import { Inventaire } from "ouca-common/inventaire.object";
@@ -281,10 +277,10 @@ export class InventaireService {
 
     let latitude: number = lieuditFormControls.latitude.value;
 
-    const temperature: number = inventaireFormControls.temperature.value;
-
-    const meteosIds: number[] = ListHelper.getIDsFromEntities(
-      inventaireFormControls.meteos.value
+    let inventaireCoordinates = buildCoordinates(
+      this.coordinatesService.getAppCoordinatesSystem(),
+      longitude,
+      latitude
     );
 
     if (
@@ -293,12 +289,13 @@ export class InventaireService {
       altitude = null;
       longitude = null;
       latitude = null;
+      inventaireCoordinates = null;
     }
 
-    const inventaireCoordinates = buildCoordinates(
-      LAMBERT_93,
-      longitude,
-      latitude
+    const temperature: number = inventaireFormControls.temperature.value;
+
+    const meteosIds: number[] = ListHelper.getIDsFromEntities(
+      inventaireFormControls.meteos.value
     );
 
     const inventaire: Inventaire = {
@@ -326,8 +323,11 @@ export class InventaireService {
     longitude: number,
     latitude: number
   ): boolean => {
-    if (lieudit) {
-      const lieuditCoordinates: Coordinates = getOriginCoordinates(lieudit);
+    if (lieudit?.id) {
+      const lieuditCoordinates: Coordinates = getCoordinates(
+        lieudit,
+        this.coordinatesService.getAppCoordinatesSystem()
+      );
 
       if (
         lieudit.altitude !== altitude ||
