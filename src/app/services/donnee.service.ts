@@ -3,7 +3,7 @@ import {
   FormControl,
   FormGroup,
   ValidatorFn,
-  Validators
+  Validators,
 } from "@angular/forms";
 import { Age } from "ouca-common/age.object";
 import { Classe } from "ouca-common/classe.object";
@@ -42,7 +42,7 @@ interface DonneeFormObject extends Donnee {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class DonneeService {
   private readonly DONNEE_IN_CACHE_ID = -1;
@@ -120,8 +120,7 @@ export class DonneeService {
           this.nextDonneeId$.next(
             donnee.nextDonneeId ?? this.DONNEE_IN_CACHE_ID
           );
-          this.creationModeService.setIsInventaireEnabled(true);
-          this.creationModeService.setIsDonneeEnabled(true);
+          this.creationModeService.setStatus(true, true);
         } else {
           this.statusMessageService.showErrorMessage(
             "Aucune fiche espèce trouvée avec l'ID " + donneeId + "."
@@ -149,11 +148,9 @@ export class DonneeService {
     this.backendApiService.getLastDonneeId().subscribe((lastDonneeId) => {
       this.currentDonnee$.next(this.donneeInCache);
       this.currentDonneeIndex$.next(null);
-      this.creationModeService.setIsInventaireEnabled(
+      this.creationModeService.setStatus(
         (this.donneeInCache.inventaire as InventaireFormObject)
-          .isInventaireEnabled
-      );
-      this.creationModeService.setIsDonneeEnabled(
+          .isInventaireEnabled,
         this.donneeInCache.isDonneeEnabled
       );
 
@@ -190,14 +187,14 @@ export class DonneeService {
       ...inventaireAttributes,
       departement: lieuditFormGroup.controls.departement.value,
       commune: lieuditFormGroup.controls.commune.value,
-      isInventaireEnabled: this.creationModeService.getIsInventaireEnabled()
+      isInventaireEnabled: this.creationModeService.getIsInventaireEnabled(),
     };
 
     this.donneeInCache = {
       ...donneeAttributes,
       inventaire: inventaireInCache,
       classe: especeFormGroup.controls.classe.value,
-      isDonneeEnabled: this.creationModeService.getIsDonneeEnabled()
+      isDonneeEnabled: this.creationModeService.getIsDonneeEnabled(),
     };
 
     console.log(
@@ -240,26 +237,26 @@ export class DonneeService {
         classe: new FormControl("", [this.classeValidator()]),
         espece: new FormControl("", [
           Validators.required,
-          this.especeValidator()
-        ])
+          this.especeValidator(),
+        ]),
       }),
       nombreGroup: new FormGroup({
         nombre: new FormControl("", [
           Validators.required,
-          this.nombreValidator()
+          this.nombreValidator(),
         ]),
         estimationNombre: new FormControl("", [
           Validators.required,
-          this.estimationNombreValidator()
-        ])
+          this.estimationNombreValidator(),
+        ]),
       }),
       sexe: new FormControl("", [Validators.required, this.sexeValidator()]),
       age: new FormControl("", [Validators.required, this.ageValidator()]),
       distanceGroup: new FormGroup({
         distance: new FormControl("", [this.distanceValidator()]),
         estimationDistance: new FormControl("", [
-          this.estimationDistanceValidator()
-        ])
+          this.estimationDistanceValidator(),
+        ]),
       }),
       regroupement: new FormControl("", [this.regroupementValidator()]),
       comportementsGroup: new FormGroup({
@@ -268,15 +265,15 @@ export class DonneeService {
         comportement3: new FormControl("", [this.comportementValidator()]),
         comportement4: new FormControl("", [this.comportementValidator()]),
         comportement5: new FormControl("", [this.comportementValidator()]),
-        comportement6: new FormControl("", [this.comportementValidator()])
+        comportement6: new FormControl("", [this.comportementValidator()]),
       }),
       milieuxGroup: new FormGroup({
         milieu1: new FormControl("", [this.milieuValidator()]),
         milieu2: new FormControl("", [this.milieuValidator()]),
         milieu3: new FormControl("", [this.milieuValidator()]),
-        milieu4: new FormControl("", [this.milieuValidator()])
+        milieu4: new FormControl("", [this.milieuValidator()]),
       }),
-      commentaire: new FormControl("", [this.commentaireValidator()])
+      commentaire: new FormControl("", [this.commentaireValidator()]),
     });
     form.disable();
     return form;
@@ -422,7 +419,7 @@ export class DonneeService {
       regroupement: donneeFormControls.regroupement.value,
       comportementsIds,
       milieuxIds,
-      commentaire: donneeFormControls.commentaire.value
+      commentaire: donneeFormControls.commentaire.value,
     };
 
     console.log("Donnée générée depuis le formulaire:", donnee);

@@ -3,7 +3,7 @@ import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class CreationModeService {
   private isInventaireEnabled$: BehaviorSubject<boolean> = new BehaviorSubject(
@@ -21,7 +21,7 @@ export class CreationModeService {
       map(([isInventaireEnabled, isDonneeEnabled]) => {
         return {
           isInventaireEnabled,
-          isDonneeEnabled
+          isDonneeEnabled,
         };
       })
     );
@@ -35,20 +35,12 @@ export class CreationModeService {
     this.isDonneeEnabled$.next(isDonneeEnabled);
   };
 
-  public setIsInventaireEnabled = (isEnabled: boolean): void => {
-    this.isInventaireEnabled$.next(isEnabled);
-  };
-
   public getIsInventaireEnabled = (): boolean => {
     return this.isInventaireEnabled$.value;
   };
 
   public getIsDonneeEnabled = (): boolean => {
     return this.isDonneeEnabled$.value;
-  };
-
-  public setIsDonneeEnabled = (isEnabled: boolean): void => {
-    this.isDonneeEnabled$.next(isEnabled);
   };
 
   public isDonneeOnlyEnabled$ = (): Observable<boolean> => {
