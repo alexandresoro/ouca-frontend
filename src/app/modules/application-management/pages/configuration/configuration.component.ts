@@ -4,10 +4,10 @@ import * as _ from "lodash";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { ConfigurationPage } from "ouca-common/configuration-page.object";
 import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { CoordinatesService } from "src/app/services/coordinates.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
-import { BackendApiService } from "../../../shared/services/backend-api.service";
 
 export enum ConfigurationParameterID {
   DEFAULT_OBSERVATEUR,

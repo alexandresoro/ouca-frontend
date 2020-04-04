@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
+import * as _ from "lodash";
 import { Age } from "ouca-common/age.object";
 import { Classe } from "ouca-common/classe.object";
 import { Commune } from "ouca-common/commune.object";
@@ -16,15 +17,14 @@ import { Meteo } from "ouca-common/meteo.object";
 import { Milieu } from "ouca-common/milieu.object";
 import { Observateur } from "ouca-common/observateur.object";
 import { Sexe } from "ouca-common/sexe.object";
-import * as _ from "lodash";
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
-import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
 
 @Component({
@@ -196,7 +196,7 @@ export class ViewComponent {
     if (this.searchForm.controls.excelMode.value) {
       this.backendApiService
         .exportDonneesByCustomizedFilters(filters)
-        .subscribe(response => {
+        .subscribe((response) => {
           this.displayWaitPanel = false;
 
           // This is an ugly "bidouille"
@@ -245,13 +245,13 @@ export class ViewComponent {
   private setEspecesWithNbDonnees = (donnees: FlatDonnee[]): void => {
     const nbDonneesByEspeceMap: { [key: string]: number } = _.countBy(
       donnees,
-      donnee => {
+      (donnee) => {
         return donnee.codeEspece;
       }
     );
 
     this.especesWithNbDonnees = _.map(nbDonneesByEspeceMap, (value, key) => {
-      const espece: Espece = _.find(this.especes$.getValue(), espece => {
+      const espece: Espece = _.find(this.especes$.getValue(), (espece) => {
         return espece.code === key;
       });
 

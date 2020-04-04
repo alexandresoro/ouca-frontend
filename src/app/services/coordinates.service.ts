@@ -6,7 +6,7 @@ import {
   COORDINATES_SYSTEMS_CONFIG
 } from "ouca-common/coordinates-system";
 import { BehaviorSubject, Observable } from "rxjs";
-import { BackendApiService } from "../modules/shared/services/backend-api.service";
+import { BackendApiService } from "./backend-api.service";
 
 @Injectable({
   providedIn: "root"

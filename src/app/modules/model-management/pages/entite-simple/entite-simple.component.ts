@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { PostResponse } from "ouca-common/post-response.object";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
@@ -9,7 +10,6 @@ import {
 } from "../../../shared/helpers/file-downloader.helper";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
-import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
 

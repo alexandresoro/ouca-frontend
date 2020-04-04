@@ -8,9 +8,8 @@ import {
 } from "@angular/forms";
 import * as _ from "lodash";
 import { Lieudit } from "ouca-common/lieudit.object";
-import { buildCoordinates } from "src/app/modules/shared/helpers/coordinates.helper";
-import { BackendApiService } from "src/app/modules/shared/services/backend-api.service";
-import { CoordinatesService } from "src/app/services/coordinates.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
+import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
@@ -22,7 +21,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
 export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
   constructor(
     backendApiService: BackendApiService,
-    private coordinatesService: CoordinatesService,
+    private coordinatesBuilderService: CoordinatesBuilderService,
     statusMessageService: StatusMessageService
   ) {
     super(backendApiService, statusMessageService);
@@ -49,12 +48,10 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
   }
 
   public saveObject(formValue: any): void {
-    // TO DO system
     const { longitude, latitude, ...otherParams } = formValue;
     const lieudit: Lieudit = {
       ...otherParams,
-      coordinates: buildCoordinates(
-        this.coordinatesService.getAppCoordinatesSystem(),
+      coordinates: this.coordinatesBuilderService.buildCoordinates(
         longitude,
         latitude
       )

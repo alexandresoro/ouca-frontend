@@ -1,42 +1,54 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+} from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Classe } from "ouca-common/classe.object";
 import { Commune } from "ouca-common/commune.object";
-import { CoordinatesSystem, CoordinatesSystemType, COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
+import {
+  CoordinatesSystem,
+  CoordinatesSystemType,
+  COORDINATES_SYSTEMS_CONFIG,
+} from "ouca-common/coordinates-system";
 import { CreationPage } from "ouca-common/creation-page.object";
 import { Departement } from "ouca-common/departement.object";
-import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
 import { Donnee } from "ouca-common/donnee.object";
 import { Espece } from "ouca-common/espece.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { PostResponse } from "ouca-common/post-response.object";
-import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { map, takeUntil } from "rxjs/operators";
+import { BackendApiService } from "src/app/services/backend-api.service";
+import { CoordinatesService } from "src/app/services/coordinates.service";
+import { CreationModeService } from "src/app/services/creation-mode.service";
+import { RegroupementService } from "src/app/services/regroupement.service";
 import { CreationPageService } from "../../../../services/creation-page.service";
 import { DonneeService } from "../../../../services/donnee.service";
 import { InventaireService } from "../../../../services/inventaire.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
-import { ConfirmationDialogData } from "../../../shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "../../../shared/components/confirmation-dialog/confirmation-dialog.component";
-import { MultipleOptionsDialogData } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog-data.object";
 import { MultipleOptionsDialogComponent } from "../../../shared/components/multiple-options-dialog/multiple-options-dialog.component";
-import { BackendApiService } from "../../../shared/services/backend-api.service";
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
-import { CreationModeEnum } from "../../helpers/creation-mode.enum";
-import { DonneeHelper } from "../../helpers/donnee.helper";
+import {
+  getDeleteDonneeDialogData,
+  getUpdateInventaireDialogData,
+} from "../../helpers/creation-dialog.helper";
 import { InventaireHelper } from "../../helpers/inventaire.helper";
-import { CreationModeService } from "../../services/creation-mode.service";
-import { NavigationService } from "../../services/navigation.service";
 
 @Component({
   styleUrls: ["./creation.component.scss"],
   templateUrl: "./creation.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreationComponent implements OnInit {
+export class CreationComponent implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject();
+
   public pageModel$: Observable<CreationPage>;
 
   public nextRegroupement$: Subject<number> = new Subject<number>();
@@ -55,19 +67,32 @@ export class CreationComponent implements OnInit {
 
   public donneeForm: FormGroup;
 
-  private requestedEspeceId: number;
+  private requestedDonneeId: number;
 
   private coordinatesSystem$: Observable<CoordinatesSystemType>;
 
+  private isModalOpened$: BehaviorSubject<boolean> = new BehaviorSubject<
+    boolean
+  >(false);
+
+  private currentModeStatus$: BehaviorSubject<{
+    isInventaireEnabled: boolean;
+    isDonneeEnabled: boolean;
+  }> = new BehaviorSubject<{
+    isInventaireEnabled: boolean;
+    isDonneeEnabled: boolean;
+  }>(null);
+
   constructor(
     private backendApiService: BackendApiService,
+    private coordinatesService: CoordinatesService,
     private dialog: MatDialog,
-    private navigationService: NavigationService,
     private router: Router,
     private creationPageService: CreationPageService,
     private inventaireService: InventaireService,
     private donneeService: DonneeService,
     private creationModeService: CreationModeService,
+    private regroupementService: RegroupementService,
     private statusMessageService: StatusMessageService
   ) {
     const navigation = this.router.getCurrentNavigation();
@@ -76,20 +101,40 @@ export class CreationComponent implements OnInit {
       navigation.extras.state &&
       (navigation.extras.state as { id: number }).id
     ) {
-      this.requestedEspeceId = (navigation.extras.state as { id: number }).id;
+      this.requestedDonneeId = (navigation.extras.state as { id: number }).id;
     }
   }
 
   public ngOnInit(): void {
+    // Create the inventaire form group
     this.inventaireForm = this.inventaireService.createInventaireForm();
+
+    // Update the coordinates form controls depending on the application coordinates system
+    this.coordinatesService
+      .getAppCoordinatesSystem$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((coordinatesSystemType) => {
+        this.coordinatesService.updateCoordinatesValidators(
+          coordinatesSystemType,
+          (this.inventaireForm.controls.lieu as FormGroup).controls.longitude,
+          (this.inventaireForm.controls.lieu as FormGroup).controls.latitude
+        );
+      });
+
+    // Create the donnee form
     this.donneeForm = this.donneeService.createDonneeForm();
-    this.pageModel$ = this.creationPageService.getCreationPage$();
+
+    // Map all observables of the page
+    this.pageModel$ = this.creationPageService
+      .getCreationPage$()
+      .pipe(takeUntil(this.destroy$));
 
     this.communes$ = this.pageModel$.pipe(
       map((pageModel) => {
         return pageModel ? pageModel.communes : [];
       })
     );
+
     this.departements$ = this.pageModel$.pipe(
       map((pageModel) => {
         return pageModel ? pageModel.departements : [];
@@ -118,151 +163,107 @@ export class CreationComponent implements OnInit {
       map((model) => model.coordinatesSystem)
     );
 
+    const requestedDonneeId = this.requestedDonneeId;
+    this.requestedDonneeId = null;
+    this.pageModel$.subscribe((creationPage: CreationPage) => {
+      this.onInitCreationPage(creationPage, requestedDonneeId);
+    });
+
+    combineLatest(this.pageModel$, this.donneeService.getCurrentDonnee$())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([pageModel, donnee]) => {
+        console.log("La donnée courante a changé", donnee);
+
+        this.donneeService.setDonneeFormFromDonnee(
+          pageModel,
+          this.donneeForm,
+          donnee
+        );
+        this.inventaireService.setInventaireFormFromInventaire(
+          pageModel,
+          this.inventaireForm,
+          donnee?.inventaire
+        );
+
+        this.inventaireService.setDisplayedInventaireId(donnee?.inventaireId);
+        // this.donneeService.setDisplayedDonneeId(donnee?.id); // TO DO
+      });
+
+    this.regroupementService
+      .getNextRegroupement$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((nextRegroupement) => {
+        this.nextRegroupement$.next(nextRegroupement);
+      });
+
+    this.creationModeService
+      .getStatus$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((status) => {
+        this.currentModeStatus$.next(status);
+
+        this.inventaireForm.disable();
+        this.donneeForm.disable();
+
+        if (status.isInventaireEnabled) {
+          this.inventaireForm.enable();
+        }
+
+        if (status.isDonneeEnabled) {
+          this.donneeForm.enable();
+        }
+
+        const elementToFocus =
+          status.isDonneeEnabled && !status.isInventaireEnabled
+            ? "input-Espèce"
+            : "input-Observateur";
+        document.getElementById(elementToFocus)?.focus();
+      });
+
+    this.dialog.afterOpened.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.isModalOpened$.next(true);
+    });
+
+    this.dialog.afterAllClosed.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.isModalOpened$.next(false);
+    });
+
     /**
      * Called when launching the page
      * Call the back-end to get the initial creation page model
      */
     this.creationPageService.initializeCreationPage();
-
-    const requestedEspeceId = this.requestedEspeceId;
-    this.requestedEspeceId = null;
-    this.pageModel$.subscribe((creationPage: CreationPage) => {
-      this.onInitCreationPageUpdate(creationPage, requestedEspeceId);
-    });
   }
 
-  private displayDonneeById = (idToFind: number): void => {
-    this.backendApiService
-      .getDonneeByIdWithContext(idToFind)
-      .subscribe((donnee: DonneeWithNavigationData) => {
-        if (donnee && donnee.inventaireId) {
-          this.inventaireService.setInventaireFormFromInventaire(
-            this.inventaireForm,
-            donnee.inventaire
-          );
-          this.donneeService.setDonneeFormFromDonnee(this.donneeForm, donnee);
-          this.switchToUpdateMode();
-          this.navigationService.updateNavigationAfterSearchDonneeById(
-            donnee.indexDonnee,
-            donnee.previousDonneeId,
-            donnee.nextDonneeId
-          );
-        } else {
-          this.statusMessageService.showErrorMessage(
-            "Aucune fiche espèce trouvée avec l'ID " + idToFind + "."
-          );
-        }
-      });
-  };
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   /**
    * If back-end call is successful, use the initial creation page model to build the page
    * @param creationPage: CreationPage
    */
-  private onInitCreationPageUpdate(
+  private onInitCreationPage(
     creationPage: CreationPage,
-    requestedEspeceId: number
+    requestedDonneeId: number
   ): void {
-    if (!!creationPage && !!creationPage.observateurs) {
+    if (creationPage?.observateurs) {
       this.nextRegroupement$.next(creationPage.nextRegroupement);
-
-      this.navigationService.init(
-        creationPage.lastDonnee,
-        creationPage.numberOfDonnees
-      );
+      this.donneeService.initialize(creationPage?.lastDonnee?.id);
 
       // If the user navigated to this page with a defined id, retrieve this id
-      if (requestedEspeceId != null) {
-        this.displayDonneeById(requestedEspeceId);
+      if (requestedDonneeId != null) {
+        this.donneeService.getDonneeById(requestedDonneeId);
       } else {
         // Otherwise call, the normal initialization of the page
-        this.switchToNewInventaireMode();
+        this.creationModeService.setStatus(true, false);
       }
     } else {
       this.statusMessageService.showErrorMessage(
         "Impossible de charger le contenu la page de Saisie des observations."
       );
     }
-  }
-
-  /**
-   * When clicking on Enter, we save the inventaire or donnee
-   * if it is valid
-   * and if the focus is not on a textarea field which can contain several lines
-   */
-  @HostListener("document:keyup", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent): void {
-    if (
-      /*event.ctrlKey &&*/ event.key === "Enter" &&
-      document.activeElement.tagName.toLowerCase() !== "textarea"
-    ) {
-      if (
-        this.creationModeService.isInventaireMode() &&
-        this.inventaireForm.valid
-      ) {
-        this.onSaveInventaireButtonClicked();
-      } else if (
-        this.creationModeService.isDonneeMode() &&
-        this.donneeForm.valid
-      ) {
-        this.onSaveDonneeButtonClicked();
-      } else if (
-        this.creationModeService.isUpdateMode() &&
-        this.inventaireForm.valid &&
-        this.donneeForm.valid
-      ) {
-        this.saveInventaireAndDonnee();
-      }
-    }
-  }
-
-  /**
-   * Initialize the page to be ready to create an inventaire
-   */
-  private switchToNewInventaireMode(): void {
-    this.navigationService.resetPreviousAndNextDonnee();
-    this.inventaireService.initializeInventaireForm(this.inventaireForm);
-    this.donneeService.initializeDonneeForm(this.donneeForm);
-    if (document.getElementById("input-Espèce")) {
-      document.getElementById("input-Espèce").focus();
-    }
-
-    this.switchToInventaireMode();
-  }
-
-  public isNewInventaireBtnDisplayed$(): Observable<boolean> {
-    return this.creationModeService.isDonneeMode$();
-  }
-
-  public isUpdateInventaireBtnDisplayed$(): Observable<boolean> {
-    return this.creationModeService.isDonneeMode$();
-  }
-
-  public isSaveInventaireBtnDisplayed$ = (): Observable<boolean> => {
-    return this.creationModeService.isInventaireMode$();
-  };
-
-  public isUpdateDonneeBtnDisplayed$(): Observable<boolean> {
-    return this.creationModeService.isUpdateMode$();
-  }
-  public isSaveDonneeBtnDisplayed$(): Observable<boolean> {
-    return this.creationModeService.isDonneeMode$();
-  }
-
-  public isNewDonneeBtnDisplayed$(): Observable<boolean> {
-    return this.creationModeService.isUpdateMode$();
-  }
-
-  public isDeleteDonneeBtnDisplayed$(): Observable<boolean> {
-    return this.creationModeService.isUpdateMode$();
-  }
-
-  public isPreviousDonneeBtnDisplayed$(): Observable<boolean> {
-    return this.navigationService.hasPreviousDonnee$();
-  }
-
-  public isNextDonneeBtnDisplayed$(): Observable<boolean> {
-    return this.navigationService.hasNextDonnee$();
   }
 
   /**
@@ -275,7 +276,7 @@ export class CreationComponent implements OnInit {
     } else {
       // Wait until first donnee is created to create the inventaire
       // Switch to donnee mode
-      this.switchToEditionDonneeMode();
+      this.creationModeService.setStatus(false, true);
     }
   }
 
@@ -321,7 +322,7 @@ export class CreationComponent implements OnInit {
       this.createDonnee();
     } else if (oldInventaireId) {
       // We were updating an existing inventaire, we switch to donnee mode
-      this.switchToEditionDonneeMode();
+      this.creationModeService.setStatus(false, true);
     }
   }
 
@@ -350,18 +351,19 @@ export class CreationComponent implements OnInit {
   }
 
   private createDonnee(): void {
-    const donneeToBeSaved: Donnee = this.donneeService.getDonneeFromDonneeForm(
+    const donnee: Donnee = this.donneeService.getDonneeFromDonneeForm(
       this.donneeForm
     );
+    this.creationPageService.saveDonnne(donnee);
 
     this.backendApiService
-      .saveDonnee(donneeToBeSaved)
+      .saveDonnee(donnee)
       .subscribe((response: PostResponse) => {
         if (response.isSuccess) {
-          if (!donneeToBeSaved.id) {
-            donneeToBeSaved.id = response.insertId;
+          if (!donnee.id) {
+            donnee.id = response.insertId;
           }
-          this.onSaveDonneeSuccess(donneeToBeSaved);
+          this.onSaveDonneeSuccess(donnee);
         } else {
           this.statusMessageService.showErrorMessage(response.message);
         }
@@ -376,21 +378,9 @@ export class CreationComponent implements OnInit {
     savedDonnee.inventaire = this.inventaireService.getInventaireFromInventaireForm(
       this.inventaireForm
     );
-    this.navigationService.updateNavigationAfterADonneeWasCreated(savedDonnee);
-    this.updateNextRegroupement();
-    this.donneeService.initializeDonneeForm(this.donneeForm);
+    this.regroupementService.updateNextRegroupement();
+    this.donneeService.initializeDonneeForm(null, this.donneeForm); // TODO
     document.getElementById("input-Espèce").focus();
-  }
-
-  /**
-   * Called when a donnee is saved to get the next regroupement number
-   */
-  private updateNextRegroupement(): void {
-    this.backendApiService
-      .getNextRegroupement()
-      .subscribe((regroupement: number) => {
-        this.nextRegroupement$.next(regroupement);
-      });
   }
 
   /**
@@ -415,37 +405,19 @@ export class CreationComponent implements OnInit {
   private displayInventaireDialog(): void {
     const ALL_DONNEES_OPTION = 1;
     const ONLY_CURRENT_DONNEE_OPTION = 2;
-
-    const updateInventaireDialogData: MultipleOptionsDialogData = {
-      title: "Confirmation de mise-à-jour",
-      content:
-        "Vous avez modifié la fiche inventaire. " +
-        "Voulez-vous mettre à jour la fiche inventaire pour cette fiche espèce " +
-        "seulement ou pour toutes les fiches espèces de cette fiche inventaire ?",
-      options: [
-        {
-          value: ALL_DONNEES_OPTION,
-          label: "Pour toutes les fiches espèces de cette fiche inventaire",
-          color: "primary"
-        },
-        {
-          value: ONLY_CURRENT_DONNEE_OPTION,
-          label: "Pour cette fiche espèce seulement",
-          color: "primary"
-        },
-        { label: "Annuler", color: "accent" }
-      ]
-    };
     const dialogRef = this.dialog.open(MultipleOptionsDialogComponent, {
       width: "800px",
-      data: updateInventaireDialogData
+      data: getUpdateInventaireDialogData(
+        ALL_DONNEES_OPTION,
+        ONLY_CURRENT_DONNEE_OPTION
+      ),
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === ALL_DONNEES_OPTION) {
+    dialogRef.afterClosed().subscribe((option) => {
+      if (option === ALL_DONNEES_OPTION) {
         // We just update the existing inventaire
         this.updateInventaireAndDonnee(false);
-      } else if (result === ONLY_CURRENT_DONNEE_OPTION) {
+      } else if (option === ONLY_CURRENT_DONNEE_OPTION) {
         // We create a new inventaire for this donnee
         this.updateInventaireAndDonnee(true);
       }
@@ -490,7 +462,7 @@ export class CreationComponent implements OnInit {
                 this.statusMessageService.showSuccessMessage(
                   "La fiche espèce et sa fiche inventaire ont été mises à jour avec succès."
                 );
-                this.updateNextRegroupement();
+                this.regroupementService.updateNextRegroupement();
                 // TO DO update next and previous donnee
               } else {
                 this.statusMessageService.showErrorMessage(
@@ -509,163 +481,33 @@ export class CreationComponent implements OnInit {
   }
 
   /**
-   * Called when clicking on "Donnee precedente" button
+   * Called when clicking on "Donnee précédente" button
    */
   public onPreviousDonneeBtnClicked(): void {
-    const currentDonnee: Donnee = this.getCurrentDonneeFromForm();
-
-    // Save the current donnee, inventaire and mode
-    if (!this.creationModeService.isUpdateMode()) {
-      this.saveCurrentContext(currentDonnee);
-      this.switchToUpdateMode();
-    }
-
-    this.navigationService
-      .getPreviousDonnee()
-      .then((donnee: DonneeWithNavigationData) => {
-        this.displayPreviousDonnne(donnee);
-
-        this.navigationService.updateNavigationAfterPreviousDonneeIsDisplayed(
-          donnee.previousDonneeId,
-          donnee.nextDonneeId
-        );
-      });
+    this.donneeService.getPreviousDonnee(this.inventaireForm, this.donneeForm);
   }
 
-  private getCurrentDonneeFromForm(): Donnee {
-    const currentDonnee: Donnee = this.donneeService.getDonneeFromDonneeForm(
-      this.donneeForm
-    );
-    currentDonnee.inventaire = this.inventaireService.getInventaireFromInventaireForm(
-      this.inventaireForm
-    );
-    return currentDonnee;
-  }
-
-  private saveCurrentContext(currentDonnee: Donnee): void {
-    this.navigationService.saveCurrentContext(
-      currentDonnee,
-      (this.inventaireForm.controls.lieu as FormGroup).controls.departement
-        .value,
-      (this.inventaireForm.controls.lieu as FormGroup).controls.commune.value,
-      (this.donneeForm.controls.especeGroup as FormGroup).controls.classe.value
-    );
-  }
-
-  private displayPreviousDonnne(previousDonnee: Donnee): void {
-    this.donneeService.setDonneeFormFromDonnee(this.donneeForm, previousDonnee);
-    this.inventaireService.setInventaireFormFromInventaire(
-      this.inventaireForm,
-      previousDonnee.inventaire
-    );
-  }
+  /**
+   * Called when clicking on "Donnée suivante" button
+   */
   public onNextDonneeBtnClicked = (): void => {
-    this.navigationService
-      .getNextDonnee()
-      .then((donnee: DonneeWithNavigationData) => {
-        this.displayNextDonnee(donnee);
-
-        this.navigationService.updateNavigationAfterNextDonneeIsDisplayed(
-          donnee.previousDonneeId,
-          donnee.nextDonneeId
-        );
-      });
+    this.donneeService.getNextDonnee();
   };
 
+  /**
+   * Called when clicking on "Supprimer la fiche espèce" button
+   */
   public onDeleteDonneeBtnClicked = (): void => {
-    const deleteDialogData = new ConfirmationDialogData(
-      "Confirmation de suppression",
-      "Êtes-vous certain de vouloir supprimer cette fiche espèce ?",
-      "Oui, supprimer",
-      "Non, annuler"
-    );
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: "450px",
-      data: deleteDialogData
+      data: getDeleteDonneeDialogData(),
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.onDeleteConfirmButtonClicked();
+    dialogRef.afterClosed().subscribe((shouldDeleteDonnee) => {
+      if (shouldDeleteDonnee) {
+        this.donneeService.deleteCurrentDonnee();
       }
     });
-  };
-
-  public onDeleteConfirmButtonClicked = (): void => {
-    this.deleteDonnee(
-      this.donneeService.getDisplayedDonneeId(),
-      this.inventaireService.getDisplayedInventaireId()
-    );
-  };
-
-  public deleteDonnee = (donneeId: number, inventaireId: number): void => {
-    this.backendApiService
-      .deleteDonnee(donneeId, inventaireId)
-      .subscribe((response: PostResponse) => {
-        if (response.isSuccess) {
-          this.onDeleteDonneeSuccess();
-        } else {
-          this.onDeleteDonneeError(response.message);
-        }
-      });
-  };
-
-  private onDeleteDonneeError = (errorMessage: string): void => {
-    this.statusMessageService.showErrorMessage(
-      "Une erreur est survenue pendant la suppression de la fiche espèce.",
-      errorMessage
-    );
-  };
-
-  private onDeleteDonneeSuccess = (): void => {
-    this.statusMessageService.showSuccessMessage(
-      "La fiche espèce a été supprimée avec succès."
-    );
-    this.navigationService
-      .getNextDonnee()
-      .then((donnee: DonneeWithNavigationData) => {
-        this.displayNextDonnee(donnee);
-        this.navigationService.updateNavigationAfterADonneeWasDeleted(
-          donnee.previousDonneeId,
-          donnee.nextDonneeId
-        );
-
-        // Check if the current inventaire is still existing
-        if (this.inventaireService.getDisplayedInventaireId()) {
-          this.backendApiService
-            .getInventaireIdById(
-              this.inventaireService.getDisplayedInventaireId()
-            )
-            .subscribe((responseId: number) => {
-              if (!responseId) {
-                this.inventaireService.setDisplayedInventaireId(null);
-              }
-            });
-        }
-      });
-  };
-
-  private displayNextDonnee = (nextDonnee: Donnee): void => {
-    this.creationModeService.updateCreationMode(
-      this.navigationService.getNextMode()
-    );
-    if (this.creationModeService.isInventaireMode()) {
-      this.switchToInventaireMode();
-    } else if (this.creationModeService.isDonneeMode()) {
-      this.switchToEditionDonneeMode();
-    }
-
-    this.inventaireService.setInventaireFormFromInventaire(
-      this.inventaireForm,
-      nextDonnee.inventaire,
-      this.navigationService.getSavedDepartement(),
-      this.navigationService.getSavedCommune()
-    );
-    this.donneeService.setDonneeFormFromDonnee(
-      this.donneeForm,
-      nextDonnee,
-      this.navigationService.getSavedClasse()
-    );
   };
 
   /**
@@ -674,64 +516,36 @@ export class CreationComponent implements OnInit {
    * but we do not reset the form fields
    */
   public onNewInventaireBtnClicked = (): void => {
-    this.inventaireService.setDisplayedInventaireId(null);
-    this.switchToInventaireMode();
+    this.inventaireService.setDisplayedInventaireId(null); // TO DO
+    this.creationModeService.setStatus(true, false);
   };
 
   public onEditInventaireBtnClicked = (): void => {
-    this.switchToInventaireMode();
+    this.creationModeService.setStatus(true, false);
   };
 
   public onNewDonneeBtnClicked = (): void => {
-    this.switchToNewInventaireMode();
+    this.creationModeService.setStatus(true, false);
   };
 
   public onSearchByIdBtnClicked = (): void => {
     const dialogRef = this.dialog.open(SearchByIdDialogComponent, {
-      width: "450px"
+      width: "450px",
     });
 
-    dialogRef.afterClosed().subscribe((idToFind: number) => {
-      if (idToFind) {
-        // Save the current donnee, inventaire and mode
-        if (!this.creationModeService.isUpdateMode()) {
-          this.saveCurrentContext(this.getCurrentDonneeFromForm());
-        }
-        this.displayDonneeById(idToFind);
+    dialogRef.afterClosed().subscribe((donneeId: number) => {
+      if (donneeId) {
+        this.donneeService.getDonneeById(donneeId);
       }
     });
-  };
-
-  private switchToInventaireMode = (): void => {
-    this.creationModeService.updateCreationMode(
-      CreationModeEnum.NEW_INVENTAIRE
-    );
-    InventaireHelper.updateFormState(this.inventaireForm, true);
-    DonneeHelper.updateFormState(this.donneeForm, false);
-    if (document.getElementById("input-Observateur")) {
-      document.getElementById("input-Observateur").focus();
-    }
-  };
-
-  private switchToEditionDonneeMode = (): void => {
-    this.creationModeService.updateCreationMode(CreationModeEnum.NEW_DONNEE);
-    InventaireHelper.updateFormState(this.inventaireForm, false);
-    DonneeHelper.updateFormState(this.donneeForm, true);
-    document.getElementById("input-Espèce").focus();
-  };
-
-  private switchToUpdateMode = (): void => {
-    this.creationModeService.updateCreationMode(CreationModeEnum.UPDATE);
-    InventaireHelper.updateFormState(this.inventaireForm, true);
-    DonneeHelper.updateFormState(this.donneeForm, true);
-    document.getElementById("input-Observateur").focus();
   };
 
   public getDisplayedDonneeId$ = (): Observable<number> => {
     return this.donneeService.getDisplayedDonneeId$();
   };
+
   public getCurrentDonneeIndex$ = (): Observable<number> => {
-    return this.navigationService.getCurrentDonneeIndex$();
+    return this.donneeService.getCurrentDonneeIndex$();
   };
 
   public getCoordinatesSystem$ = (): Observable<CoordinatesSystem> => {
@@ -739,4 +553,87 @@ export class CreationComponent implements OnInit {
       map((system) => COORDINATES_SYSTEMS_CONFIG[system])
     );
   };
+
+  public isNewInventaireBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isDonneeOnlyEnabled$();
+  }
+
+  public isUpdateInventaireBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isDonneeOnlyEnabled$();
+  }
+
+  public isSaveInventaireBtnDisplayed$ = (): Observable<boolean> => {
+    return this.creationModeService.isInventaireOnlyEnabled$();
+  };
+
+  public isUpdateDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.donneeService.isCurrentDonneeAnExistingOne$();
+  }
+
+  public isSaveDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.creationModeService.isDonneeOnlyEnabled$();
+  }
+
+  public isNewDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.donneeService.isCurrentDonneeAnExistingOne$();
+  }
+
+  public isDeleteDonneeBtnDisplayed$(): Observable<boolean> {
+    return this.donneeService.isCurrentDonneeAnExistingOne$();
+  }
+
+  public isPreviousDonneeBtnDisplayed$(): Observable<boolean> {
+    return combineLatest(
+      this.donneeService.getIsDonneeCallOngoing$(),
+      this.donneeService.hasPreviousDonnee$(),
+      (ongoingCall, hasPreviousDonnee) => {
+        return !ongoingCall && hasPreviousDonnee;
+      }
+    );
+  }
+
+  public isNextDonneeBtnDisplayed$(): Observable<boolean> {
+    return combineLatest(
+      this.donneeService.getIsDonneeCallOngoing$(),
+      this.donneeService.hasNextDonnee$(),
+      (ongoingCall, hasNextDonnee) => {
+        return !ongoingCall && hasNextDonnee;
+      }
+    );
+  }
+
+  /**
+   * When clicking on Enter, we save the inventaire or donnee
+   * if it is valid
+   * and if the focus is not on a textarea field which can contain several lines
+   */
+  @HostListener("document:keyup", ["$event"])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (
+      event.key === "Enter" &&
+      document.activeElement.tagName.toLowerCase() !== "textarea" &&
+      !this.isModalOpened$.value
+    ) {
+      if (
+        this.currentModeStatus$.value?.isInventaireEnabled &&
+        !this.currentModeStatus$.value?.isDonneeEnabled &&
+        this.inventaireForm.valid
+      ) {
+        this.onSaveInventaireButtonClicked();
+      } else if (
+        !this.currentModeStatus$.value?.isInventaireEnabled &&
+        this.currentModeStatus$.value?.isDonneeEnabled &&
+        this.donneeForm.valid
+      ) {
+        this.onSaveDonneeButtonClicked();
+      } else if (
+        this.currentModeStatus$.value?.isInventaireEnabled &&
+        this.currentModeStatus$.value?.isDonneeEnabled &&
+        this.inventaireForm.valid &&
+        this.donneeForm.valid
+      ) {
+        this.saveInventaireAndDonnee();
+      }
+    }
+  }
 }

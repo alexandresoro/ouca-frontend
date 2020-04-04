@@ -10,13 +10,13 @@ import * as _ from "lodash";
 import { Commune } from "ouca-common/commune.object";
 import { getCoordinates } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
+import { CreationPage } from "ouca-common/creation-page.object";
 import { Departement } from "ouca-common/departement.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { Meteo } from "ouca-common/meteo.object";
 import { Observateur } from "ouca-common/observateur.object";
 import { BehaviorSubject } from "rxjs";
-import { buildCoordinates } from "../modules/shared/helpers/coordinates.helper";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
 import {
@@ -24,8 +24,9 @@ import {
   interpretDateTimestampAsBrowserDate,
   TimeHelper
 } from "../modules/shared/helpers/time.helper";
+import { CoordinatesBuilderService } from "./coordinates-builder.service";
 import { CoordinatesService } from "./coordinates.service";
-import { CreationPageService } from "./creation-page.service";
+import { InventaireFormObject } from "./donnee.service";
 
 @Injectable({
   providedIn: "root"
@@ -36,8 +37,8 @@ export class InventaireService {
   >(null);
 
   constructor(
-    private coordinatesService: CoordinatesService,
-    private creationPageService: CreationPageService
+    private coordinatesBuilderService: CoordinatesBuilderService,
+    private coordinatesService: CoordinatesService
   ) {}
 
   public getDisplayedInventaireId = (): number => {
@@ -84,15 +85,7 @@ export class InventaireService {
       meteos: new FormControl("", [this.meteosValidator()])
     });
 
-    this.coordinatesService
-      .getAppCoordinatesSystem$()
-      .subscribe((coordinatesSystemType) => {
-        this.coordinatesService.updateCoordinatesValidators(
-          coordinatesSystemType,
-          (form.controls.lieu as FormGroup).controls.longitude,
-          (form.controls.lieu as FormGroup).controls.latitude
-        );
-      });
+    form.disable();
 
     return form;
   };
@@ -101,9 +94,10 @@ export class InventaireService {
    * Initialize the inventaire form
    * Reset the form and set defaults values if any
    */
-  public initializeInventaireForm = (inventaireForm: FormGroup): void => {
-    const pageModel = this.creationPageService.getCreationPage();
-
+  public initializeInventaireForm = (
+    pageModel: CreationPage,
+    inventaireForm: FormGroup
+  ): void => {
     const defaultObservateur: Observateur = ListHelper.findEntityInListByID(
       pageModel.observateurs,
       pageModel.defaultObservateurId
@@ -150,98 +144,106 @@ export class InventaireService {
    * @param inventaire Inventaire
    */
   public setInventaireFormFromInventaire = (
+    pageModel: CreationPage,
     inventaireForm: FormGroup,
-    inventaire: Inventaire,
+    inventaire: Inventaire | InventaireFormObject,
     departementToDisplay?: Departement,
     communeToDisplay?: Commune
   ): void => {
     console.log("Inventaire à afficher dans le formulaire:", inventaire);
 
-    const pageModel = this.creationPageService.getCreationPage();
-
-    const observateur: Observateur = ListHelper.findEntityInListByID(
-      pageModel.observateurs,
-      inventaire.observateurId
-    );
-
-    const lieudit: Lieudit = ListHelper.findEntityInListByID(
-      pageModel.lieudits,
-      inventaire.lieuditId
-    );
-
-    let commune: Commune = null;
-    if (!!lieudit && !!lieudit.communeId) {
-      commune = ListHelper.findEntityInListByID(
-        pageModel.communes,
-        lieudit.communeId
+    if (inventaire) {
+      const observateur: Observateur = ListHelper.findEntityInListByID(
+        pageModel.observateurs,
+        inventaire.observateurId
       );
-    } else if (communeToDisplay) {
-      commune = communeToDisplay;
-    }
 
-    let departement: Departement = null;
-    if (!!commune && !!commune.departementId) {
-      departement = ListHelper.findEntityInListByID(
-        pageModel.departements,
-        commune.departementId
+      const lieudit: Lieudit = ListHelper.findEntityInListByID(
+        pageModel.lieudits,
+        inventaire.lieuditId
       );
-    } else if (departementToDisplay) {
-      departement = departementToDisplay;
-    }
 
-    const associes: Observateur[] = ListHelper.getEntitiesFromIDs(
-      pageModel.observateurs,
-      inventaire.associesIds
-    ) as Observateur[];
+      let commune: Commune = null;
+      if (lieudit?.communeId) {
+        commune = ListHelper.findEntityInListByID(
+          pageModel.communes,
+          lieudit.communeId
+        );
+      } else {
+        commune = (inventaire as InventaireFormObject).commune;
+      }
 
-    const meteos: Meteo[] = ListHelper.getEntitiesFromIDs(
-      pageModel.meteos,
-      inventaire.meteosIds
-    ) as Meteo[];
+      let departement: Departement = null;
+      if (!!commune && !!commune.departementId) {
+        departement = ListHelper.findEntityInListByID(
+          pageModel.departements,
+          commune.departementId
+        );
+      } else {
+        departement = (inventaire as InventaireFormObject).departement;
+      }
 
-    this.displayedInventaireId$.next(inventaire.id);
+      const associes: Observateur[] = ListHelper.getEntitiesFromIDs(
+        pageModel.observateurs,
+        inventaire.associesIds
+      ) as Observateur[];
 
-    const inventaireFormControls = inventaireForm.controls;
-    const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
-      .controls;
+      const meteos: Meteo[] = ListHelper.getEntitiesFromIDs(
+        pageModel.meteos,
+        inventaire.meteosIds
+      ) as Meteo[];
 
-    inventaireFormControls.observateur.setValue(observateur);
-    inventaireFormControls.observateursAssocies.setValue(associes);
-    inventaireFormControls.date.setValue(
-      interpretDateTimestampAsBrowserDate(inventaire.date)
-    );
-    inventaireFormControls.heure.setValue(inventaire.heure);
-    inventaireFormControls.duree.setValue(inventaire.duree);
-    lieuditFormControls.departement.setValue(departement);
-    lieuditFormControls.commune.setValue(commune);
-    lieuditFormControls.lieudit.setValue(lieudit);
+      this.displayedInventaireId$.next(inventaire.id);
 
-    const coordinatesSystem = this.coordinatesService.getAppCoordinatesSystem();
-    const inventaireCoordinates: Coordinates = getCoordinates(
-      inventaire,
-      coordinatesSystem
-    );
-    const lieuditCoordinates: Coordinates = getCoordinates(
-      lieudit,
-      coordinatesSystem
-    );
+      const inventaireFormControls = inventaireForm.controls;
+      const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
+        .controls;
 
-    if (lieudit && lieudit.id && _.isNil(inventaire.customizedAltitude)) {
-      // Coordinates are not updated for the inventaire
-      // We display the lieudit coordinates
-      lieuditFormControls.altitude.setValue(lieudit.altitude);
-      lieuditFormControls.longitude.setValue(lieuditCoordinates.longitude);
-      lieuditFormControls.latitude.setValue(lieuditCoordinates.latitude);
+      inventaireFormControls.observateur.setValue(observateur);
+      inventaireFormControls.observateursAssocies.setValue(associes);
+      inventaireFormControls.date.setValue(
+        interpretDateTimestampAsBrowserDate(inventaire.date)
+      );
+      inventaireFormControls.heure.setValue(inventaire.heure);
+      inventaireFormControls.duree.setValue(inventaire.duree);
+      lieuditFormControls.departement.setValue(departement);
+      lieuditFormControls.commune.setValue(commune);
+      lieuditFormControls.lieudit.setValue(lieudit);
+
+      // TO DO observable ?
+      const coordinatesSystem = this.coordinatesService.getAppCoordinatesSystem();
+
+      if (lieudit && lieudit.id && _.isNil(inventaire.customizedAltitude)) {
+        // Coordinates are not updated for the inventaire
+        // We display the lieudit coordinates
+        const lieuditCoordinates: Coordinates = getCoordinates(
+          lieudit,
+          coordinatesSystem
+        );
+        lieuditFormControls.altitude.setValue(lieudit.altitude);
+        lieuditFormControls.longitude.setValue(lieuditCoordinates.longitude);
+        lieuditFormControls.latitude.setValue(lieuditCoordinates.latitude);
+      } else {
+        // Coordinates are updated for the inventaire
+        // We display the inventaire coordinates
+        const inventaireCoordinates = inventaire.coordinates
+          ? getCoordinates(inventaire, coordinatesSystem)
+          : {
+              longitude: null,
+              latitude: null,
+              system: coordinatesSystem,
+              isTransformed: false
+            };
+        lieuditFormControls.altitude.setValue(inventaire.customizedAltitude);
+        lieuditFormControls.longitude.setValue(inventaireCoordinates.longitude);
+        lieuditFormControls.latitude.setValue(inventaireCoordinates.latitude);
+      }
+
+      inventaireFormControls.temperature.setValue(inventaire.temperature);
+      inventaireFormControls.meteos.setValue(meteos);
     } else {
-      // Coordinates are updated for the inventaire
-      // We display the inventaire coordinates
-      lieuditFormControls.altitude.setValue(inventaire.customizedAltitude);
-      lieuditFormControls.longitude.setValue(inventaireCoordinates.longitude);
-      lieuditFormControls.latitude.setValue(inventaireCoordinates.latitude);
+      this.initializeInventaireForm(pageModel, inventaireForm);
     }
-
-    inventaireFormControls.temperature.setValue(inventaire.temperature);
-    inventaireFormControls.meteos.setValue(meteos);
   };
 
   public getInventaireFromInventaireForm = (
@@ -277,8 +279,7 @@ export class InventaireService {
 
     let latitude: number = lieuditFormControls.latitude.value;
 
-    let inventaireCoordinates = buildCoordinates(
-      this.coordinatesService.getAppCoordinatesSystem(),
+    let inventaireCoordinates = this.coordinatesBuilderService.buildCoordinates(
       longitude,
       latitude
     );

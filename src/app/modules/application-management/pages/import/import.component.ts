@@ -1,10 +1,10 @@
 import { Component } from "@angular/core";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
-import { BackendApiService } from "../../../shared/services/backend-api.service";
 @Component({
   templateUrl: "./import.component.html"
 })
