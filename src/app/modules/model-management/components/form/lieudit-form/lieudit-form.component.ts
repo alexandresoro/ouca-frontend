@@ -5,7 +5,7 @@ import { Commune } from "ouca-common/commune.object";
 import {
   CoordinatesSystem,
   COORDINATES_SYSTEMS_CONFIG,
-  getCoordinates
+  getCoordinates,
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Departement } from "ouca-common/departement.object";
@@ -21,7 +21,7 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
 @Component({
   selector: "lieudit-form",
   styleUrls: ["./lieudit-form.component.scss"],
-  templateUrl: "./lieudit-form.component.html"
+  templateUrl: "./lieudit-form.component.html",
 })
 export class LieuditFormComponent extends EntitySubFormComponent<Lieudit>
   implements OnInit {
@@ -59,6 +59,16 @@ export class LieuditFormComponent extends EntitySubFormComponent<Lieudit>
   ngOnInit(): void {
     this.initialSetting = true;
 
+    this.coordinatesService
+      .getAppCoordinatesSystem$()
+      .subscribe((coordinatesSystemType) => {
+        this.coordinatesService.updateCoordinatesValidators(
+          coordinatesSystemType,
+          this.entityForm.controls.longitude,
+          this.entityForm.controls.latitude
+        );
+      });
+
     this.coordinatesSystem$ = this.coordinatesService
       .getAppCoordinatesSystem$()
       .pipe(
@@ -72,7 +82,9 @@ export class LieuditFormComponent extends EntitySubFormComponent<Lieudit>
       .getAppCoordinatesSystem$()
       .pipe(
         map((coordinatesSystemType) =>
-          getCoordinates(this.entity, coordinatesSystemType)
+          this.entity?.coordinates
+            ? getCoordinates(this.entity, coordinatesSystemType)
+            : null
         )
       );
 
@@ -143,14 +155,14 @@ export class LieuditFormComponent extends EntitySubFormComponent<Lieudit>
     this.entityForm.controls.communeId.valueChanges.subscribe(
       (selectedCommuneId: number) => {
         this.nomCommuneControl.setValue(selectedCommuneId, {
-          emitEvent: false
+          emitEvent: false,
         });
       }
     );
     this.nomCommuneControl.valueChanges.subscribe(
       (selectedCommuneId: number) => {
         this.entityForm.controls.communeId.setValue(selectedCommuneId, {
-          emitEvent: false
+          emitEvent: false,
         });
       }
     );
