@@ -1,6 +1,5 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { ConfigurationPage } from "ouca-common/configuration-page.object";
 import { CoordinatesSystemType } from "ouca-common/coordinates-system";
@@ -16,7 +15,7 @@ import { PostResponse } from "ouca-common/post-response.object";
 import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class BackendApiService {
   private ALL: string = "all";
@@ -46,7 +45,7 @@ export class BackendApiService {
 
   private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
 
-  constructor(public http: HttpClient, private router: Router) {}
+  constructor(public http: HttpClient) {}
 
   private getApiUrl = (): string => {
     return (
@@ -72,7 +71,7 @@ export class BackendApiService {
     console.log("GET ", requestPath);
     const httpOptions: Record<string, any> = {
       observe: "response",
-      responseType: "blob" as "json"
+      responseType: "blob" as "json",
     };
     return this.http.get<any>(requestPath, httpOptions);
   }
@@ -85,7 +84,7 @@ export class BackendApiService {
     console.log("POST", requestPath, objectToPost);
     const httpOptions: Record<string, any> = {
       observe: "response",
-      responseType: "blob" as "json"
+      responseType: "blob" as "json",
     };
     return this.http.post<any>(requestPath, objectToPost, httpOptions);
   }
