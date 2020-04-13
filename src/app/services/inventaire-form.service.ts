@@ -19,6 +19,7 @@ import { Observateur } from "ouca-common/observateur.object";
 import { combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
 import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";
+import { InventaireFormValue } from "../modules/donnee-creation/models/inventaire-form-value.model";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
 import {
@@ -118,13 +119,29 @@ export class InventaireFormService {
     this.form.disable();
   };
 
+  public setInventaireIdInForm = (id: number): void => {
+    this.form.controls.id.setValue(id);
+  };
+
   /**
-   * Initialize the inventaire form
-   * Reset the form and set defaults values if any
+   * Fill the inventaire form with the values from an existing inventaire
+   * @param inventaire Inventaire
    */
-  private initializeForm = (pageModel: CreationPage): void => {
-    const defaultOptions = this.getDefaultOptions(pageModel);
-    this.form.reset(defaultOptions);
+  private updateForm = (
+    pageModel: CreationPage,
+    inventaire: Inventaire | InventaireFormObject
+  ): void => {
+    if (!pageModel) {
+      return;
+    }
+
+    console.log("Inventaire à afficher dans le formulaire:", inventaire);
+
+    if (!inventaire) {
+      this.form.reset(this.getDefaultOptions(pageModel));
+    } else {
+      this.form.reset(this.getInventaireFormValue(pageModel, inventaire));
+    }
   };
 
   private getDefaultOptions = (
@@ -158,148 +175,126 @@ export class InventaireFormService {
     };
   };
 
-  public setInventaireIdInForm = (id: number): void => {
-    this.form.controls.id.setValue(id);
-  };
-
-  /**
-   * Fill the inventaire form with the values from an existing inventaire
-   * @param inventaire Inventaire
-   */
-  private updateForm = (
+  private getInventaireFormValue = (
     pageModel: CreationPage,
-    inventaire: Inventaire | InventaireFormObject
-  ): void => {
-    if (!pageModel) {
-      return;
-    }
-    console.log("Inventaire à afficher dans le formulaire:", inventaire);
+    inventaire: Inventaire
+  ): InventaireFormValue => {
+    const observateur: Observateur = ListHelper.findEntityInListByID(
+      pageModel.observateurs,
+      inventaire.observateurId
+    );
 
-    if (!inventaire) {
-      this.initializeForm(pageModel);
+    const lieudit: Lieudit = ListHelper.findEntityInListByID(
+      pageModel.lieudits,
+      inventaire.lieuditId
+    );
+
+    let commune: Commune = null;
+    if (lieudit?.communeId) {
+      commune = ListHelper.findEntityInListByID(
+        pageModel.communes,
+        lieudit.communeId
+      );
     } else {
-      const observateur: Observateur = ListHelper.findEntityInListByID(
-        pageModel.observateurs,
-        inventaire.observateurId
-      );
-
-      const lieudit: Lieudit = ListHelper.findEntityInListByID(
-        pageModel.lieudits,
-        inventaire.lieuditId
-      );
-
-      let commune: Commune = null;
-      if (lieudit?.communeId) {
-        commune = ListHelper.findEntityInListByID(
-          pageModel.communes,
-          lieudit.communeId
-        );
-      } else {
-        commune = (inventaire as InventaireFormObject).commune;
-      }
-
-      let departement: Departement = null;
-      if (!!commune && !!commune.departementId) {
-        departement = ListHelper.findEntityInListByID(
-          pageModel.departements,
-          commune.departementId
-        );
-      } else {
-        departement = (inventaire as InventaireFormObject).departement;
-      }
-
-      const associes: Observateur[] = ListHelper.getEntitiesFromIDs(
-        pageModel.observateurs,
-        inventaire.associesIds
-      ) as Observateur[];
-
-      const meteos: Meteo[] = ListHelper.getEntitiesFromIDs(
-        pageModel.meteos,
-        inventaire.meteosIds
-      ) as Meteo[];
-
-      const inventaireFormControls = this.form.controls;
-      const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
-        .controls;
-
-      inventaireFormControls.id.setValue(inventaire.id);
-      inventaireFormControls.observateur.setValue(observateur);
-      inventaireFormControls.observateursAssocies.setValue(associes);
-      inventaireFormControls.date.setValue(
-        interpretDateTimestampAsBrowserDate(inventaire.date)
-      );
-      inventaireFormControls.heure.setValue(inventaire.heure);
-      inventaireFormControls.duree.setValue(inventaire.duree);
-      lieuditFormControls.departement.setValue(departement);
-      lieuditFormControls.commune.setValue(commune);
-      lieuditFormControls.lieudit.setValue(lieudit);
-
-      // TO DO observable ?
-      const coordinatesSystem = this.coordinatesService.getAppCoordinatesSystem();
-
-      if (lieudit && lieudit.id && _.isNil(inventaire.customizedAltitude)) {
-        // Coordinates are not updated for the inventaire
-        // We display the lieudit coordinates
-        const lieuditCoordinates: Coordinates = getCoordinates(
-          lieudit,
-          coordinatesSystem
-        );
-        lieuditFormControls.altitude.setValue(lieudit.altitude);
-        lieuditFormControls.longitude.setValue(lieuditCoordinates.longitude);
-        lieuditFormControls.latitude.setValue(lieuditCoordinates.latitude);
-      } else {
-        // Coordinates are updated for the inventaire
-        // We display the inventaire coordinates
-        const inventaireCoordinates = inventaire.coordinates
-          ? getCoordinates(inventaire, coordinatesSystem)
-          : {
-              longitude: null,
-              latitude: null,
-              system: coordinatesSystem,
-              isTransformed: false,
-            };
-        lieuditFormControls.altitude.setValue(inventaire.customizedAltitude);
-        lieuditFormControls.longitude.setValue(inventaireCoordinates.longitude);
-        lieuditFormControls.latitude.setValue(inventaireCoordinates.latitude);
-      }
-
-      inventaireFormControls.temperature.setValue(inventaire.temperature);
-      inventaireFormControls.meteos.setValue(meteos);
+      commune = (inventaire as InventaireFormObject).commune;
     }
+
+    let departement: Departement = null;
+    if (!!commune && !!commune.departementId) {
+      departement = ListHelper.findEntityInListByID(
+        pageModel.departements,
+        commune.departementId
+      );
+    } else {
+      departement = (inventaire as InventaireFormObject).departement;
+    }
+
+    const associes: Observateur[] = ListHelper.getEntitiesFromIDs(
+      pageModel.observateurs,
+      inventaire.associesIds
+    ) as Observateur[];
+
+    const meteos: Meteo[] = ListHelper.getEntitiesFromIDs(
+      pageModel.meteos,
+      inventaire.meteosIds
+    ) as Meteo[];
+
+    let altitude: number = null;
+    let longitude: number = null;
+    let latitude: number = null;
+    // TO DO observable ?
+    const coordinatesSystem = this.coordinatesService.getAppCoordinatesSystem();
+
+    if (lieudit && lieudit.id && _.isNil(inventaire.customizedAltitude)) {
+      // Coordinates are not updated for the inventaire
+      // We display the lieudit coordinates
+      const lieuditCoordinates: Coordinates = getCoordinates(
+        lieudit,
+        coordinatesSystem
+      );
+      altitude = lieudit.altitude;
+      longitude = lieuditCoordinates.longitude;
+      latitude = lieuditCoordinates.latitude;
+    } else {
+      // Coordinates are updated for the inventaire
+      // We display the inventaire coordinates
+      const inventaireCoordinates = inventaire.coordinates
+        ? getCoordinates(inventaire, coordinatesSystem)
+        : {
+            longitude: null,
+            latitude: null,
+            system: coordinatesSystem,
+            isTransformed: false,
+          };
+
+      altitude = inventaire.customizedAltitude;
+      longitude = inventaireCoordinates.longitude;
+      latitude = inventaireCoordinates.latitude;
+    }
+
+    return {
+      id: inventaire.id,
+      observateur,
+      observateursAssocies: associes,
+      date: interpretDateTimestampAsBrowserDate(inventaire.date),
+      heure: inventaire.heure,
+      duree: inventaire.duree,
+      lieu: {
+        departement,
+        commune,
+        lieudit,
+        altitude,
+        longitude,
+        latitude,
+      },
+      temperature: inventaire.temperature,
+      meteos,
+    };
   };
 
   public getInventaireFromForm = (): Inventaire => {
-    const inventaireFormControls = this.form.controls;
-    const lieuditFormControls = (inventaireFormControls.lieu as FormGroup)
-      .controls;
-
-    const id: number = inventaireFormControls.id.value;
-
-    const observateur: Observateur = inventaireFormControls.observateur.value;
+    const inventaireFormValue: InventaireFormValue = this.form.value;
 
     const associesIds: number[] = ListHelper.getIDsFromEntities(
-      inventaireFormControls.observateursAssocies.value
+      inventaireFormValue.observateursAssocies
     );
 
     const date: Date = interpretBrowserDateAsTimestampDate(
-      inventaireFormControls.date.value
+      inventaireFormValue.date
     );
 
     const heure: string = TimeHelper.getFormattedTime(
-      inventaireFormControls.heure.value
+      inventaireFormValue.heure
     );
 
     const duree: string = TimeHelper.getFormattedTime(
-      inventaireFormControls.duree.value
+      inventaireFormValue.duree
     );
 
-    const lieudit: Lieudit = lieuditFormControls.lieudit.value;
-
-    let altitude: number = lieuditFormControls.altitude.value;
-
-    let longitude: number = lieuditFormControls.longitude.value;
-
-    let latitude: number = lieuditFormControls.latitude.value;
+    const lieudit: Lieudit = inventaireFormValue.lieu.lieudit;
+    let altitude: number = inventaireFormValue.lieu.altitude;
+    let longitude: number = inventaireFormValue.lieu.longitude;
+    let latitude: number = inventaireFormValue.lieu.latitude;
 
     let inventaireCoordinates = this.coordinatesBuilderService.buildCoordinates(
       longitude,
@@ -315,23 +310,23 @@ export class InventaireFormService {
       inventaireCoordinates = null;
     }
 
-    const temperature: number = inventaireFormControls.temperature.value;
-
     const meteosIds: number[] = ListHelper.getIDsFromEntities(
-      inventaireFormControls.meteos.value
+      inventaireFormValue.meteos
     );
 
     const inventaire: Inventaire = {
-      id,
-      observateurId: observateur ? observateur.id : null,
+      id: inventaireFormValue.id,
+      observateurId: inventaireFormValue.observateur?.id
+        ? inventaireFormValue.observateur.id
+        : null,
       associesIds,
       date: date.toJSON(),
       heure,
       duree,
-      lieuditId: lieudit ? lieudit.id : null,
+      lieuditId: lieudit?.id ? lieudit.id : null,
       customizedAltitude: altitude,
       coordinates: inventaireCoordinates,
-      temperature,
+      temperature: inventaireFormValue.temperature,
       meteosIds,
     };
 
