@@ -1,4 +1,3 @@
-import { FormGroup } from "@angular/forms";
 import { isSameDay } from "date-fns";
 import * as _ from "lodash";
 import { getOriginCoordinates } from "ouca-common/coordinates-system";
@@ -7,17 +6,6 @@ import { Inventaire } from "ouca-common/inventaire.object";
 import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";
 
 export class InventaireHelper {
-  public static updateFormState = (
-    form: FormGroup,
-    toEnable: boolean
-  ): void => {
-    if (toEnable) {
-      form.enable();
-    } else {
-      form.disable();
-    }
-  };
-
   /**
    * Method that returns true if both values represent a different number, or if only one is a number
    */

@@ -23,13 +23,12 @@ import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
-  saveFile
+  saveFile,
 } from "../../../shared/helpers/file-downloader.helper";
-import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/espece-with-nb-donnees.object";
-
+import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
 @Component({
   styleUrls: ["./view.component.scss"],
-  templateUrl: "./view.component.html"
+  templateUrl: "./view.component.html",
 })
 export class ViewComponent {
   public searchForm: FormGroup = new FormGroup({
@@ -42,22 +41,22 @@ export class ViewComponent {
     duree: new FormControl(),
     especeGroup: new FormGroup({
       classes: new FormControl(),
-      especes: new FormControl()
+      especes: new FormControl(),
     }),
     lieuditGroup: new FormGroup({
       departements: new FormControl(),
       communes: new FormControl(),
-      lieuxdits: new FormControl()
+      lieuxdits: new FormControl(),
     }),
     nombreGroup: new FormGroup({
       nombre: new FormControl(),
-      estimationsNombre: new FormControl()
+      estimationsNombre: new FormControl(),
     }),
     sexes: new FormControl(),
     ages: new FormControl(),
     distanceGroup: new FormGroup({
       distance: new FormControl(),
-      estimationsDistance: new FormControl()
+      estimationsDistance: new FormControl(),
     }),
     regroupement: new FormControl(),
     fromDate: new FormControl(),
@@ -65,7 +64,7 @@ export class ViewComponent {
     commentaire: new FormControl(),
     comportements: new FormControl(),
     milieux: new FormControl(),
-    excelMode: new FormControl()
+    excelMode: new FormControl(),
   });
 
   public observateurs: Observateur[];
@@ -260,7 +259,7 @@ export class ViewComponent {
         code: key,
         nomFrancais: espece.nomFrancais,
         nomLatin: espece.nomLatin,
-        nbDonnees: value
+        nbDonnees: value,
       };
     });
   };
