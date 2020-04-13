@@ -20,16 +20,13 @@ mat-toolbar {
 .wrapper {
   height: 100vh;
   overflow: hidden;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .base-naturaliste-content {
   overflow-y: auto;
-  margin-bottom: 10px;
-
-  .base-naturaliste-body {
-    max-width: 1600px;
-    margin: 0 auto;
-  }
+  // margin-bottom: 10px;
 }
 
 .mat-menu-item {

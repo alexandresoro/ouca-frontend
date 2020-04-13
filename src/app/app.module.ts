@@ -1,5 +1,6 @@
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { NgModule } from "@angular/core";
+import { FlexLayoutModule } from "@angular/flex-layout";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "./app.component";
 import { ApplicationManagementModule } from "./modules/application-management/application-management.module";
@@ -10,11 +11,10 @@ import { NotFoundComponent } from "./modules/shared/components/not-found/not-fou
 import { ServerErrorComponent } from "./modules/shared/components/server-error/server-error.component";
 import { HttpRequestInterceptor } from "./modules/shared/services/http-request-interceptor";
 import { SharedModule } from "./modules/shared/shared.module";
-import { FlexLayoutModule } from "@angular/flex-layout";
 
 const routes: Routes = [
   { path: "error", component: ServerErrorComponent },
-  { path: "**", component: NotFoundComponent }
+  { path: "**", component: NotFoundComponent },
 ];
 @NgModule({
   imports: [
@@ -24,7 +24,7 @@ const routes: Routes = [
     DonneeCreationModule,
     DonneeViewModule,
     ModelManagementModule,
-    FlexLayoutModule
+    FlexLayoutModule,
   ],
   exports: [],
   declarations: [AppComponent, NotFoundComponent, ServerErrorComponent],
@@ -34,8 +34,8 @@ const routes: Routes = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class AppModule {}

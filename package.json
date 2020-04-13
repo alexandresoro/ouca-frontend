@@ -23,6 +23,7 @@
     "@angular/platform-browser": "9.0.4",
     "@angular/platform-browser-dynamic": "9.0.4",
     "@angular/router": "9.0.4",
+    "@swimlane/ngx-charts": "*",
     "date-fns": "*",
     "date-fns-tz": "*",
     "file-saver": "*",
@@ -32,6 +33,7 @@
     "ouca-common": "*",
     "rxjs": "*",
     "tslib": "^1.11.0",
+    "typeface-lato": "*",
     "typeface-roboto": "*",
     "zone.js": "0.10.2"
   },

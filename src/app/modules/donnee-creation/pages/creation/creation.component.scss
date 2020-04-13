@@ -1,6 +1,6 @@
 @use "~@angular/material/theming" as mat;
 
-$creation-header-footer-color: mat.mat-color(mat.$mat-grey, 400);
+$creation-header-footer-color: mat.mat-color(mat.$mat-cyan, 800);
 $creation-body-color: mat.mat-color(mat.$mat-grey, 300);
 $standardColumnGap: 20px;
 $temperatureFieldWidth: 100px;
@@ -11,17 +11,15 @@ mat-card.mat-card-override {
 }
 
 .creation-page {
-  div.creation-page-header {
-    margin-top: 20px;
-  }
+  height: 100%;
+  background-color: $creation-body-color;
 
-  div.creation-page-header,
-  div.creation-page-footer {
+  div.creation-page-header {
     display: flex;
     flex: 0 0 auto;
     padding-left: 50px;
     padding-right: 50px;
-    padding-top: 10px;
+    padding-top: 30px;
     padding-bottom: 10px;
     background-color: $creation-header-footer-color;
     min-height: 30px;
@@ -44,7 +42,7 @@ mat-card.mat-card-override {
     padding-left: 50px;
     padding-right: 50px;
     padding-top: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 100px;
 
     .creation-page-inventaire-header {
       display: flex;
@@ -97,5 +95,18 @@ input-milieux {
     font-size: 30px;
     margin-right: 0px;
     padding-bottom: 8px;
+  }
+}
+
+.save-button-container {
+  position: sticky;
+  bottom: 5vh;
+  right: 50px;
+  margin-top: 1.5em;
+  float: right;
+
+  .save-button,
+  .delete-button {
+    margin-right: 0.9rem;
   }
 }

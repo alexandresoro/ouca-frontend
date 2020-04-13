@@ -14,7 +14,7 @@ $material-design-icons-font-directory-path: "~material-design-icons-iconfont/dis
   src: url("assets/fonts/showg.ttf") format("truetype");
 }
 
-@import "../node_modules/typeface-roboto/index.css";
+@import "../node_modules/typeface-lato/index.css";
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -58,7 +58,7 @@ $custom-typography: mat-typography-config(
       mat-font-size($defaultConfig, input)-0.125,
       mat-line-height($defaultConfig, input)-0.125,
       mat-font-weight($defaultConfig, input)
-    )
+    ),
 );
 
 @include angular-material-theme($candy-app-theme);
@@ -66,10 +66,6 @@ $custom-typography: mat-typography-config(
 // Common styles
 body.base-naturaliste {
   margin: 0;
-
-  button {
-    height: 36px;
-  }
 
   .default-tooltip {
     background-color: variables.$dark-grey-color;
@@ -125,7 +121,7 @@ body.base-naturaliste {
     flex: 0 1 20px;
   }
 
-  button mat-icon:first-child {
+  button:not(.mat-fab) mat-icon:first-child {
     margin-right: 10px;
   }
 

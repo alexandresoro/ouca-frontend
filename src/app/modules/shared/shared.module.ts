@@ -10,12 +10,12 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE
+  MAT_DATE_LOCALE,
 } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import {
   MatDialogModule,
-  MAT_DIALOG_DEFAULT_OPTIONS
+  MAT_DIALOG_DEFAULT_OPTIONS,
 } from "@angular/material/dialog";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -34,9 +34,10 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatTreeModule } from "@angular/material/tree";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
 import {
   DateFnsDateAdapter,
-  MAT_DATE_FNS_DATE_FORMATS
+  MAT_DATE_FNS_DATE_FORMATS,
 } from "src/app/date-adapter/date-fns-adapter";
 import { InputAgeComponent } from "../donnee-creation/components/input-age/input-age.component";
 import { InputDistanceComponent } from "../donnee-creation/components/input-distance/input-distance.component";
@@ -84,7 +85,8 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-    ReactiveFormsModule
+    NgxChartsModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     AutocompleteActiveSelection,
@@ -102,12 +104,12 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     InputTimeComponent,
     MultipleOptionsDialogComponent,
     MultipleSelectComponent,
-    StatusMessageComponent
+    StatusMessageComponent,
   ],
   entryComponents: [
     ConfirmationDialogComponent,
     MultipleOptionsDialogComponent,
-    StatusMessageComponent
+    StatusMessageComponent,
   ],
   exports: [
     AutocompleteComponent,
@@ -151,16 +153,17 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     MatTreeModule,
     MultipleOptionsDialogComponent,
     MultipleSelectComponent,
-    ReactiveFormsModule
+    NgxChartsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
     {
       provide: DateAdapter,
-      useClass: DateFnsDateAdapter
+      useClass: DateFnsDateAdapter,
     },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_DATE_FORMATS }
-  ]
+    { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_DATE_FORMATS },
+  ],
 })
 export class SharedModule {}
