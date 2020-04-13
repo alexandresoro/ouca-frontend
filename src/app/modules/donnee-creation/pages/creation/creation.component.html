@@ -8,7 +8,7 @@
         mat-raised-button
         matTooltip="Donnée précédente"
         matTooltipClass="default-tooltip"
-        color="primary"
+        color="accent"
         [disabled]="!(isPreviousDonneeBtnDisplayed$() | async)"
         (click)="onPreviousDonneeBtnClicked()"
       >
@@ -20,7 +20,7 @@
         mat-raised-button
         matTooltip="Donnée suivante"
         matTooltipClass="default-tooltip"
-        color="primary"
+        color="accent"
         [disabled]="!(isNextDonneeBtnDisplayed$() | async)"
         (click)="onNextDonneeBtnClicked()"
       >
@@ -32,7 +32,6 @@
         mat-raised-button
         matTooltip="Recherche par ID"
         matTooltipClass="default-tooltip"
-        color="primary"
         (click)="onSearchByIdBtnClicked()"
       >
         <mat-icon>search</mat-icon>
@@ -41,379 +40,314 @@
       <button
         class="no-text-button"
         mat-raised-button
-        matTooltip="Nouvelle donnée"
+        matTooltip="Retour à l'édition de la donnée courante"
         matTooltipClass="default-tooltip"
-        color="primary"
-        *ngIf="isNewDonneeBtnDisplayed$() | async"
-        (click)="onNewDonneeBtnClicked()"
+        *ngIf="isCurrentDonneeAnExistingOne$() | async"
+        (click)="onBackToCurrentEditionButtonClicked()"
       >
-        <mat-icon>add</mat-icon>
+        <mat-icon>redo</mat-icon>
+      </button>
+
+      <button
+        class="no-text-button"
+        color="warn"
+        mat-raised-button
+        matTooltip="Réinitialiser le formulaire"
+        matTooltipClass="default-tooltip"
+        *ngIf="!(isCurrentDonneeAnExistingOne$() | async)"
+        (click)="onClearFormButtonClicked()"
+      >
+        <mat-icon>clear</mat-icon>
       </button>
     </span>
 
     <span class="flex-spacer"></span>
-
-    <!-- Top right buttons -->
-    <span class="creation-page-right-buttons">
-      <button
-        class="no-text-button"
-        mat-raised-button
-        color="primary"
-        matTooltip="Enregistrer la fiche inventaire"
-        matTooltipClass="default-tooltip"
-        *ngIf="isSaveInventaireBtnDisplayed$() | async"
-        [disabled]="!inventaireForm.valid"
-        (click)="onSaveInventaireButtonClicked()"
-      >
-        <mat-icon>save</mat-icon>
-      </button>
-      <button
-        class="no-text-button"
-        mat-raised-button
-        matTooltip="Enregistrer la fiche espèce"
-        matTooltipClass="default-tooltip"
-        color="primary"
-        *ngIf="isSaveDonneeBtnDisplayed$() | async"
-        [disabled]="!donneeForm.valid"
-        (click)="onSaveDonneeButtonClicked()"
-      >
-        <mat-icon>save</mat-icon>
-      </button>
-      <button
-        class="no-text-button"
-        *ngIf="isUpdateDonneeBtnDisplayed$() | async"
-        mat-raised-button
-        matTooltip="Mettre à jour les fiches inventaire et espèce"
-        matTooltipClass="default-tooltip"
-        color="primary"
-        (click)="saveInventaireAndDonnee()"
-        [disabled]="!inventaireForm.valid || !donneeForm.valid"
-      >
-        <mat-icon>save</mat-icon>
-      </button>
-      <button
-        class="no-text-button"
-        mat-raised-button
-        matTooltip="Supprimer la fiche espèce"
-        matTooltipClass="default-tooltip"
-        color="primary"
-        *ngIf="isDeleteDonneeBtnDisplayed$() | async"
-        (click)="onDeleteDonneeBtnClicked()"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-    </span>
   </div>
 
   <!-- FORM TO CREATE DONNEES -->
-  <div fxLayout="row" fxLayoutGap="50px" class="creation-page-form">
-    <div fxFlex="33">
-      <div class="creation-page-inventaire-header">
-        <h2>
-          Fiche inventaire
+  <div class="creation-page-form" style="position: relative;">
+    <div fxLayout="row" fxLayoutGap="50px">
+      <div fxFlex="33">
+        <div class="creation-page-inventaire-header">
+          <h2>
+            Fiche inventaire
+            <button
+              *ngIf="isEditingDonneeOnly()"
+              mat-icon-button
+              class="update-fiche-inventaire-button"
+              matTooltip="Corriger la fiche inventaire actuelle"
+              matTooltipClass="default-tooltip"
+              (click)="onEditInventaireBtnClicked()"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </h2>
+          <span class="flex-spacer"></span>
           <button
-            *ngIf="isUpdateInventaireBtnDisplayed$() | async"
+            *ngIf="isEditingDonneeOnly()"
             mat-icon-button
-            class="update-fiche-inventaire-button"
-            matTooltip="Corriger la fiche inventaire actuelle"
+            color="primary"
+            class="new-fiche-inventaire-button"
+            matTooltip="Créer une nouvelle fiche inventaire"
             matTooltipClass="default-tooltip"
-            (click)="onEditInventaireBtnClicked()"
+            (click)="onNewInventaireBtnClicked()"
           >
-            <mat-icon>edit</mat-icon>
+            <mat-icon>note_add</mat-icon>
           </button>
-        </h2>
-        <span class="flex-spacer"></span>
-        <button
-          *ngIf="isNewInventaireBtnDisplayed$() | async"
-          mat-icon-button
-          color="primary"
-          class="new-fiche-inventaire-button"
-          matTooltip="Créer une nouvelle fiche inventaire"
-          matTooltipClass="default-tooltip"
-          (click)="onNewInventaireBtnClicked()"
-        >
-          <mat-icon>note_add</mat-icon>
-        </button>
-      </div>
-
-      <form [formGroup]="inventaireForm">
-        <div class="inventaire-form">
-          <!-- CARD OBSERVATEUR + ASSOCIES -->
-          <mat-card class="mat-card-override full-width-container">
-            <!-- OBSERVATEUR -->
-            <div>
-              <input-observateur
-                [control]="inventaireForm.controls['observateur']"
-                [observateurs]="(pageModel$ | async)?.observateurs"
-              >
-              </input-observateur>
-            </div>
-
-            <!-- ASSOCIES -->
-            <div *ngIf="(pageModel$ | async)?.areAssociesDisplayed">
-              <input-observateurs-associes
-                [control]="inventaireForm.controls['observateursAssocies']"
-                [observateurs]="(pageModel$ | async)?.observateurs"
-              >
-              </input-observateurs-associes>
-            </div>
-          </mat-card>
-          <!-- END CARD OBSERVATEUR + ASSOCIES -->
-
-          <!-- CARD DATE + HEURE + DUREE -->
-          <mat-card
-            fxLayout="row wrap"
-            fxLayoutGap="20px"
-            class="mat-card-override"
-          >
-            <!-- DATE -->
-            <input-date
-              fxFlex="2 0 100px"
-              [control]="inventaireForm.controls['date']"
-            ></input-date>
-
-            <!-- HEURE -->
-            <input-time
-              fxFlex="1 0 70px"
-              [control]="inventaireForm.controls['heure']"
-              id="heure"
-              label="Heure"
-            ></input-time>
-
-            <!-- DUREE -->
-            <input-time
-              fxFlex="1 0 70px"
-              [control]="inventaireForm.controls['duree']"
-              id="duree"
-              label="Durée"
-            ></input-time>
-          </mat-card>
-          <!-- END CARD DATE + HEURE + DUREE -->
-
-          <!-- CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
-          <mat-card class="mat-card-override">
-            <input-lieudit
-              formGroupName="lieu"
-              [controlGroup]="inventaireForm.controls['lieu']"
-              [departements]="departements$"
-              [communes]="communes$"
-              [lieuxdits]="lieuxdits$"
-              [coordinatesSystem]="getCoordinatesSystem$() | async"
-            >
-            </input-lieudit>
-          </mat-card>
-          <!-- END CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
-
-          <!-- CARD TEMPERATURE + METEO -->
-          <mat-card
-            fxLayout="row wrap"
-            fxLayoutGap="20px"
-            class="mat-card-override"
-            *ngIf="(pageModel$ | async)?.isMeteoDisplayed"
-          >
-            <!-- TEMPERATURE -->
-            <input-temperature
-              fxFlex="100px"
-              [control]="inventaireForm.controls['temperature']"
-            ></input-temperature>
-
-            <!-- METEOS -->
-            <input-meteos
-              fxFlex="1 0 120px"
-              [meteos]="(pageModel$ | async)?.meteos"
-              [control]="inventaireForm.controls['meteos']"
-            ></input-meteos>
-          </mat-card>
-          <!-- END CARD TEMPERATURE + METEO -->
         </div>
-        <!-- END FICHE INVENTAIRE -->
-      </form>
-    </div>
 
-    <!-- FICHE ESPECE  -->
-    <div fxFlex="67">
-      <h2>
-        Fiche espèce
-        <span
-          *ngIf="getCurrentDonneeIndex$() | async"
-          matTooltip="ID = {{ getDisplayedDonneeId$() | async}}"
-          matTooltipClass="default-tooltip"
-        >
-          n°{{ getCurrentDonneeIndex$() | async }}
-        </span>
-      </h2>
+        <form [formGroup]="inventaireForm">
+          <div class="inventaire-form">
+            <!-- CARD OBSERVATEUR + ASSOCIES -->
+            <mat-card class="mat-card-override full-width-container">
+              <!-- OBSERVATEUR -->
+              <div>
+                <input-observateur
+                  [control]="inventaireForm.controls['observateur']"
+                  [observateurs]="(pageModel$ | async)?.observateurs"
+                >
+                </input-observateur>
+              </div>
 
-      <div class="espece-form">
-        <form [formGroup]="donneeForm">
-          <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
-          <mat-card
-            class="mat-card-override creation-espece-card full-width-container"
-          >
-            <input-espece
-              class="card-espece"
-              formGroupName="especeGroup"
-              [controlGroup]="donneeForm.controls['especeGroup']"
-              [classes]="classes$"
-              [especes]="especes$"
-            ></input-espece>
-          </mat-card>
-          <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
+              <!-- ASSOCIES -->
+              <div *ngIf="(pageModel$ | async)?.areAssociesDisplayed">
+                <input-observateurs-associes
+                  [control]="inventaireForm.controls['observateursAssocies']"
+                  [observateurs]="(pageModel$ | async)?.observateurs"
+                >
+                </input-observateurs-associes>
+              </div>
+            </mat-card>
+            <!-- END CARD OBSERVATEUR + ASSOCIES -->
 
-          <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
-          <mat-card class="mat-card-override">
-            <div fxLayout="row wrap" fxLayoutGap="10%">
-              <input-nombre
-                fxFlex="auto"
-                fxLayout="row"
-                fxLayoutGap="20px"
-                [controlGroup]="donneeForm.controls['nombreGroup']"
-                [defaultNombre]="(pageModel$ | async)?.defaultNombre"
-                [estimationsNombre]="(pageModel$ | async)?.estimationsNombre"
-                formGroupName="nombreGroup"
-              >
-              </input-nombre>
-
-              <!-- SEXE -->
-              <input-sexe
-                fxFlex="1 0 120px"
-                [control]="donneeForm.controls['sexe']"
-                [sexes]="(pageModel$ | async)?.sexes"
-              ></input-sexe>
-
-              <!-- AGE  -->
-              <input-age
-                fxFlex="1 0 120px"
-                [control]="donneeForm.controls['age']"
-                [ages]="(pageModel$ | async)?.ages"
-              ></input-age>
-            </div>
-
-            <!-- DISTANCE AND ESTIMATION DISTANCE -->
-            <div
-              *ngIf="
-                (pageModel$ | async)?.isDistanceDisplayed ||
-                (pageModel$ | async)?.isRegroupementDisplayed
-              "
+            <!-- CARD DATE + HEURE + DUREE -->
+            <mat-card
               fxLayout="row wrap"
+              fxLayoutGap="20px"
+              class="mat-card-override"
             >
-              <!-- ESTIMATION DISTANCE -->
-              <input-distance
-                *ngIf="(pageModel$ | async)?.isDistanceDisplayed"
-                fxFlex="auto"
-                fxLayout="row"
-                fxLayoutGap="20px"
-                [controlGroup]="donneeForm.controls['distanceGroup']"
-                [estimationsDistance]="(pageModel$ | async)?.estimationsDistance"
-                formGroupName="distanceGroup"
+              <!-- DATE -->
+              <input-date
+                fxFlex="2 0 100px"
+                [control]="inventaireForm.controls['date']"
+              ></input-date>
+
+              <!-- HEURE -->
+              <input-time
+                fxFlex="1 0 70px"
+                [control]="inventaireForm.controls['heure']"
+                id="heure"
+                label="Heure"
+              ></input-time>
+
+              <!-- DUREE -->
+              <input-time
+                fxFlex="1 0 70px"
+                [control]="inventaireForm.controls['duree']"
+                id="duree"
+                label="Durée"
+              ></input-time>
+            </mat-card>
+            <!-- END CARD DATE + HEURE + DUREE -->
+
+            <!-- CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
+            <mat-card class="mat-card-override">
+              <input-lieudit
+                formGroupName="lieu"
+                [controlGroup]="inventaireForm.controls['lieu']"
+                [departements]="departements$"
+                [communes]="communes$"
+                [lieuxdits]="lieuxdits$"
+                [coordinatesSystem]="getCoordinatesSystem$() | async"
               >
-              </input-distance>
+              </input-lieudit>
+            </mat-card>
+            <!-- END CARD DEPARTEMENT + COMMUNE + LIEUDIT + ALTITUDE + LONGITUDE + LATITUDE -->
 
-              <!-- REGROUPEMENT-->
-              <input-regroupement
-                *ngIf="(pageModel$ | async)?.isRegroupementDisplayed"
-                fxFlex="1 0 220px"
-                fxFlexOffset="10%"
-                [control]="donneeForm.controls['regroupement']"
-                [nextRegroupement]="nextRegroupement$ | async"
-              ></input-regroupement>
-            </div>
-          </mat-card>
-          <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
-
-          <!-- CARD COMPORTEMENT x6 -->
-          <mat-card class="mat-card-override">
-            <mat-card-content
-              class="comportements-container full-width-container"
+            <!-- CARD TEMPERATURE + METEO -->
+            <mat-card
+              fxLayout="row wrap"
+              fxLayoutGap="20px"
+              class="mat-card-override"
+              *ngIf="(pageModel$ | async)?.isMeteoDisplayed"
             >
-              <input-comportements
-                formGroupName="comportementsGroup"
-                [donneeForm]="donneeForm"
-                [controlGroup]="donneeForm.controls['comportementsGroup']"
-                [comportements]="(pageModel$ | async)?.comportements"
-              ></input-comportements>
-            </mat-card-content>
-          </mat-card>
-          <!-- END CARD COMPORTEMENT x6 -->
+              <!-- TEMPERATURE -->
+              <input-temperature
+                fxFlex="100px"
+                [control]="inventaireForm.controls['temperature']"
+              ></input-temperature>
 
-          <!-- CARD MILIEU x4 -->
-          <mat-card class="mat-card-override">
-            <mat-card-content class="milieux-container full-width-container">
-              <input-milieux
-                formGroupName="milieuxGroup"
-                [donneeForm]="donneeForm"
-                [controlGroup]="donneeForm.controls['milieuxGroup']"
-                [milieux]="(pageModel$ | async)?.milieux"
-              ></input-milieux>
-            </mat-card-content>
-          </mat-card>
-          <!-- END CARD MILIEU x4 -->
-
-          <!-- CARD COMMENTAIRE -->
-          <mat-card class="mat-card-override">
-            <mat-card-content class="full-width-container">
-              <!-- COMMENTAIRE -->
-              <input-commentaire
-                [control]="donneeForm.controls['commentaire']"
-              ></input-commentaire>
-            </mat-card-content>
-          </mat-card>
-          <!-- END CARD COMMENTAIRE -->
+              <!-- METEOS -->
+              <input-meteos
+                fxFlex="1 0 120px"
+                [meteos]="(pageModel$ | async)?.meteos"
+                [control]="inventaireForm.controls['meteos']"
+              ></input-meteos>
+            </mat-card>
+            <!-- END CARD TEMPERATURE + METEO -->
+          </div>
+          <!-- END FICHE INVENTAIRE -->
         </form>
       </div>
-    </div>
-  </div>
 
-  <!-- BAR BOTTOM BUTTOM -->
-  <div class="creation-page-footer">
-    <span class="flex-spacer"></span>
-    <span class="creation-page-right-buttons">
+      <!-- FICHE ESPECE  -->
+      <div fxFlex="67">
+        <h2>
+          Fiche espèce
+          <span
+            *ngIf="getCurrentDonneeIndex$() | async"
+            matTooltip="ID = {{ getDisplayedDonneeId$() | async }}"
+            matTooltipClass="default-tooltip"
+          >
+            n°{{ getCurrentDonneeIndex$() | async }}
+          </span>
+        </h2>
+
+        <div class="espece-form">
+          <form [formGroup]="donneeForm">
+            <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
+            <mat-card
+              class="mat-card-override creation-espece-card full-width-container"
+            >
+              <input-espece
+                class="card-espece"
+                formGroupName="especeGroup"
+                [controlGroup]="donneeForm.controls['especeGroup']"
+                [classes]="classes$"
+                [especes]="especes$"
+              ></input-espece>
+            </mat-card>
+            <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
+
+            <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+            <mat-card class="mat-card-override">
+              <div fxLayout="row wrap" fxLayoutGap="10%">
+                <input-nombre
+                  fxFlex="auto"
+                  fxLayout="row"
+                  fxLayoutGap="20px"
+                  [controlGroup]="donneeForm.controls['nombreGroup']"
+                  [defaultNombre]="(pageModel$ | async)?.defaultNombre"
+                  [estimationsNombre]="(pageModel$ | async)?.estimationsNombre"
+                  formGroupName="nombreGroup"
+                >
+                </input-nombre>
+
+                <!-- SEXE -->
+                <input-sexe
+                  fxFlex="1 0 120px"
+                  [control]="donneeForm.controls['sexe']"
+                  [sexes]="(pageModel$ | async)?.sexes"
+                ></input-sexe>
+
+                <!-- AGE  -->
+                <input-age
+                  fxFlex="1 0 120px"
+                  [control]="donneeForm.controls['age']"
+                  [ages]="(pageModel$ | async)?.ages"
+                ></input-age>
+              </div>
+
+              <!-- DISTANCE AND ESTIMATION DISTANCE -->
+              <div
+                *ngIf="
+                  (pageModel$ | async)?.isDistanceDisplayed ||
+                  (pageModel$ | async)?.isRegroupementDisplayed
+                "
+                fxLayout="row wrap"
+              >
+                <!-- ESTIMATION DISTANCE -->
+                <input-distance
+                  *ngIf="(pageModel$ | async)?.isDistanceDisplayed"
+                  fxFlex="auto"
+                  fxLayout="row"
+                  fxLayoutGap="20px"
+                  [controlGroup]="donneeForm.controls['distanceGroup']"
+                  [estimationsDistance]="
+                    (pageModel$ | async)?.estimationsDistance
+                  "
+                  formGroupName="distanceGroup"
+                >
+                </input-distance>
+
+                <!-- REGROUPEMENT-->
+                <input-regroupement
+                  *ngIf="(pageModel$ | async)?.isRegroupementDisplayed"
+                  fxFlex="1 0 220px"
+                  fxFlexOffset="10%"
+                  [control]="donneeForm.controls['regroupement']"
+                  [nextRegroupement]="nextRegroupement$ | async"
+                ></input-regroupement>
+              </div>
+            </mat-card>
+            <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+
+            <!-- CARD COMPORTEMENT x6 -->
+            <mat-card class="mat-card-override">
+              <mat-card-content
+                class="comportements-container full-width-container"
+              >
+                <input-comportements
+                  formGroupName="comportementsGroup"
+                  [donneeForm]="donneeForm"
+                  [controlGroup]="donneeForm.controls['comportementsGroup']"
+                  [comportements]="(pageModel$ | async)?.comportements"
+                ></input-comportements>
+              </mat-card-content>
+            </mat-card>
+            <!-- END CARD COMPORTEMENT x6 -->
+
+            <!-- CARD MILIEU x4 -->
+            <mat-card class="mat-card-override">
+              <mat-card-content class="milieux-container full-width-container">
+                <input-milieux
+                  formGroupName="milieuxGroup"
+                  [donneeForm]="donneeForm"
+                  [controlGroup]="donneeForm.controls['milieuxGroup']"
+                  [milieux]="(pageModel$ | async)?.milieux"
+                ></input-milieux>
+              </mat-card-content>
+            </mat-card>
+            <!-- END CARD MILIEU x4 -->
+
+            <!-- CARD COMMENTAIRE -->
+            <mat-card class="mat-card-override">
+              <mat-card-content class="full-width-container">
+                <!-- COMMENTAIRE -->
+                <input-commentaire
+                  [control]="donneeForm.controls['commentaire']"
+                ></input-commentaire>
+              </mat-card-content>
+            </mat-card>
+            <!-- END CARD COMMENTAIRE -->
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="save-button-container">
       <button
-        class="no-text-button"
-        mat-raised-button
-        matTooltip="Enregistrer la fiche inventaire"
+        class="save-button"
+        mat-fab
+        [matTooltip]="getSaveButtonTooltip()"
         matTooltipClass="default-tooltip"
         color="primary"
-        *ngIf="isSaveInventaireBtnDisplayed$() | async"
-        [disabled]="!inventaireForm.valid"
-        (click)="onSaveInventaireButtonClicked()"
+        (click)="onSaveButtonClicked()"
+        [disabled]="isSaveButtonDisabled()"
       >
         <mat-icon>save</mat-icon>
       </button>
+
       <button
-        class="no-text-button"
-        mat-raised-button
-        matTooltip="Enregistrer la fiche espèce"
-        matTooltipClass="default-tooltip"
-        color="primary"
-        *ngIf="isSaveDonneeBtnDisplayed$() | async"
-        [disabled]="!donneeForm.valid"
-        (click)="onSaveDonneeButtonClicked()"
-      >
-        <mat-icon>save</mat-icon>
-      </button>
-      <button
-        class="no-text-button"
-        mat-raised-button
-        matTooltip="Mettre à jour les fiches inventaire et espèce"
-        matTooltipClass="default-tooltip"
-        color="primary"
-        *ngIf="isUpdateDonneeBtnDisplayed$() | async"
-        (click)="saveInventaireAndDonnee()"
-        [disabled]="!inventaireForm.valid || !donneeForm.valid"
-      >
-        <mat-icon>save</mat-icon>
-      </button>
-      <button
-        class="no-text-button"
-        mat-raised-button
+        class="delete-button"
+        mat-fab
         matTooltip="Supprimer la fiche espèce"
         matTooltipClass="default-tooltip"
-        color="primary"
-        *ngIf="isDeleteDonneeBtnDisplayed$() | async"
+        color="warn"
+        *ngIf="isCurrentDonneeAnExistingOne$() | async"
         (click)="onDeleteDonneeBtnClicked()"
       >
         <mat-icon>delete</mat-icon>
       </button>
-    </span>
+    </div>
   </div>
 </div>

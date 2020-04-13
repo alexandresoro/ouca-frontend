@@ -3,7 +3,7 @@ import {
   state,
   style,
   transition,
-  trigger
+  trigger,
 } from "@angular/animations";
 import {
   Component,
@@ -11,7 +11,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  ViewChild
+  ViewChild,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -22,6 +22,7 @@ import * as _ from "lodash";
 import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
+import { CreationPageService } from "src/app/services/creation-page.service";
 
 @Component({
   selector: "table-donnees",
@@ -34,9 +35,9 @@ import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/help
       transition(
         "expanded <=> collapsed",
         animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      )
-    ])
-  ]
+      ),
+    ]),
+  ],
 })
 export class TableDonneesComponent implements OnChanges, OnInit {
   public COMPORTEMENTS_INDEXES: number[] = [1, 2, 3, 4, 5, 6];
@@ -55,7 +56,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     "date",
     "heure",
     "duree",
-    "observateur"
+    "observateur",
   ];
 
   @Input() public donneesToDisplay: FlatDonnee[];
@@ -72,13 +73,16 @@ export class TableDonneesComponent implements OnChanges, OnInit {
 
   public selectedDonnee: FlatDonnee;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private creationPageService: CreationPageService
+  ) {}
 
   private filterData = (data: FlatDonnee, filterValue: string): boolean => {
     const otherData = _.difference(_.keys(data), [
       "date",
       "comportements",
-      "milieux"
+      "milieux",
     ]);
 
     const otherDataFilter = _.some(otherData, (dataField) => {
@@ -86,10 +90,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
         return "" + data[dataField] === filterValue;
       }
 
-      return ("" + data[dataField])
-        .trim()
-        .toLowerCase()
-        .includes(filterValue);
+      return ("" + data[dataField]).trim().toLowerCase().includes(filterValue);
     });
     if (otherDataFilter) {
       return true;
@@ -98,10 +99,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     const comportementsFilter = _.some(data.comportements, (comportement) => {
       return (
         _.toNumber(comportement.code) === _.toNumber(filterValue) ||
-        comportement.libelle
-          .trim()
-          .toLowerCase()
-          .includes(filterValue)
+        comportement.libelle.trim().toLowerCase().includes(filterValue)
       );
     });
     if (comportementsFilter) {
@@ -111,10 +109,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     const milieuxFilter = _.some(data.milieux, (milieu) => {
       return (
         _.toNumber(milieu.code) === _.toNumber(filterValue) ||
-        milieu.libelle
-          .trim()
-          .toLowerCase()
-          .includes(filterValue)
+        milieu.libelle.trim().toLowerCase().includes(filterValue)
       );
     });
     if (milieuxFilter) {
@@ -166,6 +161,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
   };
 
   public editDonnee = (id: number): void => {
+    this.creationPageService.setRequestedDonneeId(id);
     this.router.navigate(["/creation"], { state: { id: id } });
   };
 

@@ -27,6 +27,14 @@ export class CreationModeService {
     );
   };
 
+  public getIsInventaireEnabled$ = (): Observable<boolean> => {
+    return this.isInventaireEnabled$;
+  };
+
+  public getIsDonneeEnabled$ = (): Observable<boolean> => {
+    return this.isDonneeEnabled$;
+  };
+
   public setStatus = (
     isInventaireEnabled: boolean,
     isDonneeEnabled: boolean
