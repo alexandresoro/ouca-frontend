@@ -5,7 +5,7 @@
       *ngIf="!isMultipleSelectMode"
       [attributesToFilter]="departementAutocompleteAttributes"
       type="Département"
-      [values]="departements | async"
+      [values]="departements$ | async"
       [control]="controlGroup.controls['departement']"
       [displayFn]="displayDepartementFormat"
     >
@@ -16,7 +16,7 @@
       [attributesToDisplay]="['code']"
       [control]="controlGroup.controls['departements']"
       [id]="'communes'"
-      [options]="departements | async"
+      [options]="departements$ | async"
       [placeholder]="'Départements'"
     ></multiple-select>
   </div>

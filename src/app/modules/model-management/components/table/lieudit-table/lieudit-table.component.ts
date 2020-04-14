@@ -9,7 +9,7 @@ import {
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Subject } from "rxjs";
-import { CoordinatesService } from "../../../../../services/coordinates.service";
+import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface LieuditRow {
@@ -47,7 +47,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
 
   private lieuxdits$: Subject<Lieudit[]> = new Subject<Lieudit[]>();
 
-  constructor(private coordinatesService: CoordinatesService) {
+  constructor(private appConfigurationService: AppConfigurationService) {
     super();
   }
 
@@ -58,7 +58,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
 
     combineLatest(
       this.lieuxdits$,
-      this.coordinatesService.getAppCoordinatesSystem$(),
+      this.appConfigurationService.getAppCoordinatesSystemType$(),
       (lieuxdits, coordinatesSystemType) => {
         return this.buildLieuxditsRows(lieuxdits, coordinatesSystemType);
       }

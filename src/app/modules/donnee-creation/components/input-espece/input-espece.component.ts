@@ -9,6 +9,7 @@ import { Classe } from "ouca-common/classe.object";
 import { Espece } from "ouca-common/espece.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
+import { CreationPageModelService } from "src/app/services/creation-page-model.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -19,11 +20,9 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
 export class InputEspeceComponent implements OnInit {
   @Input() public controlGroup: FormGroup;
 
-  @Input() public classes: Observable<Classe[]>;
-
-  @Input() public especes: Observable<Espece[]>;
-
   @Input() public isMultipleSelectMode?: boolean;
+
+  public classes$: Observable<Classe[]>;
 
   public filteredEspeces$: Observable<Espece[]>;
 
@@ -56,6 +55,10 @@ export class InputEspeceComponent implements OnInit {
     }
   ];
 
+  constructor(private creationPageModelService: CreationPageModelService) {
+    this.classes$ = this.creationPageModelService.getClasses$();
+  }
+
   public ngOnInit(): void {
     const classeControl = this.isMultipleSelectMode
       ? this.controlGroup.get("classes")
@@ -67,13 +70,13 @@ export class InputEspeceComponent implements OnInit {
 
     this.filteredEspeces$ = combineLatest(
       classeControl.valueChanges,
-      this.especes,
+      this.creationPageModelService.getEspeces$(),
       (selection, especes) => {
         if (especes) {
           if (selection) {
             if (this.isMultipleSelectMode) {
               if (selection.length > 0) {
-                return especes.filter(espece => {
+                return especes.filter((espece) => {
                   return (
                     selection.indexOf(espece.classeId) > -1 ||
                     selection.indexOf(espece.classe.id) > -1
@@ -84,7 +87,7 @@ export class InputEspeceComponent implements OnInit {
               }
             } else {
               if (selection.id) {
-                return especes.filter(espece => {
+                return especes.filter((espece) => {
                   return (
                     espece.classeId === selection.id ||
                     (espece.classe && espece.classe.id === selection.id)

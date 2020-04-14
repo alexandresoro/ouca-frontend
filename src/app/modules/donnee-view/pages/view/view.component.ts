@@ -1,36 +1,35 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import * as _ from "lodash";
 import { Age } from "ouca-common/age.object";
-import { Classe } from "ouca-common/classe.object";
-import { Commune } from "ouca-common/commune.object";
 import { Comportement } from "ouca-common/comportement.object";
-import { Departement } from "ouca-common/departement.object";
 import { DonneesFilter } from "ouca-common/donnees-filter.object";
 import { Espece } from "ouca-common/espece.object";
 import { EstimationDistance } from "ouca-common/estimation-distance.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
-import { Lieudit } from "ouca-common/lieudit.object";
 import { Meteo } from "ouca-common/meteo.object";
 import { Milieu } from "ouca-common/milieu.object";
 import { Observateur } from "ouca-common/observateur.object";
 import { Sexe } from "ouca-common/sexe.object";
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { withLatestFrom } from "rxjs/operators";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
 import { BackendApiService } from "src/app/services/backend-api.service";
+import { CreationPageModelService } from "src/app/services/creation-page-model.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
-  saveFile,
+  saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
 @Component({
   styleUrls: ["./view.component.scss"],
-  templateUrl: "./view.component.html",
+  templateUrl: "./view.component.html"
 })
-export class ViewComponent {
+export class ViewComponent implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject();
+
   public searchForm: FormGroup = new FormGroup({
     id: new FormControl(),
     observateurs: new FormControl(),
@@ -41,22 +40,22 @@ export class ViewComponent {
     duree: new FormControl(),
     especeGroup: new FormGroup({
       classes: new FormControl(),
-      especes: new FormControl(),
+      especes: new FormControl()
     }),
     lieuditGroup: new FormGroup({
       departements: new FormControl(),
       communes: new FormControl(),
-      lieuxdits: new FormControl(),
+      lieuxdits: new FormControl()
     }),
     nombreGroup: new FormGroup({
       nombre: new FormControl(),
-      estimationsNombre: new FormControl(),
+      estimationsNombre: new FormControl()
     }),
     sexes: new FormControl(),
     ages: new FormControl(),
     distanceGroup: new FormGroup({
       distance: new FormControl(),
-      estimationsDistance: new FormControl(),
+      estimationsDistance: new FormControl()
     }),
     regroupement: new FormControl(),
     fromDate: new FormControl(),
@@ -64,22 +63,18 @@ export class ViewComponent {
     commentaire: new FormControl(),
     comportements: new FormControl(),
     milieux: new FormControl(),
-    excelMode: new FormControl(),
+    excelMode: new FormControl()
   });
 
-  public observateurs: Observateur[];
-  public departements$: Subject<Departement[]>;
-  public communes$: Subject<Commune[]>;
-  public lieuxdits$: Subject<Lieudit[]>;
-  public classes$: Subject<Classe[]>;
-  public especes$: BehaviorSubject<Espece[]>;
-  public estimationsNombre: EstimationNombre[];
-  public estimationsDistance: EstimationDistance[];
-  public sexes: Sexe[];
-  public ages: Age[];
-  public comportements: Comportement[];
-  public milieux: Milieu[];
-  public meteos: Meteo[];
+  public observateurs$: Observable<Observateur[]>;
+  public especes$: Observable<Espece[]>;
+  public estimationsNombre$: Observable<EstimationNombre[]>;
+  public estimationsDistance$: Observable<EstimationDistance[]>;
+  public sexes$: Observable<Sexe[]>;
+  public ages$: Observable<Age[]>;
+  public comportements$: Observable<Comportement[]>;
+  public milieux$: Observable<Milieu[]>;
+  public meteos$: Observable<Meteo[]>;
 
   public displayWaitPanel: boolean = false;
 
@@ -99,78 +94,27 @@ export class ViewComponent {
 
   constructor(
     private backendApiService: BackendApiService,
-    private statusMessageService: StatusMessageService
-  ) {}
+    private statusMessageService: StatusMessageService,
+    private creationPageModelService: CreationPageModelService
+  ) {
+    this.observateurs$ = this.creationPageModelService.getObservateurs$();
+    this.estimationsNombre$ = this.creationPageModelService.getEstimationNombres$();
+    this.estimationsDistance$ = this.creationPageModelService.getEstimationDistances$();
+    this.especes$ = this.creationPageModelService.getEspeces$();
+    this.sexes$ = this.creationPageModelService.getSexes$();
+    this.ages$ = this.creationPageModelService.getAges$();
+    this.comportements$ = this.creationPageModelService.getComportements$();
+    this.milieux$ = this.creationPageModelService.getMilieux$();
+    this.meteos$ = this.creationPageModelService.getMeteos$();
+  }
 
   public ngOnInit(): void {
-    this.classes$ = new Subject();
-    this.especes$ = new BehaviorSubject([]);
-    this.departements$ = new Subject();
-    this.communes$ = new Subject();
-    this.lieuxdits$ = new Subject();
+    // this.creationPageModelService.refreshPageModel();
+  }
 
-    combineLatest(
-      this.backendApiService.getAllEntities("classe") as Observable<Classe[]>,
-      this.backendApiService.getAllEntities("espece") as Observable<Espece[]>,
-      this.backendApiService.getAllEntities("departement") as Observable<
-        Departement[]
-      >,
-      this.backendApiService.getAllEntities("commune") as Observable<Commune[]>,
-      this.backendApiService.getAllEntities("lieudit") as Observable<Lieudit[]>,
-      this.backendApiService.getAllEntities("observateur") as Observable<
-        Observateur[]
-      >,
-      this.backendApiService.getAllEntities("sexe") as Observable<Sexe[]>,
-      this.backendApiService.getAllEntities("age") as Observable<Age[]>,
-      this.backendApiService.getAllEntities("estimation-nombre") as Observable<
-        EstimationNombre[]
-      >,
-      this.backendApiService.getAllEntities(
-        "estimation-distance"
-      ) as Observable<EstimationDistance[]>,
-      this.backendApiService.getAllEntities("comportement") as Observable<
-        Comportement[]
-      >,
-      this.backendApiService.getAllEntities("milieu") as Observable<Milieu[]>,
-      this.backendApiService.getAllEntities("meteo") as Observable<Meteo[]>
-    ).subscribe(
-      (
-        result: [
-          Classe[],
-          Espece[],
-          Departement[],
-          Commune[],
-          Lieudit[],
-          Observateur[],
-          Sexe[],
-          Age[],
-          EstimationNombre[],
-          EstimationDistance[],
-          Comportement[],
-          Milieu[],
-          Meteo[]
-        ]
-      ) => {
-        this.classes$.next(result[0] ? result[0] : []);
-        this.especes$.next(result[1] ? result[1] : []);
-        this.departements$.next(result[2] ? result[2] : []);
-        this.communes$.next(result[3] ? result[3] : []);
-        this.lieuxdits$.next(result[4] ? result[4] : []);
-        this.observateurs = result[5] ? result[5] : [];
-        this.sexes = result[6] ? result[6] : [];
-        this.ages = result[7] ? result[7] : [];
-        this.estimationsNombre = result[8] ? result[8] : [];
-        this.estimationsDistance = result[9] ? result[9] : [];
-        this.comportements = result[10] ? result[10] : [];
-        this.milieux = result[11] ? result[11] : [];
-        this.meteos = result[12] ? result[12] : [];
-      },
-      (error: HttpErrorResponse) => {
-        console.error(
-          "Impossible de trouver les classes ou les espèces (" + error + ")"
-        );
-      }
-    );
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   public onSearchButtonClicked(): void {
@@ -229,10 +173,11 @@ export class ViewComponent {
     } else {
       this.backendApiService
         .getDonneesByCustomizedFilters(filters)
-        .subscribe((results: FlatDonnee[]) => {
+        .pipe(withLatestFrom(this.especes$))
+        .subscribe(([results, especes]) => {
           this.displayWaitPanel = false;
           this.donneesToDisplay = results;
-          this.setEspecesWithNbDonnees(this.donneesToDisplay);
+          this.setEspecesWithNbDonnees(this.donneesToDisplay, especes);
           this.displayNoDataPanel = this.donneesToDisplay.length === 0;
         });
     }
@@ -241,7 +186,10 @@ export class ViewComponent {
   /**
    * Counts number of donnees by code espece
    */
-  private setEspecesWithNbDonnees = (donnees: FlatDonnee[]): void => {
+  private setEspecesWithNbDonnees = (
+    donnees: FlatDonnee[],
+    especes: Espece[]
+  ): void => {
     const nbDonneesByEspeceMap: { [key: string]: number } = _.countBy(
       donnees,
       (donnee) => {
@@ -250,7 +198,7 @@ export class ViewComponent {
     );
 
     this.especesWithNbDonnees = _.map(nbDonneesByEspeceMap, (value, key) => {
-      const espece: Espece = _.find(this.especes$.getValue(), (espece) => {
+      const espece: Espece = _.find(especes, (espece) => {
         return espece.code === key;
       });
 
@@ -259,7 +207,7 @@ export class ViewComponent {
         code: key,
         nomFrancais: espece.nomFrancais,
         nomLatin: espece.nomLatin,
-        nbDonnees: value,
+        nbDonnees: value
       };
     });
   };

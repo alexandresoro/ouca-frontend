@@ -1,12 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
-import { ConfigurationPage } from "ouca-common/configuration-page.object";
 import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
-import { BackendApiService } from "src/app/services/backend-api.service";
-import { CoordinatesService } from "src/app/services/coordinates.service";
-import { StatusMessageService } from "../../../../services/status-message.service";
+import { Observable } from "rxjs";
+import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 
 export enum ConfigurationParameterID {
@@ -34,145 +32,130 @@ export interface ConfigurationParameter {
   styleUrls: ["./configuration.component.scss"],
   templateUrl: "./configuration.component.html"
 })
-export class ConfigurationComponent implements OnInit {
-  private configurationParametersToDisplay: ConfigurationParameter[];
-  public pageModel: ConfigurationPage;
+export class ConfigurationComponent {
+  public appConfiguration$: Observable<AppConfiguration>;
 
-  public configurationToSave: AppConfiguration;
+  private configurationParametersToDisplay: ConfigurationParameter[] = [
+    {
+      id: ConfigurationParameterID.DEFAULT_OBSERVATEUR,
+      label: "Observateur par défaut",
+      value: ""
+    },
+    {
+      id: ConfigurationParameterID.DEFAULT_DEPARTEMENT,
+      label: "Département par défaut",
+      value: ""
+    },
+    {
+      id: ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE,
+      label: "Estimation du nombre par défaut",
+      value: ""
+    },
+    {
+      id: ConfigurationParameterID.DEFAULT_NOMBRE,
+      label: "Nombre par défaut",
+      value: ""
+    },
+    {
+      id: ConfigurationParameterID.DEFAULT_SEXE,
+      label: "Sexe par défaut",
+      value: ""
+    },
+    {
+      id: ConfigurationParameterID.DEFAULT_AGE,
+      label: "Âge par défaut",
+      value: ""
+    },
+    {
+      id: ConfigurationParameterID.DISPLAY_ASSOCIES,
+      label: "Afficher les observateurs associés",
+      value: "Non"
+    },
+    {
+      id: ConfigurationParameterID.DISPLAY_METEO,
+      label: "Afficher la météo",
+      value: "Non"
+    },
+    {
+      id: ConfigurationParameterID.DISPLAY_DISTANCE,
+      label: "Afficher la distance",
+      value: "Non"
+    },
+    {
+      id: ConfigurationParameterID.DISPLAY_REGROUPEMENT,
+      label: "Afficher le numéro de regroupement",
+      value: "Non"
+    },
+    {
+      id: ConfigurationParameterID.COORDINATES_SYSTEM,
+      label: "Système de coordonnées",
+      value: ""
+    }
+  ];
 
   public displayedColumns: string[] = ["label", "value"];
 
   public dataSource: MatTableDataSource<ConfigurationParameter>;
 
-  constructor(
-    private backendApiService: BackendApiService,
-    private coordinatesService: CoordinatesService,
-    private statusMessageService: StatusMessageService
-  ) {}
+  constructor(private appConfigurationService: AppConfigurationService) {
+    this.appConfiguration$ = this.appConfigurationService.getConfiguration$();
 
-  public ngOnInit(): void {
-    this.initConfigurationPage();
+    this.appConfiguration$.subscribe((appConfiguration) => {
+      this.switchToViewAllMode();
+      this.buildDataSource(appConfiguration);
+    });
   }
 
-  private initConfigurationPage = (): void => {
-    this.configurationParametersToDisplay = [
-      {
-        id: ConfigurationParameterID.DEFAULT_OBSERVATEUR,
-        label: "Observateur par défaut",
-        value: ""
-      },
-      {
-        id: ConfigurationParameterID.DEFAULT_DEPARTEMENT,
-        label: "Département par défaut",
-        value: ""
-      },
-      {
-        id: ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE,
-        label: "Estimation du nombre par défaut",
-        value: ""
-      },
-      {
-        id: ConfigurationParameterID.DEFAULT_NOMBRE,
-        label: "Nombre par défaut",
-        value: ""
-      },
-      {
-        id: ConfigurationParameterID.DEFAULT_SEXE,
-        label: "Sexe par défaut",
-        value: ""
-      },
-      {
-        id: ConfigurationParameterID.DEFAULT_AGE,
-        label: "Âge par défaut",
-        value: ""
-      },
-      {
-        id: ConfigurationParameterID.DISPLAY_ASSOCIES,
-        label: "Afficher les observateurs associés",
-        value: "Non"
-      },
-      {
-        id: ConfigurationParameterID.DISPLAY_METEO,
-        label: "Afficher la météo",
-        value: "Non"
-      },
-      {
-        id: ConfigurationParameterID.DISPLAY_DISTANCE,
-        label: "Afficher la distance",
-        value: "Non"
-      },
-      {
-        id: ConfigurationParameterID.DISPLAY_REGROUPEMENT,
-        label: "Afficher le numéro de regroupement",
-        value: "Non"
-      },
-      {
-        id: ConfigurationParameterID.COORDINATES_SYSTEM,
-        label: "Système de coordonnées",
-        value: ""
-      }
-    ];
-    this.switchToViewAllMode();
-    this.getCurrentConfiguration();
-  };
-
-  public buildDataSource = (): void => {
+  public buildDataSource = (appConfiguration: AppConfiguration): void => {
     _.forEach(this.configurationParametersToDisplay, (parameter) => {
       let value = "";
-      if (this.configurationToSave) {
+      if (appConfiguration) {
         switch (parameter.id) {
           case ConfigurationParameterID.DEFAULT_OBSERVATEUR:
-            value = this.configurationToSave.defaultObservateur
-              ? this.configurationToSave.defaultObservateur.libelle
+            value = appConfiguration.defaultObservateur
+              ? appConfiguration.defaultObservateur.libelle
               : "";
             break;
           case ConfigurationParameterID.DEFAULT_DEPARTEMENT:
-            value = this.configurationToSave.defaultDepartement
-              ? this.configurationToSave.defaultDepartement.code
+            value = appConfiguration.defaultDepartement
+              ? appConfiguration.defaultDepartement.code
               : "";
             break;
           case ConfigurationParameterID.COORDINATES_SYSTEM:
-            value = this.configurationToSave.coordinatesSystem
-              ? COORDINATES_SYSTEMS_CONFIG[
-                  this.configurationToSave.coordinatesSystem
-                ].name
+            value = appConfiguration.coordinatesSystem
+              ? COORDINATES_SYSTEMS_CONFIG[appConfiguration.coordinatesSystem]
+                  .name
               : "";
             break;
           case ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE:
-            value = this.configurationToSave.defaultEstimationNombre
-              ? this.configurationToSave.defaultEstimationNombre.libelle
+            value = appConfiguration.defaultEstimationNombre
+              ? appConfiguration.defaultEstimationNombre.libelle
               : "";
             break;
           case ConfigurationParameterID.DEFAULT_NOMBRE:
-            value = "" + this.configurationToSave.defaultNombre;
+            value = "" + appConfiguration.defaultNombre;
             break;
           case ConfigurationParameterID.DEFAULT_SEXE:
-            value = this.configurationToSave.defaultSexe
-              ? this.configurationToSave.defaultSexe.libelle
+            value = appConfiguration.defaultSexe
+              ? appConfiguration.defaultSexe.libelle
               : "";
             break;
           case ConfigurationParameterID.DEFAULT_AGE:
-            value = this.configurationToSave.defaultAge
-              ? this.configurationToSave.defaultAge.libelle
+            value = appConfiguration.defaultAge
+              ? appConfiguration.defaultAge.libelle
               : "";
             break;
           case ConfigurationParameterID.DISPLAY_ASSOCIES:
-            value = this.configurationToSave.areAssociesDisplayed
-              ? "Oui"
-              : "Non";
+            value = appConfiguration.areAssociesDisplayed ? "Oui" : "Non";
             break;
           case ConfigurationParameterID.DISPLAY_METEO:
-            value = this.configurationToSave.isMeteoDisplayed ? "Oui" : "Non";
+            value = appConfiguration.isMeteoDisplayed ? "Oui" : "Non";
             break;
           case ConfigurationParameterID.DISPLAY_DISTANCE:
-            value = this.configurationToSave.isDistanceDisplayed
-              ? "Oui"
-              : "Non";
+            value = appConfiguration.isDistanceDisplayed ? "Oui" : "Non";
             break;
           case ConfigurationParameterID.DISPLAY_REGROUPEMENT:
-            value = this.configurationToSave.isRegroupementDisplayed
-              ? "Oui"
-              : "Non";
+            value = appConfiguration.isRegroupementDisplayed ? "Oui" : "Non";
             break;
           default:
             break;
@@ -189,56 +172,20 @@ export class ConfigurationComponent implements OnInit {
     this.switchToEditionMode();
   };
 
-  public saveAppConfiguration = (): void => {
-    this.backendApiService
-      .saveAppConfiguration(this.configurationToSave)
-      .subscribe((dbResults: any[]) => {
-        this.onSaveAppConfigurationSuccess(dbResults);
+  public saveAppConfiguration = (
+    newAppConfiguration: AppConfiguration
+  ): void => {
+    this.appConfigurationService
+      .saveAppConfiguration(newAppConfiguration)
+      .subscribe((isSuccessful) => {
+        if (isSuccessful) {
+          this.switchToViewAllMode();
+        }
       });
   };
 
   public cancelEdition = (): void => {
     this.switchToViewAllMode();
-  };
-
-  private getCurrentConfiguration = (): void => {
-    this.backendApiService
-      .getConfigurationInitialPageModel()
-      .subscribe((configurationPage: ConfigurationPage) => {
-        this.onInitConfigurationPageSuccess(configurationPage);
-      });
-  };
-
-  private onInitConfigurationPageSuccess = (
-    configurationPage: ConfigurationPage
-  ): void => {
-    this.pageModel = configurationPage;
-    this.configurationToSave = configurationPage.appConfiguration;
-    this.buildDataSource();
-  };
-
-  private onSaveAppConfigurationSuccess = (dbResults: any[]): void => {
-    if (this.isSaveConfigurationSuccess(dbResults)) {
-      this.statusMessageService.showSuccessMessage(
-        "La configuration de l'application a été mise à jour."
-      );
-      this.coordinatesService.initAppCoordinatesSystem();
-      this.getCurrentConfiguration();
-      this.switchToViewAllMode();
-    } else {
-      this.statusMessageService.showErrorMessage(
-        "Il semble qu'une erreur soit survenue pendant la sauvegarde de la configuration.",
-        dbResults
-      );
-    }
-  };
-
-  private isSaveConfigurationSuccess = (dbResults: any[]): boolean => {
-    let isSuccess = true;
-    for (const dbResult of dbResults) {
-      isSuccess = isSuccess || dbResult.affectedRows === 1;
-    }
-    return isSuccess;
   };
 
   private switchToEditionMode = (): void => {

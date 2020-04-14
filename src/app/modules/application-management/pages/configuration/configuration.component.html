@@ -13,13 +13,8 @@
 
   <configuration-form
     *ngIf="getIsEditionMode()"
-    [model]="configurationToSave"
-    [ages]="pageModel.ages"
-    [departements]="pageModel.departements"
-    [estimationsNombre]="pageModel.estimationsNombre"
-    [observateurs]="pageModel.observateurs"
-    [sexes]="pageModel.sexes"
-    (confirm)="saveAppConfiguration()"
+    [appConfiguration]="appConfiguration$ | async"
+    (confirm)="saveAppConfiguration($event)"
     (back)="cancelEdition()"
   ></configuration-form>
 

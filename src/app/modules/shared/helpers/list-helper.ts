@@ -1,5 +1,5 @@
-import { EntiteSimple } from "ouca-common/entite-simple.object";
 import * as _ from "lodash";
+import { EntiteSimple } from "ouca-common/entite-simple.object";
 
 export class ListHelper {
   private static findEntityInListByAttribute<T extends EntiteSimple>(
@@ -7,12 +7,12 @@ export class ListHelper {
     comparedAttributeName: string,
     searchedValue: number | string
   ): T | null {
-    if (!searchedValue) {
+    if (!searchedValue || !entities) {
       return null;
     }
 
     return entities.find(
-      entity => entity[comparedAttributeName] === searchedValue
+      (entity) => entity[comparedAttributeName] === searchedValue
     );
   }
 
@@ -71,7 +71,7 @@ export class ListHelper {
     allEntities: EntiteSimple[],
     idsToGet: number[]
   ): EntiteSimple[] {
-    return _.map(idsToGet, id => {
+    return _.map(idsToGet, (id) => {
       return ListHelper.findEntityInListByNumberAttribute(
         allEntities,
         "id",

@@ -1,9 +1,6 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
-import { ConfigurationPage } from "ouca-common/configuration-page.object";
-import { CoordinatesSystemType } from "ouca-common/coordinates-system";
-import { CreationPage } from "ouca-common/creation-page.object";
 import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
 import { Donnee } from "ouca-common/donnee.object";
 import { DonneesFilter } from "ouca-common/donnees-filter.object";
@@ -15,7 +12,7 @@ import { PostResponse } from "ouca-common/post-response.object";
 import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class BackendApiService {
   private ALL: string = "all";
@@ -71,7 +68,7 @@ export class BackendApiService {
     console.log("GET ", requestPath);
     const httpOptions: Record<string, any> = {
       observe: "response",
-      responseType: "blob" as "json",
+      responseType: "blob" as "json"
     };
     return this.http.get<any>(requestPath, httpOptions);
   }
@@ -84,7 +81,7 @@ export class BackendApiService {
     console.log("POST", requestPath, objectToPost);
     const httpOptions: Record<string, any> = {
       observe: "response",
-      responseType: "blob" as "json",
+      responseType: "blob" as "json"
     };
     return this.http.post<any>(requestPath, objectToPost, httpOptions);
   }
@@ -98,22 +95,18 @@ export class BackendApiService {
     return this.http.post<T>(requestPath, objectToPost);
   }
 
-  public getConfigurationInitialPageModel(): Observable<ConfigurationPage> {
-    return this.httpGet(this.CONFIGURATION + this.INIT);
-  }
+  getAppConfiguration = (): Observable<AppConfiguration> => {
+    return this.httpGet(this.CONFIGURATION + this.ALL);
+  };
 
   public saveAppConfiguration = (
     appConfigurationToSave: AppConfiguration
-  ): Observable<any[]> => {
+  ): Observable<boolean> => {
     return this.httpPost(
       this.CONFIGURATION + this.UPDATE,
       appConfigurationToSave
     );
   };
-
-  public getAppCoordinatesSystem$(): Observable<CoordinatesSystemType> {
-    return this.httpGet(this.CONFIGURATION + this.COORDINATES_SYSTEM);
-  }
 
   public importData(
     entityName: string,
@@ -129,10 +122,6 @@ export class BackendApiService {
 
   public exportData(entityName: string): Observable<HttpResponse<any>> {
     return this.httpGetObserveResponse(entityName + "/" + this.EXPORT);
-  }
-
-  public getCreationInitialPageModel(): Observable<CreationPage> {
-    return this.httpGet(this.CREATION + this.INIT);
   }
 
   public getNextDonnee(id: number): Observable<Donnee> {
@@ -193,12 +182,6 @@ export class BackendApiService {
     return this.httpGet(this.INVENTAIRE + this.FIND_ID + "?id=" + id);
   }
 
-  public getEntityInitialPageModel(
-    entityName: string
-  ): Observable<CreationPage> {
-    return this.httpGet(entityName + "/" + this.INIT);
-  }
-
   public saveEntity<T extends EntiteSimple>(
     entityName: string,
     entityToSave: T
@@ -213,7 +196,9 @@ export class BackendApiService {
     return this.httpGet(entityName + "/" + this.DELETE + "?id=" + id);
   }
 
-  public getAllEntities(entityName: string): Observable<EntiteSimple[]> {
+  public getAllEntities<T extends EntiteSimple>(
+    entityName: string
+  ): Observable<T[]> {
     return this.httpGet(entityName + "/" + this.ALL);
   }
 

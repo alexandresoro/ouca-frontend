@@ -3,7 +3,7 @@ import {
   state,
   style,
   transition,
-  trigger,
+  trigger
 } from "@angular/animations";
 import {
   Component,
@@ -11,7 +11,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  ViewChild,
+  ViewChild
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -35,9 +35,9 @@ import { CreationPageService } from "src/app/services/creation-page.service";
       transition(
         "expanded <=> collapsed",
         animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      ),
-    ]),
-  ],
+      )
+    ])
+  ]
 })
 export class TableDonneesComponent implements OnChanges, OnInit {
   public COMPORTEMENTS_INDEXES: number[] = [1, 2, 3, 4, 5, 6];
@@ -56,7 +56,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     "date",
     "heure",
     "duree",
-    "observateur",
+    "observateur"
   ];
 
   @Input() public donneesToDisplay: FlatDonnee[];
@@ -82,7 +82,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     const otherData = _.difference(_.keys(data), [
       "date",
       "comportements",
-      "milieux",
+      "milieux"
     ]);
 
     const otherDataFilter = _.some(otherData, (dataField) => {
@@ -161,8 +161,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
   };
 
   public editDonnee = (id: number): void => {
-    this.creationPageService.setRequestedDonneeId(id);
-    this.router.navigate(["/creation"], { state: { id: id } });
+    this.router.navigate(["/creation"], { state: { id } });
   };
 
   public getCoordinatesSystem = (flatDonnee: FlatDonnee): string => {

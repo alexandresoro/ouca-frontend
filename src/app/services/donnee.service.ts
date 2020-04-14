@@ -8,7 +8,7 @@ import { BackendApiService } from "./backend-api.service";
 import { StatusMessageService } from "./status-message.service";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class DonneeService {
   private currentDonnee$: BehaviorSubject<
@@ -37,11 +37,11 @@ export class DonneeService {
   ) {}
 
   public getCurrentDonnee$ = (): Observable<Donnee | DonneeFormObject> => {
-    return this.currentDonnee$;
+    return this.currentDonnee$.asObservable();
   };
 
   public getCurrentDonneeIndex$ = (): Observable<number> => {
-    return this.currentDonneeIndex$;
+    return this.currentDonneeIndex$.asObservable();
   };
 
   public hasPreviousDonnee$ = (): Observable<boolean> => {
@@ -65,7 +65,7 @@ export class DonneeService {
   };
 
   public getIsDonneeCallOngoing$ = (): Observable<boolean> => {
-    return this.isDonneeCallOngoing$;
+    return this.isDonneeCallOngoing$.asObservable();
   };
 
   public getDonneeById = (donneeId: number): Observable<boolean> => {
@@ -115,13 +115,17 @@ export class DonneeService {
     });
   };
 
-  public initialize = (): void => {
-    this.backendApiService.getLastDonneeId().subscribe((id) => {
+  public initialize = (): Observable<number> => {
+    const lastDonneeId$ = this.backendApiService.getLastDonneeId();
+
+    lastDonneeId$.subscribe((id) => {
       this.previousDonneeId$.next(id);
       this.currentDonnee$.next(null);
       this.currentDonneeIndex$.next(null);
       this.nextDonneeId$.next(null);
     });
+
+    return lastDonneeId$;
   };
 
   public setPreviousDonneeId = (id: number): void => {

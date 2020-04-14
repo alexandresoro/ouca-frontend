@@ -1,15 +1,16 @@
 import { Injectable } from "@angular/core";
+import { FormGroup } from "@angular/forms";
 import { Donnee } from "ouca-common/donnee.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { PostResponse } from "ouca-common/post-response.object";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { InventaireHelper } from "../modules/donnee-creation/helpers/inventaire.helper";
+import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { DonneeInCache } from "../modules/donnee-creation/models/donnee-in-cache.model";
 import { BackendApiService } from "./backend-api.service";
 import { CreationCacheService } from "./creation-cache.service";
 import { CreationModeService } from "./creation-mode.service";
-import { CreationPageModelService } from "./creation-page-model.service";
 import { DonneeFormService } from "./donnee-form.service";
 import { DonneeService } from "./donnee.service";
 import { InventaireFormService } from "./inventaire-form.service";
@@ -17,7 +18,7 @@ import { RegroupementService } from "./regroupement.service";
 import { StatusMessageService } from "./status-message.service";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class CreationPageService {
   private requestedDonneeId$: BehaviorSubject<number> = new BehaviorSubject<
@@ -26,7 +27,6 @@ export class CreationPageService {
 
   constructor(
     private backendApiService: BackendApiService,
-    private creationPageModelService: CreationPageModelService,
     private creationCacheService: CreationCacheService,
     private creationModeService: CreationModeService,
     private donneeFormService: DonneeFormService,
@@ -36,57 +36,44 @@ export class CreationPageService {
     private statusMessageService: StatusMessageService
   ) {}
 
-  public setRequestedDonneeId = (id: number): void => {
-    this.requestedDonneeId$.next(id);
-  };
-
-  public initializeCreationPage = (): void => {
-    this.regroupementService.updateNextRegroupement();
-    this.donneeService.initialize();
-    this.creationPageModelService.refreshPageModel();
-
-    this.creationPageModelService.getCreationPage$().subscribe(() => {
-      const requestedDonneeId = this.requestedDonneeId$.value;
-      this.requestedDonneeId$.next(null);
-
-      // If the user navigated to this page with a defined id, retrieve this id
-      if (requestedDonneeId != null) {
-        this.donneeService
-          .getDonneeById(requestedDonneeId)
-          .subscribe((isSuccessful) => {
-            if (isSuccessful) {
-              this.creationModeService.setStatus(true, true);
-            }
-          });
-      } else {
-        // Otherwise call, the normal initialization of the page
-        this.creationModeService.setStatus(true, false);
-      }
-    });
-  };
-
-  public createDonnee = (): void => {
-    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm();
+  public createDonnee = (
+    inventaireForm: FormGroup,
+    donneeForm: FormGroup,
+    donneeManual$: Subject<Donnee | DonneeFormObject>
+  ): void => {
+    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
+      inventaireForm
+    );
 
     this.saveInventaire(inventaire).subscribe((savedInventaireId) => {
-      this.inventaireFormService.setInventaireIdInForm(savedInventaireId);
+      this.inventaireFormService.setInventaireIdInForm(
+        inventaireForm,
+        savedInventaireId
+      );
 
-      const donnee: Donnee = this.donneeFormService.getDonneeFromForm();
+      const donnee: Donnee = this.donneeFormService.getDonneeFromForm(
+        donneeForm
+      );
       donnee.inventaireId = savedInventaireId;
 
       this.saveDonnee(donnee).subscribe(() => {
-        this.donneeFormService.resetForm();
+        donneeManual$.next(null);
         document.getElementById("input-Espèce")?.focus();
       });
     });
   };
 
-  public updateInventaire(): void {
-    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm();
+  public updateInventaire(inventaireForm: FormGroup): void {
+    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
+      inventaireForm
+    );
     if (inventaire.id) {
       // Update the existing inventaire and switch to donnee mode
       this.saveInventaire(inventaire).subscribe((savedInventaireId) => {
-        this.inventaireFormService.setInventaireIdInForm(savedInventaireId);
+        this.inventaireFormService.setInventaireIdInForm(
+          inventaireForm,
+          savedInventaireId
+        );
 
         this.creationModeService.setStatus(false, true);
       });
@@ -98,18 +85,27 @@ export class CreationPageService {
   }
 
   public updateInventaireAndDonnee = (
+    inventaireForm: FormGroup,
+    donneeForm: FormGroup,
     shouldCreateNewInventaire?: boolean
   ): void => {
-    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm();
+    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
+      inventaireForm
+    );
 
     if (shouldCreateNewInventaire) {
       inventaire.id = null;
     }
 
     this.saveInventaire(inventaire, true).subscribe((savedInventaireId) => {
-      this.inventaireFormService.setInventaireIdInForm(savedInventaireId);
+      this.inventaireFormService.setInventaireIdInForm(
+        inventaireForm,
+        savedInventaireId
+      );
 
-      const donnee: Donnee = this.donneeFormService.getDonneeFromForm();
+      const donnee: Donnee = this.donneeFormService.getDonneeFromForm(
+        donneeForm
+      );
       donnee.inventaireId = savedInventaireId;
 
       this.saveDonnee(donnee, true).subscribe(() => {
@@ -118,8 +114,12 @@ export class CreationPageService {
     });
   };
 
-  public isInventaireUpdated = (): Observable<boolean> => {
-    const newInventaire: Inventaire = this.inventaireFormService.getInventaireFromForm();
+  public isInventaireUpdated = (
+    inventaireForm: FormGroup
+  ): Observable<boolean> => {
+    const newInventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
+      inventaireForm
+    );
 
     return this.backendApiService.getInventaireById(newInventaire.id).pipe(
       map((oldInventaire) => {
@@ -208,12 +208,20 @@ export class CreationPageService {
     );
   };
 
-  public saveDonneeInCache = (): void => {
+  public saveDonneeInCache = (
+    inventaireForm: FormGroup,
+    donneeForm: FormGroup
+  ): void => {
     if (!this.donneeService.isCurrentDonneeAnExistingOne()) {
-      const inventaire = this.inventaireFormService.getInventaireFormObject();
-      const donnee = this.donneeFormService.getDonneeFormObject(inventaire);
-      const isInventaireEnabled = this.inventaireFormService.isFormEnabled();
-      const isDonneeEnabled = this.donneeFormService.isFormEnabled();
+      const inventaire = this.inventaireFormService.getInventaireFormObject(
+        inventaireForm
+      );
+      const donnee = this.donneeFormService.getDonneeFormObject(
+        donneeForm,
+        inventaire
+      );
+      const isInventaireEnabled = inventaireForm?.enabled;
+      const isDonneeEnabled = donneeForm?.enabled;
       this.creationCacheService.saveCurrentContext(
         donnee,
         isInventaireEnabled,
@@ -222,18 +230,32 @@ export class CreationPageService {
     }
   };
 
-  public displayDonneeById = (id: number): void => {
-    this.saveDonneeInCache();
+  public displayDonneeByIdAndSaveCurrentCache = (
+    inventaireForm: FormGroup,
+    donneeForm: FormGroup,
+    id: number
+  ): void => {
+    this.saveDonneeInCache(inventaireForm, donneeForm);
+    this.displayDonneeById(id);
+  };
 
-    this.donneeService.getDonneeById(id).subscribe((isSuccessful) => {
+  private displayDonneeById = (id: number): Observable<boolean> => {
+    const displayDonneeById$ = this.donneeService.getDonneeById(id);
+
+    displayDonneeById$.subscribe((isSuccessful) => {
       if (isSuccessful) {
         this.creationModeService.setStatus(true, true);
       }
     });
+
+    return displayDonneeById$;
   };
 
-  public displayPreviousDonnee = (): void => {
-    this.saveDonneeInCache();
+  public displayPreviousDonnee = (
+    inventaireForm: FormGroup,
+    donneeForm: FormGroup
+  ): void => {
+    this.saveDonneeInCache(inventaireForm, donneeForm);
 
     this.donneeService.getPreviousDonnee().subscribe((isSuccessful) => {
       if (isSuccessful) {
@@ -249,8 +271,8 @@ export class CreationPageService {
       }
     });
   };
-  public createNewInventaire = (): void => {
-    this.inventaireFormService.setInventaireIdInForm(null);
+  public createNewInventaire = (inventaireForm: FormGroup): void => {
+    this.inventaireFormService.setInventaireIdInForm(inventaireForm, null);
     this.creationModeService.setStatus(true, false);
   };
 

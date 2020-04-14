@@ -3,10 +3,11 @@ import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { PostResponse } from "ouca-common/post-response.object";
 import { BackendApiService } from "src/app/services/backend-api.service";
+import { CreationPageModelService } from "src/app/services/creation-page-model.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
-  saveFile
+  saveFile,
 } from "../../../shared/helpers/file-downloader.helper";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
@@ -14,7 +15,7 @@ import { EntitySubFormComponent } from "../../components/form/entite-simple-form
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
 
 @Component({
-  template: ""
+  template: "",
 })
 export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   public objects: T[];
@@ -33,6 +34,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   constructor(
     private backendApiService: BackendApiService,
+    private creationPageModelService: CreationPageModelService,
     private statusMessageService: StatusMessageService
   ) {}
 
@@ -85,6 +87,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
             this.statusMessageService.showSuccessMessage(
               this.getTheEntityLabel(true) + " a été supprimé(e) avec succès."
             );
+            this.creationPageModelService.refreshPageModel();
             this.switchToViewAllMode();
           } else {
             this.statusMessageService.showErrorMessage(
@@ -118,6 +121,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
           this.statusMessageService.showSuccessMessage(
             this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès."
           );
+          this.creationPageModelService.refreshPageModel();
           this.switchToViewAllMode();
         } else {
           this.statusMessageService.showErrorMessage(

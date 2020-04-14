@@ -104,16 +104,16 @@
               <div>
                 <input-observateur
                   [control]="inventaireForm.controls['observateur']"
-                  [observateurs]="(pageModel$ | async)?.observateurs"
+                  [observateurs]="observateurs$ | async"
                 >
                 </input-observateur>
               </div>
 
               <!-- ASSOCIES -->
-              <div *ngIf="(pageModel$ | async)?.areAssociesDisplayed">
+              <div *ngIf="(appConfiguration$ | async)?.areAssociesDisplayed">
                 <input-observateurs-associes
                   [control]="inventaireForm.controls['observateursAssocies']"
-                  [observateurs]="(pageModel$ | async)?.observateurs"
+                  [observateurs]="observateurs$ | async"
                 >
                 </input-observateurs-associes>
               </div>
@@ -155,9 +155,6 @@
               <input-lieudit
                 formGroupName="lieu"
                 [controlGroup]="inventaireForm.controls['lieu']"
-                [departements]="departements$"
-                [communes]="communes$"
-                [lieuxdits]="lieuxdits$"
                 [coordinatesSystem]="getCoordinatesSystem$() | async"
               >
               </input-lieudit>
@@ -169,7 +166,7 @@
               fxLayout="row wrap"
               fxLayoutGap="20px"
               class="mat-card-override"
-              *ngIf="(pageModel$ | async)?.isMeteoDisplayed"
+              *ngIf="(appConfiguration$ | async)?.isMeteoDisplayed"
             >
               <!-- TEMPERATURE -->
               <input-temperature
@@ -180,7 +177,7 @@
               <!-- METEOS -->
               <input-meteos
                 fxFlex="1 0 120px"
-                [meteos]="(pageModel$ | async)?.meteos"
+                [meteos]="meteos$ | async"
                 [control]="inventaireForm.controls['meteos']"
               ></input-meteos>
             </mat-card>
@@ -213,8 +210,6 @@
                 class="card-espece"
                 formGroupName="especeGroup"
                 [controlGroup]="donneeForm.controls['especeGroup']"
-                [classes]="classes$"
-                [especes]="especes$"
               ></input-espece>
             </mat-card>
             <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
@@ -227,8 +222,8 @@
                   fxLayout="row"
                   fxLayoutGap="20px"
                   [controlGroup]="donneeForm.controls['nombreGroup']"
-                  [defaultNombre]="(pageModel$ | async)?.defaultNombre"
-                  [estimationsNombre]="(pageModel$ | async)?.estimationsNombre"
+                  [defaultNombre]="(appConfiguration$ | async)?.defaultNombre"
+                  [estimationsNombre]="estimationsNombre$ | async"
                   formGroupName="nombreGroup"
                 >
                 </input-nombre>
@@ -237,42 +232,40 @@
                 <input-sexe
                   fxFlex="1 0 120px"
                   [control]="donneeForm.controls['sexe']"
-                  [sexes]="(pageModel$ | async)?.sexes"
+                  [sexes]="sexes$ | async"
                 ></input-sexe>
 
                 <!-- AGE  -->
                 <input-age
                   fxFlex="1 0 120px"
                   [control]="donneeForm.controls['age']"
-                  [ages]="(pageModel$ | async)?.ages"
+                  [ages]="ages$ | async"
                 ></input-age>
               </div>
 
               <!-- DISTANCE AND ESTIMATION DISTANCE -->
               <div
                 *ngIf="
-                  (pageModel$ | async)?.isDistanceDisplayed ||
-                  (pageModel$ | async)?.isRegroupementDisplayed
+                  (appConfiguration$ | async)?.isDistanceDisplayed ||
+                  (appConfiguration$ | async)?.isRegroupementDisplayed
                 "
                 fxLayout="row wrap"
               >
                 <!-- ESTIMATION DISTANCE -->
                 <input-distance
-                  *ngIf="(pageModel$ | async)?.isDistanceDisplayed"
+                  *ngIf="(appConfiguration$ | async)?.isDistanceDisplayed"
                   fxFlex="auto"
                   fxLayout="row"
                   fxLayoutGap="20px"
                   [controlGroup]="donneeForm.controls['distanceGroup']"
-                  [estimationsDistance]="
-                    (pageModel$ | async)?.estimationsDistance
-                  "
+                  [estimationsDistance]="estimationsDistance$ | async"
                   formGroupName="distanceGroup"
                 >
                 </input-distance>
 
                 <!-- REGROUPEMENT-->
                 <input-regroupement
-                  *ngIf="(pageModel$ | async)?.isRegroupementDisplayed"
+                  *ngIf="(appConfiguration$ | async)?.isRegroupementDisplayed"
                   fxFlex="1 0 220px"
                   fxFlexOffset="10%"
                   [control]="donneeForm.controls['regroupement']"
@@ -291,7 +284,7 @@
                   formGroupName="comportementsGroup"
                   [donneeForm]="donneeForm"
                   [controlGroup]="donneeForm.controls['comportementsGroup']"
-                  [comportements]="(pageModel$ | async)?.comportements"
+                  [comportements]="comportements$ | async"
                 ></input-comportements>
               </mat-card-content>
             </mat-card>
@@ -304,7 +297,7 @@
                   formGroupName="milieuxGroup"
                   [donneeForm]="donneeForm"
                   [controlGroup]="donneeForm.controls['milieuxGroup']"
-                  [milieux]="(pageModel$ | async)?.milieux"
+                  [milieux]="milieux$ | async"
                 ></input-milieux>
               </mat-card-content>
             </mat-card>

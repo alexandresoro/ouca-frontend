@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
-import { CoordinatesService } from "./services/coordinates.service";
+import { AppConfigurationService } from "./services/app-configuration.service";
+import { CreationPageModelService } from "./services/creation-page-model.service";
 
 @Component({
   selector: "base-naturaliste",
@@ -7,9 +8,13 @@ import { CoordinatesService } from "./services/coordinates.service";
   templateUrl: "./app.tpl.html"
 })
 export class AppComponent {
-  constructor(private coordinatesService: CoordinatesService) {}
+  constructor(
+    private appConfigurationService: AppConfigurationService,
+    private creationPageModelService: CreationPageModelService
+  ) {}
 
   ngOnInit(): void {
-    this.coordinatesService.initAppCoordinatesSystem();
+    this.appConfigurationService.refreshConfiguration();
+    this.creationPageModelService.refreshPageModel();
   }
 }

@@ -11,8 +11,6 @@ export class CreationCacheService {
     DonneeInCache
   >(null);
 
-  constructor() {}
-
   public saveCurrentContext = (
     donnee: DonneeFormObject,
     isInventaireEnabled: boolean,

@@ -15,7 +15,8 @@ import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { combineLatest, Observable } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
-import { CoordinatesService } from "src/app/services/coordinates.service";
+import { AppConfigurationService } from "src/app/services/app-configuration.service";
+import { CreationPageModelService } from "src/app/services/creation-page-model.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -24,12 +25,6 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputLieuditComponent implements OnInit {
-  @Input() public departements: Observable<Departement[]>;
-
-  @Input() public communes: Observable<Commune[]>;
-
-  @Input() public lieuxdits: Observable<Lieudit[]>;
-
   @Input() public controlGroup: FormGroup;
 
   @Input() public hideCoordinates?: boolean = false;
@@ -37,6 +32,8 @@ export class InputLieuditComponent implements OnInit {
   @Input() public isMultipleSelectMode?: boolean;
 
   @Input() public coordinatesSystem?: CoordinatesSystem;
+
+  public departements$: Observable<Departement[]>;
 
   public filteredLieuxdits$: Observable<Lieudit[]>;
 
@@ -70,7 +67,12 @@ export class InputLieuditComponent implements OnInit {
     }
   ];
 
-  constructor(private coordinatesService: CoordinatesService) {}
+  constructor(
+    private appConfigurationService: AppConfigurationService,
+    private creationPageModelService: CreationPageModelService
+  ) {
+    this.departements$ = this.creationPageModelService.getDepartements$();
+  }
 
   public ngOnInit(): void {
     const departementControl = this.isMultipleSelectMode
@@ -111,15 +113,12 @@ export class InputLieuditComponent implements OnInit {
   ): Observable<Commune[]> => {
     return combineLatest(
       departementControl.valueChanges,
-      this.communes,
+      this.creationPageModelService.getCommunes$(),
       (selection: string | number[] | Departement, communes) => {
         if (communes && selection) {
           if (this.isMultipleSelectMode) {
             return communes.filter((commune) => {
-              return (
-                (selection as number[]).includes(commune.departementId) ||
-                (selection as number[]).includes(commune.departement.id)
-              );
+              return (selection as number[]).includes(commune?.departement.id);
             });
           } else {
             return communes.filter((commune) => {
@@ -142,7 +141,7 @@ export class InputLieuditComponent implements OnInit {
   ): Observable<Lieudit[]> => {
     return combineLatest(
       communeControl.valueChanges,
-      this.lieuxdits,
+      this.creationPageModelService.getLieuxdits$(),
       (selection: string | number[] | Commune, lieuxdits) => {
         if (lieuxdits && selection) {
           if (this.isMultipleSelectMode) {
@@ -173,7 +172,7 @@ export class InputLieuditComponent implements OnInit {
   ): Observable<{ altitude: number; longitude: number; latitude: number }> => {
     return combineLatest(
       lieuditControl.valueChanges.pipe(distinctUntilChanged()),
-      this.coordinatesService.getAppCoordinatesSystem$(),
+      this.appConfigurationService.getAppCoordinatesSystemType$(),
       (
         selectedLieudit: Lieudit,
         coordinatesSystemType: CoordinatesSystemType

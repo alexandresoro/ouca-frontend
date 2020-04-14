@@ -3,7 +3,7 @@
   *ngIf="!isMultipleSelectMode"
   [attributesToFilter]="classeAutocompleteAttributes"
   type="Classe"
-  [values]="classes | async"
+  [values]="classes$ | async"
   [control]="controlGroup.controls['classe']"
   [displayFn]="displayClasseFormat"
 >
@@ -14,7 +14,7 @@
   [attributesToDisplay]="['libelle']"
   [control]="controlGroup.controls['classes']"
   [id]="'classes'"
-  [options]="classes | async"
+  [options]="classes$ | async"
   [placeholder]="'Classes espèces'"
 ></multiple-select>
 

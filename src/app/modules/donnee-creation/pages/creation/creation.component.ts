@@ -3,23 +3,42 @@ import {
   Component,
   HostListener,
   OnDestroy,
-  OnInit,
+  OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { Classe } from "ouca-common/classe.object";
-import { Commune } from "ouca-common/commune.object";
+import { Router } from "@angular/router";
+import { Age } from "ouca-common/age.object";
+import { AppConfiguration } from "ouca-common/app-configuration.object";
+import { Comportement } from "ouca-common/comportement.object";
 import {
   CoordinatesSystem,
   CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG,
+  COORDINATES_SYSTEMS_CONFIG
 } from "ouca-common/coordinates-system";
-import { CreationPage } from "ouca-common/creation-page.object";
-import { Departement } from "ouca-common/departement.object";
-import { Espece } from "ouca-common/espece.object";
-import { Lieudit } from "ouca-common/lieudit.object";
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { distinctUntilChanged, filter, map, takeUntil } from "rxjs/operators";
+import { Donnee } from "ouca-common/donnee.object";
+import { EstimationDistance } from "ouca-common/estimation-distance.object";
+import { EstimationNombre } from "ouca-common/estimation-nombre.object";
+import { Meteo } from "ouca-common/meteo.object";
+import { Milieu } from "ouca-common/milieu.object";
+import { Observateur } from "ouca-common/observateur.object";
+import { Sexe } from "ouca-common/sexe.object";
+import {
+  BehaviorSubject,
+  combineLatest,
+  merge,
+  Observable,
+  Subject
+} from "rxjs";
+import {
+  distinctUntilChanged,
+  first,
+  map,
+  takeUntil,
+  takeWhile
+} from "rxjs/operators";
+import { AppConfigurationService } from "src/app/services/app-configuration.service";
+import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationModeService } from "src/app/services/creation-mode.service";
 import { CreationPageModelService } from "src/app/services/creation-page-model.service";
 import { DonneeFormService } from "src/app/services/donnee-form.service";
@@ -32,34 +51,49 @@ import { MultipleOptionsDialogComponent } from "../../../shared/components/multi
 import { SearchByIdDialogComponent } from "../../components/search-by-id-dialog/search-by-id-dialog.component";
 import {
   getDeleteDonneeDialogData,
-  getUpdateInventaireDialogData,
+  getUpdateInventaireDialogData
 } from "../../helpers/creation-dialog.helper";
+import { DonneeFormObject } from "../../models/donnee-form-object.model";
 
 @Component({
   styleUrls: ["./creation.component.scss"],
   templateUrl: "./creation.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreationComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
-  public pageModel$: Observable<CreationPage>;
+  private requestedDonneeId: number;
+
+  public appConfiguration$: Observable<AppConfiguration>;
 
   public nextRegroupement$: Observable<number> = new Observable<number>();
 
-  public departements$: Observable<Departement[]>;
+  public observateurs$: Observable<Observateur[]>;
 
-  public communes$: Observable<Commune[]>;
+  public estimationsNombre$: Observable<EstimationNombre[]>;
 
-  public lieuxdits$: Observable<Lieudit[]>;
+  public estimationsDistance$: Observable<EstimationDistance[]>;
 
-  public classes$: Observable<Classe[]>;
+  public sexes$: Observable<Sexe[]>;
 
-  public especes$: Observable<Espece[]>;
+  public ages$: Observable<Age[]>;
+
+  public comportements$: Observable<Comportement[]>;
+
+  public milieux$: Observable<Milieu[]>;
+
+  public meteos$: Observable<Meteo[]>;
 
   public inventaireForm: FormGroup;
 
   public donneeForm: FormGroup;
+
+  private donnee$: Observable<Donnee | DonneeFormObject>;
+
+  private donneeManual$: Subject<Donnee | DonneeFormObject> = new Subject<
+    Donnee | DonneeFormObject
+  >();
 
   private coordinatesSystem$: Observable<CoordinatesSystemType>;
 
@@ -68,62 +102,102 @@ export class CreationComponent implements OnInit, OnDestroy {
   >(false);
 
   constructor(
+    private appConfigurationService: AppConfigurationService,
     private creationModeService: CreationModeService,
     private creationPageService: CreationPageService,
     private creationPageModelService: CreationPageModelService,
     private dialog: MatDialog,
     private donneeFormService: DonneeFormService,
+    private coordinatesBuilderService: CoordinatesBuilderService,
     private donneeService: DonneeService,
     private inventaireFormService: InventaireFormService,
-    private regroupementService: RegroupementService
-  ) {}
+    private regroupementService: RegroupementService,
+    private router: Router
+  ) {
+    this.requestedDonneeId = this.router.getCurrentNavigation()?.extras?.state?.id;
+
+    this.appConfiguration$ = this.appConfigurationService.getConfiguration$();
+    this.coordinatesSystem$ = this.appConfiguration$.pipe(
+      map((configuration) => configuration.coordinatesSystem)
+    );
+
+    this.observateurs$ = this.creationPageModelService.getObservateurs$();
+    this.estimationsNombre$ = this.creationPageModelService.getEstimationNombres$();
+    this.estimationsDistance$ = this.creationPageModelService.getEstimationDistances$();
+    this.sexes$ = this.creationPageModelService.getSexes$();
+    this.ages$ = this.creationPageModelService.getAges$();
+    this.comportements$ = this.creationPageModelService.getComportements$();
+    this.milieux$ = this.creationPageModelService.getMilieux$();
+    this.meteos$ = this.creationPageModelService.getMeteos$();
+  }
 
   public ngOnInit(): void {
     // Create the inventaire form group
-    this.inventaireForm = this.inventaireFormService.getForm();
-    this.donneeForm = this.donneeFormService.getForm();
+    this.inventaireForm = this.inventaireFormService.createForm();
+    this.donneeForm = this.donneeFormService.createForm();
 
-    // Map all observables of the page
-    this.pageModel$ = this.creationPageModelService.getCreationPage$().pipe(
-      filter((creationPage) => !!creationPage),
-      takeUntil(this.destroy$)
-    );
-
-    this.communes$ = this.pageModel$.pipe(
-      map((pageModel) => {
-        return pageModel ? pageModel.communes : [];
-      })
-    );
-
-    this.departements$ = this.pageModel$.pipe(
-      map((pageModel) => {
-        return pageModel ? pageModel.departements : [];
-      })
-    );
-
-    this.lieuxdits$ = this.pageModel$.pipe(
-      map((pageModel) => {
-        return pageModel ? pageModel.lieudits : [];
-      })
-    );
-
-    this.classes$ = this.pageModel$.pipe(
-      map((pageModel) => {
-        return pageModel ? pageModel.classes : [];
-      })
-    );
-
-    this.especes$ = this.pageModel$.pipe(
-      map((pageModel) => {
-        return pageModel ? pageModel.especes : [];
-      })
-    );
-
-    this.coordinatesSystem$ = this.pageModel$.pipe(
-      map((model) => model.coordinatesSystem)
-    );
+    // If a specific id was requested, retrieve it
+    // TODO improve this...
+    let initialDonnee$: Observable<boolean>;
+    if (this.requestedDonneeId) {
+      initialDonnee$ = this.donneeService.getDonneeById(this.requestedDonneeId);
+      initialDonnee$.subscribe(() => {
+        this.requestedDonneeId = null;
+      });
+    } else {
+      initialDonnee$ = this.donneeService.initialize().pipe(map(() => false));
+    }
 
     this.nextRegroupement$ = this.regroupementService.getNextRegroupement$();
+
+    this.donnee$ = merge(
+      this.donneeManual$,
+      this.donneeService.getCurrentDonnee$()
+    );
+
+    // Update the coordinates form controls depending on the application coordinates system
+    this.appConfigurationService
+      .getAppCoordinatesSystemType$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((coordinatesSystemType) => {
+        this.coordinatesBuilderService.updateCoordinatesValidators(
+          coordinatesSystemType,
+          (this.inventaireForm.controls.lieu as FormGroup).controls.longitude,
+          (this.inventaireForm.controls.lieu as FormGroup).controls.latitude
+        );
+      });
+
+    combineLatest(
+      this.creationPageModelService.getInventaireEntities$(),
+      this.donneeService
+        .getCurrentDonnee$()
+        .pipe(map((donnee) => donnee?.inventaire)),
+      this.appConfiguration$
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([pageModel, inventaire, appConfiguration]) => {
+        this.inventaireFormService.updateForm(
+          this.inventaireForm,
+          pageModel,
+          inventaire,
+          appConfiguration
+        );
+      });
+
+    combineLatest(
+      this.creationPageModelService.getDonneeEntities$(),
+      this.donnee$,
+      this.appConfiguration$
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([pageModel, donnee, appConfiguration]) => {
+        this.donneeFormService.updateForm(
+          this.donneeForm,
+          pageModel,
+          appConfiguration,
+          donnee
+        );
+      });
 
     this.creationModeService
       .getIsInventaireEnabled$()
@@ -166,7 +240,33 @@ export class CreationComponent implements OnInit, OnDestroy {
       this.isModalOpened$.next(false);
     });
 
-    this.creationPageService.initializeCreationPage();
+    // Enable the inventaire form as soon as we have received the minimal info
+    this.creationPageModelService
+      .getInventaireEntities$()
+      .pipe(first())
+      .subscribe(() => {
+        // TODO finish this with requested case
+      });
+
+    // TODO improve this logic
+    combineLatest(
+      this.creationPageModelService
+        .getIsContainingRequiredDataForInventaire()
+        .pipe(takeWhile((isInventaireReady) => !isInventaireReady, true)),
+      this.creationPageModelService
+        .getIsContainingRequiredDataForDonnee()
+        .pipe(takeWhile((isDonneeReady) => !isDonneeReady, true)),
+      initialDonnee$
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([isInventaireReady, isDonneeReady, enableDonneeForm]) => {
+        this.creationModeService.setStatus(
+          isInventaireReady,
+          isDonneeReady && enableDonneeForm
+        );
+      });
+
+    this.regroupementService.updateNextRegroupement();
   }
 
   public ngOnDestroy(): void {
@@ -190,14 +290,18 @@ export class CreationComponent implements OnInit, OnDestroy {
    * Called when clicking on "Enregistrer la fiche inventaire" button
    */
   private onSaveInventaireButtonClicked = (): void => {
-    this.creationPageService.updateInventaire();
+    this.creationPageService.updateInventaire(this.inventaireForm);
   };
 
   /**
    * Called when clicking on "Enregistrer la fiche espèce" button
    */
   private onSaveDonneeButtonClicked = (): void => {
-    this.creationPageService.createDonnee();
+    this.creationPageService.createDonnee(
+      this.inventaireForm,
+      this.donneeForm,
+      this.donneeManual$
+    );
   };
 
   /**
@@ -205,11 +309,15 @@ export class CreationComponent implements OnInit, OnDestroy {
    */
   private onSaveInventaireAndDonneeButtonClicked = (): void => {
     this.creationPageService
-      .isInventaireUpdated()
+      .isInventaireUpdated(this.inventaireForm)
       .subscribe((isInventaireUpdated) => {
         isInventaireUpdated
           ? this.openInventaireDialog()
-          : this.creationPageService.updateInventaireAndDonnee(false);
+          : this.creationPageService.updateInventaireAndDonnee(
+              this.inventaireForm,
+              this.donneeForm,
+              false
+            );
       });
   };
 
@@ -221,7 +329,7 @@ export class CreationComponent implements OnInit, OnDestroy {
       data: getUpdateInventaireDialogData(
         ALL_DONNEES_OPTION,
         ONLY_CURRENT_DONNEE_OPTION
-      ),
+      )
     });
 
     dialogRef.afterClosed().subscribe((option) => {
@@ -231,6 +339,8 @@ export class CreationComponent implements OnInit, OnDestroy {
       ) {
         const shouldCreateNewInventaire = option === ONLY_CURRENT_DONNEE_OPTION;
         this.creationPageService.updateInventaireAndDonnee(
+          this.inventaireForm,
+          this.donneeForm,
           shouldCreateNewInventaire
         );
       }
@@ -241,7 +351,10 @@ export class CreationComponent implements OnInit, OnDestroy {
    * Called when clicking on "Donnee précédente" button
    */
   public onPreviousDonneeBtnClicked = (): void => {
-    this.creationPageService.displayPreviousDonnee();
+    this.creationPageService.displayPreviousDonnee(
+      this.inventaireForm,
+      this.donneeForm
+    );
   };
 
   /**
@@ -271,7 +384,7 @@ export class CreationComponent implements OnInit, OnDestroy {
   public onDeleteDonneeBtnClicked = (): void => {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: "450px",
-      data: getDeleteDonneeDialogData(),
+      data: getDeleteDonneeDialogData()
     });
 
     dialogRef.afterClosed().subscribe((shouldDeleteDonnee) => {
@@ -287,7 +400,7 @@ export class CreationComponent implements OnInit, OnDestroy {
    * But should do not reset the form fields
    */
   public onNewInventaireBtnClicked = (): void => {
-    this.creationPageService.createNewInventaire();
+    this.creationPageService.createNewInventaire(this.inventaireForm);
   };
 
   /**
@@ -302,12 +415,16 @@ export class CreationComponent implements OnInit, OnDestroy {
    */
   public onSearchByIdBtnClicked = (): void => {
     const dialogRef = this.dialog.open(SearchByIdDialogComponent, {
-      width: "450px",
+      width: "450px"
     });
 
     dialogRef.afterClosed().subscribe((donneeId: number) => {
       if (donneeId) {
-        this.creationPageService.displayDonneeById(donneeId);
+        this.creationPageService.displayDonneeByIdAndSaveCurrentCache(
+          this.inventaireForm,
+          this.donneeForm,
+          donneeId
+        );
       }
     });
   };

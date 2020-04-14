@@ -25,7 +25,7 @@
             [attributesToDisplay]="['libelle']"
             [control]="searchForm.controls['observateurs']"
             [id]="'observateurs'"
-            [options]="observateurs"
+            [options]="observateurs$ | async"
             [placeholder]="'Observateurs'"
           ></multiple-select>
 
@@ -85,9 +85,6 @@
           <input-lieudit
             formGroupName="lieuditGroup"
             [controlGroup]="searchForm.controls['lieuditGroup']"
-            [departements]="departements$"
-            [communes]="communes$"
-            [lieuxdits]="lieuxdits$"
             [hideCoordinates]="true"
             [isMultipleSelectMode]="true"
           >
@@ -103,7 +100,7 @@
             [attributesToDisplay]="['libelle']"
             [control]="searchForm.controls['meteos']"
             [id]="'meteos'"
-            [options]="meteos"
+            [options]="meteos$ | async"
             [placeholder]="'Météos'"
           ></multiple-select>
 
@@ -112,7 +109,7 @@
             [attributesToDisplay]="['libelle']"
             [control]="searchForm.controls['associes']"
             [id]="'associes'"
-            [options]="observateurs"
+            [options]="observateurs$ | async"
             [placeholder]="'Observateurs associés'"
           ></multiple-select>
         </div>
@@ -123,8 +120,6 @@
           <input-espece
             formGroupName="especeGroup"
             [controlGroup]="searchForm.controls['especeGroup']"
-            [classes]="classes$"
-            [especes]="especes$"
             [isMultipleSelectMode]="true"
           ></input-espece>
 
@@ -133,7 +128,7 @@
             [attributesToDisplay]="['libelle']"
             [control]="nombreGroup.controls['estimationsNombre']"
             [id]="'estimations-nombre'"
-            [options]="estimationsNombre"
+            [options]="estimationsNombre$ | async"
             [placeholder]="'Estimations du nombre'"
           ></multiple-select>
 
@@ -157,7 +152,7 @@
             [attributesToDisplay]="['libelle']"
             [control]="searchForm.controls['sexes']"
             [id]="'sexes'"
-            [options]="sexes"
+            [options]="sexes$ | async"
             [placeholder]="'Sexes'"
           ></multiple-select>
 
@@ -166,7 +161,7 @@
             [attributesToDisplay]="['libelle']"
             [control]="searchForm.controls['ages']"
             [id]="'ages'"
-            [options]="ages"
+            [options]="ages$ | async"
             [placeholder]="'Ages'"
           ></multiple-select>
         </div>
@@ -178,7 +173,7 @@
             [attributesToDisplay]="['libelle']"
             [control]="distanceGroup.controls['estimationsDistance']"
             [id]="'estimations-distance'"
-            [options]="estimationsDistance"
+            [options]="estimationsDistance$ | async"
             [placeholder]="'Estimations de la distance'"
           ></multiple-select>
 
@@ -207,7 +202,7 @@
             [attributesToDisplay]="['code', 'libelle']"
             [control]="searchForm.controls['comportements']"
             [id]="'comportements'"
-            [options]="comportements"
+            [options]="comportements$ | async"
             [placeholder]="'Comportements'"
           ></multiple-select>
 
@@ -216,7 +211,7 @@
             [attributesToDisplay]="['code', 'libelle']"
             [control]="searchForm.controls['milieux']"
             [id]="'milieux'"
-            [options]="milieux"
+            [options]="milieux$ | async"
             [placeholder]="'Milieux'"
           ></multiple-select>
 
@@ -274,7 +269,7 @@
   </ng-container>
 
   <!-- NO DATA PANEL -->
-  <div *ngIf="displayNoDataPanel" style="text-align: center">
+  <div *ngIf="displayNoDataPanel" style="text-align: center;">
     <img
       src="../../../../../assets/img/blue-green-bird.svg"
       alt="Oiseaux"
@@ -284,7 +279,7 @@
   </div>
 
   <!-- WAIT PANEL-->
-  <div *ngIf="displayWaitPanel" style="text-align: center">
+  <div *ngIf="displayWaitPanel" style="text-align: center;">
     <img
       src="../../../../../assets/img/green-bird.svg"
       alt="Oiseaux"

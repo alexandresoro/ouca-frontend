@@ -7,17 +7,15 @@ import {
 } from "@angular/forms";
 import { set } from "date-fns";
 import * as _ from "lodash";
+import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { Commune } from "ouca-common/commune.object";
 import { getCoordinates } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
-import { CreationPage } from "ouca-common/creation-page.object";
 import { Departement } from "ouca-common/departement.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { Lieudit } from "ouca-common/lieudit.object";
 import { Meteo } from "ouca-common/meteo.object";
 import { Observateur } from "ouca-common/observateur.object";
-import { combineLatest } from "rxjs";
-import { map } from "rxjs/operators";
 import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";
 import { InventaireFormValue } from "../modules/donnee-creation/models/inventaire-form-value.model";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
@@ -27,10 +25,8 @@ import {
   interpretDateTimestampAsBrowserDate,
   TimeHelper,
 } from "../modules/shared/helpers/time.helper";
+import { AppConfigurationService } from "./app-configuration.service";
 import { CoordinatesBuilderService } from "./coordinates-builder.service";
-import { CoordinatesService } from "./coordinates.service";
-import { CreationPageModelService } from "./creation-page-model.service";
-import { DonneeService } from "./donnee.service";
 
 interface DefaultInventaireOptions {
   observateur: Observateur | null;
@@ -46,43 +42,13 @@ interface DefaultInventaireOptions {
   providedIn: "root",
 })
 export class InventaireFormService {
-  private form: FormGroup;
-
   constructor(
-    private creationPageModelService: CreationPageModelService,
     private coordinatesBuilderService: CoordinatesBuilderService,
-    private coordinatesService: CoordinatesService,
-    private donneeService: DonneeService
-  ) {
-    this.createForm();
+    private appConfigurationService: AppConfigurationService
+  ) {}
 
-    // Update the coordinates form controls depending on the application coordinates system
-    this.coordinatesService
-      .getAppCoordinatesSystem$()
-      .subscribe((coordinatesSystemType) => {
-        this.coordinatesService.updateCoordinatesValidators(
-          coordinatesSystemType,
-          (this.form.controls.lieu as FormGroup).controls.longitude,
-          (this.form.controls.lieu as FormGroup).controls.latitude
-        );
-      });
-
-    combineLatest(
-      this.creationPageModelService.getCreationPage$(),
-      this.donneeService
-        .getCurrentDonnee$()
-        .pipe(map((donnee) => donnee?.inventaire))
-    ).subscribe(([pageModel, inventaire]) => {
-      this.updateForm(pageModel, inventaire);
-    });
-  }
-
-  public getForm = (): FormGroup => {
-    return this.form;
-  };
-
-  private createForm = (): void => {
-    this.form = new FormGroup({
+  public createForm = (): FormGroup => {
+    const form = new FormGroup({
       id: new FormControl(),
       observateur: new FormControl("", [
         Validators.required,
@@ -116,45 +82,77 @@ export class InventaireFormService {
       meteos: new FormControl("", [this.meteosValidator()]),
     });
 
-    this.form.disable();
+    form.disable();
+    return form;
   };
 
-  public setInventaireIdInForm = (id: number): void => {
-    this.form.controls.id.setValue(id);
+  public setInventaireIdInForm = (form: FormGroup, id: number): void => {
+    form.controls.id.setValue(id);
   };
 
   /**
    * Fill the inventaire form with the values from an existing inventaire
    * @param inventaire Inventaire
    */
-  private updateForm = (
-    pageModel: CreationPage,
-    inventaire: Inventaire | InventaireFormObject
+  public updateForm = (
+    form: FormGroup,
+    entities: {
+      observateurs: Observateur[];
+      departements: Departement[];
+      lieudits: Lieudit[];
+      communes: Commune[];
+      meteos: Meteo[];
+    },
+    inventaire: Inventaire | InventaireFormObject,
+    appConfiguration: AppConfiguration
   ): void => {
-    if (!pageModel) {
+    if (!entities) {
       return;
     }
 
     console.log("Inventaire à afficher dans le formulaire:", inventaire);
 
     if (!inventaire) {
-      this.form.reset(this.getDefaultOptions(pageModel));
+      form.reset(
+        this.getDefaultOptions(
+          {
+            observateurs: entities.observateurs,
+            departements: entities.departements,
+          },
+          appConfiguration
+        )
+      );
     } else {
-      this.form.reset(this.getInventaireFormValue(pageModel, inventaire));
+      form.reset(
+        this.getInventaireFormValue(
+          {
+            observateurs: entities.observateurs,
+            lieudits: entities.lieudits,
+            communes: entities.communes,
+            departements: entities.departements,
+            meteos: entities.meteos,
+          },
+          inventaire
+        )
+      );
     }
   };
 
   private getDefaultOptions = (
-    pageModel: CreationPage
+    entities: {
+      observateurs: Observateur[];
+      departements: Departement[];
+    },
+    appConfiguration: AppConfiguration
   ): DefaultInventaireOptions => {
     const defaultObservateur: Observateur = ListHelper.findEntityInListByID(
-      pageModel.observateurs,
-      pageModel.defaultObservateurId
+      entities.observateurs,
+      appConfiguration.defaultObservateur?.id
     );
 
     const defaultDepartement: Departement = ListHelper.findEntityInListByID(
-      pageModel.departements,
-      pageModel.defaultDepartementId
+      entities.departements,
+      appConfiguration.defaultDepartement?.id
     );
 
     const today = set(new Date(), {
@@ -176,23 +174,29 @@ export class InventaireFormService {
   };
 
   private getInventaireFormValue = (
-    pageModel: CreationPage,
+    entities: {
+      observateurs: Observateur[];
+      lieudits: Lieudit[];
+      communes: Commune[];
+      departements: Departement[];
+      meteos: Meteo[];
+    },
     inventaire: Inventaire
   ): InventaireFormValue => {
     const observateur: Observateur = ListHelper.findEntityInListByID(
-      pageModel.observateurs,
+      entities.observateurs,
       inventaire.observateurId
     );
 
     const lieudit: Lieudit = ListHelper.findEntityInListByID(
-      pageModel.lieudits,
+      entities.lieudits,
       inventaire.lieuditId
     );
 
     let commune: Commune = null;
     if (lieudit?.communeId) {
       commune = ListHelper.findEntityInListByID(
-        pageModel.communes,
+        entities.communes,
         lieudit.communeId
       );
     } else {
@@ -202,7 +206,7 @@ export class InventaireFormService {
     let departement: Departement = null;
     if (!!commune && !!commune.departementId) {
       departement = ListHelper.findEntityInListByID(
-        pageModel.departements,
+        entities.departements,
         commune.departementId
       );
     } else {
@@ -210,12 +214,12 @@ export class InventaireFormService {
     }
 
     const associes: Observateur[] = ListHelper.getEntitiesFromIDs(
-      pageModel.observateurs,
+      entities.observateurs,
       inventaire.associesIds
     ) as Observateur[];
 
     const meteos: Meteo[] = ListHelper.getEntitiesFromIDs(
-      pageModel.meteos,
+      entities.meteos,
       inventaire.meteosIds
     ) as Meteo[];
 
@@ -223,7 +227,7 @@ export class InventaireFormService {
     let longitude: number = null;
     let latitude: number = null;
     // TO DO observable ?
-    const coordinatesSystem = this.coordinatesService.getAppCoordinatesSystem();
+    const coordinatesSystem = this.appConfigurationService.getAppCoordinatesSystemType();
 
     if (lieudit && lieudit.id && _.isNil(inventaire.customizedAltitude)) {
       // Coordinates are not updated for the inventaire
@@ -272,8 +276,8 @@ export class InventaireFormService {
     };
   };
 
-  public getInventaireFromForm = (): Inventaire => {
-    const inventaireFormValue: InventaireFormValue = this.form.value;
+  public getInventaireFromForm = (form: FormGroup): Inventaire => {
+    const inventaireFormValue: InventaireFormValue = form.value;
 
     const associesIds: number[] = ListHelper.getIDsFromEntities(
       inventaireFormValue.observateursAssocies
@@ -335,21 +339,17 @@ export class InventaireFormService {
     return inventaire;
   };
 
-  public getInventaireFormObject = (): InventaireFormObject => {
-    const inventaire = this.getInventaireFromForm();
+  public getInventaireFormObject = (form: FormGroup): InventaireFormObject => {
+    const inventaire = this.getInventaireFromForm(form);
     const { ...inventaireAttributes } = inventaire;
 
-    const lieuditFormGroup = this.form.controls.lieu as FormGroup;
+    const lieuditFormGroup = form.controls.lieu as FormGroup;
 
     return {
       ...inventaireAttributes,
       departement: lieuditFormGroup.controls.departement.value,
       commune: lieuditFormGroup.controls.commune.value,
     };
-  };
-
-  public isFormEnabled = (): boolean => {
-    return this.form.enabled;
   };
 
   private areCoordinatesCustomized = (
@@ -361,7 +361,7 @@ export class InventaireFormService {
     if (lieudit?.id) {
       const lieuditCoordinates: Coordinates = getCoordinates(
         lieudit,
-        this.coordinatesService.getAppCoordinatesSystem()
+        this.appConfigurationService.getAppCoordinatesSystemType()
       );
 
       if (

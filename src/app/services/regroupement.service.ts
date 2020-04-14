@@ -11,7 +11,7 @@ export class RegroupementService {
   constructor(private backendApiService: BackendApiService) {}
 
   public getNextRegroupement$ = (): Observable<number> => {
-    return this.nextRegroupement$;
+    return this.nextRegroupement$.asObservable();
   };
 
   public updateNextRegroupement(): void {

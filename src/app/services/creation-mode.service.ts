@@ -28,11 +28,15 @@ export class CreationModeService {
   };
 
   public getIsInventaireEnabled$ = (): Observable<boolean> => {
-    return this.isInventaireEnabled$;
+    return this.isInventaireEnabled$.asObservable();
   };
 
   public getIsDonneeEnabled$ = (): Observable<boolean> => {
-    return this.isDonneeEnabled$;
+    return this.isDonneeEnabled$.asObservable();
+  };
+
+  public setInventaireEnabled = (isInventaireEnabled: boolean): void => {
+    this.isInventaireEnabled$.next(isInventaireEnabled);
   };
 
   public setStatus = (
@@ -41,25 +45,5 @@ export class CreationModeService {
   ): void => {
     this.isInventaireEnabled$.next(isInventaireEnabled);
     this.isDonneeEnabled$.next(isDonneeEnabled);
-  };
-
-  public getIsInventaireEnabled = (): boolean => {
-    return this.isInventaireEnabled$.value;
-  };
-
-  public getIsDonneeEnabled = (): boolean => {
-    return this.isDonneeEnabled$.value;
-  };
-
-  public isDonneeOnlyEnabled$ = (): Observable<boolean> => {
-    return this.getStatus$().pipe(
-      map((status) => !status.isInventaireEnabled && status.isDonneeEnabled)
-    );
-  };
-
-  public isInventaireOnlyEnabled$ = (): Observable<boolean> => {
-    return this.getStatus$().pipe(
-      map((status) => status.isInventaireEnabled && !status.isDonneeEnabled)
-    );
   };
 }

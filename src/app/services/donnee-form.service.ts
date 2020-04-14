@@ -6,9 +6,9 @@ import {
   Validators,
 } from "@angular/forms";
 import { Age } from "ouca-common/age.object";
+import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { Classe } from "ouca-common/classe.object";
 import { Comportement } from "ouca-common/comportement.object";
-import { CreationPage } from "ouca-common/creation-page.object";
 import { Donnee } from "ouca-common/donnee.object";
 import { EntiteAvecLibelleEtCode } from "ouca-common/entite-avec-libelle-et-code.object";
 import { Espece } from "ouca-common/espece.object";
@@ -16,13 +16,10 @@ import { EstimationDistance } from "ouca-common/estimation-distance.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { Milieu } from "ouca-common/milieu.object";
 import { Sexe } from "ouca-common/sexe.object";
-import { combineLatest, merge, Observable, Subject } from "rxjs";
 import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
-import { CreationPageModelService } from "./creation-page-model.service";
-import { DonneeService } from "./donnee.service";
 
 interface DefaultDonneeOptions {
   age: Age | null;
@@ -38,43 +35,8 @@ interface DefaultDonneeOptions {
   providedIn: "root",
 })
 export class DonneeFormService {
-  private form: FormGroup;
-
-  private donnee$: Observable<Donnee | DonneeFormObject>;
-
-  private donneeManual$: Subject<Donnee | DonneeFormObject> = new Subject<
-    Donnee | DonneeFormObject
-  >();
-
-  constructor(
-    private creationPageModelService: CreationPageModelService,
-    private donneeService: DonneeService
-  ) {
-    this.createForm();
-
-    this.donnee$ = merge(
-      this.donneeManual$,
-      this.donneeService.getCurrentDonnee$()
-    );
-
-    combineLatest(
-      this.creationPageModelService.getCreationPage$(),
-      this.donnee$
-    ).subscribe(([pageModel, donnee]) => {
-      this.updateForm(pageModel, donnee);
-    });
-  }
-
-  public getForm = (): FormGroup => {
-    return this.form;
-  };
-
-  public resetForm = (): void => {
-    this.donneeManual$.next(null);
-  };
-
-  private createForm = (): void => {
-    this.form = new FormGroup({
+  public createForm = (): FormGroup => {
+    const form = new FormGroup({
       id: new FormControl(),
       especeGroup: new FormGroup({
         classe: new FormControl("", [this.classeValidator()]),
@@ -118,43 +80,58 @@ export class DonneeFormService {
       }),
       commentaire: new FormControl("", [this.commentaireValidator()]),
     });
-    this.form.disable();
+
+    form.disable();
+    return form;
   };
 
   /**
    * Initialize the donnee form
    * Reset the form and set defaults values if any
    */
-  private initializeForm = (pageModel: CreationPage): void => {
-    const defaultOptions = this.getDefaultOptions(pageModel);
-    this.form.reset(defaultOptions);
+  private initializeForm = (
+    form: FormGroup,
+    entities: {
+      ages: Age[];
+      sexes: Sexe[];
+      estimationsNombre: EstimationNombre[];
+    },
+    appConfiguration: AppConfiguration
+  ): void => {
+    const defaultOptions = this.getDefaultOptions(entities, appConfiguration);
+    form.reset(defaultOptions);
   };
 
   private getDefaultOptions = (
-    pageModel: CreationPage
+    entities: {
+      ages: Age[];
+      sexes: Sexe[];
+      estimationsNombre: EstimationNombre[];
+    },
+    appConfiguration: AppConfiguration
   ): DefaultDonneeOptions => {
     const defaultAge: Age = ListHelper.findEntityInListByID(
-      pageModel.ages,
-      pageModel.defaultAgeId
+      entities.ages,
+      appConfiguration?.defaultAge?.id
     );
 
     const defaultSexe: Sexe = ListHelper.findEntityInListByID(
-      pageModel.sexes,
-      pageModel.defaultSexeId
+      entities.sexes,
+      appConfiguration?.defaultSexe?.id
     );
 
     const defaultEstimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
-      pageModel.estimationsNombre,
-      pageModel.defaultEstimationNombreId
+      entities.estimationsNombre,
+      appConfiguration?.defaultEstimationNombre?.id
     );
 
     let defaultNombre: number = null;
     if (
-      pageModel.defaultNombre &&
+      appConfiguration?.defaultNombre &&
       (!defaultEstimationNombre ||
         (defaultEstimationNombre && !defaultEstimationNombre.nonCompte))
     ) {
-      defaultNombre = pageModel.defaultNombre;
+      defaultNombre = appConfiguration.defaultNombre;
     }
 
     return {
@@ -170,8 +147,8 @@ export class DonneeFormService {
   /**
    * Returns a donnee object from the values filled in donnee form
    */
-  public getDonneeFromForm = (): Donnee => {
-    const donneeFormControls = this.form.controls;
+  public getDonneeFromForm = (form: FormGroup): Donnee => {
+    const donneeFormControls = form.controls;
     const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
       .controls;
     const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
@@ -248,20 +225,31 @@ export class DonneeFormService {
   /**
    * Fill the donnee form with the values of an existing donnee
    */
-  private updateForm = (
-    pageModel: CreationPage,
+  public updateForm = (
+    form: FormGroup,
+    entities: {
+      classes: Classe[];
+      especes: Espece[];
+      ages: Age[];
+      sexes: Sexe[];
+      estimationsNombre: EstimationNombre[];
+      estimationsDistance: EstimationDistance[];
+      comportements: Comportement[];
+      milieux: Milieu[];
+    },
+    appConfiguration: AppConfiguration,
     donnee: Donnee | DonneeFormObject
   ): void => {
-    if (!pageModel) {
+    if (!entities) {
       return;
     }
 
     console.log("Donnée à afficher dans le formulaire:", donnee);
 
     if (!donnee) {
-      this.initializeForm(pageModel);
+      this.initializeForm(form, entities, appConfiguration);
     } else {
-      const donneeFormControls = this.form.controls;
+      const donneeFormControls = form.controls;
       const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
         .controls;
       const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
@@ -274,31 +262,31 @@ export class DonneeFormService {
         .controls;
 
       const espece: Espece = ListHelper.findEntityInListByID(
-        pageModel.especes,
+        entities.especes,
         donnee.especeId
       );
 
       const classe: Classe = espece?.classeId
-        ? ListHelper.findEntityInListByID(pageModel.classes, espece.classeId)
+        ? ListHelper.findEntityInListByID(entities.classes, espece.classeId)
         : (donnee as DonneeFormObject).classe;
 
       const estimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
-        pageModel.estimationsNombre,
+        entities.estimationsNombre,
         donnee.estimationNombreId
       );
 
       const estimationDistance: EstimationDistance = ListHelper.findEntityInListByID(
-        pageModel.estimationsDistance,
+        entities.estimationsDistance,
         donnee.estimationDistanceId
       );
 
       const sexe: Sexe = ListHelper.findEntityInListByID(
-        pageModel.sexes,
+        entities.sexes,
         donnee.sexeId
       );
 
       const age: EstimationDistance = ListHelper.findEntityInListByID(
-        pageModel.ages,
+        entities.ages,
         donnee.ageId
       );
 
@@ -319,42 +307,42 @@ export class DonneeFormService {
       if (donnee.comportementsIds) {
         comportementsFormControls.comportement1.setValue(
           this.getComportement(
-            pageModel.comportements,
+            entities.comportements,
             donnee.comportementsIds,
             1
           )
         );
         comportementsFormControls.comportement2.setValue(
           this.getComportement(
-            pageModel.comportements,
+            entities.comportements,
             donnee.comportementsIds,
             2
           )
         );
         comportementsFormControls.comportement3.setValue(
           this.getComportement(
-            pageModel.comportements,
+            entities.comportements,
             donnee.comportementsIds,
             3
           )
         );
         comportementsFormControls.comportement4.setValue(
           this.getComportement(
-            pageModel.comportements,
+            entities.comportements,
             donnee.comportementsIds,
             4
           )
         );
         comportementsFormControls.comportement5.setValue(
           this.getComportement(
-            pageModel.comportements,
+            entities.comportements,
             donnee.comportementsIds,
             5
           )
         );
         comportementsFormControls.comportement6.setValue(
           this.getComportement(
-            pageModel.comportements,
+            entities.comportements,
             donnee.comportementsIds,
             6
           )
@@ -362,16 +350,16 @@ export class DonneeFormService {
       }
       if (donnee.milieuxIds) {
         milieuxFormControls.milieu1.setValue(
-          this.getMilieu(pageModel.milieux, donnee.milieuxIds, 1)
+          this.getMilieu(entities.milieux, donnee.milieuxIds, 1)
         );
         milieuxFormControls.milieu2.setValue(
-          this.getMilieu(pageModel.milieux, donnee.milieuxIds, 2)
+          this.getMilieu(entities.milieux, donnee.milieuxIds, 2)
         );
         milieuxFormControls.milieu3.setValue(
-          this.getMilieu(pageModel.milieux, donnee.milieuxIds, 3)
+          this.getMilieu(entities.milieux, donnee.milieuxIds, 3)
         );
         milieuxFormControls.milieu4.setValue(
-          this.getMilieu(pageModel.milieux, donnee.milieuxIds, 4)
+          this.getMilieu(entities.milieux, donnee.milieuxIds, 4)
         );
       }
       donneeFormControls.commentaire.setValue(donnee.commentaire);
@@ -379,23 +367,20 @@ export class DonneeFormService {
   };
 
   public getDonneeFormObject = (
+    form: FormGroup,
     inventaireFormObject: InventaireFormObject
   ): DonneeFormObject => {
-    const donnee = this.getDonneeFromForm();
+    const donnee = this.getDonneeFromForm(form);
 
     const { ...donneeAttributes } = donnee;
 
-    const especeFormGroup = this.form.controls.especeGroup as FormGroup;
+    const especeFormGroup = form.controls.especeGroup as FormGroup;
 
     return {
       ...donneeAttributes,
       inventaire: inventaireFormObject,
       classe: especeFormGroup.controls.classe.value,
     };
-  };
-
-  public isFormEnabled = (): boolean => {
-    return this.form.enabled;
   };
 
   /**
