@@ -7,7 +7,7 @@ import { DonneesFilter } from "ouca-common/donnees-filter.object";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { Inventaire } from "ouca-common/inventaire.object";
-import { Lieudit } from "ouca-common/lieudit.object";
+import { Lieudit } from "ouca-common/lieudit.model";
 import { PostResponse } from "ouca-common/post-response.object";
 import { Observable } from "rxjs";
 
@@ -17,7 +17,6 @@ import { Observable } from "rxjs";
 export class BackendApiService {
   private ALL: string = "all";
   private CONFIGURATION: string = "configuration/";
-  private CREATION: string = "creation/";
   private DATABASE: string = "database/";
   private DELETE: string = "delete";
   private DONNEE: string = "donnee/";
@@ -27,8 +26,6 @@ export class BackendApiService {
   private FIND_WITH_CONTEXT: string = "find_with_context";
 
   private IMPORT: string = "import";
-  private INIT: string = "init";
-  private COORDINATES_SYSTEM: string = "coordinates_system";
   private INVENTAIRE: string = "inventaire/";
   private LIEUDIT: string = "lieudit/";
   private NEXT_DONNEE: string = "next_donnee";
