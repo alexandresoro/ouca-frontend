@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener,
   OnDestroy,
   OnInit
 } from "@angular/core";
@@ -27,11 +26,13 @@ import {
   BehaviorSubject,
   combineLatest,
   forkJoin,
+  fromEvent,
   Observable,
   Subject
 } from "rxjs";
 import {
   distinctUntilChanged,
+  filter,
   first,
   map,
   takeUntil,
@@ -129,6 +130,26 @@ export class CreationComponent implements OnInit, OnDestroy {
     // Create the inventaire form group
     this.inventaireForm = this.inventaireFormService.createForm();
     this.donneeForm = this.donneeFormService.createForm();
+
+    /**
+     * When clicking on Enter, we save the inventaire or donnee
+     * if it is valid
+     * and if the focus is not on a textarea field which can contain several lines
+     */
+    fromEvent(document, "keyup")
+      .pipe(
+        withLatestFrom(this.isModalOpened$),
+        filter(([event, isModalOpened]) => {
+          return (
+            (event as KeyboardEvent).key === "Enter" &&
+            document.activeElement.tagName.toLowerCase() !== "textarea" &&
+            !isModalOpened
+          );
+        })
+      )
+      .subscribe(() => {
+        this.onSaveButtonClicked();
+      });
 
     // If a specific id was requested, retrieve it
     let initialDonnee$: Observable<boolean>;
@@ -509,20 +530,4 @@ export class CreationComponent implements OnInit, OnDestroy {
   private isEditingBothInventaireAndDonnee = (): boolean => {
     return this.inventaireForm.enabled && this.donneeForm.enabled;
   };
-
-  /**
-   * When clicking on Enter, we save the inventaire or donnee
-   * if it is valid
-   * and if the focus is not on a textarea field which can contain several lines
-   */
-  @HostListener("document:keyup", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent): void {
-    if (
-      event.key === "Enter" &&
-      document.activeElement.tagName.toLowerCase() !== "textarea" &&
-      !this.isModalOpened$.value
-    ) {
-      this.onSaveButtonClicked();
-    }
-  }
 }

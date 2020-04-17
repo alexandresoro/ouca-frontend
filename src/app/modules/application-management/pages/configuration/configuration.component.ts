@@ -47,7 +47,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
 
   public appConfiguration$: Observable<AppConfiguration>;
 
-  private configurationParametersToDisplay: ConfigurationParameter[] = [
+  private readonly configurationParametersToDisplay: ConfigurationParameter[] = [
     {
       id: ConfigurationParameterID.DEFAULT_OBSERVATEUR,
       label: "Observateur par défaut",
@@ -114,11 +114,16 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.dataSource = new MatTableDataSource(
+      this.configurationParametersToDisplay
+    );
     this.switchToViewAllMode();
     this.appConfiguration$
       .pipe(takeUntil(this.destroy$))
       .subscribe((appConfiguration) => {
-        this.buildDataSource(appConfiguration);
+        if (appConfiguration) {
+          this.buildDataSource(appConfiguration);
+        }
       });
   }
 
@@ -128,67 +133,72 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   }
 
   public buildDataSource = (appConfiguration: AppConfiguration): void => {
-    _.forEach(this.configurationParametersToDisplay, (parameter) => {
-      let value = "";
-      if (appConfiguration) {
-        switch (parameter.id) {
-          case ConfigurationParameterID.DEFAULT_OBSERVATEUR:
-            value = appConfiguration.defaultObservateur
-              ? appConfiguration.defaultObservateur.libelle
-              : "";
-            break;
-          case ConfigurationParameterID.DEFAULT_DEPARTEMENT:
-            value = appConfiguration.defaultDepartement
-              ? appConfiguration.defaultDepartement.code
-              : "";
-            break;
-          case ConfigurationParameterID.COORDINATES_SYSTEM:
-            value = appConfiguration.coordinatesSystem
-              ? COORDINATES_SYSTEMS_CONFIG[appConfiguration.coordinatesSystem]
-                  .name
-              : "";
-            break;
-          case ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE:
-            value = appConfiguration.defaultEstimationNombre
-              ? appConfiguration.defaultEstimationNombre.libelle
-              : "";
-            break;
-          case ConfigurationParameterID.DEFAULT_NOMBRE:
-            value = appConfiguration.defaultNombre
-              ? "" + appConfiguration.defaultNombre
-              : "";
-            break;
-          case ConfigurationParameterID.DEFAULT_SEXE:
-            value = appConfiguration.defaultSexe
-              ? appConfiguration.defaultSexe.libelle
-              : "";
-            break;
-          case ConfigurationParameterID.DEFAULT_AGE:
-            value = appConfiguration.defaultAge
-              ? appConfiguration.defaultAge.libelle
-              : "";
-            break;
-          case ConfigurationParameterID.DISPLAY_ASSOCIES:
-            value = appConfiguration.areAssociesDisplayed ? "Oui" : "Non";
-            break;
-          case ConfigurationParameterID.DISPLAY_METEO:
-            value = appConfiguration.isMeteoDisplayed ? "Oui" : "Non";
-            break;
-          case ConfigurationParameterID.DISPLAY_DISTANCE:
-            value = appConfiguration.isDistanceDisplayed ? "Oui" : "Non";
-            break;
-          case ConfigurationParameterID.DISPLAY_REGROUPEMENT:
-            value = appConfiguration.isRegroupementDisplayed ? "Oui" : "Non";
-            break;
-          default:
-            break;
+    const newConfiguration = _.map(
+      this.configurationParametersToDisplay,
+      (parameter) => {
+        let value = "";
+        if (appConfiguration) {
+          switch (parameter.id) {
+            case ConfigurationParameterID.DEFAULT_OBSERVATEUR:
+              value = appConfiguration.defaultObservateur
+                ? appConfiguration.defaultObservateur.libelle
+                : "";
+              break;
+            case ConfigurationParameterID.DEFAULT_DEPARTEMENT:
+              value = appConfiguration.defaultDepartement
+                ? appConfiguration.defaultDepartement.code
+                : "";
+              break;
+            case ConfigurationParameterID.COORDINATES_SYSTEM:
+              value = appConfiguration.coordinatesSystem
+                ? COORDINATES_SYSTEMS_CONFIG[appConfiguration.coordinatesSystem]
+                    .name
+                : "";
+              break;
+            case ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE:
+              value = appConfiguration.defaultEstimationNombre
+                ? appConfiguration.defaultEstimationNombre.libelle
+                : "";
+              break;
+            case ConfigurationParameterID.DEFAULT_NOMBRE:
+              value = appConfiguration.defaultNombre
+                ? "" + appConfiguration.defaultNombre
+                : "";
+              break;
+            case ConfigurationParameterID.DEFAULT_SEXE:
+              value = appConfiguration.defaultSexe
+                ? appConfiguration.defaultSexe.libelle
+                : "";
+              break;
+            case ConfigurationParameterID.DEFAULT_AGE:
+              value = appConfiguration.defaultAge
+                ? appConfiguration.defaultAge.libelle
+                : "";
+              break;
+            case ConfigurationParameterID.DISPLAY_ASSOCIES:
+              value = appConfiguration.areAssociesDisplayed ? "Oui" : "Non";
+              break;
+            case ConfigurationParameterID.DISPLAY_METEO:
+              value = appConfiguration.isMeteoDisplayed ? "Oui" : "Non";
+              break;
+            case ConfigurationParameterID.DISPLAY_DISTANCE:
+              value = appConfiguration.isDistanceDisplayed ? "Oui" : "Non";
+              break;
+            case ConfigurationParameterID.DISPLAY_REGROUPEMENT:
+              value = appConfiguration.isRegroupementDisplayed ? "Oui" : "Non";
+              break;
+            default:
+              break;
+          }
         }
+        return {
+          id: parameter.id,
+          label: parameter.label,
+          value
+        };
       }
-      parameter.value = value;
-    });
-    this.dataSource = new MatTableDataSource(
-      this.configurationParametersToDisplay
     );
+    this.dataSource.data = newConfiguration;
   };
 
   public saveAppConfiguration = (isSuccessfulSave: boolean): void => {

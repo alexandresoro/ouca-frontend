@@ -251,15 +251,13 @@ export class CreationPageService {
   };
 
   private displayDonneeById = (id: number): Observable<boolean> => {
-    const displayDonneeById$ = this.donneeService.getDonneeById(id);
-
-    displayDonneeById$.subscribe((isSuccessful) => {
-      if (isSuccessful) {
-        this.creationModeService.setStatus(true, true);
-      }
-    });
-
-    return displayDonneeById$;
+    return this.donneeService.getDonneeById(id).pipe(
+      tap((isSuccessful) => {
+        if (isSuccessful) {
+          this.creationModeService.setStatus(true, true);
+        }
+      })
+    );
   };
 
   public displayPreviousDonnee = (

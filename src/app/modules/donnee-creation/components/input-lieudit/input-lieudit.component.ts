@@ -14,7 +14,7 @@ import {
 } from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.model";
-import { combineLatest, Observable, Subject } from "rxjs";
+import { combineLatest, merge, Observable, ReplaySubject, Subject } from "rxjs";
 import { distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
@@ -37,6 +37,14 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   @Input() public coordinatesSystem?: CoordinatesSystem;
 
   private readonly destroy$ = new Subject();
+
+  private departementDefault$: ReplaySubject<Departement> = new ReplaySubject<
+    Departement
+  >(1);
+
+  private communeDefault$: ReplaySubject<Departement> = new ReplaySubject<
+    Departement
+  >(1);
 
   public departements$: Observable<Departement[]>;
 
@@ -90,6 +98,16 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       ? this.controlGroup.get("lieuxdits")
       : this.controlGroup.get("lieudit");
 
+    if (departementControl?.value?.id) {
+      this.departementDefault$.next(departementControl.value);
+      this.departementDefault$.complete();
+    }
+
+    if (communeControl?.value?.id) {
+      this.communeDefault$.next(communeControl.value);
+      this.communeDefault$.complete();
+    }
+
     departementControl.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(() => {
@@ -122,7 +140,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     departementControl: AbstractControl
   ): Observable<UICommune[]> => {
     return combineLatest(
-      departementControl.valueChanges,
+      merge(departementControl.valueChanges, this.departementDefault$),
       this.entitiesStoreService.getCommunes$(),
       (selection: string | number[] | Departement, communes) => {
         if (communes && selection) {
@@ -146,7 +164,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     communeControl: AbstractControl
   ): Observable<UILieudit[]> => {
     return combineLatest(
-      communeControl.valueChanges,
+      merge(communeControl.valueChanges, this.communeDefault$),
       this.entitiesStoreService.getLieuxdits$(),
       (selection: string | number[] | Commune, lieuxdits) => {
         if (lieuxdits && selection) {

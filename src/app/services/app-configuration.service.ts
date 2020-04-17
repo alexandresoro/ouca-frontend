@@ -5,7 +5,7 @@ import {
   CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG
 } from "ouca-common/coordinates-system";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Observable, ReplaySubject } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { BackendApiService } from "./backend-api.service";
 import { StatusMessageService } from "./status-message.service";
@@ -14,9 +14,9 @@ import { StatusMessageService } from "./status-message.service";
   providedIn: "root"
 })
 export class AppConfigurationService {
-  private configuration$: BehaviorSubject<
+  private configuration$: ReplaySubject<AppConfiguration> = new ReplaySubject<
     AppConfiguration
-  > = new BehaviorSubject<AppConfiguration>({} as AppConfiguration);
+  >(1);
 
   constructor(
     private backendApiService: BackendApiService,
@@ -62,10 +62,6 @@ export class AppConfigurationService {
     return this.configuration$.pipe(
       map((configuration) => configuration?.coordinatesSystem)
     );
-  };
-
-  public getAppCoordinatesSystemType = (): CoordinatesSystemType => {
-    return this.configuration$.value.coordinatesSystem;
   };
 
   public getAppCoordinatesSystem$ = (): Observable<CoordinatesSystem> => {

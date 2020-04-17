@@ -19,6 +19,7 @@ import { Inventaire } from "ouca-common/inventaire.object";
 import { Lieudit } from "ouca-common/lieudit.model";
 import { Meteo } from "ouca-common/meteo.object";
 import { Observateur } from "ouca-common/observateur.object";
+import { BehaviorSubject } from "rxjs";
 import { buildLieuditFromUILieudit } from "../helpers/lieudit.helper";
 import { UILieudit } from "../models/lieudit.model";
 import { DefaultInventaireOptions } from "../modules/donnee-creation/models/default-inventaire-options.model";
@@ -38,10 +39,18 @@ import { CoordinatesBuilderService } from "./coordinates-builder.service";
   providedIn: "root"
 })
 export class InventaireFormService {
+  private coordinatesSystem$: BehaviorSubject<
+    CoordinatesSystemType
+  > = new BehaviorSubject<CoordinatesSystemType>(null);
+
   constructor(
     private coordinatesBuilderService: CoordinatesBuilderService,
     private appConfigurationService: AppConfigurationService
-  ) {}
+  ) {
+    this.appConfigurationService
+      .getAppCoordinatesSystemType$()
+      .subscribe(this.coordinatesSystem$);
+  }
 
   public createForm = (): FormGroup => {
     const form = new FormGroup({
@@ -265,7 +274,8 @@ export class InventaireFormService {
       inventaireFormValue.lieu.lieudit
     );
 
-    const coordinatesSystem: CoordinatesSystemType = this.appConfigurationService.getAppCoordinatesSystemType();
+    const coordinatesSystem: CoordinatesSystemType = this.coordinatesSystem$
+      .value;
 
     let inventaireAltitude: number = inventaireFormValue.lieu.altitude;
     let inventaireCoordinates: Coordinates = {
