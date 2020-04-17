@@ -14,7 +14,7 @@ import { SharedModule } from "./modules/shared/shared.module";
 
 const routes: Routes = [
   { path: "error", component: ServerErrorComponent },
-  { path: "**", component: NotFoundComponent },
+  { path: "**", component: NotFoundComponent }
 ];
 @NgModule({
   imports: [
@@ -24,7 +24,7 @@ const routes: Routes = [
     DonneeCreationModule,
     DonneeViewModule,
     ModelManagementModule,
-    FlexLayoutModule,
+    FlexLayoutModule
   ],
   exports: [],
   declarations: [AppComponent, NotFoundComponent, ServerErrorComponent],
@@ -34,8 +34,8 @@ const routes: Routes = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
-      multi: true,
-    },
-  ],
+      multi: true
+    }
+  ]
 })
 export class AppModule {}
