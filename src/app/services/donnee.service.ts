@@ -130,25 +130,24 @@ export class DonneeService {
     this.previousDonneeId$.next(id);
   };
 
-  public deleteCurrentDonnee = (): void => {
+  public deleteCurrentDonnee = (): Observable<PostResponse> => {
     const currentDonnee = this.currentDonnee$.value;
-    this.backendApiService
+    return this.backendApiService
       .deleteDonnee(currentDonnee?.id, currentDonnee?.inventaireId)
-      .subscribe((response: PostResponse) => {
-        if (response.isSuccess) {
-          this.statusMessageService.showSuccessMessage(
-            "La fiche espèce a été supprimée avec succès."
-          );
-
-          // After the successful deletion of the donnee, we need to retrieve the "next" one
-          this.getDonneeById(this.nextDonneeId$.value);
-        } else {
-          this.statusMessageService.showErrorMessage(
-            "Une erreur est survenue pendant la suppression de la fiche espèce.",
-            response.message
-          );
-        }
-      });
+      .pipe(
+        tap((response) => {
+          if (response.isSuccess) {
+            this.statusMessageService.showSuccessMessage(
+              "La fiche espèce a été supprimée avec succès."
+            );
+          } else {
+            this.statusMessageService.showErrorMessage(
+              "Une erreur est survenue pendant la suppression de la fiche espèce.",
+              response.message
+            );
+          }
+        })
+      );
   };
 
   public getDisplayedDonneeId$ = (): Observable<number> => {

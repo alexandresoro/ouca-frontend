@@ -181,7 +181,18 @@ export class CreationPageService {
   };
 
   public deleteCurrentDonnee = (): void => {
-    this.donneeService.deleteCurrentDonnee();
+    this.donneeService
+      .deleteCurrentDonnee()
+      .subscribe((response: PostResponse) => {
+        if (response.isSuccess) {
+          // After the successful deletion of the donnee, we need to retrieve the "next" one
+          if (this.donneeService.hasNextDonnee()) {
+            this.displayNextDonnee();
+          } else {
+            this.backToCurrentEdition();
+          }
+        }
+      });
   };
 
   public resetCurrentEdition = (): void => {

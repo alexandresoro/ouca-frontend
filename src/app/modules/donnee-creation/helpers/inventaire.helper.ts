@@ -28,8 +28,8 @@ export class InventaireHelper {
   };
 
   private static areDifferentCoordinates(
-    firstCoordinates: Coordinates | undefined,
-    secondCoordinates: Coordinates | undefined
+    firstCoordinates: Coordinates,
+    secondCoordinates: Coordinates
   ): boolean {
     if (
       _.every([firstCoordinates, secondCoordinates], (coordinates) => {
