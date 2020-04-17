@@ -156,10 +156,7 @@
   </mat-error>
 </mat-form-field>
 
-<p
-  *ngIf="(currentCoordinates$ | async)?.isTransformed"
-  class="coordinates-warning"
->
+<p *ngIf="areCoordinatesTransformed$ | async" class="coordinates-warning">
   Attention: les coordonnées de ce lieu-dit ont été converties à partir d'un
   autre système de coordonnées.
 </p>

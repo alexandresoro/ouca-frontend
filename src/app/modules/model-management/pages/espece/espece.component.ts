@@ -6,7 +6,8 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Espece } from "ouca-common/espece.object";
+import { Observable } from "rxjs";
+import { UIEspece } from "src/app/models/espece.model";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
 import { EspeceFormComponent } from "../../components/form/espece-form/espece-form.component";
@@ -15,7 +16,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
 @Component({
   templateUrl: "./espece.tpl.html"
 })
-export class EspeceComponent extends EntiteSimpleComponent<Espece> {
+export class EspeceComponent extends EntiteSimpleComponent<UIEspece> {
   public ngOnInit(): void {
     super.ngOnInit();
     this.form = new FormGroup(
@@ -30,13 +31,21 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     );
   }
 
+  public getEntities$ = (): Observable<UIEspece[]> => {
+    return this.entitiesStoreService.getEspeces$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateEspeces();
+  };
+
   private nomFrancaisValidator: ValidatorFn = (
     formGroup: FormGroup
   ): ValidationErrors | null => {
     const nomFrancais = formGroup.controls.nomFrancais.value;
     const id = formGroup.controls.id.value;
 
-    const foundEspeceByCode: Espece = ListHelper.findEntityInListByStringAttribute(
+    const foundEspeceByCode: UIEspece = ListHelper.findEntityInListByStringAttribute(
       this.objects,
       "nomFrancais",
       nomFrancais
@@ -59,7 +68,7 @@ export class EspeceComponent extends EntiteSimpleComponent<Espece> {
     const nomLatin = formGroup.controls.nomLatin.value;
     const id = formGroup.controls.id.value;
 
-    const foundEspeceByCode: Espece = ListHelper.findEntityInListByStringAttribute(
+    const foundEspeceByCode: UIEspece = ListHelper.findEntityInListByStringAttribute(
       this.objects,
       "nomLatin",
       nomLatin

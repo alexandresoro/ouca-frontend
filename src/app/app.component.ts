@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { AppConfigurationService } from "./services/app-configuration.service";
-import { CreationPageModelService } from "./services/creation-page-model.service";
+import { EntitiesStoreService } from "./services/entities-store.service";
 
 @Component({
   selector: "base-naturaliste",
@@ -10,11 +10,11 @@ import { CreationPageModelService } from "./services/creation-page-model.service
 export class AppComponent {
   constructor(
     private appConfigurationService: AppConfigurationService,
-    private creationPageModelService: CreationPageModelService
+    private entitiesStoreService: EntitiesStoreService
   ) {}
 
   ngOnInit(): void {
     this.appConfigurationService.refreshConfiguration();
-    this.creationPageModelService.refreshPageModel();
+    this.entitiesStoreService.updateAllEntities();
   }
 }

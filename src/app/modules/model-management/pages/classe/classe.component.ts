@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Classe } from "ouca-common/classe.object";
+import { Observable } from "rxjs";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
@@ -19,6 +20,14 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
       [this.libelleValidator]
     );
   }
+
+  public getEntities$ = (): Observable<Classe[]> => {
+    return this.entitiesStoreService.getClasses$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateClasses();
+  };
 
   public getEntityName(): string {
     return "classe";

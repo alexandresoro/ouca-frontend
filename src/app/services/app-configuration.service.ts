@@ -6,7 +6,7 @@ import {
   COORDINATES_SYSTEMS_CONFIG
 } from "ouca-common/coordinates-system";
 import { BehaviorSubject, Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { BackendApiService } from "./backend-api.service";
 import { StatusMessageService } from "./status-message.service";
 
@@ -24,38 +24,32 @@ export class AppConfigurationService {
   ) {}
 
   public refreshConfiguration = (): void => {
-    const configuration$ = this.backendApiService.getAppConfiguration();
-
-    configuration$.subscribe((configuration: AppConfiguration) => {
-      this.configuration$.next(configuration);
-    });
+    this.backendApiService
+      .getAppConfiguration()
+      .subscribe((appConfiguration) => {
+        this.configuration$.next(appConfiguration);
+      });
   };
 
   public saveAppConfiguration = (
     newAppConfiguration: AppConfiguration
   ): Observable<boolean> => {
-    const saveApp$ = this.backendApiService.saveAppConfiguration(
-      newAppConfiguration
-    );
-
-    saveApp$.subscribe((isSuccessful) => {
-      if (isSuccessful) {
-        this.statusMessageService.showSuccessMessage(
-          "La configuration de l'application a été mise à jour."
-        );
-      } else {
-        this.statusMessageService.showErrorMessage(
-          "Une erreur est survenue pendant la sauvegarde de la configuration."
-        );
-      }
-      this.refreshConfiguration();
-    });
-
-    return saveApp$.pipe(
-      map((isSuccessful) => {
-        return isSuccessful;
-      })
-    );
+    return this.backendApiService
+      .saveAppConfiguration(newAppConfiguration)
+      .pipe(
+        tap((isSuccessful) => {
+          if (isSuccessful) {
+            this.statusMessageService.showSuccessMessage(
+              "La configuration de l'application a été mise à jour."
+            );
+          } else {
+            this.statusMessageService.showErrorMessage(
+              "Une erreur est survenue pendant la sauvegarde de la configuration."
+            );
+          }
+          this.refreshConfiguration();
+        })
+      );
   };
 
   public getConfiguration$ = (): Observable<AppConfiguration> => {

@@ -1,4 +1,4 @@
-import { Commune } from "ouca-common/commune.object";
+import { Commune } from "ouca-common/commune.model";
 import { Departement } from "ouca-common/departement.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 

@@ -4,7 +4,7 @@ import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-
 import { DonneeInCache } from "../modules/donnee-creation/models/donnee-in-cache.model";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class CreationCacheService {
   private donnee$: BehaviorSubject<DonneeInCache> = new BehaviorSubject<
@@ -23,8 +23,12 @@ export class CreationCacheService {
     this.donnee$.next({
       donnee,
       isInventaireEnabled,
-      isDonneeEnabled,
+      isDonneeEnabled
     });
+  };
+
+  public deleteCurrentContext = (): void => {
+    this.donnee$.next(null);
   };
 
   public getSavedContext = (): DonneeInCache => {

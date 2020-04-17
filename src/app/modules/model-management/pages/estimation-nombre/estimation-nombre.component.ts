@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
+import { Observable } from "rxjs";
 import { EstimationNombreFormComponent } from "../../components/form/estimation-nombre-form/estimation-nombre-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
@@ -21,6 +22,14 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
       [this.libelleValidator]
     );
   }
+
+  public getEntities$ = (): Observable<EstimationNombre[]> => {
+    return this.entitiesStoreService.getEstimationNombres$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateEstimationsNombre();
+  };
 
   public getFormType(): any {
     return EstimationNombreFormComponent;

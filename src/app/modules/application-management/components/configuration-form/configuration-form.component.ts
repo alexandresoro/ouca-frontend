@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { Age } from "ouca-common/age.object";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
@@ -11,20 +19,24 @@ import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { Observateur } from "ouca-common/observateur.object";
 import { Sexe } from "ouca-common/sexe.object";
-import { Observable } from "rxjs";
-import { CreationPageModelService } from "src/app/services/creation-page-model.service";
+import { Observable, Subject } from "rxjs";
+import { AppConfigurationService } from "src/app/services/app-configuration.service";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 
 @Component({
   selector: "configuration-form",
   styleUrls: ["./configuration-form.component.scss"],
-  templateUrl: "./configuration-form.component.html"
+  templateUrl: "./configuration-form.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfigurationFormComponent {
+export class ConfigurationFormComponent implements OnInit, OnDestroy {
   @Input() public appConfiguration: AppConfiguration;
 
-  @Output() public confirm: EventEmitter<AppConfiguration> = new EventEmitter();
+  @Output() public confirm: EventEmitter<boolean> = new EventEmitter();
 
   @Output() public back: EventEmitter<boolean> = new EventEmitter();
+
+  private readonly destroy$ = new Subject();
 
   public form: FormGroup;
 
@@ -39,16 +51,18 @@ export class ConfigurationFormComponent {
   public ages$: Observable<Age[]>;
 
   constructor(
-    private creationPageModelService: CreationPageModelService,
+    private entitiesStoreService: EntitiesStoreService,
+    private appConfigurationService: AppConfigurationService,
     private formBuilder: FormBuilder
   ) {
-    this.observateurs$ = this.creationPageModelService.getObservateurs$();
-    this.departements$ = this.creationPageModelService.getDepartements$();
-    this.estimationsNombre$ = this.creationPageModelService.getEstimationNombres$();
-    this.sexes$ = this.creationPageModelService.getSexes$();
-    this.ages$ = this.creationPageModelService.getAges$();
+    this.observateurs$ = this.entitiesStoreService.getObservateurs$();
+    this.departements$ = this.entitiesStoreService.getDepartements$();
+    this.estimationsNombre$ = this.entitiesStoreService.getEstimationNombres$();
+    this.sexes$ = this.entitiesStoreService.getSexes$();
+    this.ages$ = this.entitiesStoreService.getAges$();
 
     this.form = this.formBuilder.group({
+      id: "",
       defaultObservateur: "",
       defaultDepartement: "",
       defaultEstimationNombre: "",
@@ -64,7 +78,12 @@ export class ConfigurationFormComponent {
   }
 
   ngOnInit(): void {
-    this.form.setValue(this.appConfiguration);
+    this.form.reset(this.appConfiguration);
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   public coordinatesSystems: CoordinatesSystem[] = Object.values(
@@ -72,7 +91,11 @@ export class ConfigurationFormComponent {
   );
 
   public save(): void {
-    this.confirm.emit(this.form.value);
+    this.appConfigurationService
+      .saveAppConfiguration(this.form.value)
+      .subscribe((isSuccessful) => {
+        this.confirm.emit(isSuccessful);
+      });
   }
 
   public cancel(): void {

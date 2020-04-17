@@ -7,14 +7,16 @@ import {
   Validators
 } from "@angular/forms";
 import * as _ from "lodash";
-import { Commune } from "ouca-common/commune.object";
+import { Commune } from "ouca-common/commune.model";
+import { Observable } from "rxjs";
+import { UICommune } from "src/app/models/commune.model";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 @Component({
   templateUrl: "./commune.tpl.html"
 })
-export class CommuneComponent extends EntiteSimpleComponent<Commune> {
+export class CommuneComponent extends EntiteSimpleComponent<UICommune> {
   public ngOnInit(): void {
     super.ngOnInit();
     this.form = new FormGroup(
@@ -31,6 +33,14 @@ export class CommuneComponent extends EntiteSimpleComponent<Commune> {
       [this.codeValidator, this.nomValidator]
     );
   }
+
+  public getEntities$ = (): Observable<UICommune[]> => {
+    return this.entitiesStoreService.getCommunes$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateCommunes();
+  };
 
   public codeValidator: ValidatorFn = (
     formGroup: FormGroup

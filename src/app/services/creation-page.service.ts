@@ -3,10 +3,9 @@ import { FormGroup } from "@angular/forms";
 import { Donnee } from "ouca-common/donnee.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { PostResponse } from "ouca-common/post-response.object";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { InventaireHelper } from "../modules/donnee-creation/helpers/inventaire.helper";
-import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { DonneeInCache } from "../modules/donnee-creation/models/donnee-in-cache.model";
 import { BackendApiService } from "./backend-api.service";
 import { CreationCacheService } from "./creation-cache.service";
@@ -14,17 +13,12 @@ import { CreationModeService } from "./creation-mode.service";
 import { DonneeFormService } from "./donnee-form.service";
 import { DonneeService } from "./donnee.service";
 import { InventaireFormService } from "./inventaire-form.service";
-import { RegroupementService } from "./regroupement.service";
 import { StatusMessageService } from "./status-message.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class CreationPageService {
-  private requestedDonneeId$: BehaviorSubject<number> = new BehaviorSubject<
-    number
-  >(null);
-
   constructor(
     private backendApiService: BackendApiService,
     private creationCacheService: CreationCacheService,
@@ -32,14 +26,13 @@ export class CreationPageService {
     private donneeFormService: DonneeFormService,
     private donneeService: DonneeService,
     private inventaireFormService: InventaireFormService,
-    private regroupementService: RegroupementService,
     private statusMessageService: StatusMessageService
   ) {}
 
   public createDonnee = (
     inventaireForm: FormGroup,
     donneeForm: FormGroup,
-    donneeManual$: Subject<Donnee | DonneeFormObject>
+    clearDonnee$: Subject<Donnee>
   ): void => {
     const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
       inventaireForm
@@ -57,7 +50,7 @@ export class CreationPageService {
       donnee.inventaireId = savedInventaireId;
 
       this.saveDonnee(donnee).subscribe(() => {
-        donneeManual$.next(null);
+        clearDonnee$.next(null);
         document.getElementById("input-Espèce")?.focus();
       });
     });
@@ -181,9 +174,6 @@ export class CreationPageService {
       filter((response) => {
         return response?.isSuccess;
       }),
-      tap(() => {
-        this.regroupementService.updateNextRegroupement();
-      }),
       map((response) => {
         return response.insertId ? response.insertId : donnee.id;
       })
@@ -201,6 +191,16 @@ export class CreationPageService {
 
   public backToCurrentEdition = (): void => {
     const donneeInCache: DonneeInCache = this.creationCacheService.getSavedContext();
+
+    if (!donneeInCache) {
+      // It could be the case when we want to come back to the current donnee,
+      // but never reached before (e.g. coming from a requestedId directly)
+      this.donneeService.initialize().subscribe(() => {
+        this.creationModeService.setStatus(true, false);
+      });
+      return;
+    }
+
     this.donneeService.setCurrentlyEditingDonnee(donneeInCache.donnee);
     this.creationModeService.setStatus(
       donneeInCache.isInventaireEnabled,

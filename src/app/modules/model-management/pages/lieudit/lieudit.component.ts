@@ -4,29 +4,31 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators,
+  Validators
 } from "@angular/forms";
 import * as _ from "lodash";
-import { Lieudit } from "ouca-common/lieudit.object";
+import { Lieudit } from "ouca-common/lieudit.model";
+import { Observable } from "rxjs";
+import { UILieudit } from "src/app/models/lieudit.model";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
-import { CreationPageModelService } from "src/app/services/creation-page-model.service";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
-  templateUrl: "./lieudit.tpl.html",
+  templateUrl: "./lieudit.tpl.html"
 })
-export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
+export class LieuditComponent extends EntiteSimpleComponent<UILieudit> {
   constructor(
     backendApiService: BackendApiService,
-    creationPageModelService: CreationPageModelService,
+    entitiesStoreService: EntitiesStoreService,
     private coordinatesBuilderService: CoordinatesBuilderService,
     statusMessageService: StatusMessageService
   ) {
-    super(backendApiService, creationPageModelService, statusMessageService);
+    super(backendApiService, entitiesStoreService, statusMessageService);
   }
 
   public ngOnInit(): void {
@@ -40,14 +42,22 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
         nom: new FormControl("", [Validators.required]),
         altitude: new FormControl("", [
           Validators.required,
-          this.altitudeNumberValidator(),
+          this.altitudeNumberValidator()
         ]),
         longitude: new FormControl(),
-        latitude: new FormControl(),
+        latitude: new FormControl()
       },
       [this.nomValidator]
     );
   }
+
+  public getEntities$ = (): Observable<UILieudit[]> => {
+    return this.entitiesStoreService.getLieuxdits$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateLieuxDits();
+  };
 
   public saveObject(formValue: any): void {
     const { longitude, latitude, ...otherParams } = formValue;
@@ -56,9 +66,9 @@ export class LieuditComponent extends EntiteSimpleComponent<Lieudit> {
       coordinates: this.coordinatesBuilderService.buildCoordinates(
         longitude,
         latitude
-      ),
+      )
     };
-    super.saveObject(lieudit);
+    super.saveObject(lieudit as any);
   }
 
   public nomValidator: ValidatorFn = (

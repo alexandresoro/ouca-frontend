@@ -2,9 +2,9 @@
   <div class="configuration-container-header">
     <h1>Configuration</h1>
     <span class="flex-spacer"></span>
-    <ng-container *ngIf="getIsAllViewMode()">
+    <ng-container *ngIf="!(isCurrentlyEditing$ | async)">
       <span class="button-spacer"></span>
-      <button mat-raised-button color="primary" (click)="editConfigurations()">
+      <button mat-raised-button color="primary" (click)="switchToEditionMode()">
         <mat-icon>create</mat-icon>
         <span>Modifier la configuration</span>
       </button>
@@ -12,13 +12,13 @@
   </div>
 
   <configuration-form
-    *ngIf="getIsEditionMode()"
+    *ngIf="isCurrentlyEditing$ | async"
     [appConfiguration]="appConfiguration$ | async"
     (confirm)="saveAppConfiguration($event)"
-    (back)="cancelEdition()"
+    (back)="switchToViewAllMode()"
   ></configuration-form>
 
-  <div *ngIf="getIsAllViewMode()" class="table-responsive">
+  <div *ngIf="!(isCurrentlyEditing$ | async)" class="table-responsive">
     <mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="label">
         <mat-header-cell *matHeaderCellDef> Propriété </mat-header-cell>

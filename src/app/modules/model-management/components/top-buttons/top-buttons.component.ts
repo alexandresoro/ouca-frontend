@@ -18,8 +18,6 @@ export class TopButtonsComponent {
 
   @Output() public onClickExportObjects = new EventEmitter();
 
-  @Output() public onClickRefresh = new EventEmitter();
-
   public newObject(): void {
     this.onClickNewObject.emit();
   }

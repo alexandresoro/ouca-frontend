@@ -116,16 +116,14 @@ export class DonneeService {
   };
 
   public initialize = (): Observable<number> => {
-    const lastDonneeId$ = this.backendApiService.getLastDonneeId();
-
-    lastDonneeId$.subscribe((id) => {
-      this.previousDonneeId$.next(id);
-      this.currentDonnee$.next(null);
-      this.currentDonneeIndex$.next(null);
-      this.nextDonneeId$.next(null);
-    });
-
-    return lastDonneeId$;
+    return this.backendApiService.getLastDonneeId().pipe(
+      tap((id) => {
+        this.previousDonneeId$.next(id);
+        this.currentDonnee$.next(null);
+        this.currentDonneeIndex$.next(null);
+        this.nextDonneeId$.next(null);
+      })
+    );
   };
 
   public setPreviousDonneeId = (id: number): void => {

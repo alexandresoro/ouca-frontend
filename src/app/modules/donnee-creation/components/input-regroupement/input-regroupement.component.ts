@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { RegroupementService } from "src/app/services/regroupement.service";
 
 @Component({
   selector: "input-regroupement",
@@ -9,11 +10,15 @@ import { FormControl } from "@angular/forms";
 export class InputRegroupementComponent {
   @Input() public control: FormControl;
 
-  @Input() public nextRegroupement: number;
-
   @Input() public hideButton: boolean;
 
+  constructor(private regroupementService: RegroupementService) {}
+
   public displayNextRegroupement(): void {
-    this.control.setValue(this.nextRegroupement);
+    this.regroupementService
+      .updateNextRegroupement()
+      .subscribe((nextRegroupement) => {
+        this.control.setValue(nextRegroupement);
+      });
   }
 }

@@ -6,12 +6,11 @@
     [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
-    (onClickRefresh)="getAll()"
   ></top-buttons>
 
   <classe-table
     *ngIf="entityModeHelper.isViewAllMode()"
-    [objects]="objects"
+    [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
     (view)="viewObject($event)"

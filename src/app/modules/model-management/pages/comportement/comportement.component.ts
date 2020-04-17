@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { Comportement } from "ouca-common/comportement.object";
+import { Observable } from "rxjs";
 import { EntiteAvecLibelleEtCodeComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code.component";
 @Component({
   templateUrl: "./comportement.tpl.html"
@@ -7,6 +8,14 @@ import { EntiteAvecLibelleEtCodeComponent } from "../entite-avec-libelle-et-code
 export class ComportementComponent extends EntiteAvecLibelleEtCodeComponent<
   Comportement
 > {
+  public getEntities$ = (): Observable<Comportement[]> => {
+    return this.entitiesStoreService.getComportements$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateComportements();
+  };
+
   getEntityName(): string {
     return "comportement";
   }

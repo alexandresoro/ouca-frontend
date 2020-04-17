@@ -7,8 +7,9 @@ import {
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
-import { Lieudit } from "ouca-common/lieudit.object";
+import { Lieudit } from "ouca-common/lieudit.model";
 import { combineLatest, Subject } from "rxjs";
+import { UILieudit } from "src/app/models/lieudit.model";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
@@ -45,7 +46,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "nbDonnees"
   ];
 
-  private lieuxdits$: Subject<Lieudit[]> = new Subject<Lieudit[]>();
+  private lieuxdits$: Subject<UILieudit[]> = new Subject<UILieudit[]>();
 
   constructor(private appConfigurationService: AppConfigurationService) {
     super();
@@ -74,18 +75,18 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
   }
 
   private buildLieuxditsRows = (
-    lieuxdits: Lieudit[],
+    lieuxdits: UILieudit[],
     coordinatesSystemType?: CoordinatesSystemType
   ): LieuditRow[] => {
     const rows: LieuditRow[] = [];
-    _.forEach(lieuxdits, (lieudit: Lieudit) => {
+    _.forEach(lieuxdits, (lieudit) => {
       rows.push(this.buildRowFromLieudit(lieudit, coordinatesSystemType));
     });
     return rows;
   };
 
   private buildRowFromLieudit(
-    lieudit: Lieudit,
+    lieudit: UILieudit,
     coordinatesSystemType: CoordinatesSystemType
   ): LieuditRow {
     const coordinates: Coordinates = getCoordinates(

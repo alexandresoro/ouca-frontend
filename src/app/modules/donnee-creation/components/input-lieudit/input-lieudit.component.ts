@@ -2,21 +2,24 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  OnDestroy,
   OnInit
 } from "@angular/core";
 import { AbstractControl, FormGroup } from "@angular/forms";
-import { Commune } from "ouca-common/commune.object";
+import { Commune } from "ouca-common/commune.model";
 import {
   CoordinatesSystem,
   CoordinatesSystemType,
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
-import { Lieudit } from "ouca-common/lieudit.object";
-import { combineLatest, Observable } from "rxjs";
-import { distinctUntilChanged } from "rxjs/operators";
+import { Lieudit } from "ouca-common/lieudit.model";
+import { combineLatest, Observable, Subject } from "rxjs";
+import { distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { UICommune } from "src/app/models/commune.model";
+import { UILieudit } from "src/app/models/lieudit.model";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
-import { CreationPageModelService } from "src/app/services/creation-page-model.service";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -24,7 +27,7 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   templateUrl: "./input-lieudit.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputLieuditComponent implements OnInit {
+export class InputLieuditComponent implements OnInit, OnDestroy {
   @Input() public controlGroup: FormGroup;
 
   @Input() public hideCoordinates?: boolean = false;
@@ -33,11 +36,13 @@ export class InputLieuditComponent implements OnInit {
 
   @Input() public coordinatesSystem?: CoordinatesSystem;
 
+  private readonly destroy$ = new Subject();
+
   public departements$: Observable<Departement[]>;
 
-  public filteredLieuxdits$: Observable<Lieudit[]>;
+  public filteredLieuxdits$: Observable<UILieudit[]>;
 
-  public filteredCommunes$: Observable<Commune[]>;
+  public filteredCommunes$: Observable<UICommune[]>;
 
   public departementAutocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -69,9 +74,9 @@ export class InputLieuditComponent implements OnInit {
 
   constructor(
     private appConfigurationService: AppConfigurationService,
-    private creationPageModelService: CreationPageModelService
+    private entitiesStoreService: EntitiesStoreService
   ) {
-    this.departements$ = this.creationPageModelService.getDepartements$();
+    this.departements$ = this.entitiesStoreService.getDepartements$();
   }
 
   public ngOnInit(): void {
@@ -108,12 +113,17 @@ export class InputLieuditComponent implements OnInit {
     });
   }
 
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private getCommunesToDisplay$ = (
     departementControl: AbstractControl
-  ): Observable<Commune[]> => {
+  ): Observable<UICommune[]> => {
     return combineLatest(
       departementControl.valueChanges,
-      this.creationPageModelService.getCommunes$(),
+      this.entitiesStoreService.getCommunes$(),
       (selection: string | number[] | Departement, communes) => {
         if (communes && selection) {
           if (this.isMultipleSelectMode) {
@@ -122,49 +132,38 @@ export class InputLieuditComponent implements OnInit {
             });
           } else {
             return communes.filter((commune) => {
-              return (
-                commune.departementId === (selection as Departement).id ||
-                (commune.departement &&
-                  commune.departement.id === (selection as Departement).id)
-              );
+              return commune.departement?.id === (selection as Departement).id;
             });
           }
         } else {
           return [];
         }
       }
-    );
+    ).pipe(takeUntil(this.destroy$));
   };
 
   private getLieuxditsToDisplay$ = (
     communeControl: AbstractControl
-  ): Observable<Lieudit[]> => {
+  ): Observable<UILieudit[]> => {
     return combineLatest(
       communeControl.valueChanges,
-      this.creationPageModelService.getLieuxdits$(),
+      this.entitiesStoreService.getLieuxdits$(),
       (selection: string | number[] | Commune, lieuxdits) => {
         if (lieuxdits && selection) {
           if (this.isMultipleSelectMode) {
             return lieuxdits.filter((lieudit) => {
-              return (
-                (selection as number[]).includes(lieudit.communeId) ||
-                (selection as number[]).includes(lieudit.commune.id)
-              );
+              return (selection as number[]).includes(lieudit.commune.id);
             });
           } else {
             return lieuxdits.filter((lieudit) => {
-              return (
-                lieudit.communeId === (selection as Commune).id ||
-                (lieudit.commune &&
-                  lieudit.commune.id === (selection as Commune).id)
-              );
+              return lieudit.commune?.id === (selection as Commune).id;
             });
           }
         } else {
           return [];
         }
       }
-    );
+    ).pipe(takeUntil(this.destroy$));
   };
 
   private getCoordinatesToDisplay$ = (
@@ -194,7 +193,7 @@ export class InputLieuditComponent implements OnInit {
           latitude: null
         };
       }
-    );
+    ).pipe(takeUntil(this.destroy$));
   };
 
   private displayCoordinates = (

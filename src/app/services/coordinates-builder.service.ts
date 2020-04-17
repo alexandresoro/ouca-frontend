@@ -3,13 +3,13 @@ import { AbstractControl, Validators } from "@angular/forms";
 import {
   CoordinatesSystem,
   CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG,
+  COORDINATES_SYSTEMS_CONFIG
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { AppConfigurationService } from "./app-configuration.service";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class CoordinatesBuilderService {
   constructor(private appConfigurationService: AppConfigurationService) {}
@@ -17,16 +17,14 @@ export class CoordinatesBuilderService {
   public buildCoordinates = (
     longitude: number,
     latitude: number
-  ): Partial<Record<CoordinatesSystemType, Coordinates>> => {
+  ): Coordinates => {
     const system: CoordinatesSystemType = this.appConfigurationService.getAppCoordinatesSystemType();
-    const coordinates: Partial<Record<CoordinatesSystemType, Coordinates>> = {};
-    coordinates[system] = {
+    return {
       longitude: longitude,
       latitude: latitude,
       system,
-      isTransformed: false,
+      isTransformed: false
     };
-    return coordinates;
   };
 
   public updateCoordinatesValidators = (
@@ -40,12 +38,12 @@ export class CoordinatesBuilderService {
     longitudeControl.setValidators([
       Validators.required,
       Validators.min(coordinatesSystem?.longitudeRange.min),
-      Validators.max(coordinatesSystem?.longitudeRange.max),
+      Validators.max(coordinatesSystem?.longitudeRange.max)
     ]);
     latitudeControl.setValidators([
       Validators.required,
       Validators.min(coordinatesSystem?.latitudeRange.min),
-      Validators.max(coordinatesSystem?.latitudeRange.max),
+      Validators.max(coordinatesSystem?.latitudeRange.max)
     ]);
 
     longitudeControl.updateValueAndValidity();

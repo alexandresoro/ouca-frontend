@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import * as _ from "lodash";
 import { Age } from "ouca-common/age.object";
 import { Comportement } from "ouca-common/comportement.object";
 import { DonneesFilter } from "ouca-common/donnees-filter.object";
-import { Espece } from "ouca-common/espece.object";
 import { EstimationDistance } from "ouca-common/estimation-distance.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
@@ -14,9 +13,10 @@ import { Observateur } from "ouca-common/observateur.object";
 import { Sexe } from "ouca-common/sexe.object";
 import { Observable, Subject } from "rxjs";
 import { withLatestFrom } from "rxjs/operators";
+import { UIEspece } from "src/app/models/espece.model";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
 import { BackendApiService } from "src/app/services/backend-api.service";
-import { CreationPageModelService } from "src/app/services/creation-page-model.service";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
@@ -27,7 +27,7 @@ import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
   styleUrls: ["./view.component.scss"],
   templateUrl: "./view.component.html"
 })
-export class ViewComponent implements OnInit, OnDestroy {
+export class ViewComponent implements OnDestroy {
   private readonly destroy$ = new Subject();
 
   public searchForm: FormGroup = new FormGroup({
@@ -67,7 +67,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   });
 
   public observateurs$: Observable<Observateur[]>;
-  public especes$: Observable<Espece[]>;
+  public especes$: Observable<UIEspece[]>;
   public estimationsNombre$: Observable<EstimationNombre[]>;
   public estimationsDistance$: Observable<EstimationDistance[]>;
   public sexes$: Observable<Sexe[]>;
@@ -95,21 +95,17 @@ export class ViewComponent implements OnInit, OnDestroy {
   constructor(
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService,
-    private creationPageModelService: CreationPageModelService
+    private entitiesStoreService: EntitiesStoreService
   ) {
-    this.observateurs$ = this.creationPageModelService.getObservateurs$();
-    this.estimationsNombre$ = this.creationPageModelService.getEstimationNombres$();
-    this.estimationsDistance$ = this.creationPageModelService.getEstimationDistances$();
-    this.especes$ = this.creationPageModelService.getEspeces$();
-    this.sexes$ = this.creationPageModelService.getSexes$();
-    this.ages$ = this.creationPageModelService.getAges$();
-    this.comportements$ = this.creationPageModelService.getComportements$();
-    this.milieux$ = this.creationPageModelService.getMilieux$();
-    this.meteos$ = this.creationPageModelService.getMeteos$();
-  }
-
-  public ngOnInit(): void {
-    // this.creationPageModelService.refreshPageModel();
+    this.observateurs$ = this.entitiesStoreService.getObservateurs$();
+    this.estimationsNombre$ = this.entitiesStoreService.getEstimationNombres$();
+    this.estimationsDistance$ = this.entitiesStoreService.getEstimationDistances$();
+    this.especes$ = this.entitiesStoreService.getEspeces$();
+    this.sexes$ = this.entitiesStoreService.getSexes$();
+    this.ages$ = this.entitiesStoreService.getAges$();
+    this.comportements$ = this.entitiesStoreService.getComportements$();
+    this.milieux$ = this.entitiesStoreService.getMilieux$();
+    this.meteos$ = this.entitiesStoreService.getMeteos$();
   }
 
   public ngOnDestroy(): void {
@@ -188,7 +184,7 @@ export class ViewComponent implements OnInit, OnDestroy {
    */
   private setEspecesWithNbDonnees = (
     donnees: FlatDonnee[],
-    especes: Espece[]
+    especes: UIEspece[]
   ): void => {
     const nbDonneesByEspeceMap: { [key: string]: number } = _.countBy(
       donnees,
@@ -198,7 +194,7 @@ export class ViewComponent implements OnInit, OnDestroy {
     );
 
     this.especesWithNbDonnees = _.map(nbDonneesByEspeceMap, (value, key) => {
-      const espece: Espece = _.find(especes, (espece) => {
+      const espece: UIEspece = _.find(especes, (espece) => {
         return espece.code === key;
       });
 

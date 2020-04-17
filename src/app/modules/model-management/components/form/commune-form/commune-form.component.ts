@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
-import { Commune } from "ouca-common/commune.object";
+import { Commune } from "ouca-common/commune.model";
 import { Departement } from "ouca-common/departement.object";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { BackendApiService } from "src/app/services/backend-api.service";

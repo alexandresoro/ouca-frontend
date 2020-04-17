@@ -2,12 +2,13 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { PostResponse } from "ouca-common/post-response.object";
+import { Observable } from "rxjs";
 import { BackendApiService } from "src/app/services/backend-api.service";
-import { CreationPageModelService } from "src/app/services/creation-page-model.service";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
-  saveFile,
+  saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
@@ -15,10 +16,13 @@ import { EntitySubFormComponent } from "../../components/form/entite-simple-form
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
 
 @Component({
-  template: "",
+  template: ""
 })
 export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
+  // TODO remove objects
   public objects: T[];
+
+  public entities$: Observable<T[]>;
 
   public currentObject: T;
 
@@ -34,21 +38,22 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
 
   constructor(
     private backendApiService: BackendApiService,
-    private creationPageModelService: CreationPageModelService,
+    protected entitiesStoreService: EntitiesStoreService,
     private statusMessageService: StatusMessageService
   ) {}
 
   public ngOnInit(): void {
+    this.entities$ = this.getEntities$();
     this.switchToViewAllMode();
   }
 
-  public getAll(): void {
-    this.backendApiService
-      .getAllEntities(this.getEntityName())
-      .subscribe((result: T[]) => {
-        this.objects = result;
-      });
-  }
+  public getEntities$ = (): Observable<T[]> => {
+    return;
+  };
+
+  public updateEntities = (): void => {
+    return;
+  };
 
   public getEntityName(): string {
     return "unknown";
@@ -87,7 +92,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
             this.statusMessageService.showSuccessMessage(
               this.getTheEntityLabel(true) + " a été supprimé(e) avec succès."
             );
-            this.creationPageModelService.refreshPageModel();
+            this.updateEntities();
             this.switchToViewAllMode();
           } else {
             this.statusMessageService.showErrorMessage(
@@ -121,7 +126,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
           this.statusMessageService.showSuccessMessage(
             this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès."
           );
-          this.creationPageModelService.refreshPageModel();
+          this.updateEntities();
           this.switchToViewAllMode();
         } else {
           this.statusMessageService.showErrorMessage(
@@ -167,7 +172,6 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   private switchToViewAllMode(): void {
-    this.getAll();
     this.resetForm();
     this.objectToSave = this.getNewObject();
     this.currentObject = undefined;

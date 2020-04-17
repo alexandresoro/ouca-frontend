@@ -67,10 +67,10 @@ export class ListHelper {
     });
   };
 
-  public static getEntitiesFromIDs(
-    allEntities: EntiteSimple[],
+  public static getEntitiesFromIDs = <T extends EntiteSimple>(
+    allEntities: T[],
     idsToGet: number[]
-  ): EntiteSimple[] {
+  ): T[] => {
     return _.map(idsToGet, (id) => {
       return ListHelper.findEntityInListByNumberAttribute(
         allEntities,
@@ -78,5 +78,5 @@ export class ListHelper {
         id
       );
     });
-  }
+  };
 }

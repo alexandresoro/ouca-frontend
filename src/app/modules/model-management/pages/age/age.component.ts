@@ -1,11 +1,20 @@
 import { Component } from "@angular/core";
 import { Age } from "ouca-common/age.object";
+import { Observable } from "rxjs";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
   templateUrl: "./age.tpl.html"
 })
 export class AgeComponent extends EntiteAvecLibelleComponent<Age> {
+  public getEntities$ = (): Observable<Age[]> => {
+    return this.entitiesStoreService.getAges$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateAges();
+  };
+
   public getEntityName(): string {
     return "age";
   }

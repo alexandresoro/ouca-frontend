@@ -1,7 +1,8 @@
 import { Component, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { Espece } from "ouca-common/espece.object";
 import * as _ from "lodash";
+import { Espece } from "ouca-common/espece.model";
+import { UIEspece } from "src/app/models/espece.model";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface EspeceRow {
@@ -30,7 +31,7 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes.objects && !!changes.objects.currentValue) {
       const rows: EspeceRow[] = [];
-      _.forEach(changes.objects.currentValue, (value: Espece) => {
+      _.forEach(changes.objects.currentValue, (value: UIEspece) => {
         rows.push(this.buildRowFromEspece(value));
       });
       this.dataSource = new MatTableDataSource(rows);
@@ -39,7 +40,7 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
     }
   }
 
-  private buildRowFromEspece(espece: Espece): EspeceRow {
+  private buildRowFromEspece(espece: UIEspece): EspeceRow {
     return {
       id: espece.id,
       classe: espece.classe.libelle,
@@ -54,7 +55,9 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
     if (!!this.selectedObject && this.selectedObject.id === id) {
       this.selectedObject = undefined;
     } else {
-      this.selectedObject = this.objects.filter(espece => espece.id === id)[0];
+      this.selectedObject = this.objects.filter(
+        (espece) => espece.id === id
+      )[0];
     }
   };
 }

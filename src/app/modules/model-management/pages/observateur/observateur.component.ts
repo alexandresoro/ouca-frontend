@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { Observateur } from "ouca-common/observateur.object";
+import { Observable } from "rxjs";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 @Component({
   templateUrl: "./observateur.tpl.html"
@@ -7,15 +8,23 @@ import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-l
 export class ObservateurComponent extends EntiteAvecLibelleComponent<
   Observateur
 > {
-  public getEntityName(): string {
+  public getEntities$ = (): Observable<Observateur[]> => {
+    return this.entitiesStoreService.getObservateurs$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateObservateurs();
+  };
+
+  public getEntityName = (): string => {
     return "observateur";
-  }
+  };
 
-  public getAnEntityLabel(): string {
+  public getAnEntityLabel = (): string => {
     return "un observateur";
-  }
+  };
 
-  public getTheEntityLabel(uppercase?: boolean): string {
+  public getTheEntityLabel = (uppercase?: boolean): string => {
     return uppercase ? "L'observateur" : "l'observateur";
-  }
+  };
 }

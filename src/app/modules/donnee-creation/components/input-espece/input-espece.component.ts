@@ -2,14 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  OnDestroy,
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Classe } from "ouca-common/classe.object";
-import { Espece } from "ouca-common/espece.object";
-import { combineLatest, Observable } from "rxjs";
-import { distinctUntilChanged } from "rxjs/operators";
-import { CreationPageModelService } from "src/app/services/creation-page-model.service";
+import { Espece } from "ouca-common/espece.model";
+import { combineLatest, Observable, Subject } from "rxjs";
+import { distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { UIEspece } from "src/app/models/espece.model";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -17,14 +19,18 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   templateUrl: "./input-espece.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputEspeceComponent implements OnInit {
+export class InputEspeceComponent implements OnInit, OnDestroy {
   @Input() public controlGroup: FormGroup;
 
   @Input() public isMultipleSelectMode?: boolean;
 
+  private readonly destroy$ = new Subject();
+
   public classes$: Observable<Classe[]>;
 
-  public filteredEspeces$: Observable<Espece[]>;
+  public filteredEspeces$: Observable<UIEspece[]> = new Observable<
+    UIEspece[]
+  >();
 
   public classeAutocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -55,8 +61,8 @@ export class InputEspeceComponent implements OnInit {
     }
   ];
 
-  constructor(private creationPageModelService: CreationPageModelService) {
-    this.classes$ = this.creationPageModelService.getClasses$();
+  constructor(private entitiesStoreService: EntitiesStoreService) {
+    this.classes$ = this.entitiesStoreService.getClasses$();
   }
 
   public ngOnInit(): void {
@@ -70,17 +76,14 @@ export class InputEspeceComponent implements OnInit {
 
     this.filteredEspeces$ = combineLatest(
       classeControl.valueChanges,
-      this.creationPageModelService.getEspeces$(),
+      this.entitiesStoreService.getEspeces$(),
       (selection, especes) => {
         if (especes) {
           if (selection) {
             if (this.isMultipleSelectMode) {
               if (selection.length > 0) {
                 return especes.filter((espece) => {
-                  return (
-                    selection.indexOf(espece.classeId) > -1 ||
-                    selection.indexOf(espece.classe.id) > -1
-                  );
+                  return selection.indexOf(espece.classe.id) > -1;
                 });
               } else {
                 return especes;
@@ -88,10 +91,7 @@ export class InputEspeceComponent implements OnInit {
             } else {
               if (selection.id) {
                 return especes.filter((espece) => {
-                  return (
-                    espece.classeId === selection.id ||
-                    (espece.classe && espece.classe.id === selection.id)
-                  );
+                  return espece.classe && espece.classe.id === selection.id;
                 });
               }
             }
@@ -102,7 +102,12 @@ export class InputEspeceComponent implements OnInit {
           return [];
         }
       }
-    );
+    ).pipe(takeUntil(this.destroy$));
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**

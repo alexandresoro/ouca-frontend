@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { Classe } from "ouca-common/classe.object";
-import { Espece } from "ouca-common/espece.object";
+import { Espece } from "ouca-common/espece.model";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";

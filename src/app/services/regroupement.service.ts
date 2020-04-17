@@ -1,24 +1,14 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 import { BackendApiService } from "./backend-api.service";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class RegroupementService {
-  private nextRegroupement$: Subject<number> = new Subject<number>();
-
   constructor(private backendApiService: BackendApiService) {}
 
-  public getNextRegroupement$ = (): Observable<number> => {
-    return this.nextRegroupement$.asObservable();
-  };
-
-  public updateNextRegroupement(): void {
-    this.backendApiService
-      .getNextRegroupement()
-      .subscribe((regroupement: number) => {
-        this.nextRegroupement$.next(regroupement);
-      });
+  public updateNextRegroupement(): Observable<number> {
+    return this.backendApiService.getNextRegroupement();
   }
 }

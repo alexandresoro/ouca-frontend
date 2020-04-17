@@ -7,6 +7,7 @@ import {
   Validators
 } from "@angular/forms";
 import { Departement } from "ouca-common/departement.object";
+import { Observable } from "rxjs";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
 import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
@@ -26,6 +27,14 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
       [this.departementValidator]
     );
   }
+
+  public getEntities$ = (): Observable<Departement[]> => {
+    return this.entitiesStoreService.getDepartements$();
+  };
+
+  public updateEntities = (): void => {
+    this.entitiesStoreService.updateDepartements();
+  };
 
   private departementValidator: ValidatorFn = (
     formGroup: FormGroup

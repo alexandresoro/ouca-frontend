@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
-import { distinctUntilChanged } from "rxjs/operators";
+import { combineLatest, Observable, of } from "rxjs";
+import { distinctUntilChanged, map } from "rxjs/operators";
+import { CreationModeService } from "src/app/services/creation-mode.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({
@@ -18,16 +20,32 @@ export class InputNombreComponent {
 
   @Input() public isMultipleSelectMode?: boolean;
 
+  constructor(private creationModeService: CreationModeService) {}
+
   public ngOnInit(): void {
     const estimationControl = this.isMultipleSelectMode
       ? this.controlGroup.get("estimationsNombre")
       : this.controlGroup.get("estimationNombre");
 
-    estimationControl.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe((selectedEstimation: EstimationNombre) => {
+    const canNombreFieldBeActivated$: Observable<boolean> = this
+      .isMultipleSelectMode
+      ? of(true)
+      : this.creationModeService.getStatus$().pipe(
+          map((status) => {
+            return status.isDonneeEnabled;
+          })
+        );
+
+    combineLatest(
+      estimationControl.valueChanges.pipe(distinctUntilChanged()),
+      canNombreFieldBeActivated$
+    ).subscribe(([selectedEstimation, canFieldBeActive]) => {
+      if (canFieldBeActive) {
         this.onEstimationNombreChanged(selectedEstimation);
-      });
+      } else {
+        this.controlGroup.controls.nombre.disable();
+      }
+    });
   }
 
   public autocompleteAttributes: AutocompleteAttribute[] = [

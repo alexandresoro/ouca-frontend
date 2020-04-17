@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { Injectable } from "@angular/core";
 import {
   FormControl,
   FormGroup,
   ValidatorFn,
-  Validators,
+  Validators
 } from "@angular/forms";
 import { Age } from "ouca-common/age.object";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
@@ -11,12 +12,15 @@ import { Classe } from "ouca-common/classe.object";
 import { Comportement } from "ouca-common/comportement.object";
 import { Donnee } from "ouca-common/donnee.object";
 import { EntiteAvecLibelleEtCode } from "ouca-common/entite-avec-libelle-et-code.object";
-import { Espece } from "ouca-common/espece.object";
+import { Espece } from "ouca-common/espece.model";
 import { EstimationDistance } from "ouca-common/estimation-distance.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { Milieu } from "ouca-common/milieu.object";
 import { Sexe } from "ouca-common/sexe.object";
+import { getEspeceFromUIEspece } from "../helpers/espece.helper";
+import { UIEspece } from "../models/espece.model";
 import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
+import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
 import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
@@ -32,7 +36,7 @@ interface DefaultDonneeOptions {
 }
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class DonneeFormService {
   public createForm = (): FormGroup => {
@@ -42,26 +46,26 @@ export class DonneeFormService {
         classe: new FormControl("", [this.classeValidator()]),
         espece: new FormControl("", [
           Validators.required,
-          this.especeValidator(),
-        ]),
+          this.especeValidator()
+        ])
       }),
       nombreGroup: new FormGroup({
         nombre: new FormControl("", [
           Validators.required,
-          this.nombreValidator(),
+          this.nombreValidator()
         ]),
         estimationNombre: new FormControl("", [
           Validators.required,
-          this.estimationNombreValidator(),
-        ]),
+          this.estimationNombreValidator()
+        ])
       }),
       sexe: new FormControl("", [Validators.required, this.sexeValidator()]),
       age: new FormControl("", [Validators.required, this.ageValidator()]),
       distanceGroup: new FormGroup({
         distance: new FormControl("", [this.distanceValidator()]),
         estimationDistance: new FormControl("", [
-          this.estimationDistanceValidator(),
-        ]),
+          this.estimationDistanceValidator()
+        ])
       }),
       regroupement: new FormControl("", [this.regroupementValidator()]),
       comportementsGroup: new FormGroup({
@@ -70,15 +74,15 @@ export class DonneeFormService {
         comportement3: new FormControl("", [this.comportementValidator()]),
         comportement4: new FormControl("", [this.comportementValidator()]),
         comportement5: new FormControl("", [this.comportementValidator()]),
-        comportement6: new FormControl("", [this.comportementValidator()]),
+        comportement6: new FormControl("", [this.comportementValidator()])
       }),
       milieuxGroup: new FormGroup({
         milieu1: new FormControl("", [this.milieuValidator()]),
         milieu2: new FormControl("", [this.milieuValidator()]),
         milieu3: new FormControl("", [this.milieuValidator()]),
-        milieu4: new FormControl("", [this.milieuValidator()]),
+        milieu4: new FormControl("", [this.milieuValidator()])
       }),
-      commentaire: new FormControl("", [this.commentaireValidator()]),
+      commentaire: new FormControl("", [this.commentaireValidator()])
     });
 
     form.disable();
@@ -86,20 +90,107 @@ export class DonneeFormService {
   };
 
   /**
-   * Initialize the donnee form
-   * Reset the form and set defaults values if any
+   * Fill the donnee form with the values of an existing donnee
    */
-  private initializeForm = (
+  public updateForm = (
     form: FormGroup,
     entities: {
+      especes: UIEspece[];
       ages: Age[];
       sexes: Sexe[];
       estimationsNombre: EstimationNombre[];
+      estimationsDistance: EstimationDistance[];
+      comportements: Comportement[];
+      milieux: Milieu[];
     },
-    appConfiguration: AppConfiguration
+    appConfiguration: AppConfiguration,
+    donnee: Donnee | DonneeFormObject
   ): void => {
-    const defaultOptions = this.getDefaultOptions(entities, appConfiguration);
-    form.reset(defaultOptions);
+    if (!entities) {
+      return;
+    }
+
+    console.log("Donnée à afficher dans le formulaire:", donnee);
+
+    if (!donnee) {
+      const defaultOptions = this.getDefaultOptions(
+        {
+          ages: entities.ages,
+          sexes: entities.sexes,
+          estimationsNombre: entities.estimationsNombre
+        },
+        appConfiguration
+      );
+      form.reset(defaultOptions);
+    } else {
+      const donneeFormValue = this.getDonneeFormValue(entities, donnee);
+      form.reset(donneeFormValue);
+    }
+  };
+
+  private getDonneeFormValue = (
+    entities: {
+      especes: UIEspece[];
+      ages: Age[];
+      sexes: Sexe[];
+      estimationsNombre: EstimationNombre[];
+      estimationsDistance: EstimationDistance[];
+      comportements: Comportement[];
+      milieux: Milieu[];
+    },
+    donnee: Donnee | DonneeFormObject
+  ): DonneeFormValue => {
+    const espece = ListHelper.findEntityInListByID(
+      entities.especes,
+      donnee.especeId
+    );
+
+    const classe: Classe = espece?.classe ? espece.classe : null;
+
+    const estimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
+      entities.estimationsNombre,
+      donnee.estimationNombreId
+    );
+
+    const estimationDistance: EstimationDistance = ListHelper.findEntityInListByID(
+      entities.estimationsDistance,
+      donnee.estimationDistanceId
+    );
+
+    const sexe: Sexe = ListHelper.findEntityInListByID(
+      entities.sexes,
+      donnee.sexeId
+    );
+
+    const age: EstimationDistance = ListHelper.findEntityInListByID(
+      entities.ages,
+      donnee.ageId
+    );
+
+    return {
+      id: donnee.id,
+      especeGroup: {
+        classe,
+        espece
+      },
+      age,
+      sexe,
+      nombreGroup: {
+        nombre: donnee.nombre,
+        estimationNombre
+      },
+      distanceGroup: {
+        distance: donnee.distance,
+        estimationDistance
+      },
+      regroupement: donnee.regroupement,
+      comportementsGroup: this.getComportementsForForm(
+        entities.comportements,
+        donnee.comportementsIds
+      ),
+      milieuxGroup: this.getMilieuxForForm(entities.milieux, donnee.milieuxIds),
+      commentaire: donnee.commentaire
+    };
   };
 
   private getDefaultOptions = (
@@ -137,10 +228,10 @@ export class DonneeFormService {
     return {
       nombreGroup: {
         nombre: defaultNombre,
-        estimationNombre: defaultEstimationNombre,
+        estimationNombre: defaultEstimationNombre
       },
       sexe: defaultSexe,
-      age: defaultAge,
+      age: defaultAge
     };
   };
 
@@ -148,222 +239,35 @@ export class DonneeFormService {
    * Returns a donnee object from the values filled in donnee form
    */
   public getDonneeFromForm = (form: FormGroup): Donnee => {
-    const donneeFormControls = form.controls;
-    const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
-      .controls;
-    const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
-      .controls;
-    const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
-      .controls;
-    const comportementsFormControls = (donneeFormControls.comportementsGroup as FormGroup)
-      .controls;
-    const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
-      .controls;
+    const donneeFormValue: DonneeFormValue = form.value;
 
-    const comportementsIds: number[] = [];
-    //_.uniq(_.map(donneeFormControls.comportementsGroup.value as {[key: string]: Comportement}, (value) => value.id))
-    this.addComportement(
-      comportementsIds,
-      comportementsFormControls.comportement1.value
+    const espece: Espece = getEspeceFromUIEspece(
+      donneeFormValue.especeGroup.espece
     );
-    this.addComportement(
-      comportementsIds,
-      comportementsFormControls.comportement2.value
-    );
-    this.addComportement(
-      comportementsIds,
-      comportementsFormControls.comportement3.value
-    );
-    this.addComportement(
-      comportementsIds,
-      comportementsFormControls.comportement4.value
-    );
-    this.addComportement(
-      comportementsIds,
-      comportementsFormControls.comportement5.value
-    );
-    this.addComportement(
-      comportementsIds,
-      comportementsFormControls.comportement6.value
-    );
-
-    const milieuxIds: number[] = [];
-    this.addMilieu(milieuxIds, milieuxFormControls.milieu1.value);
-    this.addMilieu(milieuxIds, milieuxFormControls.milieu2.value);
-    this.addMilieu(milieuxIds, milieuxFormControls.milieu3.value);
-    this.addMilieu(milieuxIds, milieuxFormControls.milieu4.value);
-
-    const id: number = donneeFormControls.id.value;
-    const espece: Espece = especeFormControls.espece.value;
-    const estimationNombre: EstimationNombre =
-      nombreFormControls.estimationNombre.value;
-    const sexe: Sexe = donneeFormControls.sexe.value;
-    const age: Age = donneeFormControls.age.value;
-    const estimationDistance = distanceFormControls.estimationDistance.value;
 
     const donnee: Donnee = {
-      id,
+      id: donneeFormValue.id,
       inventaireId: null,
       especeId: espece ? espece.id : null,
-      nombre: nombreFormControls.nombre.value,
-      estimationNombreId: estimationNombre ? estimationNombre.id : null,
-      sexeId: sexe ? sexe.id : null,
-      ageId: age ? age.id : null,
-      distance: distanceFormControls.distance.value,
-      estimationDistanceId: estimationDistance ? estimationDistance.id : null,
-      regroupement: donneeFormControls.regroupement.value,
-      comportementsIds,
-      milieuxIds,
-      commentaire: donneeFormControls.commentaire.value,
+      nombre: donneeFormValue.nombreGroup.nombre,
+      estimationNombreId: donneeFormValue.nombreGroup.estimationNombre?.id
+        ? donneeFormValue.nombreGroup.estimationNombre.id
+        : null,
+      sexeId: donneeFormValue.sexe?.id ? donneeFormValue.sexe.id : null,
+      ageId: donneeFormValue.age?.id ? donneeFormValue.age.id : null,
+      distance: donneeFormValue.distanceGroup.distance,
+      estimationDistanceId: donneeFormValue.distanceGroup.estimationDistance?.id
+        ? donneeFormValue.distanceGroup.estimationDistance.id
+        : null,
+      regroupement: donneeFormValue.regroupement,
+      comportementsIds: this.getComportements(donneeFormValue),
+      milieuxIds: this.getMilieux(donneeFormValue),
+      commentaire: donneeFormValue.commentaire
     };
 
     console.log("Donnée générée depuis le formulaire:", donnee);
 
     return donnee;
-  };
-
-  /**
-   * Fill the donnee form with the values of an existing donnee
-   */
-  public updateForm = (
-    form: FormGroup,
-    entities: {
-      classes: Classe[];
-      especes: Espece[];
-      ages: Age[];
-      sexes: Sexe[];
-      estimationsNombre: EstimationNombre[];
-      estimationsDistance: EstimationDistance[];
-      comportements: Comportement[];
-      milieux: Milieu[];
-    },
-    appConfiguration: AppConfiguration,
-    donnee: Donnee | DonneeFormObject
-  ): void => {
-    if (!entities) {
-      return;
-    }
-
-    console.log("Donnée à afficher dans le formulaire:", donnee);
-
-    if (!donnee) {
-      this.initializeForm(form, entities, appConfiguration);
-    } else {
-      const donneeFormControls = form.controls;
-      const nombreFormControls = (donneeFormControls.nombreGroup as FormGroup)
-        .controls;
-      const distanceFormControls = (donneeFormControls.distanceGroup as FormGroup)
-        .controls;
-      const especeFormControls = (donneeFormControls.especeGroup as FormGroup)
-        .controls;
-      const comportementsFormControls = (donneeFormControls.comportementsGroup as FormGroup)
-        .controls;
-      const milieuxFormControls = (donneeFormControls.milieuxGroup as FormGroup)
-        .controls;
-
-      const espece: Espece = ListHelper.findEntityInListByID(
-        entities.especes,
-        donnee.especeId
-      );
-
-      const classe: Classe = espece?.classeId
-        ? ListHelper.findEntityInListByID(entities.classes, espece.classeId)
-        : (donnee as DonneeFormObject).classe;
-
-      const estimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
-        entities.estimationsNombre,
-        donnee.estimationNombreId
-      );
-
-      const estimationDistance: EstimationDistance = ListHelper.findEntityInListByID(
-        entities.estimationsDistance,
-        donnee.estimationDistanceId
-      );
-
-      const sexe: Sexe = ListHelper.findEntityInListByID(
-        entities.sexes,
-        donnee.sexeId
-      );
-
-      const age: EstimationDistance = ListHelper.findEntityInListByID(
-        entities.ages,
-        donnee.ageId
-      );
-
-      donneeFormControls.id.setValue(donnee.id);
-      especeFormControls.classe.setValue(classe);
-      especeFormControls.espece.setValue(espece);
-      nombreFormControls.nombre.setValue(donnee.nombre);
-      nombreFormControls.estimationNombre.setValue(estimationNombre);
-      if (!!estimationNombre && !!estimationNombre.nonCompte) {
-        nombreFormControls.nombre.disable();
-      }
-      donneeFormControls.sexe.setValue(sexe);
-      donneeFormControls.age.setValue(age);
-      distanceFormControls.distance.setValue(donnee.distance);
-      distanceFormControls.estimationDistance.setValue(estimationDistance);
-      donneeFormControls.regroupement.setValue(donnee.regroupement);
-
-      if (donnee.comportementsIds) {
-        comportementsFormControls.comportement1.setValue(
-          this.getComportement(
-            entities.comportements,
-            donnee.comportementsIds,
-            1
-          )
-        );
-        comportementsFormControls.comportement2.setValue(
-          this.getComportement(
-            entities.comportements,
-            donnee.comportementsIds,
-            2
-          )
-        );
-        comportementsFormControls.comportement3.setValue(
-          this.getComportement(
-            entities.comportements,
-            donnee.comportementsIds,
-            3
-          )
-        );
-        comportementsFormControls.comportement4.setValue(
-          this.getComportement(
-            entities.comportements,
-            donnee.comportementsIds,
-            4
-          )
-        );
-        comportementsFormControls.comportement5.setValue(
-          this.getComportement(
-            entities.comportements,
-            donnee.comportementsIds,
-            5
-          )
-        );
-        comportementsFormControls.comportement6.setValue(
-          this.getComportement(
-            entities.comportements,
-            donnee.comportementsIds,
-            6
-          )
-        );
-      }
-      if (donnee.milieuxIds) {
-        milieuxFormControls.milieu1.setValue(
-          this.getMilieu(entities.milieux, donnee.milieuxIds, 1)
-        );
-        milieuxFormControls.milieu2.setValue(
-          this.getMilieu(entities.milieux, donnee.milieuxIds, 2)
-        );
-        milieuxFormControls.milieu3.setValue(
-          this.getMilieu(entities.milieux, donnee.milieuxIds, 3)
-        );
-        milieuxFormControls.milieu4.setValue(
-          this.getMilieu(entities.milieux, donnee.milieuxIds, 4)
-        );
-      }
-      donneeFormControls.commentaire.setValue(donnee.commentaire);
-    }
   };
 
   public getDonneeFormObject = (
@@ -379,8 +283,37 @@ export class DonneeFormService {
     return {
       ...donneeAttributes,
       inventaire: inventaireFormObject,
-      classe: especeFormGroup.controls.classe.value,
+      classe: especeFormGroup.controls.classe.value
     };
+  };
+
+  private getComportements = (donneeFormValue: DonneeFormValue): number[] => {
+    const comportementsIds: number[] = [];
+    this.addComportement(
+      comportementsIds,
+      donneeFormValue.comportementsGroup.comportement1
+    );
+    this.addComportement(
+      comportementsIds,
+      donneeFormValue.comportementsGroup.comportement2
+    );
+    this.addComportement(
+      comportementsIds,
+      donneeFormValue.comportementsGroup.comportement3
+    );
+    this.addComportement(
+      comportementsIds,
+      donneeFormValue.comportementsGroup.comportement4
+    );
+    this.addComportement(
+      comportementsIds,
+      donneeFormValue.comportementsGroup.comportement5
+    );
+    this.addComportement(
+      comportementsIds,
+      donneeFormValue.comportementsGroup.comportement6
+    );
+    return comportementsIds;
   };
 
   /**
@@ -412,6 +345,53 @@ export class DonneeFormService {
     if (!!comportement && !!comportement.id) {
       this.addId(comportementsIds, comportement.id);
     }
+  };
+
+  private getComportementsForForm = (
+    comportements: Comportement[],
+    comportementsIds: number[]
+  ): {
+    comportement1: Comportement;
+    comportement2: Comportement;
+    comportement3: Comportement;
+    comportement4: Comportement;
+    comportement5: Comportement;
+    comportement6: Comportement;
+  } => {
+    return {
+      comportement1: this.getComportement(comportements, comportementsIds, 1),
+      comportement2: this.getComportement(comportements, comportementsIds, 2),
+      comportement3: this.getComportement(comportements, comportementsIds, 3),
+      comportement4: this.getComportement(comportements, comportementsIds, 4),
+      comportement5: this.getComportement(comportements, comportementsIds, 5),
+      comportement6: this.getComportement(comportements, comportementsIds, 6)
+    };
+  };
+
+  private getMilieuxForForm = (
+    milieux: Milieu[],
+    milieuxIds: number[]
+  ): {
+    milieu1: Milieu;
+    milieu2: Milieu;
+    milieu3: Milieu;
+    milieu4: Milieu;
+  } => {
+    return {
+      milieu1: this.getMilieu(milieux, milieuxIds, 1),
+      milieu2: this.getMilieu(milieux, milieuxIds, 2),
+      milieu3: this.getMilieu(milieux, milieuxIds, 3),
+      milieu4: this.getMilieu(milieux, milieuxIds, 4)
+    };
+  };
+
+  private getMilieux = (donneeFormValue: DonneeFormValue): number[] => {
+    const milieuxIds: number[] = [];
+    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup.milieu1);
+    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup.milieu2);
+    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup.milieu3);
+    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup.milieu4);
+    return milieuxIds;
   };
 
   /**

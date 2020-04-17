@@ -1,11 +1,16 @@
-import { Component } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit
+} from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
-import { EntityModeHelper } from "../../../model-management/helpers/entity-mode.helper";
 
 export enum ConfigurationParameterID {
   DEFAULT_OBSERVATEUR,
@@ -30,9 +35,16 @@ export interface ConfigurationParameter {
 @Component({
   selector: "configuration",
   styleUrls: ["./configuration.component.scss"],
-  templateUrl: "./configuration.component.html"
+  templateUrl: "./configuration.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfigurationComponent {
+export class ConfigurationComponent implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject();
+
+  public isCurrentlyEditing$: BehaviorSubject<boolean> = new BehaviorSubject<
+    boolean
+  >(false);
+
   public appConfiguration$: Observable<AppConfiguration>;
 
   private configurationParametersToDisplay: ConfigurationParameter[] = [
@@ -99,11 +111,20 @@ export class ConfigurationComponent {
 
   constructor(private appConfigurationService: AppConfigurationService) {
     this.appConfiguration$ = this.appConfigurationService.getConfiguration$();
+  }
 
-    this.appConfiguration$.subscribe((appConfiguration) => {
-      this.switchToViewAllMode();
-      this.buildDataSource(appConfiguration);
-    });
+  public ngOnInit(): void {
+    this.switchToViewAllMode();
+    this.appConfiguration$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((appConfiguration) => {
+        this.buildDataSource(appConfiguration);
+      });
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   public buildDataSource = (appConfiguration: AppConfiguration): void => {
@@ -168,39 +189,17 @@ export class ConfigurationComponent {
     );
   };
 
-  public editConfigurations = (): void => {
-    this.switchToEditionMode();
+  public saveAppConfiguration = (isSuccessfulSave: boolean): void => {
+    if (isSuccessfulSave) {
+      this.switchToViewAllMode();
+    }
   };
 
-  public saveAppConfiguration = (
-    newAppConfiguration: AppConfiguration
-  ): void => {
-    this.appConfigurationService
-      .saveAppConfiguration(newAppConfiguration)
-      .subscribe((isSuccessful) => {
-        if (isSuccessful) {
-          this.switchToViewAllMode();
-        }
-      });
+  public switchToEditionMode = (): void => {
+    this.isCurrentlyEditing$.next(true);
   };
 
-  public cancelEdition = (): void => {
-    this.switchToViewAllMode();
-  };
-
-  private switchToEditionMode = (): void => {
-    EntityModeHelper.switchToEditionMode();
-  };
-
-  private switchToViewAllMode = (): void => {
-    EntityModeHelper.switchToViewAllMode();
-  };
-
-  public getIsAllViewMode = (): boolean => {
-    return EntityModeHelper.isViewAllMode();
-  };
-
-  public getIsEditionMode = (): boolean => {
-    return EntityModeHelper.isEditionMode();
+  public switchToViewAllMode = (): void => {
+    this.isCurrentlyEditing$.next(false);
   };
 }
