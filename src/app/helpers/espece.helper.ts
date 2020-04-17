@@ -1,7 +1,7 @@
 import { Espece } from "ouca-common/espece.model";
 import { UIEspece } from "../models/espece.model";
 
-export const getEspeceFromUIEspece = (uiEspece: UIEspece): Espece => {
+export const buildEspeceFromUIEspece = (uiEspece: UIEspece): Espece => {
   let espece: Espece = null;
   if (uiEspece?.classe) {
     const { classe, ...especeAttributes } = uiEspece;

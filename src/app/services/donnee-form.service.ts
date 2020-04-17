@@ -17,23 +17,14 @@ import { EstimationDistance } from "ouca-common/estimation-distance.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { Milieu } from "ouca-common/milieu.object";
 import { Sexe } from "ouca-common/sexe.object";
-import { getEspeceFromUIEspece } from "../helpers/espece.helper";
+import { buildEspeceFromUIEspece } from "../helpers/espece.helper";
 import { UIEspece } from "../models/espece.model";
+import { DefaultDonneeOptions } from "../modules/donnee-creation/models/default-donnee-options.model";
 import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
 import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
-
-interface DefaultDonneeOptions {
-  age: Age | null;
-  sexe: Sexe | null;
-
-  nombreGroup: {
-    nombre: number | null;
-    estimationNombre: EstimationNombre | null;
-  };
-}
 
 @Injectable({
   providedIn: "root"
@@ -110,7 +101,7 @@ export class DonneeFormService {
       return;
     }
 
-    console.log("Donnée à afficher dans le formulaire:", donnee);
+    console.log("Affichage de la donnée dans le formulaire.", donnee);
 
     if (!donnee) {
       const defaultOptions = this.getDefaultOptions(
@@ -145,7 +136,8 @@ export class DonneeFormService {
       donnee.especeId
     );
 
-    const classe: Classe = espece?.classe ? espece.classe : null;
+    const classe: Classe =
+      espece?.classe ?? (donnee as DonneeFormObject).classe;
 
     const estimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
       entities.estimationsNombre,
@@ -241,24 +233,22 @@ export class DonneeFormService {
   public getDonneeFromForm = (form: FormGroup): Donnee => {
     const donneeFormValue: DonneeFormValue = form.value;
 
-    const espece: Espece = getEspeceFromUIEspece(
+    const espece: Espece = buildEspeceFromUIEspece(
       donneeFormValue.especeGroup.espece
     );
 
     const donnee: Donnee = {
       id: donneeFormValue.id,
       inventaireId: null,
-      especeId: espece ? espece.id : null,
+      especeId: espece?.id ?? null,
       nombre: donneeFormValue.nombreGroup.nombre,
-      estimationNombreId: donneeFormValue.nombreGroup.estimationNombre?.id
-        ? donneeFormValue.nombreGroup.estimationNombre.id
-        : null,
-      sexeId: donneeFormValue.sexe?.id ? donneeFormValue.sexe.id : null,
-      ageId: donneeFormValue.age?.id ? donneeFormValue.age.id : null,
+      estimationNombreId:
+        donneeFormValue.nombreGroup.estimationNombre?.id ?? null,
+      sexeId: donneeFormValue.sexe?.id ?? null,
+      ageId: donneeFormValue.age?.id ?? null,
       distance: donneeFormValue.distanceGroup.distance,
-      estimationDistanceId: donneeFormValue.distanceGroup.estimationDistance?.id
-        ? donneeFormValue.distanceGroup.estimationDistance.id
-        : null,
+      estimationDistanceId:
+        donneeFormValue.distanceGroup.estimationDistance?.id ?? null,
       regroupement: donneeFormValue.regroupement,
       comportementsIds: this.getComportements(donneeFormValue),
       milieuxIds: this.getMilieux(donneeFormValue),
@@ -274,16 +264,14 @@ export class DonneeFormService {
     form: FormGroup,
     inventaireFormObject: InventaireFormObject
   ): DonneeFormObject => {
-    const donnee = this.getDonneeFromForm(form);
+    const { ...donneeAttributes } = this.getDonneeFromForm(form);
 
-    const { ...donneeAttributes } = donnee;
-
-    const especeFormGroup = form.controls.especeGroup as FormGroup;
+    const donneeFormValue: DonneeFormValue = form.value;
 
     return {
       ...donneeAttributes,
       inventaire: inventaireFormObject,
-      classe: especeFormGroup.controls.classe.value
+      classe: donneeFormValue.especeGroup.classe
     };
   };
 
