@@ -154,7 +154,9 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
               : "";
             break;
           case ConfigurationParameterID.DEFAULT_NOMBRE:
-            value = "" + appConfiguration.defaultNombre;
+            value = appConfiguration.defaultNombre
+              ? "" + appConfiguration.defaultNombre
+              : "";
             break;
           case ConfigurationParameterID.DEFAULT_SEXE:
             value = appConfiguration.defaultSexe
