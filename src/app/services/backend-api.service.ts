@@ -10,6 +10,7 @@ import { Inventaire } from "ouca-common/inventaire.object";
 import { Lieudit } from "ouca-common/lieudit.model";
 import { PostResponse } from "ouca-common/post-response.object";
 import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
@@ -54,20 +55,26 @@ export class BackendApiService {
 
   private httpGet<T>(relativePath: string): Observable<T> {
     const requestPath: string = this.getApiUrl() + relativePath;
-    console.log("GET ", requestPath);
-    return this.http.get<T>(requestPath);
+    return this.http.get<T>(requestPath).pipe(
+      tap(() => {
+        console.log("HTTP GET ", requestPath);
+      })
+    );
   }
 
   private httpGetObserveResponse<T>(
     relativePath: string
   ): Observable<HttpResponse<any>> {
     const requestPath: string = this.getApiUrl() + relativePath;
-    console.log("GET ", requestPath);
     const httpOptions: Record<string, any> = {
       observe: "response",
       responseType: "blob" as "json"
     };
-    return this.http.get<any>(requestPath, httpOptions);
+    return this.http.get<any>(requestPath, httpOptions).pipe(
+      tap(() => {
+        console.log("HTTP GET", requestPath);
+      })
+    );
   }
 
   private httpPostObserveResponse<T>(
@@ -75,12 +82,16 @@ export class BackendApiService {
     objectToPost: any
   ): Observable<HttpResponse<any>> {
     const requestPath: string = this.getApiUrl() + relativePath;
-    console.log("POST", requestPath, objectToPost);
+
     const httpOptions: Record<string, any> = {
       observe: "response",
       responseType: "blob" as "json"
     };
-    return this.http.post<any>(requestPath, objectToPost, httpOptions);
+    return this.http.post<any>(requestPath, objectToPost, httpOptions).pipe(
+      tap(() => {
+        console.log("HTTP POST", requestPath, objectToPost);
+      })
+    );
   }
 
   private httpPost<T>(
@@ -88,8 +99,11 @@ export class BackendApiService {
     objectToPost: object
   ): Observable<T> {
     const requestPath: string = this.getApiUrl() + relativePath;
-    console.log("POST", requestPath, objectToPost);
-    return this.http.post<T>(requestPath, objectToPost);
+    return this.http.post<T>(requestPath, objectToPost).pipe(
+      tap(() => {
+        console.log("HTTP POST", requestPath, objectToPost);
+      })
+    );
   }
 
   getAppConfiguration = (): Observable<AppConfiguration> => {
