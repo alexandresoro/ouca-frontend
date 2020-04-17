@@ -1,6 +1,5 @@
 import { isSameDay } from "date-fns";
 import * as _ from "lodash";
-import { getOriginCoordinates } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";
@@ -78,8 +77,8 @@ export class InventaireHelper {
         inventaireFromForm.customizedAltitude
       ) ||
       this.areDifferentCoordinates(
-        getOriginCoordinates(inventaireFromDB),
-        getOriginCoordinates(inventaireFromForm)
+        inventaireFromDB.coordinates,
+        inventaireFromForm.coordinates
       ) ||
       inventaireFromDB.temperature !== inventaireFromForm.temperature ||
       !_.isEqual(
