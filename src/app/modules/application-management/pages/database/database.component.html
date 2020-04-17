@@ -4,13 +4,14 @@
   <button
     *ngIf="!isWaitPanelDisplayed"
     mat-raised-button
+    type="button"
     color="accent"
     (click)="onSaveDatabaseClicked()"
   >
     Créer une sauvegarde de la base de données
   </button>
 
-  <div *ngIf="isWaitPanelDisplayed" style="text-align: center">
+  <div *ngIf="isWaitPanelDisplayed" style="text-align: center;">
     <img
       src="../../../../../assets/img/green-bird.svg"
       alt="Oiseaux"

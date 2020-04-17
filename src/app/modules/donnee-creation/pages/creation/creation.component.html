@@ -6,6 +6,7 @@
       <button
         class="no-text-button"
         mat-raised-button
+        type="button"
         matTooltip="Donnée précédente"
         matTooltipClass="default-tooltip"
         color="accent"
@@ -18,6 +19,7 @@
       <button
         class="no-text-button"
         mat-raised-button
+        type="button"
         matTooltip="Donnée suivante"
         matTooltipClass="default-tooltip"
         color="accent"
@@ -30,6 +32,7 @@
       <button
         class="no-text-button"
         mat-raised-button
+        type="button"
         matTooltip="Recherche par ID"
         matTooltipClass="default-tooltip"
         (click)="onSearchByIdBtnClicked()"
@@ -40,6 +43,7 @@
       <button
         class="no-text-button"
         mat-raised-button
+        type="button"
         matTooltip="Retour à l'édition de la donnée courante"
         matTooltipClass="default-tooltip"
         *ngIf="isCurrentDonneeAnExistingOne$() | async"
@@ -52,6 +56,7 @@
         class="no-text-button"
         color="warn"
         mat-raised-button
+        type="button"
         matTooltip="Réinitialiser le formulaire"
         matTooltipClass="default-tooltip"
         *ngIf="!(isCurrentDonneeAnExistingOne$() | async)"
@@ -74,6 +79,7 @@
             <button
               *ngIf="isEditingDonneeOnly()"
               mat-icon-button
+              type="button"
               class="update-fiche-inventaire-button"
               matTooltip="Corriger la fiche inventaire actuelle"
               matTooltipClass="default-tooltip"
@@ -86,6 +92,7 @@
           <button
             *ngIf="isEditingDonneeOnly()"
             mat-icon-button
+            type="button"
             color="primary"
             class="new-fiche-inventaire-button"
             matTooltip="Créer une nouvelle fiche inventaire"
@@ -320,6 +327,7 @@
       <button
         class="save-button"
         mat-fab
+        type="button"
         [matTooltip]="getSaveButtonTooltip()"
         matTooltipClass="default-tooltip"
         color="primary"

@@ -1,7 +1,7 @@
 <div class="table-top-buttons">
   <button
     mat-raised-button
-    type="submit"
+    type="button"
     (click)="editObject()"
     [disabled]="!object"
   >
@@ -10,8 +10,8 @@
   </button>
   <button
     mat-raised-button
+    type="button"
     *ngIf="!hideDeleteButton"
-    type="submit"
     (click)="deleteObject()"
     [disabled]="!object"
   >

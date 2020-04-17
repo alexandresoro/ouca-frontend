@@ -15,10 +15,20 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button color="accent" [mat-dialog-close]="null">
+  <button
+    mat-raised-button
+    type="button"
+    color="accent"
+    [mat-dialog-close]="null"
+  >
     Annuler
   </button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="idToSearch">
+  <button
+    mat-raised-button
+    type="button"
+    color="primary"
+    [mat-dialog-close]="idToSearch"
+  >
     Chercher la fiche espèce
   </button>
 </mat-dialog-actions>

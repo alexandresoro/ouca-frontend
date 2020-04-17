@@ -2,11 +2,21 @@
   <h1>{{ title }}</h1>
   <span class="flex-spacer"></span>
   <div *ngIf="areButtonsDisplayed" class="entity-top-buttons">
-    <button mat-raised-button color="primary" (click)="newObject()">
+    <button
+      mat-raised-button
+      type="button"
+      color="primary"
+      (click)="newObject()"
+    >
       <mat-icon>add</mat-icon>
       <span>{{ createButtonLibelle }}</span>
     </button>
-    <button mat-raised-button color="primary" (click)="exportObjects()">
+    <button
+      mat-raised-button
+      type="button"
+      color="primary"
+      (click)="exportObjects()"
+    >
       <mat-icon>save</mat-icon>
       <span>{{ exportButtonLibelle }}</span>
     </button>

@@ -4,7 +4,12 @@
     <span class="flex-spacer"></span>
     <ng-container *ngIf="!(isCurrentlyEditing$ | async)">
       <span class="button-spacer"></span>
-      <button mat-raised-button color="primary" (click)="switchToEditionMode()">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="switchToEditionMode()"
+      >
         <mat-icon>create</mat-icon>
         <span>Modifier la configuration</span>
       </button>
