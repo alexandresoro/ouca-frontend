@@ -1,5 +1,4 @@
 import { Component, OnChanges, SimpleChanges } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
 import {
   CoordinatesSystemType,
@@ -8,7 +7,7 @@ import {
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Lieudit } from "ouca-common/lieudit.model";
-import { combineLatest, Subject } from "rxjs";
+import { combineLatest, ReplaySubject } from "rxjs";
 import { UILieudit } from "src/app/models/lieudit.model";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
@@ -46,16 +45,16 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "nbDonnees"
   ];
 
-  private lieuxdits$: Subject<UILieudit[]> = new Subject<UILieudit[]>();
+  private lieuxdits$: ReplaySubject<UILieudit[]> = new ReplaySubject<
+    UILieudit[]
+  >(1);
 
   constructor(private appConfigurationService: AppConfigurationService) {
     super();
   }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource();
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    super.ngOnInit();
 
     combineLatest(
       this.lieuxdits$,
@@ -69,7 +68,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.objects && !!changes.objects.currentValue) {
+    if (changes?.objects?.currentValue) {
       this.lieuxdits$.next(changes.objects.currentValue);
     }
   }

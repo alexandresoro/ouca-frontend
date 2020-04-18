@@ -36,9 +36,6 @@ import { ClasseComponent } from "./pages/classe/classe.component";
 import { CommuneComponent } from "./pages/commune/commune.component";
 import { ComportementComponent } from "./pages/comportement/comportement.component";
 import { DepartementComponent } from "./pages/departement/departement.component";
-import { EntiteAvecLibelleEtCodeComponent } from "./pages/entite-avec-libelle-et-code/entite-avec-libelle-et-code.component";
-import { EntiteAvecLibelleComponent } from "./pages/entite-avec-libelle/entite-avec-libelle.component";
-import { EntiteSimpleComponent } from "./pages/entite-simple/entite-simple.component";
 import { EspeceComponent } from "./pages/espece/espece.component";
 import { EstimationDistanceComponent } from "./pages/estimation-distance/estimation-distance.component";
 import { EstimationNombreComponent } from "./pages/estimation-nombre/estimation-nombre.component";
@@ -63,13 +60,10 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     DepartementComponent,
     DepartementFormComponent,
     DepartementTableComponent,
-    EntiteAvecLibelleComponent,
     EntiteAvecLibelleFormComponent,
     EntiteAvecLibelleTableComponent,
-    EntiteAvecLibelleEtCodeComponent,
     EntiteAvecLibelleEtCodeFormComponent,
     EntiteAvecLibelleEtCodeTableComponent,
-    EntiteSimpleComponent,
     EntityFormComponent,
     EntitySubFormDirective,
     EntitySubFormComponent,

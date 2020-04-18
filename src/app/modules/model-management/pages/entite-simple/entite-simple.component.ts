@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { Observable } from "rxjs";
@@ -6,13 +6,10 @@ import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
-import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
 
-@Component({
-  template: ""
-})
-export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
+export abstract class EntiteSimpleComponent<T extends EntiteSimple>
+  implements OnInit {
   // TODO remove objects
   public objects: T[];
 
@@ -40,33 +37,21 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
     this.switchToViewAllMode();
   }
 
-  public getEntities$ = (): Observable<T[]> => {
-    return;
-  };
+  abstract getEntities$(): Observable<T[]>;
 
-  public updateEntities = (): void => {
-    return;
-  };
+  abstract updateEntities(): void;
 
-  public getEntityName(): string {
-    return "unknown";
-  }
+  abstract getEntityName(): string;
 
-  public getAnEntityLabel(): string {
-    return "une entité";
-  }
+  abstract getAnEntityLabel(): string;
 
-  public getTheEntityLabel(uppercase?: boolean): string {
-    return uppercase ? "L'entité" : "l'entité";
-  }
+  abstract getTheEntityLabel(uppercase?: boolean): string;
 
   public getNewObject(): T {
     return {} as T;
   }
 
-  public getFormType(): any {
-    return EntitySubFormComponent;
-  }
+  abstract getFormType(): any;
 
   public newObject(): void {
     this.switchToCreationMode();

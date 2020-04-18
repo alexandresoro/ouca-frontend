@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild
@@ -16,7 +17,7 @@ import { EntiteSimple } from "ouca-common/entite-simple.object";
   template: ""
 })
 export class EntiteSimpleTableComponent<T extends EntiteSimple>
-  implements OnChanges {
+  implements OnInit, OnChanges {
   @Input() public objects: T[];
 
   @Output() public delete: EventEmitter<T> = new EventEmitter<T>();
@@ -29,15 +30,18 @@ export class EntiteSimpleTableComponent<T extends EntiteSimple>
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public dataSource: MatTableDataSource<any>;
+  public dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
   public selectedObject: T;
 
+  ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.objects && !!changes.objects.currentValue) {
-      this.dataSource = new MatTableDataSource(changes.objects.currentValue);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    if (changes?.objects?.currentValue) {
+      this.dataSource.data = changes.objects.currentValue;
     }
   }
 
