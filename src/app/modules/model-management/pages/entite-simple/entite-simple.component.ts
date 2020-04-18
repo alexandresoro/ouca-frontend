@@ -1,15 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
-import { PostResponse } from "ouca-common/post-response.object";
 import { Observable } from "rxjs";
-import { BackendApiService } from "src/app/services/backend-api.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
-import { StatusMessageService } from "../../../../services/status-message.service";
-import {
-  getContentTypeFromResponse,
-  saveFile
-} from "../../../shared/helpers/file-downloader.helper";
+import { ExportService } from "src/app/services/export.service";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { ListHelper } from "../../../shared/helpers/list-helper";
 import { EntitySubFormComponent } from "../../components/form/entite-simple-form/entity-sub-form.component";
@@ -37,9 +31,8 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   public entityModeHelper = EntityModeHelper;
 
   constructor(
-    private backendApiService: BackendApiService,
     protected entitiesStoreService: EntitiesStoreService,
-    private statusMessageService: StatusMessageService
+    private exportService: ExportService
   ) {}
 
   public ngOnInit(): void {
@@ -84,21 +77,17 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   }
 
   public confirmObjectRemoval(isConfirmed: boolean): void {
-    if (!!isConfirmed && !!this.objectToRemove) {
-      this.backendApiService
-        .deleteEntity(this.getEntityName(), this.objectToRemove.id)
-        .subscribe((response: PostResponse) => {
-          if (response.isSuccess) {
-            this.statusMessageService.showSuccessMessage(
-              this.getTheEntityLabel(true) + " a été supprimé(e) avec succès."
-            );
+    if (isConfirmed && this.objectToRemove?.id) {
+      this.entitiesStoreService
+        .deleteEntity(
+          this.objectToRemove.id,
+          this.getEntityName(),
+          this.getTheEntityLabel(true)
+        )
+        .subscribe((isSuccessful) => {
+          if (isSuccessful) {
             this.updateEntities();
             this.switchToViewAllMode();
-          } else {
-            this.statusMessageService.showErrorMessage(
-              "Une erreue est survenue pendant la suppression.",
-              response.message
-            );
           }
         });
     } else {
@@ -130,15 +119,7 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
   };
 
   public exportObjects(): void {
-    this.backendApiService
-      .exportData(this.getEntityName())
-      .subscribe((response: any) => {
-        saveFile(
-          response.body,
-          this.getEntityName() + ".xlsx",
-          getContentTypeFromResponse(response)
-        );
-      });
+    this.exportService.exportEntities(this.getEntityName());
   }
 
   public cancelEdition(): void {

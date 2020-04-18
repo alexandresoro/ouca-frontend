@@ -373,4 +373,26 @@ export class EntitiesStoreService {
       map((response: PostResponse) => response.isSuccess)
     );
   };
+
+  public deleteEntity = (
+    id: number,
+    entityName: string,
+    theEntityLabel: string
+  ): Observable<boolean> => {
+    return this.backendApiService.deleteEntity(entityName, id).pipe(
+      tap((response: PostResponse) => {
+        if (response.isSuccess) {
+          this.statusMessageService.showSuccessMessage(
+            theEntityLabel + " a été supprimé(e) avec succès."
+          );
+        } else {
+          this.statusMessageService.showErrorMessage(
+            "Une erreur est survenue pendant la suppression.",
+            response.message
+          );
+        }
+      }),
+      map((response: PostResponse) => response.isSuccess)
+    );
+  };
 }

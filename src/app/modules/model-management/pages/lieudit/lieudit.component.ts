@@ -14,9 +14,8 @@ import { Lieudit } from "ouca-common/lieudit.model";
 import { Observable } from "rxjs";
 import { UILieudit } from "src/app/models/lieudit.model";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
-import { BackendApiService } from "src/app/services/backend-api.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
-import { StatusMessageService } from "src/app/services/status-message.service";
+import { ExportService } from "src/app/services/export.service";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
 import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -28,11 +27,10 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuditCommon>
   implements OnInit {
   constructor(
     private appConfigurationService: AppConfigurationService,
-    backendApiService: BackendApiService,
     entitiesStoreService: EntitiesStoreService,
-    statusMessageService: StatusMessageService
+    exportService: ExportService
   ) {
-    super(backendApiService, entitiesStoreService, statusMessageService);
+    super(entitiesStoreService, exportService);
   }
 
   public ngOnInit(): void {
