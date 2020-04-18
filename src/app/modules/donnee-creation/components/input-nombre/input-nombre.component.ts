@@ -57,7 +57,7 @@ export class InputNombreComponent {
   ];
 
   private onEstimationNombreChanged(estimation: EstimationNombre): void {
-    if (!!estimation && !!estimation.nonCompte) {
+    if (estimation?.nonCompte) {
       this.controlGroup.controls.nombre.disable();
       this.controlGroup.controls.nombre.setValue(null);
     } else {
