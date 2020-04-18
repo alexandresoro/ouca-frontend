@@ -118,24 +118,16 @@ export class EntiteSimpleComponent<T extends EntiteSimple> implements OnInit {
     this.switchToViewAllMode();
   }
 
-  public saveObject(objectToSave: T): void {
-    this.backendApiService
-      .saveEntity(this.getEntityName(), objectToSave)
-      .subscribe((response: PostResponse) => {
-        if (response.isSuccess) {
-          this.statusMessageService.showSuccessMessage(
-            this.getTheEntityLabel(true) + " a été sauvegardé(e) avec succès."
-          );
+  public saveObject = <E extends EntiteSimple>(entity: E): void => {
+    this.entitiesStoreService
+      .saveEntity(entity, this.getEntityName(), this.getTheEntityLabel(true))
+      .subscribe((isSuccessful) => {
+        if (isSuccessful) {
           this.updateEntities();
           this.switchToViewAllMode();
-        } else {
-          this.statusMessageService.showErrorMessage(
-            "Une erreur est survenue pendant la sauvegarde.",
-            response.message
-          );
         }
       });
-  }
+  };
 
   public exportObjects(): void {
     this.backendApiService

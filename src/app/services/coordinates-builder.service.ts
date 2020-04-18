@@ -5,7 +5,6 @@ import {
   CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG
 } from "ouca-common/coordinates-system";
-import { Coordinates } from "ouca-common/coordinates.object";
 import { AppConfigurationService } from "./app-configuration.service";
 
 @Injectable({
@@ -13,19 +12,6 @@ import { AppConfigurationService } from "./app-configuration.service";
 })
 export class CoordinatesBuilderService {
   constructor(private appConfigurationService: AppConfigurationService) {}
-
-  public buildCoordinates = (
-    longitude: number,
-    latitude: number
-  ): Coordinates => {
-    const system: CoordinatesSystemType = this.appConfigurationService.getAppCoordinatesSystemType();
-    return {
-      longitude: longitude,
-      latitude: latitude,
-      system,
-      isTransformed: false
-    };
-  };
 
   public updateCoordinatesValidators = (
     coordinatesSystemType: CoordinatesSystemType,

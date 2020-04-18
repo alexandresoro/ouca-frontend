@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+/* eslint-disable @typescript-eslint/unbound-method */
+import { Component, OnInit } from "@angular/core";
 import {
   FormControl,
   FormGroup,
@@ -7,11 +8,13 @@ import {
   Validators
 } from "@angular/forms";
 import * as _ from "lodash";
+import { GPS } from "ouca-common/coordinates-system";
+import { LieuditCommon } from "ouca-common/lieudit-common.model";
 import { Lieudit } from "ouca-common/lieudit.model";
 import { Observable } from "rxjs";
 import { UILieudit } from "src/app/models/lieudit.model";
+import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { BackendApiService } from "src/app/services/backend-api.service";
-import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
@@ -19,13 +22,14 @@ import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
-  templateUrl: "./lieudit.tpl.html"
+  templateUrl: "./lieudit.component.html"
 })
-export class LieuditComponent extends EntiteSimpleComponent<UILieudit> {
+export class LieuditComponent extends EntiteSimpleComponent<LieuditCommon>
+  implements OnInit {
   constructor(
+    private appConfigurationService: AppConfigurationService,
     backendApiService: BackendApiService,
     entitiesStoreService: EntitiesStoreService,
-    private coordinatesBuilderService: CoordinatesBuilderService,
     statusMessageService: StatusMessageService
   ) {
     super(backendApiService, entitiesStoreService, statusMessageService);
@@ -37,7 +41,6 @@ export class LieuditComponent extends EntiteSimpleComponent<UILieudit> {
     this.form = new FormGroup(
       {
         id: new FormControl("", []),
-        commune: new FormControl("", []),
         communeId: new FormControl("", [Validators.required]),
         nom: new FormControl("", [Validators.required]),
         altitude: new FormControl("", [
@@ -59,17 +62,29 @@ export class LieuditComponent extends EntiteSimpleComponent<UILieudit> {
     this.entitiesStoreService.updateLieuxDits();
   };
 
-  public saveObject(formValue: any): void {
-    const { longitude, latitude, ...otherParams } = formValue;
+  public saveLieudit = (formValue: {
+    id: number;
+    communeId: number;
+    nom: string;
+    altitude: number;
+    longitude: number;
+    latitude: number;
+  }): void => {
+    const { longitude, latitude, ...lieuditAttributes } = formValue;
+    // TODO
+    // const system: CoordinatesSystemType = this.appConfigurationService.getAppCoordinatesSystemType();
+    const system = GPS;
     const lieudit: Lieudit = {
-      ...otherParams,
-      coordinates: this.coordinatesBuilderService.buildCoordinates(
-        longitude,
-        latitude
-      )
+      ...lieuditAttributes,
+      coordinates: {
+        longitude: longitude,
+        latitude: latitude,
+        system,
+        isTransformed: false
+      }
     };
-    super.saveObject(lieudit as any);
-  }
+    this.saveObject(lieudit);
+  };
 
   public nomValidator: ValidatorFn = (
     formGroup: FormGroup

@@ -13,9 +13,10 @@ import { Lieudit } from "ouca-common/lieudit.model";
 import { Meteo } from "ouca-common/meteo.object";
 import { Milieu } from "ouca-common/milieu.object";
 import { Observateur } from "ouca-common/observateur.object";
+import { PostResponse } from "ouca-common/post-response.object";
 import { Sexe } from "ouca-common/sexe.object";
 import { combineLatest, Observable, ReplaySubject, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { UICommune } from "../models/commune.model";
 import { UIEspece } from "../models/espece.model";
 import { UILieudit } from "../models/lieudit.model";
@@ -330,41 +331,6 @@ export class EntitiesStoreService {
     return this.meteos$.asObservable();
   };
 
-  public getEntities$ = <T extends EntiteSimple>(
-    entityName: string
-  ): Observable<any[]> => {
-    switch (entityName) {
-      case "observateur":
-        return this.getObservateurs$();
-      case "departement":
-        return this.getDepartements$();
-      case "commune":
-        return this.getCommunes$();
-      case "lieudit":
-        return this.getLieuxdits$();
-      case "meteo":
-        return this.getMeteos$();
-      case "classe":
-        return this.getClasses$();
-      case "espece":
-        return this.getEspeces$();
-      case "age":
-        return this.getAges$();
-      case "sexe":
-        return this.getSexes$();
-      case "estimation-nombre":
-        return this.getEstimationNombres$();
-      case "estimation-distance":
-        return this.getEstimationDistances$();
-      case "comportement":
-        return this.getComportements$();
-      case "milieu":
-        return this.getMilieux$();
-      default:
-        break;
-    }
-  };
-
   public getInventaireEntities$ = (): Observable<{
     observateurs: Observateur[];
     lieudits: UILieudit[];
@@ -384,5 +350,27 @@ export class EntitiesStoreService {
     milieux: Milieu[];
   }> => {
     return this.donneeEntities$;
+  };
+
+  public saveEntity = <E extends EntiteSimple>(
+    entity: E,
+    entityName: string,
+    theEntityLabel: string
+  ): Observable<boolean> => {
+    return this.backendApiService.saveEntity(entityName, entity).pipe(
+      tap((response: PostResponse) => {
+        if (response.isSuccess) {
+          this.statusMessageService.showSuccessMessage(
+            theEntityLabel + " a été sauvegardé(e) avec succès."
+          );
+        } else {
+          this.statusMessageService.showErrorMessage(
+            "Une erreur est survenue pendant la sauvegarde.",
+            response.message
+          );
+        }
+      }),
+      map((response: PostResponse) => response.isSuccess)
+    );
   };
 }
