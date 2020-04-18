@@ -1,4 +1,10 @@
-import { Component, Input, SimpleChanges, ViewChild } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  SimpleChanges,
+  ViewChild
+} from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
@@ -8,6 +14,7 @@ import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
   selector: "table-especes-with-nb-donnees",
   styleUrls: ["./table-especes-with-nb-donnees.component.scss"],
   templateUrl: "./table-especes-with-nb-donnees.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableEspecesWithNbDonneesComponent {
   public displayedColumns: string[] = [
@@ -15,7 +22,7 @@ export class TableEspecesWithNbDonneesComponent {
     "code",
     "nomFrancais",
     "nomLatin",
-    "nbDonnees",
+    "nbDonnees"
   ];
 
   @Input() public especesToDisplay: EspeceWithNbDonnees[];

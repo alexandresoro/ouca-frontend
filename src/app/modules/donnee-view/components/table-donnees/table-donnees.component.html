@@ -229,14 +229,7 @@
           *matCellDef="let element"
           [attr.colspan]="displayedColumns.length"
         >
-          <div
-            class="donnee-detail"
-            [@detailExpand]="
-              !!selectedDonnee && element.id === selectedDonnee.id
-                ? 'expanded'
-                : 'collapsed'
-            "
-          >
+          <div class="donnee-detail" [@detailExpand]="getRowState(element)">
             <div class="donnee-details-panel">
               <div>
                 <strong>ID:</strong> {{ element.id }}
@@ -397,6 +390,7 @@
       <!-- LINE FOR A DONNEE -->
       <tr
         mat-row
+        matRipple
         *matRowDef="let row; columns: displayedColumns"
         class="donnee-row"
         [class.selected-row]="!!selectedDonnee && selectedDonnee.id === row.id"

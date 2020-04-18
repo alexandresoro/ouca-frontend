@@ -6,6 +6,7 @@ import {
   trigger
 } from "@angular/animations";
 import {
+  ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges,
@@ -22,7 +23,6 @@ import * as _ from "lodash";
 import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
-import { CreationPageService } from "src/app/services/creation-page.service";
 
 @Component({
   selector: "table-donnees",
@@ -30,14 +30,18 @@ import { CreationPageService } from "src/app/services/creation-page.service";
   templateUrl: "./table-donnees.component.html",
   animations: [
     trigger("detailExpand", [
-      state("collapsed", style({ height: "0px", minHeight: "0" })),
-      state("expanded", style({ height: "*" })),
+      state(
+        "collapsed, void",
+        style({ height: "0px", minHeight: "0", visibility: "hidden" })
+      ),
+      state("expanded", style({ height: "*", visibility: "visible" })),
       transition(
         "expanded <=> collapsed",
         animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
       )
     ])
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableDonneesComponent implements OnChanges, OnInit {
   public COMPORTEMENTS_INDEXES: number[] = [1, 2, 3, 4, 5, 6];
@@ -71,12 +75,9 @@ export class TableDonneesComponent implements OnChanges, OnInit {
 
   public filteringOnGoing: boolean = false;
 
-  public selectedDonnee: FlatDonnee;
+  public selectedDonnee: FlatDonnee | null;
 
-  constructor(
-    private router: Router,
-    private creationPageService: CreationPageService
-  ) {}
+  constructor(private router: Router) {}
 
   private filterData = (data: FlatDonnee, filterValue: string): boolean => {
     const otherData = _.difference(_.keys(data), [
@@ -153,7 +154,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
   }
 
   public onRowClicked = (object: FlatDonnee): void => {
-    if (!!this.selectedDonnee && this.selectedDonnee.id === object.id) {
+    if (this.selectedDonnee?.id === object.id) {
       this.selectedDonnee = null;
     } else {
       this.selectedDonnee = object;
@@ -176,5 +177,9 @@ export class TableDonneesComponent implements OnChanges, OnInit {
       ? flatDonnee.customizedCoordinatesSystem
       : flatDonnee.coordinatesSystem;
     return COORDINATES_SYSTEMS_CONFIG[systemType].unitName;
+  };
+
+  public getRowState = (row: FlatDonnee): string => {
+    return this.selectedDonnee?.id === row.id ? "expanded" : "collapsed";
   };
 }
