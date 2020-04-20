@@ -135,14 +135,6 @@ export class BackendApiService {
     return this.httpGetObserveResponse(entityName + "/" + this.EXPORT);
   }
 
-  public getNextDonnee(id: number): Observable<Donnee> {
-    return this.httpGet(this.DONNEE + this.NEXT_DONNEE + "?id=" + id);
-  }
-
-  public getPreviousDonnee(id: number): Observable<Donnee> {
-    return this.httpGet(this.DONNEE + this.PREVIOUS_DONNEE + "?id=" + id);
-  }
-
   public deleteDonnee(
     donneeId: number,
     inventaireId: number
