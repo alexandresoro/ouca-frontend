@@ -3,17 +3,14 @@
     title="Estimations du nombre"
     createButtonLibelle="Créer une estimation"
     exportButtonLibelle="Exporter les estimations"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <estimation-nombre-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   >
   </estimation-nombre-table>
 </div>

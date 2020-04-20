@@ -3,16 +3,13 @@
     title="Âges"
     createButtonLibelle="Créer un âge"
     exportButtonLibelle="Exporter les âges"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <age-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   ></age-table>
 </div>

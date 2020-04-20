@@ -8,14 +8,11 @@ export abstract class EntiteAvecLibelleEtCodeComponent<
 > extends EntiteSimpleComponent<T> {
   public ngOnInit(): void {
     super.ngOnInit();
-    this.form = new FormGroup(
-      {
-        id: new FormControl("", []),
-        code: new FormControl("", [Validators.required]),
-        libelle: new FormControl("", [Validators.required])
-      },
-      [this.libelleValidator, this.codeValidator]
-    );
+    this.form = new FormGroup({
+      id: new FormControl("", []),
+      code: new FormControl("", [Validators.required]),
+      libelle: new FormControl("", [Validators.required])
+    });
   }
 
   public getFormType(): any {

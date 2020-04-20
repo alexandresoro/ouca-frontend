@@ -3,17 +3,14 @@
     title="Météos"
     createButtonLibelle="Créer une météo"
     exportButtonLibelle="Exporter les météos"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <meteo-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   >
   </meteo-table>
 </div>

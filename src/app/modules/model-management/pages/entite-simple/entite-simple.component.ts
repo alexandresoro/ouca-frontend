@@ -1,11 +1,13 @@
 import { OnInit } from "@angular/core";
-import { FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { FormGroup } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { Observable } from "rxjs";
+import { ConfirmationDialogData } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog-data.object";
+import { ConfirmationDialogComponent } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog.component";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
-import { FormValidatorHelper } from "../../../shared/helpers/form-validator.helper";
-import { ListHelper } from "../../../shared/helpers/list-helper";
 import { EntityModeHelper } from "../../helpers/entity-mode.helper";
 
 export abstract class EntiteSimpleComponent<T extends EntiteSimple>
@@ -28,13 +30,14 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple>
   public entityModeHelper = EntityModeHelper;
 
   constructor(
+    private dialog: MatDialog,
     protected entitiesStoreService: EntitiesStoreService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private router: Router
   ) {}
 
   public ngOnInit(): void {
     this.entities$ = this.getEntities$();
-    this.switchToViewAllMode();
   }
 
   abstract getEntities$(): Observable<T[]>;
@@ -47,150 +50,45 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple>
 
   abstract getTheEntityLabel(uppercase?: boolean): string;
 
-  public getNewObject(): T {
-    return {} as T;
-  }
-
-  abstract getFormType(): any;
+  abstract getDeleteMessage(entity: T): string;
 
   public newObject(): void {
-    this.switchToCreationMode();
-  }
-
-  public deleteObject(object: T): void {
-    this.switchToRemoveMode(object);
-  }
-
-  public confirmObjectRemoval(isConfirmed: boolean): void {
-    if (isConfirmed && this.objectToRemove?.id) {
-      this.entitiesStoreService
-        .deleteEntity(
-          this.objectToRemove.id,
-          this.getEntityName(),
-          this.getTheEntityLabel(true)
-        )
-        .subscribe((isSuccessful) => {
-          if (isSuccessful) {
-            this.updateEntities();
-            this.switchToViewAllMode();
-          }
-        });
-    } else {
-      this.switchToViewAllMode();
-    }
+    this.router.navigate(["/" + this.getEntityName() + "/create"]);
   }
 
   public editObject(object: T): void {
-    this.switchToEditionMode(object);
+    this.router.navigate(["/" + this.getEntityName() + "/edit/" + object?.id]);
   }
 
-  public viewObject(object: T): void {
-    this.switchToViewOneMode(object);
+  public deleteObject(entity: T): void {
+    this.openDeleteConfirmationDialog(entity);
   }
-
-  public viewAll(): void {
-    this.switchToViewAllMode();
-  }
-
-  public saveObject = <E extends EntiteSimple>(entity: E): void => {
-    this.entitiesStoreService
-      .saveEntity(entity, this.getEntityName(), this.getTheEntityLabel(true))
-      .subscribe((isSuccessful) => {
-        if (isSuccessful) {
-          this.updateEntities();
-          this.switchToViewAllMode();
-        }
-      });
-  };
 
   public exportObjects(): void {
     this.exportService.exportEntities(this.getEntityName());
   }
 
-  public cancelEdition(): void {
-    this.switchToViewAllMode();
-  }
+  private openDeleteConfirmationDialog = (entity: T): void => {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: "550px",
+      data: new ConfirmationDialogData(
+        "Confirmation de suppression",
+        this.getDeleteMessage(entity),
+        "Oui, supprimer",
+        "Non, annuler"
+      )
+    });
 
-  public resetForm(): void {
-    if (this.form) {
-      this.form.reset({});
-    }
-  }
-
-  private switchToCreationMode(): void {
-    this.objectToSave = this.getNewObject();
-    this.currentObject = this.getNewObject();
-    EntityModeHelper.switchToCreationMode();
-  }
-
-  private switchToEditionMode(object: T): void {
-    this.objectToSave = object;
-    this.currentObject = object;
-    EntityModeHelper.switchToEditionMode();
-  }
-
-  private switchToViewAllMode(): void {
-    this.resetForm();
-    this.objectToSave = this.getNewObject();
-    this.currentObject = undefined;
-    EntityModeHelper.switchToViewAllMode();
-  }
-
-  private switchToViewOneMode(object: T): void {
-    this.objectToView = object;
-    this.currentObject = object;
-    EntityModeHelper.switchToViewOneMode();
-  }
-
-  private switchToRemoveMode(object: T): void {
-    this.objectToRemove = object;
-    this.currentObject = object;
-    EntityModeHelper.switchToRemoveMode();
-  }
-
-  public libelleValidator: ValidatorFn = (
-    formGroup: FormGroup
-  ): ValidationErrors | null => {
-    const libelle = formGroup.controls.libelle.value;
-    const id = formGroup.controls.id.value;
-
-    const foundEntityByLibelle: T = ListHelper.findEntityInListByStringAttribute(
-      this.objects,
-      "libelle",
-      libelle
-    );
-
-    const valueIsAnExistingEntity: boolean =
-      !!foundEntityByLibelle && id !== foundEntityByLibelle.id;
-
-    return valueIsAnExistingEntity
-      ? FormValidatorHelper.getValidatorResult(
-          "alreadyExistingLibelle",
-          "Il existe déjà " + this.getAnEntityLabel() + " avec ce libellé."
-        )
-      : null;
-  };
-
-  public codeValidator: ValidatorFn = (
-    formGroup: FormGroup
-  ): ValidationErrors | null => {
-    const code = formGroup.controls.code.value;
-    const id = formGroup.controls.id.value;
-
-    const foundEntityByCode: T = ListHelper.findEntityInListByStringAttribute(
-      this.objects,
-      "code",
-      code
-    );
-
-    const valueIsAnExistingEntity: boolean =
-      !!foundEntityByCode && id !== foundEntityByCode.id;
-
-    return valueIsAnExistingEntity
-      ? FormValidatorHelper.getValidatorResult(
-          "alreadyExistingCode",
-          "Il existe déjà " + this.getAnEntityLabel() + " avec ce code."
-        )
-      : null;
+    dialogRef.afterClosed().subscribe((shouldDeleteEntity) => {
+      if (shouldDeleteEntity) {
+        this.entitiesStoreService
+          .deleteEntity(this.objectToRemove.id, this.getEntityName())
+          .subscribe((isSuccessful) => {
+            if (isSuccessful) {
+              this.updateEntities();
+            }
+          });
+      }
+    });
   };
 }

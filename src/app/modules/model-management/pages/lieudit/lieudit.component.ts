@@ -96,7 +96,6 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuditCommon>
         isTransformed: false
       }
     };
-    this.saveObject(lieudit);
   };
 
   public nomValidator: ValidatorFn = (

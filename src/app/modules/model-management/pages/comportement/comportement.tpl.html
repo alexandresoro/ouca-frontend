@@ -3,17 +3,14 @@
     title="Comportements"
     createButtonLibelle="Créer un comportement"
     exportButtonLibelle="Exporter les comportements"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <comportement-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   >
   </comportement-table>
 </div>

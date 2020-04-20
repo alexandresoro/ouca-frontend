@@ -3,17 +3,14 @@
     title="Observateurs"
     createButtonLibelle="Créer un observateur"
     exportButtonLibelle="Exporter les observateurs"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <observateur-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   >
   </observateur-table>
 </div>

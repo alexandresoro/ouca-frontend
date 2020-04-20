@@ -1,8 +1,6 @@
 import { Component } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { Observable } from "rxjs";
-import { EstimationNombreFormComponent } from "../../components/form/estimation-nombre-form/estimation-nombre-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
@@ -11,18 +9,6 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
 export class EstimationNombreComponent extends EntiteSimpleComponent<
   EstimationNombre
 > {
-  public ngOnInit(): void {
-    super.ngOnInit();
-    this.form = new FormGroup(
-      {
-        id: new FormControl("", []),
-        libelle: new FormControl("", [Validators.required]),
-        nonCompte: new FormControl("")
-      },
-      [this.libelleValidator]
-    );
-  }
-
   public getEntities$ = (): Observable<EstimationNombre[]> => {
     return this.entitiesStoreService.getEstimationNombres$();
   };
@@ -30,10 +16,6 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
   public updateEntities = (): void => {
     this.entitiesStoreService.updateEstimationsNombre();
   };
-
-  public getFormType(): any {
-    return EstimationNombreFormComponent;
-  }
 
   getEntityName(): string {
     return "estimation-nombre";

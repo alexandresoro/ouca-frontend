@@ -3,16 +3,13 @@
     title="Classes"
     createButtonLibelle="Créer une classe"
     exportButtonLibelle="Exporter les classes"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <classe-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   ></classe-table>
 </div>

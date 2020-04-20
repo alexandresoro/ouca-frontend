@@ -1,5 +1,4 @@
 import { Component } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Classe } from "ouca-common/classe.object";
 import { Observable } from "rxjs";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
@@ -8,19 +7,6 @@ import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-l
   templateUrl: "./classe.tpl.html"
 })
 export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
-  public ngOnInit(): void {
-    super.ngOnInit();
-    this.form = new FormGroup(
-      {
-        id: new FormControl("", []),
-        libelle: new FormControl("", [Validators.required]),
-        nbDonnees: new FormControl("", []),
-        nbEspeces: new FormControl("", [])
-      },
-      [this.libelleValidator]
-    );
-  }
-
   public getEntities$ = (): Observable<Classe[]> => {
     return this.entitiesStoreService.getClasses$();
   };

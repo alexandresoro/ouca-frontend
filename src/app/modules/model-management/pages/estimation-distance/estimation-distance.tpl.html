@@ -3,16 +3,13 @@
     title="Estimations de la distance"
     createButtonLibelle="Créer une estimation"
     exportButtonLibelle="Exporter les estimations"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <estimation-distance-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   ></estimation-distance-table>
 </div>

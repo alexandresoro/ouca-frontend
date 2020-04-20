@@ -3,17 +3,14 @@
     title="Sexes"
     createButtonLibelle="Créer un sexe"
     exportButtonLibelle="Exporter les sexes"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <sexe-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   >
   </sexe-table>
 </div>

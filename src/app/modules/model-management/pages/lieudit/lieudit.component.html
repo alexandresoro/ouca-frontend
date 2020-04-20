@@ -3,18 +3,15 @@
     title="Lieux-dits"
     createButtonLibelle="Créer un lieu-dit"
     exportButtonLibelle="Exporter les lieux-dits"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   >
   </top-buttons>
 
   <lieudit-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   >
   </lieudit-table>
 </div>

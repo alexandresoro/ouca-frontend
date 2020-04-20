@@ -3,16 +3,13 @@
     title="Espèces"
     createButtonLibelle="Créer une espèce"
     exportButtonLibelle="Exporter les espèces"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <espece-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   ></espece-table>
 </div>

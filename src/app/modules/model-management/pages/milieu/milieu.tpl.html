@@ -3,17 +3,14 @@
     title="Milieux"
     createButtonLibelle="Créer un milieu"
     exportButtonLibelle="Exporter les milieux"
-    [areButtonsDisplayed]="entityModeHelper.isViewAllMode()"
     (onClickNewObject)="newObject()"
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
   <milieu-table
-    *ngIf="entityModeHelper.isViewAllMode()"
     [objects]="entities$ | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
-    (view)="viewObject($event)"
   >
   </milieu-table>
 </div>

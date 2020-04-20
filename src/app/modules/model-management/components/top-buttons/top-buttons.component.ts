@@ -12,8 +12,6 @@ export class TopButtonsComponent {
 
   @Input() public exportButtonLibelle: string = "Exporter";
 
-  @Input() public areButtonsDisplayed: boolean;
-
   @Output() public onClickNewObject = new EventEmitter();
 
   @Output() public onClickExportObjects = new EventEmitter();
