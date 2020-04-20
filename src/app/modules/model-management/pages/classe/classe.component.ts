@@ -34,10 +34,23 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
   }
 
   public getAnEntityLabel(): string {
-    return "une classec";
+    return "une classe";
   }
 
   public getTheEntityLabel(uppercase?: boolean): string {
     return uppercase ? "La classe" : "la classe";
+  }
+
+  public getDeleteMessage(classe: Classe): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer la classe " +
+      classe.libelle +
+      " ? " +
+      "Toutes les espèces (" +
+      classe.nbEspeces +
+      ") et toutes les données (" +
+      classe.nbDonnees +
+      ") avec cette classe seront supprimées."
+    );
   }
 }

@@ -7,6 +7,8 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import * as _ from "lodash";
 import { GPS } from "ouca-common/coordinates-system";
 import { LieuditCommon } from "ouca-common/lieudit-common.model";
@@ -28,9 +30,11 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuditCommon>
   constructor(
     private appConfigurationService: AppConfigurationService,
     entitiesStoreService: EntitiesStoreService,
-    exportService: ExportService
+    exportService: ExportService,
+    router: Router,
+    dialog: MatDialog
   ) {
-    super(entitiesStoreService, exportService);
+    super(dialog, entitiesStoreService, exportService, router);
   }
 
   public ngOnInit(): void {
@@ -49,6 +53,17 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuditCommon>
         latitude: new FormControl()
       },
       [this.nomValidator]
+    );
+  }
+
+  public getDeleteMessage(lieuDit: Lieudit): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer le lieu-dit " +
+      lieuDit.nom +
+      " ? " +
+      "Toutes les données (" +
+      lieuDit.nbDonnees +
+      ") avec ce lieu-dit seront supprimées."
     );
   }
 

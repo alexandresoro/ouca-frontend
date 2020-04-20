@@ -16,33 +16,4 @@
     (view)="viewObject($event)"
   >
   </departement-table>
-
-  <entity-form
-    *ngIf="
-      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
-    "
-    [componentType]="getFormType()"
-    creationTitle="Création d'un département"
-    editionTitle="Édition d'un département"
-    [entityForm]="form"
-    [object]="objectToSave"
-    (confirm)="saveObject($event)"
-    (back)="cancelEdition()"
-  ></entity-form>
-
-  <entity-delete-confirmation
-    *ngIf="entityModeHelper.isRemoveMode()"
-    question="Êtes-vous certain de vouloir supprimer le département ?"
-    details="Toutes les communes ({{
-      currentObject.nbCommunes
-    }}), tous les lieux-dits ({{
-      currentObject.nbLieuxdits
-    }}) et toutes les données ({{
-      currentObject.nbDonnees
-    }}) avec ce département seront supprimés."
-    cancellationLabel="Non, annuler la suppression"
-    confirmationLabel="Oui, supprimer le département"
-    (confirm)="confirmObjectRemoval($event)"
-  >
-  </entity-delete-confirmation>
 </div>

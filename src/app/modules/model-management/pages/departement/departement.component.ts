@@ -74,4 +74,19 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
   public getFormType(): any {
     return DepartementFormComponent;
   }
+
+  public getDeleteMessage(departement: Departement): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer le département " +
+      departement.code +
+      " ? " +
+      "Toutes les communes (" +
+      departement.nbCommunes +
+      "), tous les lieux-dits (" +
+      departement.nbLieuxdits +
+      ") et toutes les données (" +
+      departement.nbDonnees +
+      ") avec ce département seront supprimés."
+    );
+  }
 }

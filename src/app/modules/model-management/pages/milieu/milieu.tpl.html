@@ -16,27 +16,4 @@
     (view)="viewObject($event)"
   >
   </milieu-table>
-
-  <entity-form
-    *ngIf="
-      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
-    "
-    [componentType]="getFormType()"
-    creationTitle="Création d'un milieu"
-    editionTitle="Édition d'un milieu"
-    [entityForm]="form"
-    [object]="objectToSave"
-    (confirm)="saveObject($event)"
-    (back)="cancelEdition()"
-  ></entity-form>
-
-  <entity-delete-confirmation
-    *ngIf="entityModeHelper.isRemoveMode()"
-    question="Êtes-vous certain de vouloir supprimer le milieu ?"
-    details="{{ currentObject.nbDonnees }} données ont ce milieu."
-    cancellationLabel="Non, annuler la suppression"
-    confirmationLabel="Oui, supprimer le milieu"
-    (confirm)="confirmObjectRemoval($event)"
-  >
-  </entity-delete-confirmation>
 </div>

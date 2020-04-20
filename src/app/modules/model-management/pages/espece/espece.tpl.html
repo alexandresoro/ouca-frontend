@@ -15,29 +15,4 @@
     (edit)="editObject($event)"
     (view)="viewObject($event)"
   ></espece-table>
-
-  <entity-form
-    *ngIf="
-      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
-    "
-    [componentType]="getFormType()"
-    creationTitle="Création d'une espèce"
-    editionTitle="Édition d'une espèce"
-    [entityForm]="form"
-    [object]="objectToSave"
-    (confirm)="saveObject($event)"
-    (back)="cancelEdition()"
-  ></entity-form>
-
-  <entity-delete-confirmation
-    *ngIf="entityModeHelper.isRemoveMode()"
-    question="Êtes-vous certain de vouloir supprimer l'espèce ?"
-    details="Toutes les données ({{
-      currentObject.nbDonnees
-    }}) avec cette espèce seront supprimées."
-    cancellationLabel="Non, annuler la suppression"
-    confirmationLabel="Oui, supprimer l'espèce"
-    (confirm)="confirmObjectRemoval($event)"
-  >
-  </entity-delete-confirmation>
 </div>

@@ -30,4 +30,14 @@ export class EstimationDistanceComponent extends EntiteAvecLibelleComponent<
       ? "L'estimation de la distance"
       : "l'estimation de la distance";
   }
+
+  public getDeleteMessage(estimation: EstimationDistance): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer l'estimation de la distance " +
+      estimation.libelle +
+      " ? " +
+      estimation.nbDonnees +
+      " données ont cette estimation de la distance."
+    );
+  }
 }

@@ -15,29 +15,4 @@
     (edit)="editObject($event)"
     (view)="viewObject($event)"
   ></estimation-distance-table>
-
-  <entity-form
-    *ngIf="
-      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
-    "
-    [componentType]="getFormType()"
-    creationTitle="Création d'une estimation de la distance"
-    editionTitle="Édition d'une estimation de la distance"
-    [entityForm]="form"
-    [object]="objectToSave"
-    (confirm)="saveObject($event)"
-    (back)="cancelEdition()"
-  ></entity-form>
-
-  <entity-delete-confirmation
-    *ngIf="entityModeHelper.isRemoveMode()"
-    question="Êtes-vous certain de vouloir supprimer l'estimation de la distance ?"
-    details="{{
-      currentObject.nbDonnees
-    }} données ont cette estimation de la distance."
-    cancellationLabel="Non, annuler la suppression"
-    confirmationLabel="Oui, supprimer l'estimation de la distance"
-    (confirm)="confirmObjectRemoval($event)"
-  >
-  </entity-delete-confirmation>
 </div>

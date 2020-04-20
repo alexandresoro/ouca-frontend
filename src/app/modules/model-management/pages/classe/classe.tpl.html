@@ -15,31 +15,4 @@
     (edit)="editObject($event)"
     (view)="viewObject($event)"
   ></classe-table>
-
-  <entity-form
-    *ngIf="
-      entityModeHelper.isCreationMode() || entityModeHelper.isEditionMode()
-    "
-    [componentType]="getFormType()"
-    creationTitle="Création d'une classe espèce"
-    editionTitle="Édition d'une classe espèce"
-    [entityForm]="form"
-    [object]="objectToSave"
-    (confirm)="saveObject($event)"
-    (back)="cancelEdition()"
-  ></entity-form>
-
-  <entity-delete-confirmation
-    *ngIf="entityModeHelper.isRemoveMode()"
-    question="Êtes-vous certain de vouloir supprimer la classe ?"
-    details="Toutes les espèces ({{
-      currentObject.nbEspeces
-    }}) et toutes les données ({{
-      currentObject.nbDonnees
-    }}) avec cette classe seront supprimées."
-    cancellationLabel="Non, annuler la suppression"
-    confirmationLabel="Oui, supprimer la classe"
-    (confirm)="confirmObjectRemoval($event)"
-  >
-  </entity-delete-confirmation>
 </div>

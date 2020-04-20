@@ -27,4 +27,15 @@ export class ObservateurComponent extends EntiteAvecLibelleComponent<
   public getTheEntityLabel = (uppercase?: boolean): string => {
     return uppercase ? "L'observateur" : "l'observateur";
   };
+
+  public getDeleteMessage(observateur: Observateur): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer l'observateur " +
+      observateur.libelle +
+      " ? " +
+      "Toutes les données (" +
+      observateur.nbDonnees +
+      ") avec cet observateur seront supprimées."
+    );
+  }
 }

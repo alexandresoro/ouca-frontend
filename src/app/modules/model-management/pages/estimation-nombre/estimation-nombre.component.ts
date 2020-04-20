@@ -46,4 +46,15 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
   public getTheEntityLabel(uppercase?: boolean): string {
     return uppercase ? "L'estimation du nombre" : "l'estimation du nombre";
   }
+
+  public getDeleteMessage(estimation: EstimationNombre): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer l'estimation du nombre " +
+      estimation.libelle +
+      " ? " +
+      "Toutes les données (" +
+      estimation.nbDonnees +
+      ") avec cette estimation du nombre seront supprimées."
+    );
+  }
 }

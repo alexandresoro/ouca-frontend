@@ -26,4 +26,15 @@ export class AgeComponent extends EntiteAvecLibelleComponent<Age> {
   public getTheEntityLabel(uppercase?: boolean): string {
     return uppercase ? "L'âge" : "l'âge";
   }
+
+  public getDeleteMessage(age: Age): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer l'âge " +
+      age.libelle +
+      " ? " +
+      "Toutes les données (" +
+      age.nbDonnees +
+      ") avec cet âge seront supprimées."
+    );
+  }
 }

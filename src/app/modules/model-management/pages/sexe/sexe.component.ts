@@ -26,4 +26,15 @@ export class SexeComponent extends EntiteAvecLibelleComponent<Sexe> {
   public getTheEntityLabel(uppercase?: boolean): string {
     return uppercase ? "Le sexe" : "le sexe";
   }
+
+  public getDeleteMessage(sexe: Sexe): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer le sexe " +
+      sexe.libelle +
+      " ? " +
+      "Toutes les données (" +
+      sexe.nbDonnees +
+      ") avec ce sexe seront supprimées."
+    );
+  }
 }

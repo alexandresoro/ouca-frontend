@@ -100,4 +100,15 @@ export class EspeceComponent extends EntiteSimpleComponent<UIEspece> {
   public getFormType(): any {
     return EspeceFormComponent;
   }
+
+  public getDeleteMessage(espece: UIEspece): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer l'espèce " +
+      espece.nomFrancais +
+      " ? " +
+      "Toutes les données (" +
+      espece.nbDonnees +
+      ") avec cette espèce seront supprimées."
+    );
+  }
 }

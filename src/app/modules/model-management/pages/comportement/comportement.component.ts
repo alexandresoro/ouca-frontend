@@ -27,4 +27,14 @@ export class ComportementComponent extends EntiteAvecLibelleEtCodeComponent<
   public getTheEntityLabel(uppercase?: boolean): string {
     return uppercase ? "Le comportement" : "le comportement";
   }
+
+  public getDeleteMessage(comportement: Comportement): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer le comportement " +
+      comportement.libelle +
+      " ? " +
+      comportement.nbDonnees +
+      " données ont ce comportement."
+    );
+  }
 }

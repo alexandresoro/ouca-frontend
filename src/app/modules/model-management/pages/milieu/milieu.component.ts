@@ -26,4 +26,14 @@ export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
   public getTheEntityLabel(uppercase?: boolean): string {
     return uppercase ? "Le milieu" : "le milieu";
   }
+
+  public getDeleteMessage(milieu: Milieu): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer le milieu " +
+      milieu.libelle +
+      " ? " +
+      milieu.nbDonnees +
+      " données ont ce milieu."
+    );
+  }
 }

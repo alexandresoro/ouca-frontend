@@ -42,6 +42,19 @@ export class CommuneComponent extends EntiteSimpleComponent<UICommune> {
     this.entitiesStoreService.updateCommunes();
   };
 
+  public getDeleteMessage(commune: UICommune): string {
+    return (
+      "Êtes-vous certain de vouloir supprimer la commune " +
+      commune.nom +
+      " ? " +
+      "Tous les lieux-dits (" +
+      commune.nbLieuxdits +
+      ") et toutes les données (" +
+      commune.nbDonnees +
+      ") avec cette commune seront supprimés."
+    );
+  }
+
   public codeValidator: ValidatorFn = (
     formGroup: FormGroup
   ): ValidationErrors | null => {
