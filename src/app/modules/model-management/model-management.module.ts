@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "../shared/shared.module";
-import { EntityDeleteConfirmationComponent } from "./components/entity-delete-confirmation/entity-delete-confirmation.component";
 import { CommuneFormComponent } from "./components/form/commune-form/commune-form.component";
 import { DepartementFormComponent } from "./components/form/departement-form/departement-form.component";
 import { EntiteAvecLibelleEtCodeFormComponent } from "./components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
@@ -67,7 +66,6 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     EntityFormComponent,
     EntitySubFormDirective,
     EntitySubFormComponent,
-    EntityDeleteConfirmationComponent,
     EntiteSimpleTableComponent,
     EspeceComponent,
     EspeceFormComponent,
