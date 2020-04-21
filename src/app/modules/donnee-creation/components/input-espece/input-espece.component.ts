@@ -74,6 +74,21 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
       this.resetSelectedEspece();
     });
 
+    if (
+      this.controlGroup.controls.espece &&
+      this.controlGroup.controls.classe
+    ) {
+      this.controlGroup.controls.espece.valueChanges.subscribe(
+        (selectedEspece) => {
+          if (selectedEspece?.id) {
+            this.controlGroup.controls.classe.setValue(selectedEspece.classe, {
+              emitEvent: false
+            });
+          }
+        }
+      );
+    }
+
     this.filteredEspeces$ = combineLatest(
       classeControl.valueChanges,
       this.entitiesStoreService.getEspeces$(),
