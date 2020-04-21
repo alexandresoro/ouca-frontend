@@ -6,8 +6,9 @@ import {
   COORDINATES_SYSTEMS_CONFIG
 } from "ouca-common/coordinates-system";
 import { Observable, ReplaySubject } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { filter, map, tap } from "rxjs/operators";
 import { BackendApiService } from "./backend-api.service";
+import { BackendWsService } from "./backend-ws.service";
 import { StatusMessageService } from "./status-message.service";
 
 @Injectable({
@@ -20,16 +21,21 @@ export class AppConfigurationService {
 
   constructor(
     private backendApiService: BackendApiService,
-    private statusMessageService: StatusMessageService
-  ) {}
-
-  public refreshConfiguration = (): void => {
-    this.backendApiService
-      .getAppConfiguration()
+    private statusMessageService: StatusMessageService,
+    private backendWsService: BackendWsService
+  ) {
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => !!updateContent.configuration),
+        map((updateContent) => {
+          return updateContent.configuration;
+        })
+      )
       .subscribe((appConfiguration) => {
         this.configuration$.next(appConfiguration);
       });
-  };
+  }
 
   public saveAppConfiguration = (
     newAppConfiguration: AppConfiguration
@@ -47,7 +53,6 @@ export class AppConfigurationService {
               "Une erreur est survenue pendant la sauvegarde de la configuration."
             );
           }
-          this.refreshConfiguration();
         })
       );
   };
