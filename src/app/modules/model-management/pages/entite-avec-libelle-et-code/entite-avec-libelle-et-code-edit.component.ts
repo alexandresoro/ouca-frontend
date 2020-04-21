@@ -71,7 +71,7 @@ export abstract class EntiteAvecLibelleEtCodeEditAbstractComponent<
 
       return isAnExistingEntity
         ? {
-            alreadyExistingLibelle: {
+            alreadyExistingCode: {
               message: "Il existe déjà " + anEntityLabel + " avec ce code."
             }
           }
