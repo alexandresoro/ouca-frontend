@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { EntiteAvecLibelleEtCodeComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code.component";
 
 @Component({
-  templateUrl: "./milieu.tpl.html"
+  templateUrl: "./milieu.component.html"
 })
 export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
   public getEntities$ = (): Observable<Milieu[]> => {
@@ -17,14 +17,6 @@ export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
 
   getEntityName(): string {
     return "milieu";
-  }
-
-  public getAnEntityLabel(): string {
-    return "un milieu";
-  }
-
-  public getTheEntityLabel(uppercase?: boolean): string {
-    return uppercase ? "Le milieu" : "le milieu";
   }
 
   public getDeleteMessage(milieu: Milieu): string {

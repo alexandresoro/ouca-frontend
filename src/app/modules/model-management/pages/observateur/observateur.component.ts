@@ -3,7 +3,7 @@ import { Observateur } from "ouca-common/observateur.object";
 import { Observable } from "rxjs";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 @Component({
-  templateUrl: "./observateur.tpl.html"
+  templateUrl: "./observateur.component.html"
 })
 export class ObservateurComponent extends EntiteAvecLibelleComponent<
   Observateur
@@ -18,14 +18,6 @@ export class ObservateurComponent extends EntiteAvecLibelleComponent<
 
   public getEntityName = (): string => {
     return "observateur";
-  };
-
-  public getAnEntityLabel = (): string => {
-    return "un observateur";
-  };
-
-  public getTheEntityLabel = (uppercase?: boolean): string => {
-    return uppercase ? "L'observateur" : "l'observateur";
   };
 
   public getDeleteMessage(observateur: Observateur): string {

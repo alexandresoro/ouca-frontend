@@ -4,7 +4,7 @@ import { UIEspece } from "src/app/models/espece.model";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
-  templateUrl: "./espece.tpl.html"
+  templateUrl: "./espece.component.html"
 })
 export class EspeceComponent extends EntiteSimpleComponent<UIEspece> {
   public getEntities$ = (): Observable<UIEspece[]> => {
@@ -17,14 +17,6 @@ export class EspeceComponent extends EntiteSimpleComponent<UIEspece> {
 
   getEntityName(): string {
     return "espece";
-  }
-
-  public getAnEntityLabel(): string {
-    return "une espèce";
-  }
-
-  public getTheEntityLabel(uppercase?: boolean): string {
-    return uppercase ? "L'espèce" : "l'espèce";
   }
 
   public getDeleteMessage(espece: UIEspece): string {

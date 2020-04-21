@@ -1,11 +1,10 @@
 import { Component } from "@angular/core";
 import { Departement } from "ouca-common/departement.object";
 import { Observable } from "rxjs";
-import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
-  templateUrl: "./departement.tpl.html"
+  templateUrl: "./departement.component.html"
 })
 export class DepartementComponent extends EntiteSimpleComponent<Departement> {
   public getEntities$ = (): Observable<Departement[]> => {
@@ -18,18 +17,6 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
 
   public getEntityName(): string {
     return "departement";
-  }
-
-  public getAnEntityLabel(): string {
-    return "un département";
-  }
-
-  public getTheEntityLabel(uppercase?: boolean): string {
-    return uppercase ? "Le département" : "le département";
-  }
-
-  public getFormType(): any {
-    return DepartementFormComponent;
   }
 
   public getDeleteMessage(departement: Departement): string {

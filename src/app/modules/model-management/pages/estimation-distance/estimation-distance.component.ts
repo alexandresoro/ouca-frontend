@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
 
 @Component({
-  templateUrl: "./estimation-distance.tpl.html"
+  templateUrl: "./estimation-distance.component.html"
 })
 export class EstimationDistanceComponent extends EntiteAvecLibelleComponent<
   EstimationDistance
@@ -19,16 +19,6 @@ export class EstimationDistanceComponent extends EntiteAvecLibelleComponent<
 
   getEntityName(): string {
     return "estimation-distance";
-  }
-
-  public getAnEntityLabel(): string {
-    return "une estimation de la distance";
-  }
-
-  public getTheEntityLabel(uppercase?: boolean): string {
-    return uppercase
-      ? "L'estimation de la distance"
-      : "l'estimation de la distance";
   }
 
   public getDeleteMessage(estimation: EstimationDistance): string {

@@ -46,11 +46,11 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple>
 
   abstract getEntityName(): string;
 
-  abstract getAnEntityLabel(): string;
-
-  abstract getTheEntityLabel(uppercase?: boolean): string;
-
   abstract getDeleteMessage(entity: T): string;
+
+  public exportObjects(): void {
+    this.exportService.exportEntities(this.getEntityName());
+  }
 
   public newObject(): void {
     this.router.navigate(["/" + this.getEntityName() + "/create"]);
@@ -62,10 +62,6 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple>
 
   public deleteObject(entity: T): void {
     this.openDeleteConfirmationDialog(entity);
-  }
-
-  public exportObjects(): void {
-    this.exportService.exportEntities(this.getEntityName());
   }
 
   private openDeleteConfirmationDialog = (entity: T): void => {
@@ -82,7 +78,7 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple>
     dialogRef.afterClosed().subscribe((shouldDeleteEntity) => {
       if (shouldDeleteEntity) {
         this.entitiesStoreService
-          .deleteEntity(this.objectToRemove.id, this.getEntityName())
+          .deleteEntity(entity.id, this.getEntityName())
           .subscribe((isSuccessful) => {
             if (isSuccessful) {
               this.updateEntities();

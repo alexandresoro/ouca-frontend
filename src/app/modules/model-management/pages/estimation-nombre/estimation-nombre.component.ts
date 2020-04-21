@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
-  templateUrl: "./estimation-nombre.tpl.html"
+  templateUrl: "./estimation-nombre.component.html"
 })
 export class EstimationNombreComponent extends EntiteSimpleComponent<
   EstimationNombre
@@ -19,14 +19,6 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
 
   getEntityName(): string {
     return "estimation-nombre";
-  }
-
-  public getAnEntityLabel(): string {
-    return "une estimation du nombre";
-  }
-
-  public getTheEntityLabel(uppercase?: boolean): string {
-    return uppercase ? "L'estimation du nombre" : "l'estimation du nombre";
   }
 
   public getDeleteMessage(estimation: EstimationNombre): string {

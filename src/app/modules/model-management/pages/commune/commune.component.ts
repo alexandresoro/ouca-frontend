@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 import { UICommune } from "src/app/models/commune.model";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 @Component({
-  templateUrl: "./commune.tpl.html"
+  templateUrl: "./commune.component.html"
 })
 export class CommuneComponent extends EntiteSimpleComponent<UICommune> {
   public getEntities$ = (): Observable<UICommune[]> => {
@@ -13,6 +13,10 @@ export class CommuneComponent extends EntiteSimpleComponent<UICommune> {
   public updateEntities = (): void => {
     this.entitiesStoreService.updateCommunes();
   };
+
+  getEntityName(): string {
+    return "commune";
+  }
 
   public getDeleteMessage(commune: UICommune): string {
     return (
@@ -25,17 +29,5 @@ export class CommuneComponent extends EntiteSimpleComponent<UICommune> {
       commune.nbDonnees +
       ") avec cette commune seront supprimés."
     );
-  }
-
-  getEntityName(): string {
-    return "commune";
-  }
-
-  public getAnEntityLabel(): string {
-    return "une commune";
-  }
-
-  public getTheEntityLabel(uppercase?: boolean): string {
-    return uppercase ? "La commune" : "la commune";
   }
 }
