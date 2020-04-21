@@ -1,5 +1,4 @@
 import { Component } from "@angular/core";
-import { first } from "rxjs/operators";
 import { AppConfigurationService } from "./services/app-configuration.service";
 import { BackendWsService } from "./services/backend-ws.service";
 import { EntitiesStoreService } from "./services/entities-store.service";
@@ -17,14 +16,6 @@ export class AppComponent {
   ) {}
 
   ngOnInit(): void {
-    this.backendWsService
-      .getIsWebsocketOpen$()
-      .pipe(first((isOpen) => isOpen))
-      .subscribe(() => {
-        // Request initial configuration
-        this.backendWsService.sendMessage("init");
-      });
-
     this.entitiesStoreService.updateAllEntities();
   }
 }
