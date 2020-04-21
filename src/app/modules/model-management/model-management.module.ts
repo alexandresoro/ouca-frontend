@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "../shared/shared.module";
+import { ChartsComponent } from "./components/charts/charts.component";
 import { CommuneFormComponent } from "./components/form/commune-form/commune-form.component";
 import { DepartementFormComponent } from "./components/form/departement-form/departement-form.component";
 import { EntiteAvecLibelleEtCodeFormComponent } from "./components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
@@ -66,6 +67,7 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     ClasseComponent,
     ClasseEditComponent,
     ClasseTableComponent,
+    ChartsComponent,
     CommuneComponent,
     CommuneFormComponent,
     CommuneEditComponent,

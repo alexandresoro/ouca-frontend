@@ -1,0 +1,45 @@
+<div class="page-container">
+  <h1>{{ (currentEspece$ | async).nomFrancais }}</h1>
+
+  <mat-card>
+    <mat-card-title>
+      <h2>Nombre d'individus par sexe</h2>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-charts-advanced-pie-chart
+        [view]="[1300, 300]"
+        [scheme]=""
+        [results]="specimensBySexe"
+        [gradient]="true"
+        label="Répartition par sexe"
+        legendPosition="below"
+        (select)="onSelect($event)"
+        (activate)="onActivate($event)"
+        (deactivate)="onDeactivate($event)"
+      >
+      </ngx-charts-advanced-pie-chart>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-title>
+      <h2>Nombre d'individus par âge</h2>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-charts-advanced-pie-chart
+        [view]="[1300, 300]"
+        [scheme]=""
+        [results]="specimensByAge"
+        [gradient]="true"
+        label="Répartition par âge"
+        legendPosition="below"
+        (select)="onSelect($event)"
+        (activate)="onActivate($event)"
+        (deactivate)="onDeactivate($event)"
+      >
+      </ngx-charts-advanced-pie-chart>
+    </mat-card-content>
+  </mat-card>
+</div>

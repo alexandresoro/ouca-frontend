@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { ChartsComponent } from "./components/charts/charts.component";
 import { AgeEditComponent } from "./pages/age/age-edit.component";
 import { AgeComponent } from "./pages/age/age.component";
 import { ClasseEditComponent } from "./pages/classe/classe-edit.component";
@@ -135,6 +136,10 @@ const routes: Routes = [
     data: {
       isEditingMode: true
     }
+  },
+  {
+    path: "espece/details/:id",
+    component: ChartsComponent
   },
   {
     path: "estimation-nombre",

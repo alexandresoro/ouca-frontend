@@ -224,4 +224,16 @@ export class BackendApiService {
   public saveDatabase(): Observable<HttpResponse<any>> {
     return this.httpGetObserveResponse(this.DATABASE + this.SAVE);
   }
+
+  public getEspeceDetailsByAge = (
+    especeId: number
+  ): Observable<{ name: string; value: number }[]> => {
+    return this.httpGet("espece/details_by_age?id=" + especeId);
+  };
+
+  public getEspeceDetailsBySexe = (
+    especeId: number
+  ): Observable<{ name: string; value: number }[]> => {
+    return this.httpGet("espece/details_by_sexe?id=" + especeId);
+  };
 }
