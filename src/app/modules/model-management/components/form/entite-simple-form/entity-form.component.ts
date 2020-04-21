@@ -31,8 +31,6 @@ export class EntityFormComponent<T extends EntiteSimple> implements OnInit {
 
   @Input() public editionTitle: string;
 
-  @Input() public object?: T;
-
   @Input() public entityForm: FormGroup;
 
   @Output() public confirm: EventEmitter<EntiteSimple> = new EventEmitter<
@@ -47,11 +45,6 @@ export class EntityFormComponent<T extends EntiteSimple> implements OnInit {
 
   ngOnInit(): void {
     this.loadComponent();
-    if (!!this.object && !!this.object.id) {
-      this.entityForm.patchValue(this.object, {
-        emitEvent: true
-      });
-    }
   }
 
   private loadComponent = (): void => {
@@ -65,7 +58,6 @@ export class EntityFormComponent<T extends EntiteSimple> implements OnInit {
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
     componentRef.instance.entityForm = this.entityForm;
-    componentRef.instance.entity = this.object;
   };
 
   public save = (): void => {
