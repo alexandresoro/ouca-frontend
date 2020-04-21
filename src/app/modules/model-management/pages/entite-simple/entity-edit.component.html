@@ -1,0 +1,13 @@
+<div class="page-container">
+  <h1>{{ getPageTitle() }}</h1>
+
+  <entity-form
+    [componentType]="getFormType()"
+    [isEditionMode]="getIsEditionMode$() | async"
+    [creationTitle]="getCreationTitle()"
+    [editionTitle]="getEditionTitle()"
+    [entityForm]="getForm()"
+    (confirm)="saveEntity($event)"
+    (back)="backToEntityPage()"
+  ></entity-form>
+</div>

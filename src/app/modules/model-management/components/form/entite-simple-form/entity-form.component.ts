@@ -25,11 +25,13 @@ export class EntityFormComponent<T extends EntiteSimple> implements OnInit {
   @ViewChild(EntitySubFormDirective, { static: true })
   entitySubFormDirective: EntitySubFormDirective;
 
+  @Input() public isEditionMode: boolean;
+
   @Input() public creationTitle: string;
 
   @Input() public editionTitle: string;
 
-  @Input() public object: T;
+  @Input() public object?: T;
 
   @Input() public entityForm: FormGroup;
 

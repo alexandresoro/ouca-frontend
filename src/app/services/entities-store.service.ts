@@ -20,6 +20,7 @@ import { map, tap } from "rxjs/operators";
 import { UICommune } from "../models/commune.model";
 import { UIEspece } from "../models/espece.model";
 import { UILieudit } from "../models/lieudit.model";
+import { ENTITIES_PROPERTIES } from "../modules/model-management/models/entities-properties.model";
 import { BackendApiService } from "./backend-api.service";
 import { StatusMessageService } from "./status-message.service";
 
@@ -354,14 +355,16 @@ export class EntitiesStoreService {
 
   public saveEntity = <E extends EntiteSimple>(
     entity: E,
-    entityName: string,
-    theEntityLabel: string
+    entityName: string
   ): Observable<boolean> => {
     return this.backendApiService.saveEntity(entityName, entity).pipe(
       tap((response: PostResponse) => {
         if (response.isSuccess) {
           this.statusMessageService.showSuccessMessage(
-            theEntityLabel + " a été sauvegardé(e) avec succès."
+            ENTITIES_PROPERTIES[entityName].theEntityLabelUppercase +
+              " a été sauvegardé" +
+              (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
+              " avec succès."
           );
         } else {
           this.statusMessageService.showErrorMessage(
@@ -376,14 +379,16 @@ export class EntitiesStoreService {
 
   public deleteEntity = (
     id: number,
-    entityName: string,
-    theEntityLabel: string
+    entityName: string
   ): Observable<boolean> => {
     return this.backendApiService.deleteEntity(entityName, id).pipe(
       tap((response: PostResponse) => {
         if (response.isSuccess) {
           this.statusMessageService.showSuccessMessage(
-            theEntityLabel + " a été supprimé(e) avec succès."
+            ENTITIES_PROPERTIES[entityName].theEntityLabelUppercase +
+              " a été supprimé" +
+              (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
+              " avec succès."
           );
         } else {
           this.statusMessageService.showErrorMessage(

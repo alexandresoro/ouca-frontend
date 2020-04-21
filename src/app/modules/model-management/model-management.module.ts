@@ -30,33 +30,51 @@ import { ObservateurTableComponent } from "./components/table/observateur-table/
 import { SexeTableComponent } from "./components/table/sexe-table/sexe-table.component";
 import { TopButtonsComponent } from "./components/top-buttons/top-buttons.component";
 import { ModelManagementRoutingModule } from "./model-management-routing.module";
+import { AgeEditComponent } from "./pages/age/age-edit.component";
 import { AgeComponent } from "./pages/age/age.component";
+import { ClasseEditComponent } from "./pages/classe/classe-edit.component";
 import { ClasseComponent } from "./pages/classe/classe.component";
+import { CommuneEditComponent } from "./pages/commune/commune-edit.component";
 import { CommuneComponent } from "./pages/commune/commune.component";
+import { ComportementEditComponent } from "./pages/comportement/comportement-edit.component";
 import { ComportementComponent } from "./pages/comportement/comportement.component";
+import { DepartementEditComponent } from "./pages/departement/departement-edit.component";
 import { DepartementComponent } from "./pages/departement/departement.component";
+import { EspeceEditComponent } from "./pages/espece/espece-edit.component";
 import { EspeceComponent } from "./pages/espece/espece.component";
+import { EstimationDistanceEditComponent } from "./pages/estimation-distance/estimation-distance-edit.component";
 import { EstimationDistanceComponent } from "./pages/estimation-distance/estimation-distance.component";
+import { EstimationNombreEditComponent } from "./pages/estimation-nombre/estimation-nombre-edit.component";
 import { EstimationNombreComponent } from "./pages/estimation-nombre/estimation-nombre.component";
+import { LieuDitEditComponent } from "./pages/lieudit/lieu-dit-edit.component";
 import { LieuditComponent } from "./pages/lieudit/lieudit.component";
+import { MeteoEditComponent } from "./pages/meteo/meteo-edit.component";
 import { MeteoComponent } from "./pages/meteo/meteo.component";
+import { MilieuEditComponent } from "./pages/milieu/milieu-edit.component";
 import { MilieuComponent } from "./pages/milieu/milieu.component";
+import { ObservateurEditComponent } from "./pages/observateur/observateur-edit.component";
 import { ObservateurComponent } from "./pages/observateur/observateur.component";
+import { SexeEditComponent } from "./pages/sexe/sexe-edit.component";
 import { SexeComponent } from "./pages/sexe/sexe.component";
 
 @NgModule({
   imports: [SharedModule, ModelManagementRoutingModule],
   declarations: [
     AgeComponent,
+    AgeEditComponent,
     AgeTableComponent,
     ClasseComponent,
+    ClasseEditComponent,
     ClasseTableComponent,
     CommuneComponent,
     CommuneFormComponent,
+    CommuneEditComponent,
     CommuneTableComponent,
     ComportementComponent,
+    ComportementEditComponent,
     ComportementTableComponent,
     DepartementComponent,
+    DepartementEditComponent,
     DepartementFormComponent,
     DepartementTableComponent,
     EntiteAvecLibelleFormComponent,
@@ -68,23 +86,31 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     EntitySubFormComponent,
     EntiteSimpleTableComponent,
     EspeceComponent,
+    EspeceEditComponent,
     EspeceFormComponent,
     EspeceTableComponent,
     EstimationDistanceComponent,
+    EstimationDistanceEditComponent,
     EstimationDistanceTableComponent,
     EstimationNombreComponent,
+    EstimationNombreEditComponent,
     EstimationNombreFormComponent,
     EstimationNombreTableComponent,
     LieuditComponent,
+    LieuDitEditComponent,
     LieuditFormComponent,
     LieuditTableComponent,
     MeteoComponent,
+    MeteoEditComponent,
     MeteoTableComponent,
     MilieuComponent,
+    MilieuEditComponent,
     MilieuTableComponent,
     ObservateurComponent,
+    ObservateurEditComponent,
     ObservateurTableComponent,
     SexeComponent,
+    SexeEditComponent,
     SexeTableComponent,
     TableButtonsComponent,
     TableTopbarComponent,
