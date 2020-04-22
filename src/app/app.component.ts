@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { AppConfigurationService } from "./services/app-configuration.service";
+import { INIT } from "ouca-common/websocket/websocket-request-message.model";
 import { BackendWsService } from "./services/backend-ws.service";
 import { EntitiesStoreService } from "./services/entities-store.service";
 
@@ -10,12 +10,12 @@ import { EntitiesStoreService } from "./services/entities-store.service";
 })
 export class AppComponent {
   constructor(
-    private appConfigurationService: AppConfigurationService,
     private entitiesStoreService: EntitiesStoreService,
     private backendWsService: BackendWsService
   ) {}
 
   ngOnInit(): void {
+    this.backendWsService.sendMessage(INIT);
     this.entitiesStoreService.updateAllEntities();
   }
 }

@@ -43,4 +43,11 @@ export class BackendWsService {
       })
     );
   };
+
+  public sendMessage = (message: string): void => {
+    this.websocket$.next({
+      type: null,
+      content: message
+    });
+  };
 }
