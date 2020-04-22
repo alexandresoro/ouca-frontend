@@ -16,12 +16,13 @@ import { Observateur } from "ouca-common/observateur.object";
 import { PostResponse } from "ouca-common/post-response.object";
 import { Sexe } from "ouca-common/sexe.object";
 import { combineLatest, Observable, ReplaySubject, Subject } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { filter, map, tap } from "rxjs/operators";
 import { UICommune } from "../models/commune.model";
 import { UIEspece } from "../models/espece.model";
 import { UILieudit } from "../models/lieudit.model";
 import { ENTITIES_PROPERTIES } from "../modules/model-management/models/entities-properties.model";
 import { BackendApiService } from "./backend-api.service";
+import { BackendWsService } from "./backend-ws.service";
 import { StatusMessageService } from "./status-message.service";
 
 @Injectable({
@@ -97,8 +98,22 @@ export class EntitiesStoreService {
 
   constructor(
     private backendApiService: BackendApiService,
+    private backendWsService: BackendWsService,
+
     private statusMessageService: StatusMessageService
   ) {
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => !!(updateContent as any).observateurs),
+        map((updateContent) => {
+          return (updateContent as any).observateurs;
+        })
+      )
+      .subscribe((observateurs) => {
+        this.observateurs$.next(observateurs);
+      });
+
     this.communes$ = combineLatest(this.communesFlat$, this.departements$).pipe(
       map(([communes, departements]) => {
         return _.map(communes, (commune) => {
@@ -196,7 +211,6 @@ export class EntitiesStoreService {
   }
 
   public updateAllEntities = (): void => {
-    this.updateObservateurs();
     this.updateCommunes();
     this.updateDepartements();
     this.updateLieuxDits();
