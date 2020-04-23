@@ -10,7 +10,6 @@ export class InputCommentaireComponent {
   @Input() public control: FormControl;
 
   public commentaireKeyPress(event: KeyboardEvent): void {
-    const pattern = new RegExp(";");
     const inputChar = String.fromCharCode(event.charCode);
     if (inputChar.includes(";")) {
       // invalid character, prevent input

@@ -74,7 +74,7 @@ export class DateFnsDateAdapter extends DateAdapter<Date> {
     return new Date(year, month, date);
   }
 
-  format(date: Date, displayFormat: any): string {
+  format(date: Date, displayFormat: string): string {
     return format(date, displayFormat, {
       locale
     });
@@ -85,7 +85,7 @@ export class DateFnsDateAdapter extends DateAdapter<Date> {
   }
 
   getDateNames(): string[] {
-    return range(1, 31).map(day => String(day));
+    return range(1, 31).map((day) => String(day));
   }
 
   getDayOfWeek(date: Date): number {
@@ -102,7 +102,7 @@ export class DateFnsDateAdapter extends DateAdapter<Date> {
     const formatStr = map[style];
     const date = new Date();
 
-    return range(0, 6).map(month =>
+    return range(0, 6).map((month) =>
       format(setDay(date, month), formatStr, {
         locale
       })
@@ -127,7 +127,7 @@ export class DateFnsDateAdapter extends DateAdapter<Date> {
     const formatStr = map[style];
     const date = new Date();
 
-    return range(0, 11).map(month =>
+    return range(0, 11).map((month) =>
       format(setMonth(date, month), formatStr, {
         locale
       })
@@ -152,7 +152,7 @@ export class DateFnsDateAdapter extends DateAdapter<Date> {
     return new Date(NaN);
   }
 
-  isDateInstance(obj: any): boolean {
+  isDateInstance(obj: unknown): boolean {
     return obj instanceof Date;
   }
 
@@ -160,7 +160,7 @@ export class DateFnsDateAdapter extends DateAdapter<Date> {
     return date instanceof Date && !isNaN(date.getTime());
   }
 
-  parse(value: any, parseFormat: string[]): Date | null {
+  parse(value: string, parseFormat: string[]): Date | null {
     for (const format of parseFormat) {
       const parsedDate = parse(value, format, new Date(), {
         locale

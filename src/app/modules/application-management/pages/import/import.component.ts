@@ -18,8 +18,8 @@ export class ImportComponent {
     private statusMessageService: StatusMessageService
   ) {}
 
-  public setFile = (event: any): void => {
-    this.file = event.target.files[0];
+  public setFile = (event: Event): void => {
+    this.file = (event.target as HTMLInputElement & EventTarget).files[0];
   };
 
   public onImportClicked = (entityName: string): void => {

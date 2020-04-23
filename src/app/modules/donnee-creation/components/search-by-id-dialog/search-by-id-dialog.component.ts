@@ -10,7 +10,7 @@ export class SearchByIdDialogComponent {
 
   constructor(public dialogRef: MatDialogRef<SearchByIdDialogComponent>) {}
 
-  closeDialog() {
+  closeDialog(): void {
     this.dialogRef.close();
   }
 }

@@ -15,7 +15,7 @@ export class StatusMessageService {
   private showStatusMessage = (
     message: string,
     severity: StatusMessageSeverity,
-    error?: any
+    error?: unknown
   ): void => {
     this.snackbar.openFromComponent(StatusMessageComponent, {
       data: {
@@ -29,7 +29,7 @@ export class StatusMessageService {
     } as MatSnackBarConfig<StatusMessageParameters>);
   };
 
-  public showErrorMessage = (message: string, error?: any): void => {
+  public showErrorMessage = (message: string, error?: unknown): void => {
     this.showStatusMessage(message, StatusMessageSeverity.ERROR, error);
     console.error(message, error);
   };

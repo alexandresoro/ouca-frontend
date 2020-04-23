@@ -1,11 +1,5 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { Injectable } from "@angular/core";
-import {
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators
-} from "@angular/forms";
+import { FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 import { Age } from "ouca-common/age.object";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { Classe } from "ouca-common/classe.object";

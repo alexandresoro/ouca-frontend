@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { Component, OnInit } from "@angular/core";
 import { LieuditCommon } from "ouca-common/lieudit-common.model";
 import { Lieudit } from "ouca-common/lieudit.model";

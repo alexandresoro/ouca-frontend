@@ -7,7 +7,6 @@ import { DonneesFilter } from "ouca-common/donnees-filter.object";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { Inventaire } from "ouca-common/inventaire.object";
-import { Lieudit } from "ouca-common/lieudit.model";
 import { PostResponse } from "ouca-common/post-response.object";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
@@ -23,20 +22,15 @@ export class BackendApiService {
   private DONNEE: string = "donnee/";
   private EXPORT: string = "export";
   private FIND: string = "find";
-  private FIND_ID: string = "find_id";
   private FIND_WITH_CONTEXT: string = "find_with_context";
 
   private IMPORT: string = "import";
   private INVENTAIRE: string = "inventaire/";
-  private LIEUDIT: string = "lieudit/";
-  private NEXT_DONNEE: string = "next_donnee";
   private NEXT_REGROUPEMENT: string = "next_regroupement";
-  private PREVIOUS_DONNEE: string = "previous_donnee";
   private UPDATE: string = "update";
   private SAVE: string = "save";
   private LAST: string = "last";
   private SEARCH: string = "search";
-  private SEARCH_BY_COMMUNE: string = "search_by_commune/";
 
   private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
 
@@ -106,10 +100,6 @@ export class BackendApiService {
     );
   }
 
-  getAppConfiguration = (): Observable<AppConfiguration> => {
-    return this.httpGet(this.CONFIGURATION + this.ALL);
-  };
-
   public saveAppConfiguration = (
     appConfigurationToSave: AppConfiguration
   ): Observable<boolean> => {
@@ -163,10 +153,6 @@ export class BackendApiService {
     return this.httpGet(this.DONNEE + this.NEXT_REGROUPEMENT);
   }
 
-  public getLieuxditsByCommuneId(idCommune: number): Observable<Lieudit[]> {
-    return this.httpGet(this.LIEUDIT + this.SEARCH_BY_COMMUNE + idCommune);
-  }
-
   public saveDonnee(donneeToSave: Donnee): Observable<PostResponse> {
     return this.httpPost(this.DONNEE + this.SAVE, donneeToSave);
   }
@@ -179,10 +165,6 @@ export class BackendApiService {
 
   public getInventaireById(id: number): Observable<Inventaire> {
     return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
-  }
-
-  public getInventaireIdById(id: number): Observable<number> {
-    return this.httpGet(this.INVENTAIRE + this.FIND_ID + "?id=" + id);
   }
 
   public saveEntity<T extends EntiteSimple>(
@@ -203,10 +185,6 @@ export class BackendApiService {
     entityName: string
   ): Observable<T[]> {
     return this.httpGet(entityName + "/" + this.ALL);
-  }
-
-  public exportAllEntities(entityName: string): Observable<any[]> {
-    return this.httpGet(entityName + "/" + this.EXPORT);
   }
 
   public getDonneesByCustomizedFilters(

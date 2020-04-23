@@ -19,7 +19,12 @@
       }
     ],
     "@typescript-eslint/prefer-for-of": "error",
-    "@typescript-eslint/unbound-method": "warn",
+    "@typescript-eslint/unbound-method": [
+      "error",
+      {
+        "ignoreStatic": true
+      }
+    ],
     "no-useless-escape": "warn"
   }
 }

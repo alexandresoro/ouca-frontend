@@ -14,7 +14,7 @@ export class InventaireHelper {
   ): boolean => {
     return (
       !_.isEqual(firstNumber, secondNumber) &&
-      _.some([firstNumber, secondNumber], _.isNumber)
+      _.some([firstNumber, secondNumber], (number) => _.isNumber(number))
     );
   };
 
