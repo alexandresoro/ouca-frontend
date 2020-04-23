@@ -43,10 +43,6 @@ export class EstimationNombreEditComponent
     return this.entitiesStoreService.getEstimationNombres$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateEstimationsNombre();
-  };
-
   public getFormType(): any {
     return EstimationNombreFormComponent;
   }

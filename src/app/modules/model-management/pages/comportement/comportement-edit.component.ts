@@ -33,10 +33,6 @@ export class ComportementEditComponent
     return this.entitiesStoreService.getComportements$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateComportements();
-  };
-
   public getPageTitle = (): string => {
     return "Comportements";
   };

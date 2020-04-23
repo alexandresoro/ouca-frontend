@@ -72,10 +72,6 @@ export class EspeceEditComponent
     return this.entitiesStoreService.getEspeces$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateEspeces();
-  };
-
   private updateEspeceValidators = (
     form: FormGroup,
     especes: UIEspece[]

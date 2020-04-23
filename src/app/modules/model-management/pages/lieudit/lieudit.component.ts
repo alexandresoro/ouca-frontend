@@ -15,10 +15,6 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuditCommon>
     return this.entitiesStoreService.getLieuxdits$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateLieuxDits();
-  };
-
   getEntityName(): string {
     return "lieudit";
   }

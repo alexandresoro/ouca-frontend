@@ -12,10 +12,6 @@ export class ObservateurComponent extends EntiteAvecLibelleComponent<
     return this.entitiesStoreService.getObservateurs$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateObservateurs();
-  };
-
   public getEntityName = (): string => {
     return "observateur";
   };

@@ -42,8 +42,6 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple>
 
   abstract getEntities$(): Observable<T[]>;
 
-  abstract updateEntities(): void;
-
   abstract getEntityName(): string;
 
   abstract getDeleteMessage(entity: T): string;
@@ -79,11 +77,7 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple>
       if (shouldDeleteEntity) {
         this.entitiesStoreService
           .deleteEntity(entity.id, this.getEntityName())
-          .subscribe((isSuccessful) => {
-            if (isSuccessful) {
-              this.updateEntities();
-            }
-          });
+          .subscribe();
       }
     });
   };

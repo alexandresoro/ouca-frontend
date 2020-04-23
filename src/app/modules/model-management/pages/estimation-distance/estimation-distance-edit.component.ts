@@ -33,10 +33,6 @@ export class EstimationDistanceEditComponent
     return this.entitiesStoreService.getEstimationDistances$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateEstimationsDistance();
-  };
-
   public getPageTitle = (): string => {
     return "Estimations de la distance";
   };

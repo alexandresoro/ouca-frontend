@@ -67,7 +67,6 @@ export abstract class EntiteSimpleEditAbstractComponent<
       .saveEntity(entity, entityName)
       .subscribe((isSuccessful) => {
         if (isSuccessful) {
-          this.updateEntities();
           this.backToEntityPage();
         }
       });
@@ -80,8 +79,6 @@ export abstract class EntiteSimpleEditAbstractComponent<
   abstract getEntityName(): string;
 
   abstract getEntities$(): Observable<T[]>;
-
-  abstract updateEntities(): void;
 
   protected getFormValue(entity: T): any {
     return entity;

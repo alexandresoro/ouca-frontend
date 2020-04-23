@@ -33,10 +33,6 @@ export class ClasseEditComponent
     return this.entitiesStoreService.getClasses$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateClasses();
-  };
-
   public getPageTitle = (): string => {
     return "Classes espèces";
   };

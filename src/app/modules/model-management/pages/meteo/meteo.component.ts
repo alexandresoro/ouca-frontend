@@ -11,10 +11,6 @@ export class MeteoComponent extends EntiteAvecLibelleComponent<Meteo> {
     return this.entitiesStoreService.getMeteos$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateMeteos();
-  };
-
   getEntityName(): string {
     return "meteo";
   }

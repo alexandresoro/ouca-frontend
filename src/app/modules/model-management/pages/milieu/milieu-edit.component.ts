@@ -33,10 +33,6 @@ export class MilieuEditComponent
     return this.entitiesStoreService.getMilieux$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateMilieux();
-  };
-
   public getPageTitle = (): string => {
     return "Milieux";
   };

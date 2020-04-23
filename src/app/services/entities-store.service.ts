@@ -15,7 +15,7 @@ import { Milieu } from "ouca-common/milieu.object";
 import { Observateur } from "ouca-common/observateur.object";
 import { PostResponse } from "ouca-common/post-response.object";
 import { Sexe } from "ouca-common/sexe.object";
-import { combineLatest, Observable, ReplaySubject, Subject } from "rxjs";
+import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { UICommune } from "../models/commune.model";
 import { UIEspece } from "../models/espece.model";
@@ -105,13 +105,157 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => !!(updateContent as any).observateurs),
+        filter((updateContent) => _.has(updateContent, "observateurs")),
         map((updateContent) => {
-          return (updateContent as any).observateurs;
+          return updateContent.observateurs;
         })
       )
       .subscribe((observateurs) => {
         this.observateurs$.next(observateurs);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "lieuxdits")),
+        map((updateContent) => {
+          return updateContent.lieuxdits;
+        })
+      )
+      .subscribe((lieuxdits) => {
+        this.lieuxditsFlat$.next(lieuxdits);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "communes")),
+        map((updateContent) => {
+          return updateContent.communes;
+        })
+      )
+      .subscribe((communes) => {
+        this.communesFlat$.next(communes);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "departements")),
+        map((updateContent) => {
+          return updateContent.departements;
+        })
+      )
+      .subscribe((departements) => {
+        this.departements$.next(departements);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "classes")),
+        map((updateContent) => {
+          return updateContent.classes;
+        })
+      )
+      .subscribe((classes) => {
+        this.classes$.next(classes);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "especes")),
+        map((updateContent) => {
+          return updateContent.especes;
+        })
+      )
+      .subscribe((especes) => {
+        this.especesFlat$.next(especes);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "sexes")),
+        map((updateContent) => {
+          return updateContent.sexes;
+        })
+      )
+      .subscribe((sexes) => {
+        this.sexes$.next(sexes);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "ages")),
+        map((updateContent) => {
+          return updateContent.ages;
+        })
+      )
+      .subscribe((ages) => {
+        this.ages$.next(ages);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "estimationsDistance")),
+        map((updateContent) => {
+          return updateContent.estimationsDistance;
+        })
+      )
+      .subscribe((estimationsDistance) => {
+        this.estimationDistances$.next(estimationsDistance);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "estimationsNombre")),
+        map((updateContent) => {
+          return updateContent.estimationsNombre;
+        })
+      )
+      .subscribe((estimationsNombre) => {
+        this.estimationNombres$.next(estimationsNombre);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "comportements")),
+        map((updateContent) => {
+          return updateContent.comportements;
+        })
+      )
+      .subscribe((comportements) => {
+        this.comportements$.next(comportements);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "milieux")),
+        map((updateContent) => {
+          return updateContent.milieux;
+        })
+      )
+      .subscribe((milieux) => {
+        this.milieux$.next(milieux);
+      });
+
+    this.backendWsService
+      .getUpdateMessageContent$()
+      .pipe(
+        filter((updateContent) => _.has(updateContent, "meteos")),
+        map((updateContent) => {
+          return updateContent.meteos;
+        })
+      )
+      .subscribe((meteos) => {
+        this.meteos$.next(meteos);
       });
 
     this.communes$ = combineLatest(this.communesFlat$, this.departements$).pipe(
@@ -209,90 +353,6 @@ export class EntitiesStoreService {
       )
     );
   }
-
-  public updateAllEntities = (): void => {
-    this.updateCommunes();
-    this.updateDepartements();
-    this.updateLieuxDits();
-    this.updateClasses();
-    this.updateEspeces();
-    this.updateSexes();
-    this.updateAges();
-    this.updateEstimationsNombre();
-    this.updateEstimationsDistance();
-    this.updateComportements();
-    this.updateMilieux();
-    this.updateMeteos();
-  };
-
-  public updateObservateurs = (): void => {
-    this.updateEntities("observateur", this.observateurs$);
-  };
-
-  public updateDepartements = (): void => {
-    this.updateEntities("departement", this.departements$);
-  };
-
-  public updateCommunes = (): void => {
-    this.updateEntities("commune", this.communesFlat$);
-  };
-
-  public updateLieuxDits = (): void => {
-    this.updateEntities("lieudit", this.lieuxditsFlat$);
-  };
-
-  public updateMeteos = (): void => {
-    this.updateEntities("meteo", this.meteos$);
-  };
-
-  public updateClasses = (): void => {
-    this.updateEntities("classe", this.classes$);
-  };
-
-  public updateEspeces = (): void => {
-    this.updateEntities("espece", this.especesFlat$);
-  };
-
-  public updateSexes = (): void => {
-    this.updateEntities("sexe", this.sexes$);
-  };
-
-  public updateAges = (): void => {
-    this.updateEntities("age", this.ages$);
-  };
-
-  public updateEstimationsNombre = (): void => {
-    this.updateEntities("estimation-nombre", this.estimationNombres$);
-  };
-
-  public updateEstimationsDistance = (): void => {
-    this.updateEntities("estimation-distance", this.estimationDistances$);
-  };
-
-  public updateComportements = (): void => {
-    this.updateEntities("comportement", this.comportements$);
-  };
-
-  public updateMilieux = (): void => {
-    this.updateEntities("milieu", this.milieux$);
-  };
-
-  private updateEntities = <T extends EntiteSimple>(
-    entityName: string,
-    observableToUpdate: Subject<T[]>
-  ): void => {
-    this.backendApiService
-      .getAllEntities<T>(entityName)
-      .subscribe((entities) => {
-        // console.log("Entités %s", entityName, entities);
-        if (!entities) {
-          this.statusMessageService.showErrorMessage(
-            "Impossible de charger le contenu des entités " + entityName
-          );
-        }
-        observableToUpdate.next(entities ?? []);
-      });
-  };
 
   public getObservateurs$ = (): Observable<Observateur[]> => {
     return this.observateurs$.asObservable();

@@ -11,10 +11,6 @@ export class EspeceComponent extends EntiteSimpleComponent<UIEspece> {
     return this.entitiesStoreService.getEspeces$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateEspeces();
-  };
-
   getEntityName(): string {
     return "espece";
   }

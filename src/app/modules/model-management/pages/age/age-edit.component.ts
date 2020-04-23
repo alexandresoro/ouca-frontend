@@ -33,10 +33,6 @@ export class AgeEditComponent
     return this.entitiesStoreService.getAges$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateAges();
-  };
-
   public getPageTitle = (): string => {
     return "Âges";
   };

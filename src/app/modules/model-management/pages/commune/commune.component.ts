@@ -10,10 +10,6 @@ export class CommuneComponent extends EntiteSimpleComponent<UICommune> {
     return this.entitiesStoreService.getCommunes$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateCommunes();
-  };
-
   getEntityName(): string {
     return "commune";
   }

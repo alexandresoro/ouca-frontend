@@ -94,10 +94,6 @@ export class LieuDitEditComponent
     return this.entitiesStoreService.getLieuxdits$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateLieuxDits();
-  };
-
   private updateLieuDitValidators = (
     form: FormGroup,
     lieuxDits: UILieudit[]

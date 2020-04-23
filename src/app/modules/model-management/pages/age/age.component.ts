@@ -11,10 +11,6 @@ export class AgeComponent extends EntiteAvecLibelleComponent<Age> {
     return this.entitiesStoreService.getAges$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateAges();
-  };
-
   public getEntityName(): string {
     return "age";
   }

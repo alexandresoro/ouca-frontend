@@ -13,10 +13,6 @@ export class EstimationNombreComponent extends EntiteSimpleComponent<
     return this.entitiesStoreService.getEstimationNombres$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateEstimationsNombre();
-  };
-
   getEntityName(): string {
     return "estimation-nombre";
   }

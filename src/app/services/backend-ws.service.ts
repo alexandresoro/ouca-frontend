@@ -1,5 +1,8 @@
 import { Injectable } from "@angular/core";
-import { UPDATE } from "ouca-common/websocket/websocket-message-type.model";
+import {
+  TEXT,
+  UPDATE
+} from "ouca-common/websocket/websocket-message-type.model";
 import { WebsocketMessage } from "ouca-common/websocket/websocket-message.model";
 import { WebsocketUpdateContent } from "ouca-common/websocket/websocket-update-content.model";
 import { WebsocketUpdateMessage } from "ouca-common/websocket/websocket-update-message";
@@ -46,7 +49,7 @@ export class BackendWsService {
 
   public sendMessage = (message: string): void => {
     this.websocket$.next({
-      type: null,
+      type: TEXT,
       content: message
     });
   };

@@ -11,10 +11,6 @@ export class ClasseComponent extends EntiteAvecLibelleComponent<Classe> {
     return this.entitiesStoreService.getClasses$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateClasses();
-  };
-
   public getEntityName(): string {
     return "classe";
   }

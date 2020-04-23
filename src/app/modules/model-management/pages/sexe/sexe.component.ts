@@ -11,10 +11,6 @@ export class SexeComponent extends EntiteAvecLibelleComponent<Sexe> {
     return this.entitiesStoreService.getSexes$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateSexes();
-  };
-
   getEntityName(): string {
     return "sexe";
   }

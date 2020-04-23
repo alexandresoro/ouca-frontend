@@ -33,10 +33,6 @@ export class MeteoEditComponent
     return this.entitiesStoreService.getMeteos$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateMeteos();
-  };
-
   public getPageTitle = (): string => {
     return "Météos";
   };

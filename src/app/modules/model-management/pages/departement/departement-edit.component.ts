@@ -61,10 +61,6 @@ export class DepartementEditComponent
     return this.entitiesStoreService.getDepartements$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateDepartements();
-  };
-
   private updateDepartementValidators = (
     form: FormGroup,
     departements: Departement[]

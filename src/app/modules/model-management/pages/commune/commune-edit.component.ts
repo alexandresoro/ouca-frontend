@@ -68,10 +68,6 @@ export class CommuneEditComponent
     return this.entitiesStoreService.getCommunes$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateCommunes();
-  };
-
   private updateCommuneValidators = (
     form: FormGroup,
     communes: UICommune[]

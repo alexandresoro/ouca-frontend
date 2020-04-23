@@ -33,10 +33,6 @@ export class ObservateurEditComponent
     return this.entitiesStoreService.getObservateurs$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateObservateurs();
-  };
-
   public getPageTitle = (): string => {
     return "Observateurs";
   };

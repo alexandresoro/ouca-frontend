@@ -11,10 +11,6 @@ export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
     return this.entitiesStoreService.getMilieux$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateMilieux();
-  };
-
   getEntityName(): string {
     return "milieu";
   }

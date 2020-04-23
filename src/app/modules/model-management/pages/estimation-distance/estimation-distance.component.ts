@@ -13,10 +13,6 @@ export class EstimationDistanceComponent extends EntiteAvecLibelleComponent<
     return this.entitiesStoreService.getEstimationDistances$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateEstimationsDistance();
-  };
-
   getEntityName(): string {
     return "estimation-distance";
   }

@@ -16,6 +16,5 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.backendWsService.sendMessage(INIT);
-    this.entitiesStoreService.updateAllEntities();
   }
 }

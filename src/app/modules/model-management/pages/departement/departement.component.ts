@@ -11,10 +11,6 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     return this.entitiesStoreService.getDepartements$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateDepartements();
-  };
-
   public getEntityName(): string {
     return "departement";
   }

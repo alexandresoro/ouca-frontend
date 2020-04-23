@@ -12,10 +12,6 @@ export class ComportementComponent extends EntiteAvecLibelleEtCodeComponent<
     return this.entitiesStoreService.getComportements$();
   };
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateComportements();
-  };
-
   getEntityName(): string {
     return "comportement";
   }

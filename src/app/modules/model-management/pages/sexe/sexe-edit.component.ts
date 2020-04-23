@@ -34,10 +34,6 @@ export class SexeEditComponent
     return this.entitiesStoreService.getSexes$();
   }
 
-  public updateEntities = (): void => {
-    this.entitiesStoreService.updateSexes();
-  };
-
   public getPageTitle = (): string => {
     return "Sexes";
   };
