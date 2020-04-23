@@ -6,12 +6,10 @@
       <h2>Nombre d'individus par sexe</h2>
     </mat-card-title>
 
-    <mat-card-content>
+    <mat-card-content style="height: 300px;">
       <ngx-charts-advanced-pie-chart
-        [view]="[1300, 300]"
-        [scheme]=""
+        [scheme]="colorScheme"
         [results]="specimensBySexe"
-        [gradient]="true"
         label="Répartition par sexe"
         legendPosition="below"
         (select)="onSelect($event)"
@@ -27,12 +25,10 @@
       <h2>Nombre d'individus par âge</h2>
     </mat-card-title>
 
-    <mat-card-content>
+    <mat-card-content style="height: 300px;">
       <ngx-charts-advanced-pie-chart
-        [view]="[1300, 300]"
-        [scheme]=""
+        [scheme]="colorScheme"
         [results]="specimensByAge"
-        [gradient]="true"
         label="Répartition par âge"
         legendPosition="below"
         (select)="onSelect($event)"

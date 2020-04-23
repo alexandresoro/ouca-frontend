@@ -19,6 +19,22 @@ export class ChartsComponent implements OnInit {
 
   public specimensByAge: { name: string; value: number }[];
 
+  colorScheme = {
+    domain: [
+      "#DFF650",
+      "#D8A0FF",
+      "#98E4FF",
+      "#FFFF66",
+      "#FFADD6",
+      "#B0F9FF",
+      "#E5C8FF",
+      "#FFA2A2",
+      "#A6FFD9",
+      "#FFD0B0",
+      "#98E4FF"
+    ]
+  };
+
   constructor(
     private backendApiService: BackendApiService,
     private entitiesStoreService: EntitiesStoreService,
