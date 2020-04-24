@@ -9,6 +9,7 @@ import { set } from "date-fns";
 import * as _ from "lodash";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import {
+  areCoordinatesCustomized,
   CoordinatesSystemType,
   getCoordinates
 } from "ouca-common/coordinates-system";
@@ -285,7 +286,7 @@ export class InventaireFormService {
     };
 
     if (
-      !this.areCoordinatesCustomized(
+      !areCoordinatesCustomized(
         lieudit,
         inventaireAltitude,
         inventaireCoordinates.longitude,
@@ -332,28 +333,6 @@ export class InventaireFormService {
       departement: inventaireFormValue.lieu.departement,
       commune: inventaireFormValue.lieu.commune
     };
-  };
-
-  private areCoordinatesCustomized = (
-    lieudit: Lieudit,
-    altitude: number,
-    longitude: number,
-    latitude: number,
-    system: CoordinatesSystemType
-  ): boolean => {
-    if (lieudit?.id) {
-      const lieuditCoordinates: Coordinates = getCoordinates(lieudit, system);
-
-      if (
-        lieudit.altitude !== altitude ||
-        lieuditCoordinates.longitude !== longitude ||
-        lieuditCoordinates.latitude !== latitude
-      ) {
-        return true;
-      }
-    }
-
-    return false;
   };
 
   /**
