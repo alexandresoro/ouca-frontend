@@ -1,7 +1,7 @@
 import { Component, SimpleChanges } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import * as _ from "lodash";
+import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface EstimationNombreRow {
@@ -44,12 +44,12 @@ export class EstimationNombreTableComponent extends EntiteSimpleTableComponent<
     };
   }
 
-  public onRowEstimationNombreClicked(id: number) {
+  public onRowEstimationNombreClicked(id: number): void {
     if (!!this.selectedObject && this.selectedObject.id === id) {
       this.selectedObject = undefined;
     } else {
       this.selectedObject = this.objects.filter(
-        estimation => estimation.id === id
+        (estimation) => estimation.id === id
       )[0];
     }
   }

@@ -15,7 +15,7 @@ export class MultipleSelectComponent {
   @Input() public placeholder: string;
 
   public getDisplayedValue = (object: EntiteSimple): string => {
-    let displayedValue: string = "";
+    let displayedValue = "";
 
     if (object) {
       displayedValue = object[this.attributesToDisplay[0]];

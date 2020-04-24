@@ -59,7 +59,7 @@ export class InventaireFormService {
         this.observateurValidator()
       ]),
       observateursAssocies: new FormControl("", [this.associesValidator()]),
-      date: new FormControl("", [Validators.required, this.dateValidator()]),
+      date: new FormControl("", [Validators.required]),
       heure: new FormControl("", [this.heureValidator()]),
       duree: new FormControl("", [this.dureeValidator()]),
       lieu: new FormGroup({
@@ -368,13 +368,6 @@ export class InventaireFormService {
    */
   private associesValidator = (): ValidatorFn => {
     return FormValidatorHelper.areExistingEntitiesValidator();
-  };
-
-  /**
-   * The date should be filled and follow the format DD/MM/YYYY
-   */
-  private dateValidator = (): ValidatorFn => {
-    return FormValidatorHelper.emptyValidator();
   };
 
   /**

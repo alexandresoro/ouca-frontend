@@ -30,7 +30,7 @@ export class EntiteSimpleTableComponent<T extends EntiteSimple>
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<unknown> = new MatTableDataSource();
 
   public selectedObject: T;
 
@@ -65,7 +65,7 @@ export class EntiteSimpleTableComponent<T extends EntiteSimple>
     }
   }
 
-  public onRowClicked(object: T) {
+  public onRowClicked(object: T): void {
     if (!!this.selectedObject && this.selectedObject.id === object.id) {
       this.selectedObject = undefined;
     } else {

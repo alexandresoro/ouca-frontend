@@ -71,15 +71,15 @@ export class ChartsComponent implements OnInit {
     });
   }
 
-  onSelect(item: any): void {
+  onSelect(item: unknown): void {
     console.log("Item clicked", JSON.parse(JSON.stringify(item)));
   }
 
-  onActivate(item: any): void {
+  onActivate(item: unknown): void {
     console.log("Activate", JSON.parse(JSON.stringify(item)));
   }
 
-  onDeactivate(item: any): void {
+  onDeactivate(item: unknown): void {
     console.log("Deactivate", JSON.parse(JSON.stringify(item)));
   }
 }

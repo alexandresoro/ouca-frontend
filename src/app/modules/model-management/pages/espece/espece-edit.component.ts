@@ -8,6 +8,8 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Classe } from "ouca-common/classe.object";
+import { Espece } from "ouca-common/espece.model";
 import { Observable } from "rxjs";
 import { UIEspece } from "src/app/models/espece.model";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
@@ -52,7 +54,13 @@ export class EspeceEditComponent
     });
   }
 
-  protected getEntityFromFormValue<Espece>(formValue: any): Espece {
+  protected getEntityFromFormValue(formValue: {
+    id: number;
+    classe: Classe;
+    code: string;
+    nomFrancais: string;
+    nomLatin: string;
+  }): Espece {
     const { classe, ...especeAttributes } = formValue;
     return {
       ...especeAttributes,

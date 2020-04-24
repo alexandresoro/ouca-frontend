@@ -1,10 +1,15 @@
 import { AbstractControl, ValidatorFn } from "@angular/forms";
-import * as _ from "lodash";
 import { TimeHelper } from "./time.helper";
 
 export class FormValidatorHelper {
   public static isAnExistingEntityValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (
+      control: AbstractControl
+    ): {
+      forbiddenValue: {
+        value: unknown;
+      };
+    } | null => {
       const valueIsNotAnExistingEntity: boolean =
         !!control.value && !control.value.id;
       return valueIsNotAnExistingEntity
@@ -14,7 +19,13 @@ export class FormValidatorHelper {
   }
 
   public static areExistingEntitiesValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (
+      control: AbstractControl
+    ): {
+      forbiddenValue: {
+        value: unknown;
+      };
+    } | null => {
       let oneOfTheValueIsNotAnExistingEntity = false;
       for (const value of control.value) {
         if (!!value && !value.id) {
@@ -28,7 +39,13 @@ export class FormValidatorHelper {
   }
 
   public static isAnIntegerValidator(min?: number, max?: number): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (
+      control: AbstractControl
+    ): {
+      forbiddenValue: {
+        value: unknown;
+      };
+    } | null => {
       if (!control.value) {
         return null;
       }
@@ -54,7 +71,13 @@ export class FormValidatorHelper {
   }
 
   public static timeValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (
+      control: AbstractControl
+    ): {
+      forbiddenValue: {
+        value: unknown;
+      };
+    } | null => {
       const value = TimeHelper.getFormattedTime(control.value);
 
       const finalDateRegExp = new RegExp("^[0-9][0-9][:][0-9][0-9]$");
@@ -67,34 +90,11 @@ export class FormValidatorHelper {
     };
   }
 
-  public static emptyValidator(): ValidatorFn {
-    return (): { [key: string]: any } | null => {
-      return null;
-    };
-  }
-
-  public static isExisting(
-    fieldName: string,
-    objects: any[],
-    value: string,
-    id: number
-  ): boolean {
-    return (
-      !!value &&
-      !!_.find(objects, (object: any) => {
-        return (
-          _.deburr(object[fieldName].trim().toLowerCase()) ===
-            _.deburr(value.trim().toLowerCase()) && id !== object.id
-        );
-      })
-    );
-  }
-
   public static getValidatorResult(
     key: string,
     value: string
-  ): { [key: string]: any } | null {
-    const result: { [key: string]: any } = {};
+  ): { [key: string]: { message: string } } | null {
+    const result = {};
     result[key] = {
       message: value
     };

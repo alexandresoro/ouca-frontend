@@ -1,5 +1,10 @@
 import { Injectable } from "@angular/core";
-import { FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import {
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import { Age } from "ouca-common/age.object";
 import { AppConfiguration } from "ouca-common/app-configuration.object";
 import { Classe } from "ouca-common/classe.object";
@@ -67,7 +72,7 @@ export class DonneeFormService {
         milieu3: new FormControl("", [this.milieuValidator()]),
         milieu4: new FormControl("", [this.milieuValidator()])
       }),
-      commentaire: new FormControl("", [this.commentaireValidator()])
+      commentaire: new FormControl("")
     });
 
     form.disable();
@@ -469,9 +474,5 @@ export class DonneeFormService {
 
   private milieuValidator = (): ValidatorFn => {
     return FormValidatorHelper.isAnExistingEntityValidator();
-  };
-
-  private commentaireValidator = (): ValidatorFn => {
-    return FormValidatorHelper.emptyValidator();
   };
 }
