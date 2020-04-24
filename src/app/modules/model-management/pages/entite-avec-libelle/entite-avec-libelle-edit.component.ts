@@ -30,7 +30,7 @@ export abstract class EntiteAvecLibelleEditAbstractComponent<
     });
   }
 
-  public getFormType(): any {
+  public getFormType(): typeof EntiteAvecLibelleFormComponent {
     return EntiteAvecLibelleFormComponent;
   }
 

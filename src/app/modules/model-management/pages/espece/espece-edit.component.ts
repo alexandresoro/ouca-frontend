@@ -60,7 +60,7 @@ export class EspeceEditComponent
     };
   }
 
-  public getFormType(): any {
+  public getFormType(): typeof EspeceFormComponent {
     return EspeceFormComponent;
   }
 

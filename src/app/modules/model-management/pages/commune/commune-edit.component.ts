@@ -56,7 +56,7 @@ export class CommuneEditComponent
     });
   }
 
-  public getFormType(): any {
+  public getFormType(): typeof CommuneFormComponent {
     return CommuneFormComponent;
   }
 

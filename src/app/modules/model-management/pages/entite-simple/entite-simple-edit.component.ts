@@ -59,9 +59,9 @@ export abstract class EntiteSimpleEditAbstractComponent<
     });
   }
 
-  public saveEntity = <E extends EntiteSimple>(formValue: any): void => {
+  public saveEntity = (formValue: unknown): void => {
     const entityName = this.getEntityName();
-    const entity: E = this.getEntityFromFormValue<E>(formValue);
+    const entity: EntiteSimple = this.getEntityFromFormValue(formValue);
 
     this.entitiesStoreService
       .saveEntity(entity, entityName)
@@ -80,7 +80,7 @@ export abstract class EntiteSimpleEditAbstractComponent<
 
   abstract getEntities$(): Observable<T[]>;
 
-  protected getFormValue(entity: T): any {
+  protected getFormValue(entity: T): unknown {
     return entity;
   }
 
@@ -90,11 +90,11 @@ export abstract class EntiteSimpleEditAbstractComponent<
     );
   };
 
-  protected getEntityFromFormValue<E extends EntiteSimple>(formValue: any): E {
-    return formValue as E;
+  protected getEntityFromFormValue(formValue: unknown): EntiteSimple {
+    return formValue as EntiteSimple;
   }
 
-  abstract getFormType(): any;
+  abstract getFormType(): unknown;
 
   abstract createForm(): FormGroup;
 

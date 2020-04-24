@@ -49,7 +49,7 @@ export class DepartementEditComponent
     });
   }
 
-  public getFormType(): any {
+  public getFormType(): typeof DepartementFormComponent {
     return DepartementFormComponent;
   }
 

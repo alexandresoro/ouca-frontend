@@ -31,7 +31,7 @@ export abstract class EntiteAvecLibelleEtCodeEditAbstractComponent<
     });
   }
 
-  public getFormType(): any {
+  public getFormType(): typeof EntiteAvecLibelleEtCodeFormComponent {
     return EntiteAvecLibelleEtCodeFormComponent;
   }
 

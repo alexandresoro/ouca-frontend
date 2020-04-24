@@ -35,6 +35,18 @@ export class EstimationNombreEditComponent
     });
   }
 
+  getEntityFromFormValue(formValue: {
+    id: number;
+    libelle: string;
+    nonCompte: boolean;
+  }): EstimationNombre {
+    const { nonCompte, ...estimationAttributes } = formValue;
+    return {
+      ...estimationAttributes,
+      nonCompte: nonCompte ? true : false
+    };
+  }
+
   public getEntityName = (): string => {
     return "estimation-nombre";
   };
@@ -43,7 +55,7 @@ export class EstimationNombreEditComponent
     return this.entitiesStoreService.getEstimationNombres$();
   }
 
-  public getFormType(): any {
+  public getFormType(): typeof EstimationNombreFormComponent {
     return EstimationNombreFormComponent;
   }
 
