@@ -16,8 +16,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import _ from "lodash";
 import {
   CoordinatesSystem,
-  getCoordinates,
-  GPS
+  CoordinatesSystemType,
+  getCoordinates
 } from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.model";
@@ -142,21 +142,27 @@ export class LieuDitEditComponent
       });
     });
 
-    this.coordinatesSystem$.subscribe((coordinatesSystem) => {
-      // Update the coordinates validators depending on the current coordinates system
-      this.coordinatesBuilderService.updateCoordinatesValidators(
-        coordinatesSystem.code,
-        this.getForm().controls.longitude,
-        this.getForm().controls.latitude
-      );
+    combineLatest(this.coordinatesSystem$, this.getEntityToDisplay$())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([coordinatesSystem, lieuDit]) => {
+        // Update the coordinates validators depending on the current coordinates system
+        this.coordinatesBuilderService.updateCoordinatesValidators(
+          coordinatesSystem.code,
+          this.getForm().controls.longitude,
+          this.getForm().controls.latitude
+        );
 
-      // Set the coordinates
-      // TODO
-      //const coordinates = getCoordinates(lieudit, coordinatesSystem.code);
-      //this.entityForm.controls.longitude.setValue(coordinates?.longitude);
-      //this.entityForm.controls.latitude.setValue(coordinates?.latitude);
-      //this.areCoordinatesTransformed$.next(coordinates.isTransformed);
-    });
+        this.getForm().controls.coordinatesSystem.setValue(
+          coordinatesSystem.code
+        );
+
+        if (lieuDit?.coordinates) {
+          const coordinates = getCoordinates(lieuDit, coordinatesSystem.code);
+          this.getForm().controls.longitude.setValue(coordinates?.longitude);
+          this.getForm().controls.latitude.setValue(coordinates?.latitude);
+          this.areCoordinatesTransformed$.next(coordinates.isTransformed);
+        }
+      });
   }
 
   public createForm(): FormGroup {
@@ -166,6 +172,7 @@ export class LieuDitEditComponent
       communeId: new FormControl("", [Validators.required]),
       nomCommune: new FormControl("", [Validators.required]),
       nom: new FormControl("", [Validators.required]),
+      coordinatesSystem: new FormControl(),
       altitude: new FormControl("", [
         Validators.required,
         this.altitudeNumberValidator()
@@ -186,13 +193,8 @@ export class LieuDitEditComponent
     altitude: number;
     longitude: number;
     latitude: number;
+    coordinatesSystem: CoordinatesSystemType;
   } {
-    // TODO
-    const coordinatesSystemType = GPS;
-    // const coordinatesSystemType: CoordinatesSystemType = this.appConfigurationService.getAppCoordinatesSystemType();
-
-    const coordinates = getCoordinates(lieuDit, coordinatesSystemType);
-
     return {
       id: lieuDit.id,
       departement: lieuDit.commune.departement,
@@ -200,8 +202,9 @@ export class LieuDitEditComponent
       nomCommune: lieuDit.commune.id,
       nom: lieuDit.nom,
       altitude: lieuDit.altitude,
-      longitude: coordinates.longitude,
-      latitude: coordinates.latitude
+      longitude: lieuDit.coordinates.longitude,
+      latitude: lieuDit.coordinates.latitude,
+      coordinatesSystem: lieuDit.coordinates.system
     };
   }
 
@@ -214,10 +217,8 @@ export class LieuDitEditComponent
     altitude: number;
     longitude: number;
     latitude: number;
+    coordinatesSystem: CoordinatesSystemType;
   }): Lieudit {
-    // TODO
-    // const coordinatesSystemType: CoordinatesSystemType = this.appConfigurationService.getAppCoordinatesSystemType();
-    const coordinatesSystemType = GPS;
     const lieuDit: Lieudit = {
       id: formValue?.id ? formValue.id : null,
       communeId: formValue.communeId,
@@ -226,7 +227,7 @@ export class LieuDitEditComponent
       coordinates: {
         longitude: formValue.longitude,
         latitude: formValue.latitude,
-        system: coordinatesSystemType,
+        system: formValue.coordinatesSystem,
         isTransformed: false
       }
     };
