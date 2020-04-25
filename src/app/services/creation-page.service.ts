@@ -245,9 +245,9 @@ export class CreationPageService {
     inventaireForm: FormGroup,
     donneeForm: FormGroup,
     id: number
-  ): void => {
+  ): Observable<boolean> => {
     this.saveDonneeInCache(inventaireForm, donneeForm);
-    this.displayDonneeById(id);
+    return this.displayDonneeById(id);
   };
 
   private displayDonneeById = (id: number): Observable<boolean> => {
