@@ -1,0 +1,234 @@
+<div class="page-container">
+  <h1>Lieux-dits</h1>
+
+  <mat-card>
+    <mat-card-title>
+      <h2 *ngIf="!(getIsEditionMode$() | async)">Création d'un lieu-dit</h2>
+      <h2 *ngIf="getIsEditionMode$() | async">Edition d'un lieu-dit</h2>
+    </mat-card-title>
+
+    <mat-card-content>
+      <form [formGroup]="getForm()" class="entity-form">
+        <!-- ID -->
+        <mat-form-field *ngIf="getIsEditionMode$() | async">
+          <input
+            [formControl]="getForm().controls['id']"
+            id="input-id"
+            matInput
+            name="id"
+            placeholder="ID"
+            readonly
+            type="text"
+          />
+        </mat-form-field>
+
+        <!-- Departement -->
+        <mat-form-field>
+          <mat-select
+            [formControl]="getForm().controls['departement']"
+            id="input-departement"
+            name="departement"
+            placeholder="Département"
+          >
+            <mat-option
+              *ngFor="let departement of departements$ | async"
+              [value]="departement"
+            >
+              {{ departement.code }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="getForm().controls['departement'].hasError('required')"
+          >
+            Le champ "Département" ne peut pas être vide.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Code Commune -->
+        <mat-form-field>
+          <mat-select
+            [formControl]="getForm().controls['communeId']"
+            id="input-code-commune"
+            name="code-commune"
+            placeholder="Code de la commune"
+          >
+            <mat-option
+              *ngFor="let commune of filteredCommunes$ | async"
+              [value]="commune.id"
+            >
+              {{ commune.code }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="getForm().controls['communeId'].hasError('required')"
+          >
+            Le champ "Code de la commune" ne peut pas être vide.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Nom Commune -->
+        <mat-form-field>
+          <mat-select
+            [formControl]="getForm().controls['nomCommune']"
+            id="input-nom-commune"
+            name="nom-commune"
+            placeholder="Nom de la commune"
+          >
+            <mat-option
+              *ngFor="let commune of filteredCommunes$ | async"
+              [value]="commune.id"
+            >
+              {{ commune.nom }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="getForm().controls['nomCommune'].hasError('required')"
+          >
+            Le champ "Nom de la commune" ne peut pas être vide.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Nom lieudit -->
+        <mat-form-field>
+          <input
+            [errorStateMatcher]="lieuditNomErrorStateMatcher"
+            [formControl]="getForm().controls['nom']"
+            id="input-nom"
+            matInput
+            maxlength="150"
+            name="nom"
+            placeholder="Nom du lieu-dit"
+            type="text"
+          />
+
+          <mat-error *ngIf="getForm().controls['nom'].hasError('required')">
+            Le champ "Nom du lieu-dit" ne peut pas être vide.
+          </mat-error>
+          <mat-error *ngIf="getForm().hasError('alreadyExistingNom')">
+            {{ getForm().getError("alreadyExistingNom").message }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Altitude -->
+        <mat-form-field>
+          <input
+            [formControl]="getForm().controls['altitude']"
+            id="input-altitude"
+            matInput
+            min="0"
+            max="65535"
+            name="altitude"
+            placeholder="Altitude en mètres"
+            type="number"
+          />
+
+          <mat-error
+            *ngIf="getForm().controls['altitude'].hasError('required')"
+          >
+            Le champ "Altitude" ne peut pas être vide.
+          </mat-error>
+          <mat-error
+            *ngIf="getForm().controls['altitude'].hasError('forbiddenValue')"
+          >
+            L'altitude doit être un entier compris entre 0 et 65535.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Longitude -->
+        <mat-form-field>
+          <input
+            [formControl]="getForm().controls['longitude']"
+            id="input-longitude"
+            matInput
+            min="{{ (coordinatesSystem$ | async)?.longitudeRange.min }}"
+            max="{{ (coordinatesSystem$ | async)?.longitudeRange.max }}"
+            name="longitude"
+            placeholder="Longitude en {{
+              (coordinatesSystem$ | async)?.unitName
+            }}"
+            type="number"
+          />
+
+          <mat-error
+            *ngIf="getForm().controls['longitude'].hasError('required')"
+          >
+            Le champ "Longitude" ne peut pas être vide.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              getForm().controls['longitude'].hasError('min') ||
+              getForm().controls['longitude'].hasError('max')
+            "
+          >
+            La longitude doit être un nombre compris entre
+            {{ (coordinatesSystem$ | async)?.longitudeRange.min }} et
+            {{ (coordinatesSystem$ | async)?.longitudeRange.max }}.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Latitude -->
+        <mat-form-field>
+          <input
+            [formControl]="getForm().controls['latitude']"
+            id="input-latitude"
+            matInput
+            min="{{ (coordinatesSystem$ | async)?.latitudeRange.min }}"
+            max="{{ (coordinatesSystem$ | async)?.latitudeRange.max }}"
+            name="latitude"
+            placeholder="Latitude en {{
+              (coordinatesSystem$ | async)?.unitName
+            }}"
+            type="number"
+          />
+
+          <mat-error
+            *ngIf="getForm().controls['latitude'].hasError('required')"
+          >
+            Le champ "Latitude" ne peut pas être vide.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              getForm().controls['latitude'].hasError('min') ||
+              getForm().controls['latitude'].hasError('max')
+            "
+          >
+            La latitude doit être un nombre compris entre
+            {{ (coordinatesSystem$ | async)?.latitudeRange.min }} et
+            {{ (coordinatesSystem$ | async)?.latitudeRange.max }}.
+          </mat-error>
+        </mat-form-field>
+
+        <p
+          *ngIf="areCoordinatesTransformed$ | async"
+          class="coordinates-warning"
+        >
+          Attention: les coordonnées de ce lieu-dit ont été converties à partir
+          d'un autre système de coordonnées.
+        </p>
+
+        <div class="cancel-submit-buttons">
+          <button
+            mat-raised-button
+            type="button"
+            color="accent"
+            (click)="backToEntityPage()"
+          >
+            <mat-icon>cancel</mat-icon>
+            Annuler
+          </button>
+          <span class="button-spacer"></span>
+          <button
+            mat-raised-button
+            type="submit"
+            color="primary"
+            [disabled]="!getForm().valid"
+            (click)="saveEntity(getForm().value)"
+          >
+            <mat-icon>save</mat-icon>
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

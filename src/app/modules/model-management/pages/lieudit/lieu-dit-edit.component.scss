@@ -1,0 +1,12 @@
+@use "src/styles/mixins";
+@use "src/styles/variables";
+
+form.entity-form {
+  @include mixins.default-form;
+}
+
+.coordinates-warning {
+  color: variables.$accent-color;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
