@@ -448,11 +448,13 @@ export class CreationComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((donneeId: number) => {
       if (donneeId) {
-        this.creationPageService.displayDonneeByIdAndSaveCurrentCache(
-          this.inventaireForm,
-          this.donneeForm,
-          donneeId
-        );
+        this.creationPageService
+          .displayDonneeByIdAndSaveCurrentCache(
+            this.inventaireForm,
+            this.donneeForm,
+            donneeId
+          )
+          .subscribe();
       }
     });
   };
