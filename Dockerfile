@@ -12,8 +12,6 @@ RUN yarn install --frozen-lockfile
 COPY .eslintrc.json angular.json browserslist tsconfig.app.json tsconfig.json /app/frontend/
 COPY src/ /app/frontend/src
 
-RUN yarn lint
-
 RUN yarn build:prod
 
 # 2. Build the nginx image along with the built project
