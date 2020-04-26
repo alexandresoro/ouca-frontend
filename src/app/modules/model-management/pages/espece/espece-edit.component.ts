@@ -1,5 +1,10 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit
+} from "@angular/core";
 import {
   FormControl,
   FormGroup,
@@ -10,7 +15,8 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { Classe } from "ouca-common/classe.object";
 import { Espece } from "ouca-common/espece.model";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { UIEspece } from "src/app/models/espece.model";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
@@ -18,11 +24,14 @@ import { EspeceFormComponent } from "../../components/form/espece-form/espece-fo
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
 @Component({
-  templateUrl: "../entite-simple/entity-edit.component.html"
+  templateUrl: "../entite-simple/entity-edit.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EspeceEditComponent
   extends EntiteSimpleEditAbstractComponent<UIEspece>
-  implements OnInit {
+  implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject();
+
   constructor(
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
@@ -36,12 +45,19 @@ export class EspeceEditComponent
     this.initialize();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   protected initialize(): void {
     super.initialize();
 
-    this.getEntities$().subscribe((entities) => {
-      this.updateEspeceValidators(this.getForm(), entities);
-    });
+    this.getEntities$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((entities) => {
+        this.updateEspeceValidators(this.getForm(), entities);
+      });
   }
 
   public createForm(): FormGroup {

@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EstimationDistance } from "ouca-common/estimation-distance.object";
 import { Observable } from "rxjs";
@@ -7,7 +7,8 @@ import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
 
 @Component({
-  templateUrl: "../entite-simple/entity-edit.component.html"
+  templateUrl: "../entite-simple/entity-edit.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EstimationDistanceEditComponent
   extends EntiteAvecLibelleEditAbstractComponent<EstimationDistance>

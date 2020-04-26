@@ -1,5 +1,10 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit
+} from "@angular/core";
 import {
   FormControl,
   FormGroup,
@@ -9,18 +14,22 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Departement } from "ouca-common/departement.object";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
 @Component({
-  templateUrl: "../entite-simple/entity-edit.component.html"
+  templateUrl: "../entite-simple/entity-edit.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DepartementEditComponent
   extends EntiteSimpleEditAbstractComponent<Departement>
-  implements OnInit {
+  implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject();
+
   constructor(
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
@@ -34,12 +43,19 @@ export class DepartementEditComponent
     this.initialize();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   protected initialize(): void {
     super.initialize();
 
-    this.getEntities$().subscribe((entities) => {
-      this.updateDepartementValidators(this.getForm(), entities);
-    });
+    this.getEntities$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((entities) => {
+        this.updateDepartementValidators(this.getForm(), entities);
+      });
   }
 
   public createForm(): FormGroup {

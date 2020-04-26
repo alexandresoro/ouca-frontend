@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Milieu } from "ouca-common/milieu.object";
 import { Observable } from "rxjs";
@@ -7,7 +7,8 @@ import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEtCodeEditAbstractComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code-edit.component";
 
 @Component({
-  templateUrl: "../entite-simple/entity-edit.component.html"
+  templateUrl: "../entite-simple/entity-edit.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MilieuEditComponent
   extends EntiteAvecLibelleEtCodeEditAbstractComponent<Milieu>

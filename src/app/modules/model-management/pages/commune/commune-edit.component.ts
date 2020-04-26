@@ -1,5 +1,10 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit
+} from "@angular/core";
 import {
   FormControl,
   FormGroup,
@@ -9,7 +14,8 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import _ from "lodash";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { UICommune } from "src/app/models/commune.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
@@ -17,11 +23,14 @@ import { CommuneFormComponent } from "../../components/form/commune-form/commune
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
 @Component({
-  templateUrl: "../entite-simple/entity-edit.component.html"
+  templateUrl: "../entite-simple/entity-edit.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommuneEditComponent
   extends EntiteSimpleEditAbstractComponent<UICommune>
-  implements OnInit {
+  implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject();
+
   constructor(
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
@@ -35,12 +44,19 @@ export class CommuneEditComponent
     this.initialize();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   protected initialize(): void {
     super.initialize();
 
-    this.getEntities$().subscribe((entities) => {
-      this.updateCommuneValidators(this.getForm(), entities);
-    });
+    this.getEntities$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((entities) => {
+        this.updateCommuneValidators(this.getForm(), entities);
+      });
   }
 
   public createForm(): FormGroup {
