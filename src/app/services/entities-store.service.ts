@@ -101,7 +101,9 @@ export class EntitiesStoreService {
     private backendWsService: BackendWsService,
 
     private statusMessageService: StatusMessageService
-  ) {
+  ) {}
+
+  public initializeEntitiesStore = (): void => {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
@@ -352,7 +354,7 @@ export class EntitiesStoreService {
         }
       )
     );
-  }
+  };
 
   public getObservateurs$ = (): Observable<Observateur[]> => {
     return this.observateurs$.asObservable();

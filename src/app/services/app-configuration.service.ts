@@ -23,7 +23,9 @@ export class AppConfigurationService {
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService,
     private backendWsService: BackendWsService
-  ) {
+  ) {}
+
+  public initializeConfigurationStore = (): void => {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
@@ -35,7 +37,7 @@ export class AppConfigurationService {
       .subscribe((appConfiguration) => {
         this.configuration$.next(appConfiguration);
       });
-  }
+  };
 
   public saveAppConfiguration = (
     newAppConfiguration: AppConfiguration
