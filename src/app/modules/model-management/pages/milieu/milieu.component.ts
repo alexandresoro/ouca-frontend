@@ -1,12 +1,25 @@
 import { Component } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import { Milieu } from "ouca-common/milieu.object";
 import { Observable } from "rxjs";
-import { EntiteAvecLibelleEtCodeComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code.component";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { ExportService } from "src/app/services/export.service";
+import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
   templateUrl: "./milieu.component.html"
 })
-export class MilieuComponent extends EntiteAvecLibelleEtCodeComponent<Milieu> {
+export class MilieuComponent extends EntiteSimpleComponent<Milieu> {
+  constructor(
+    dialog: MatDialog,
+    entitiesStoreService: EntitiesStoreService,
+    exportService: ExportService,
+    router: Router
+  ) {
+    super(dialog, entitiesStoreService, exportService, router);
+  }
+
   public getEntities$ = (): Observable<Milieu[]> => {
     return this.entitiesStoreService.getMilieux$();
   };

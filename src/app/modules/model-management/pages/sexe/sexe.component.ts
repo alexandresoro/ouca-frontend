@@ -1,12 +1,25 @@
 import { Component } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import { Sexe } from "ouca-common/sexe.object";
 import { Observable } from "rxjs";
-import { EntiteAvecLibelleComponent } from "../entite-avec-libelle/entite-avec-libelle.component";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { ExportService } from "src/app/services/export.service";
+import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
   templateUrl: "./sexe.component.html"
 })
-export class SexeComponent extends EntiteAvecLibelleComponent<Sexe> {
+export class SexeComponent extends EntiteSimpleComponent<Sexe> {
+  constructor(
+    dialog: MatDialog,
+    entitiesStoreService: EntitiesStoreService,
+    exportService: ExportService,
+    router: Router
+  ) {
+    super(dialog, entitiesStoreService, exportService, router);
+  }
+
   public getEntities$ = (): Observable<Sexe[]> => {
     return this.entitiesStoreService.getSexes$();
   };
