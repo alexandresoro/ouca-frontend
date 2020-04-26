@@ -9,7 +9,7 @@
   </top-buttons>
 
   <lieudit-table
-    [objects]="entities$ | async"
+    [objects]="getEntities$() | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
   >
