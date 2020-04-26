@@ -7,10 +7,6 @@
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
-  <commune-table
-    [objects]="getEntities$() | async"
-    (delete)="deleteObject($event)"
-    (edit)="editObject($event)"
-  >
+  <commune-table (delete)="deleteObject($event)" (edit)="editObject($event)">
   </commune-table>
 </div>

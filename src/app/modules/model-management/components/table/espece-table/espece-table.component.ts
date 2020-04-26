@@ -1,8 +1,8 @@
-import { Component, SimpleChanges } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
+import { Component } from "@angular/core";
 import * as _ from "lodash";
-import { Espece } from "ouca-common/espece.model";
+import { Observable } from "rxjs";
 import { UIEspece } from "src/app/models/espece.model";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface EspeceRow {
@@ -19,7 +19,7 @@ interface EspeceRow {
   styleUrls: ["./espece-table.component.scss"],
   templateUrl: "./espece-table.tpl.html"
 })
-export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
+export class EspeceTableComponent extends EntiteSimpleTableComponent<UIEspece> {
   public displayedColumns: string[] = [
     "classe",
     "code",
@@ -28,16 +28,24 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
     "nbDonnees"
   ];
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.objects && !!changes.objects.currentValue) {
-      const rows: EspeceRow[] = [];
-      _.forEach(changes.objects.currentValue, (value: UIEspece) => {
-        rows.push(this.buildRowFromEspece(value));
-      });
-      this.dataSource = new MatTableDataSource(rows);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
+  constructor(private entitiesStoreService: EntitiesStoreService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.initialize();
+  }
+
+  public getEntities$ = (): Observable<UIEspece[]> => {
+    return this.entitiesStoreService.getEspeces$();
+  };
+
+  protected getDataSource(especes: UIEspece[]): EspeceRow[] {
+    const rows: EspeceRow[] = [];
+    _.forEach(especes, (espece: UIEspece) => {
+      rows.push(this.buildRowFromEspece(espece));
+    });
+    return rows;
   }
 
   private buildRowFromEspece(espece: UIEspece): EspeceRow {
@@ -50,14 +58,4 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<Espece> {
       nbDonnees: espece.nbDonnees
     };
   }
-
-  public onRowEspeceClicked = (id: number): void => {
-    if (!!this.selectedObject && this.selectedObject.id === id) {
-      this.selectedObject = undefined;
-    } else {
-      this.selectedObject = this.objects.filter(
-        (espece) => espece.id === id
-      )[0];
-    }
-  };
 }

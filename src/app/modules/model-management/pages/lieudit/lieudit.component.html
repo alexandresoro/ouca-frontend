@@ -8,10 +8,6 @@
   >
   </top-buttons>
 
-  <lieudit-table
-    [objects]="getEntities$() | async"
-    (delete)="deleteObject($event)"
-    (edit)="editObject($event)"
-  >
+  <lieudit-table (delete)="deleteObject($event)" (edit)="editObject($event)">
   </lieudit-table>
 </div>

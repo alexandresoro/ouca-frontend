@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 import { Age } from "ouca-common/age.object";
+import { Observable } from "rxjs";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
 
 @Component({
@@ -9,4 +11,16 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
   ],
   templateUrl: "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html"
 })
-export class AgeTableComponent extends EntiteAvecLibelleTableComponent<Age> {}
+export class AgeTableComponent extends EntiteAvecLibelleTableComponent<Age> {
+  constructor(private entitiesStoreService: EntitiesStoreService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.initialize();
+  }
+
+  public getEntities$ = (): Observable<Age[]> => {
+    return this.entitiesStoreService.getAges$();
+  };
+}

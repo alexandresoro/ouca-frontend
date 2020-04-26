@@ -1,7 +1,8 @@
-import { Component, SimpleChanges } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
+import { Component } from "@angular/core";
 import * as _ from "lodash";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
+import { Observable } from "rxjs";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface EstimationNombreRow {
@@ -21,16 +22,26 @@ export class EstimationNombreTableComponent extends EntiteSimpleTableComponent<
 > {
   public displayedColumns: string[] = ["libelle", "nonCompte", "nbDonnees"];
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.objects && !!changes.objects.currentValue) {
-      const rows: EstimationNombreRow[] = [];
-      _.forEach(changes.objects.currentValue, (value: EstimationNombre) => {
-        rows.push(this.buildRowFromEstimation(value));
-      });
-      this.dataSource = new MatTableDataSource(rows);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
+  constructor(private entitiesStoreService: EntitiesStoreService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.initialize();
+  }
+
+  public getEntities$ = (): Observable<EstimationNombre[]> => {
+    return this.entitiesStoreService.getEstimationNombres$();
+  };
+
+  protected getDataSource(
+    estimations: EstimationNombre[]
+  ): EstimationNombreRow[] {
+    const rows: EstimationNombreRow[] = [];
+    _.forEach(estimations, (value: EstimationNombre) => {
+      rows.push(this.buildRowFromEstimation(value));
+    });
+    return rows;
   }
 
   private buildRowFromEstimation(
@@ -42,15 +53,5 @@ export class EstimationNombreTableComponent extends EntiteSimpleTableComponent<
       nonCompte: estimation.nonCompte ? "Oui" : "Non",
       nbDonnees: estimation.nbDonnees
     };
-  }
-
-  public onRowEstimationNombreClicked(id: number): void {
-    if (!!this.selectedObject && this.selectedObject.id === id) {
-      this.selectedObject = undefined;
-    } else {
-      this.selectedObject = this.objects.filter(
-        (estimation) => estimation.id === id
-      )[0];
-    }
   }
 }

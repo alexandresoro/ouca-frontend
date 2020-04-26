@@ -1,30 +1,19 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from "@angular/core";
+import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Component({
   template: ""
 })
-export class EntiteSimpleTableComponent<T extends EntiteSimple>
-  implements OnInit, OnChanges {
-  @Input() public objects: T[];
+export abstract class EntiteSimpleTableComponent<T extends EntiteSimple> {
+  private currentEntities$: BehaviorSubject<T[]> = new BehaviorSubject([]);
 
   @Output() public delete: EventEmitter<T> = new EventEmitter<T>();
 
-  @Output() public edit: EventEmitter<T> = new EventEmitter<T>();
-
-  @Output() public view: EventEmitter<T> = new EventEmitter<T>();
+  @Output() public edit: EventEmitter<number> = new EventEmitter<number>();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -32,44 +21,49 @@ export class EntiteSimpleTableComponent<T extends EntiteSimple>
 
   public dataSource: MatTableDataSource<unknown> = new MatTableDataSource();
 
-  public selectedObject: T;
+  public selectedObjectId: number;
 
-  ngOnInit(): void {
+  protected initialize(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    this.getEntities$().subscribe((entities) => {
+      this.currentEntities$.next(entities);
+      this.dataSource.data = this.getDataSource(entities);
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.objects?.currentValue) {
-      this.dataSource.data = changes.objects.currentValue;
-    }
+  protected getDataSource(entities: T[]): unknown[] {
+    return entities;
   }
 
-  public deleteObject(object: T): void {
-    this.delete.emit(object);
-  }
+  protected abstract getEntities$(): Observable<T[]>;
 
-  public editObject(object: T): void {
-    this.edit.emit(object);
-  }
+  public deleteObject = (): void => {
+    const entities = this.currentEntities$.value;
+    const entityToDelete = entities.find((entity) => {
+      return this.selectedObjectId === entity.id;
+    });
+    this.delete.emit(entityToDelete);
+  };
 
-  public viewObject(object: T): void {
-    this.view.emit(object);
-  }
+  public editObject = (): void => {
+    this.edit.emit(this.selectedObjectId);
+  };
 
-  public applyFilter(filterValue: string): void {
+  public applyFilter = (filterValue: string): void => {
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
+  };
 
-  public onRowClicked(object: T): void {
-    if (!!this.selectedObject && this.selectedObject.id === object.id) {
-      this.selectedObject = undefined;
+  public onRowClicked = (selectedId: number): void => {
+    if (!!this.selectedObjectId && this.selectedObjectId === selectedId) {
+      this.selectedObjectId = undefined;
     } else {
-      this.selectedObject = object;
+      this.selectedObjectId = selectedId;
     }
-  }
+  };
 }

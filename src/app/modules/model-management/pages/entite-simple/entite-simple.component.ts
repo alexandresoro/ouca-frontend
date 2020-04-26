@@ -29,8 +29,8 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
     this.router.navigate(["/" + this.getEntityName() + "/create"]);
   }
 
-  public editObject(object: T): void {
-    this.router.navigate(["/" + this.getEntityName() + "/edit/" + object?.id]);
+  public editObject(id: number): void {
+    this.router.navigate(["/" + this.getEntityName() + "/edit/" + id]);
   }
 
   public deleteObject(entity: T): void {

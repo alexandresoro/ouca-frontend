@@ -1,8 +1,7 @@
 <table-topbar
-  [selectedObject]="selectedObject"
-  (onClickViewObject)="viewObject(selectedObject)"
-  (onClickEditObject)="editObject(selectedObject)"
-  (onClickDeleteObject)="deleteObject(selectedObject)"
+  [selectedId]="selectedObjectId"
+  (onClickEditObject)="editObject()"
+  (onClickDeleteObject)="deleteObject()"
   (onFilterChange)="applyFilter($event)"
 >
 </table-topbar>
@@ -35,9 +34,9 @@
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
-      (click)="onRowClicked(row)"
+      (click)="onRowClicked(row.id)"
       [ngClass]="{
-        'selected-row': !!selectedObject && selectedObject.id == row.id
+        'selected-row': !!selectedObjectId && selectedObjectId == row.id
       }"
     ></tr>
   </table>

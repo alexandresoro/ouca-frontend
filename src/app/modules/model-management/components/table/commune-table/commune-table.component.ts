@@ -1,8 +1,8 @@
-import { Component, SimpleChanges } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
+import { Component } from "@angular/core";
 import * as _ from "lodash";
-import { Commune } from "ouca-common/commune.model";
+import { Observable } from "rxjs";
 import { UICommune } from "src/app/models/commune.model";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 interface CommunetRow {
   id: number;
@@ -18,7 +18,9 @@ interface CommunetRow {
   styleUrls: ["./commune-table.component.scss"],
   templateUrl: "./commune-table.tpl.html"
 })
-export class CommuneTableComponent extends EntiteSimpleTableComponent<Commune> {
+export class CommuneTableComponent extends EntiteSimpleTableComponent<
+  UICommune
+> {
   public displayedColumns: string[] = [
     "departement",
     "code",
@@ -27,16 +29,24 @@ export class CommuneTableComponent extends EntiteSimpleTableComponent<Commune> {
     "nbDonnees"
   ];
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.objects && !!changes.objects.currentValue) {
-      const rows: CommunetRow[] = [];
-      _.forEach(changes.objects.currentValue, (value: UICommune) => {
-        rows.push(this.buildRowFromLieudit(value));
-      });
-      this.dataSource = new MatTableDataSource(rows);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
+  constructor(private entitiesStoreService: EntitiesStoreService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.initialize();
+  }
+
+  protected getEntities$ = (): Observable<UICommune[]> => {
+    return this.entitiesStoreService.getCommunes$();
+  };
+
+  protected getDataSource(communes: UICommune[]): CommunetRow[] {
+    const rows: CommunetRow[] = [];
+    _.forEach(communes, (commune: UICommune) => {
+      rows.push(this.buildRowFromLieudit(commune));
+    });
+    return rows;
   }
 
   private buildRowFromLieudit(commune: UICommune): CommunetRow {
@@ -48,15 +58,5 @@ export class CommuneTableComponent extends EntiteSimpleTableComponent<Commune> {
       nbLieuxdits: commune.nbLieuxdits,
       nbDonnees: commune.nbDonnees
     };
-  }
-
-  public onRowCommuneClicked(id: number): void {
-    if (!!this.selectedObject && this.selectedObject.id === id) {
-      this.selectedObject = undefined;
-    } else {
-      this.selectedObject = this.objects.filter(
-        (commune) => commune.id === id
-      )[0];
-    }
   }
 }

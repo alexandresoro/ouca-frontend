@@ -5,7 +5,7 @@ import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple
 @Component({
   template: ""
 })
-export class EntiteAvecLibelleEtCodeTableComponent<
+export abstract class EntiteAvecLibelleEtCodeTableComponent<
   T extends EntiteAvecLibelleEtCode
 > extends EntiteSimpleTableComponent<T> {
   public displayedColumns: string[] = ["code", "libelle", "nbDonnees"];

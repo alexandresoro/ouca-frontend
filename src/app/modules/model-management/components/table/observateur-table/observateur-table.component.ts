@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 import { Observateur } from "ouca-common/observateur.object";
+import { Observable } from "rxjs";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
 
 @Component({
@@ -11,4 +13,16 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
 })
 export class ObservateurTableComponent extends EntiteAvecLibelleTableComponent<
   Observateur
-> {}
+> {
+  constructor(private entitiesStoreService: EntitiesStoreService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.initialize();
+  }
+
+  public getEntities$ = (): Observable<Observateur[]> => {
+    return this.entitiesStoreService.getObservateurs$();
+  };
+}

@@ -11,16 +11,12 @@ import { EntitySubFormDirective } from "./components/form/entite-simple-form/ent
 import { EspeceFormComponent } from "./components/form/espece-form/espece-form.component";
 import { EstimationNombreFormComponent } from "./components/form/estimation-nombre-form/estimation-nombre-form.component";
 import { LieuditFormComponent } from "./components/form/lieudit-form/lieudit-form.component";
-import { TableButtonsComponent } from "./components/table-buttons/table-buttons.component";
 import { TableTopbarComponent } from "./components/table-topbar/table-topbar.component";
 import { AgeTableComponent } from "./components/table/age-table/age-table.component";
 import { ClasseTableComponent } from "./components/table/classe-table/classe-table.component";
 import { CommuneTableComponent } from "./components/table/commune-table/commune-table.component";
 import { ComportementTableComponent } from "./components/table/comportement-table/comportement-table.component";
 import { DepartementTableComponent } from "./components/table/departement-table/departement-table.component";
-import { EntiteAvecLibelleEtCodeTableComponent } from "./components/table/entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component";
-import { EntiteAvecLibelleTableComponent } from "./components/table/entite-avec-libelle-table/entite-avec-libelle-table.component";
-import { EntiteSimpleTableComponent } from "./components/table/entite-simple-table/entite-simple-table.component";
 import { EspeceTableComponent } from "./components/table/espece-table/espece-table.component";
 import { EstimationDistanceTableComponent } from "./components/table/estimation-distance-table/estimation-distance-table.component";
 import { EstimationNombreTableComponent } from "./components/table/estimation-nombre-table/estimation-nombre-table.component";
@@ -80,13 +76,10 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     DepartementFormComponent,
     DepartementTableComponent,
     EntiteAvecLibelleFormComponent,
-    EntiteAvecLibelleTableComponent,
     EntiteAvecLibelleEtCodeFormComponent,
-    EntiteAvecLibelleEtCodeTableComponent,
     EntityFormComponent,
     EntitySubFormDirective,
     EntitySubFormComponent,
-    EntiteSimpleTableComponent,
     EspeceComponent,
     EspeceEditComponent,
     EspeceFormComponent,
@@ -114,7 +107,6 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     SexeComponent,
     SexeEditComponent,
     SexeTableComponent,
-    TableButtonsComponent,
     TableTopbarComponent,
     TopButtonsComponent
   ],

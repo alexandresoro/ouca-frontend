@@ -8,7 +8,6 @@
   ></top-buttons>
 
   <espece-table
-    [objects]="getEntities$() | async"
     (delete)="deleteObject($event)"
     (edit)="editObject($event)"
   ></espece-table>

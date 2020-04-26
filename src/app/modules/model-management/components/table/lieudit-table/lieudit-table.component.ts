@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import * as _ from "lodash";
 import {
   CoordinatesSystemType,
@@ -6,10 +6,11 @@ import {
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
-import { Lieudit } from "ouca-common/lieudit.model";
-import { combineLatest, ReplaySubject } from "rxjs";
+import { combineLatest, Observable, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { UILieudit } from "src/app/models/lieudit.model";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
+import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 interface LieuditRow {
@@ -29,10 +30,13 @@ interface LieuditRow {
 @Component({
   selector: "lieudit-table",
   styleUrls: ["./lieudit-table.component.scss"],
-  templateUrl: "./lieudit-table.component.html"
+  templateUrl: "./lieudit-table.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
-  implements OnChanges {
+export class LieuditTableComponent extends EntiteSimpleTableComponent<UILieudit>
+  implements OnDestroy {
+  private readonly destroy$ = new Subject();
+
   public displayedColumns: string[] = [
     "departement",
     "codeCommune",
@@ -45,37 +49,45 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
     "nbDonnees"
   ];
 
-  private lieuxdits$: ReplaySubject<UILieudit[]> = new ReplaySubject<
-    UILieudit[]
-  >(1);
-
-  constructor(private appConfigurationService: AppConfigurationService) {
+  constructor(
+    private appConfigurationService: AppConfigurationService,
+    private entitiesStoreService: EntitiesStoreService
+  ) {
     super();
   }
 
   ngOnInit(): void {
-    super.ngOnInit();
+    this.initialize();
 
     combineLatest(
-      this.lieuxdits$,
+      this.getEntities$(),
       this.appConfigurationService.getAppCoordinatesSystemType$(),
       (lieuxdits, coordinatesSystemType) => {
         return this.buildLieuxditsRows(lieuxdits, coordinatesSystemType);
       }
-    ).subscribe((lieuxditsRows) => {
-      this.dataSource.data = lieuxditsRows;
-    });
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((lieuxditsRows) => {
+        this.dataSource.data = lieuxditsRows;
+      });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.objects?.currentValue) {
-      this.lieuxdits$.next(changes.objects.currentValue);
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  public getEntities$ = (): Observable<UILieudit[]> => {
+    return this.entitiesStoreService.getLieuxdits$();
+  };
+
+  public getDataSource(): [] {
+    return [];
   }
 
   private buildLieuxditsRows = (
     lieuxdits: UILieudit[],
-    coordinatesSystemType?: CoordinatesSystemType
+    coordinatesSystemType: CoordinatesSystemType
   ): LieuditRow[] => {
     const rows: LieuditRow[] = [];
     _.forEach(lieuxdits, (lieudit) => {
@@ -106,15 +118,5 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<Lieudit>
       isTransformed: coordinates.isTransformed,
       nbDonnees: lieudit.nbDonnees
     };
-  }
-
-  public onRowLieuditClicked(id: number): void {
-    if (!!this.selectedObject && this.selectedObject.id === id) {
-      this.selectedObject = undefined;
-    } else {
-      this.selectedObject = this.objects.filter(
-        (lieudit) => lieudit.id === id
-      )[0];
-    }
   }
 }

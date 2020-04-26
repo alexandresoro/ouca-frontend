@@ -1,12 +1,31 @@
 <div class="table-topbar">
   <mat-form-field class="table-filter-field">
-    <input matInput
+    <input
+      matInput
       (keyup)="applyFilter($event.target.value)"
-      placeholder="Filtre">
+      placeholder="Filtre"
+    />
   </mat-form-field>
   <span class="flex-spacer"></span>
-  <table-buttons [object]="selectedObject"
-    (onClickViewObject)="viewObject()"
-    (onClickEditObject)="editObject()"
-    (onClickDeleteObject)="deleteObject()"></table-buttons>
+
+  <div class="table-top-buttons">
+    <button
+      mat-raised-button
+      type="button"
+      (click)="editObject()"
+      [disabled]="!selectedId"
+    >
+      <mat-icon>edit</mat-icon>
+      Éditer
+    </button>
+    <button
+      mat-raised-button
+      type="button"
+      (click)="deleteObject()"
+      [disabled]="!selectedId"
+    >
+      <mat-icon>delete</mat-icon>
+      Supprimer
+    </button>
+  </div>
 </div>

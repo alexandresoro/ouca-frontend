@@ -7,10 +7,6 @@
     (onClickExportObjects)="exportObjects()"
   ></top-buttons>
 
-  <sexe-table
-    [objects]="getEntities$() | async"
-    (delete)="deleteObject($event)"
-    (edit)="editObject($event)"
-  >
+  <sexe-table (delete)="deleteObject($event)" (edit)="editObject($event)">
   </sexe-table>
 </div>
