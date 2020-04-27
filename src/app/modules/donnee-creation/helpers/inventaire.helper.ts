@@ -1,5 +1,6 @@
 import { isSameDay } from "date-fns";
 import * as _ from "lodash";
+import { getCoordinates } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
 import { Inventaire } from "ouca-common/inventaire.object";
 import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";
@@ -44,16 +45,22 @@ export class InventaireHelper {
         return this.isNullOrEmptyCoordinates(coordinates);
       })
     ) {
-      return false;
+      return true;
     }
+
+    // We should compare the coordinates in the same system
+    const firstCoordinatesTransformed = getCoordinates(
+      { coordinates: firstCoordinates },
+      secondCoordinates.system
+    );
 
     return (
       this.areDifferentNumbers(
-        firstCoordinates.latitude,
+        firstCoordinatesTransformed.latitude,
         secondCoordinates.latitude
       ) ||
       this.areDifferentNumbers(
-        firstCoordinates.longitude,
+        firstCoordinatesTransformed.longitude,
         secondCoordinates.longitude
       )
     );
