@@ -29,7 +29,6 @@
     "file-saver": "*",
     "lodash": "*",
     "material-design-icons-iconfont": "*",
-    "ngx-take-until-destroy": "*",
     "ouca-common": "*",
     "rxjs": "*",
     "tslib": "^1.11.0",
