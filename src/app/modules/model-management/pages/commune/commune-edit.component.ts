@@ -62,7 +62,6 @@ export class CommuneEditComponent
   public createForm(): FormGroup {
     return new FormGroup({
       id: new FormControl("", []),
-      departement: new FormControl("", []),
       departementId: new FormControl("", [Validators.required]),
       code: new FormControl("", [
         Validators.required,
@@ -70,6 +69,22 @@ export class CommuneEditComponent
       ]),
       nom: new FormControl("", [Validators.required])
     });
+  }
+
+  protected getFormValue(
+    commune: UICommune
+  ): {
+    id: number;
+    departementId: number;
+    code: number;
+    nom: string;
+  } {
+    return {
+      id: commune.id,
+      departementId: commune.departement.id,
+      code: commune.code,
+      nom: commune.nom
+    };
   }
 
   public getFormType(): typeof CommuneFormComponent {

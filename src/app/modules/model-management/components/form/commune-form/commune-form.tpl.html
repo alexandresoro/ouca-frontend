@@ -7,13 +7,13 @@
     placeholder="Département"
   >
     <mat-option
-      *ngFor="let departement of departements"
+      *ngFor="let departement of departements$ | async"
       [value]="departement.id"
     >
       {{ departement.code }}
     </mat-option>
   </mat-select>
-  <mat-error *ngIf="entityForm.controls['departement'].hasError('required')">
+  <mat-error *ngIf="entityForm.controls['departementId'].hasError('required')">
     Le champ "Département" ne peut pas être vide.
   </mat-error>
 </mat-form-field>

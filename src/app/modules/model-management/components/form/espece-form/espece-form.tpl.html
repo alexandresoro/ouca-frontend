@@ -6,7 +6,7 @@
     name="classe"
     placeholder="Classe de l'espèce"
   >
-    <mat-option *ngFor="let classe of classes" [value]="classe">
+    <mat-option *ngFor="let classe of classes$ | async" [value]="classe">
       {{ classe.libelle }}
     </mat-option>
   </mat-select>

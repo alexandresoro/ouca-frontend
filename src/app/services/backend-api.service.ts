@@ -181,12 +181,6 @@ export class BackendApiService {
     return this.httpGet(entityName + "/" + this.DELETE + "?id=" + id);
   }
 
-  public getAllEntities<T extends EntiteSimple>(
-    entityName: string
-  ): Observable<T[]> {
-    return this.httpGet(entityName + "/" + this.ALL);
-  }
-
   public getDonneesByCustomizedFilters(
     parameters: DonneesFilter
   ): Observable<FlatDonnee[]> {
