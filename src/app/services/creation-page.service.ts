@@ -6,6 +6,7 @@ import { PostResponse } from "ouca-common/post-response.object";
 import { Observable, Subject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { InventaireHelper } from "../modules/donnee-creation/helpers/inventaire.helper";
+import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { DonneeInCache } from "../modules/donnee-creation/models/donnee-in-cache.model";
 import { BackendApiService } from "./backend-api.service";
 import { CreationCacheService } from "./creation-cache.service";
@@ -219,26 +220,37 @@ export class CreationPageService {
     );
   };
 
+  public addADonneeToAnExistingInventaire = (
+    inventaireForm: FormGroup
+  ): void => {
+    const donnee: DonneeFormObject = {
+      isDonneeEmpty: true,
+      inventaire: this.inventaireFormService.getInventaireFromForm(
+        inventaireForm
+      )
+    } as DonneeFormObject;
+    this.donneeService.setCurrentlyEditingDonnee(donnee);
+    this.creationModeService.setStatus(false, true);
+  };
+
   public saveDonneeInCache = (
     inventaireForm: FormGroup,
     donneeForm: FormGroup
   ): void => {
-    if (!this.donneeService.isCurrentDonneeAnExistingOne()) {
-      const inventaire = this.inventaireFormService.getInventaireFormObject(
-        inventaireForm
-      );
-      const donnee = this.donneeFormService.getDonneeFormObject(
-        donneeForm,
-        inventaire
-      );
-      const isInventaireEnabled = inventaireForm?.enabled;
-      const isDonneeEnabled = donneeForm?.enabled;
-      this.creationCacheService.saveCurrentContext(
-        donnee,
-        isInventaireEnabled,
-        isDonneeEnabled
-      );
-    }
+    const inventaire = this.inventaireFormService.getInventaireFormObject(
+      inventaireForm
+    );
+    const donnee = this.donneeFormService.getDonneeFormObject(
+      donneeForm,
+      inventaire
+    );
+    const isInventaireEnabled = inventaireForm?.enabled;
+    const isDonneeEnabled = donneeForm?.enabled;
+    this.creationCacheService.saveCurrentContext(
+      donnee,
+      isInventaireEnabled,
+      isDonneeEnabled
+    );
   };
 
   public displayDonneeByIdAndSaveCurrentCache = (
@@ -246,8 +258,10 @@ export class CreationPageService {
     donneeForm: FormGroup,
     id: number
   ): Observable<boolean> => {
-    this.saveDonneeInCache(inventaireForm, donneeForm);
-    return this.displayDonneeById(id);
+    if (!this.donneeService.isCurrentDonneeAnExistingOne()) {
+      this.saveDonneeInCache(inventaireForm, donneeForm);
+      return this.displayDonneeById(id);
+    }
   };
 
   private displayDonneeById = (id: number): Observable<boolean> => {
@@ -264,7 +278,9 @@ export class CreationPageService {
     inventaireForm: FormGroup,
     donneeForm: FormGroup
   ): void => {
-    this.saveDonneeInCache(inventaireForm, donneeForm);
+    if (!this.donneeService.isCurrentDonneeAnExistingOne()) {
+      this.saveDonneeInCache(inventaireForm, donneeForm);
+    }
 
     this.donneeService.getPreviousDonnee().subscribe((isSuccessful) => {
       if (isSuccessful) {

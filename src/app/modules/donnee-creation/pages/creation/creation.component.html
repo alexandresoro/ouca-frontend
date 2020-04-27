@@ -99,6 +99,18 @@
             matTooltipClass="default-tooltip"
             (click)="onNewInventaireBtnClicked()"
           >
+            <mat-icon>add_to_photos</mat-icon>
+          </button>
+          <button
+            *ngIf="isCurrentDonneeAnExistingOne$() | async"
+            mat-icon-button
+            type="button"
+            color="primary"
+            class="new-fiche-inventaire-button"
+            matTooltip="Ajouter une nouvelle fiche espèce à cet inventaire"
+            matTooltipClass="default-tooltip"
+            (click)="onAddADonneeToThisInventaireButtonClicked()"
+          >
             <mat-icon>note_add</mat-icon>
           </button>
         </div>

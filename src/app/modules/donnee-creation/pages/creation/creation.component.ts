@@ -400,6 +400,15 @@ export class CreationComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Called when clicking on "Ajouter une nouvelle fiche espèce à cet inventaire" button
+   */
+  public onAddADonneeToThisInventaireButtonClicked = (): void => {
+    this.creationPageService.addADonneeToAnExistingInventaire(
+      this.inventaireForm
+    );
+  };
+
+  /**
    * Called when clicking on "Vider le formulaire" button
    */
   public onClearFormButtonClicked = (): void => {

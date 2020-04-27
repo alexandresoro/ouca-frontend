@@ -102,7 +102,7 @@ export class DonneeFormService {
 
     console.log("Affichage de la donnée dans le formulaire.", donnee);
 
-    if (!donnee) {
+    if (!donnee || (donnee as DonneeFormObject).isDonneeEmpty) {
       const defaultOptions = this.getDefaultOptions(
         {
           ages: entities.ages,
