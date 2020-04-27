@@ -14,7 +14,14 @@ import {
 } from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.model";
-import { combineLatest, merge, Observable, ReplaySubject, Subject } from "rxjs";
+import {
+  BehaviorSubject,
+  combineLatest,
+  merge,
+  Observable,
+  ReplaySubject,
+  Subject
+} from "rxjs";
 import { distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
@@ -24,6 +31,7 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
 
 @Component({
   selector: "input-lieudit",
+  styleUrls: ["input-lieudit.component.scss"],
   templateUrl: "./input-lieudit.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -51,6 +59,10 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   public filteredLieuxdits$: Observable<UILieudit[]>;
 
   public filteredCommunes$: Observable<UICommune[]>;
+
+  public areCoordinatesTransformed$: BehaviorSubject<
+    boolean
+  > = new BehaviorSubject<boolean>(false);
 
   public departementAutocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -199,6 +211,9 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
             selectedLieudit,
             coordinatesSystemType
           );
+
+          this.areCoordinatesTransformed$.next(coordinates.isTransformed);
+
           return {
             altitude: selectedLieudit.altitude,
             longitude: coordinates.longitude,

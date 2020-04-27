@@ -107,5 +107,15 @@
         name="latitude"
       />
     </mat-form-field>
+
+    <div
+      *ngIf="areCoordinatesTransformed$ | async"
+      class="coordinates-transformed-message"
+    >
+      <mat-icon [inline]="true">info</mat-icon> Les coordonnées de cet
+      inventaire ont été converties à partir d'un autre système de coordonnées.
+      Si vous les modifiez, elles seront sauvegardées dans le système de
+      coordonnées sélectionné dans la page de configuration.
+    </div>
   </div>
 </div>

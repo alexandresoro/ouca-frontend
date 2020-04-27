@@ -1,0 +1,6 @@
+@use "src/styles/variables";
+
+.coordinates-transformed-message {
+  color: variables.$main-color;
+  margin-bottom: 20px;
+}
