@@ -202,8 +202,10 @@
           *ngIf="areCoordinatesTransformed$ | async"
           class="coordinates-warning"
         >
-          Attention: les coordonnées de ce lieu-dit ont été converties à partir
-          d'un autre système de coordonnées.
+          <mat-icon [inline]="true">info</mat-icon> Les coordonnées de ce
+          lieu-dit ont été converties à partir d'un autre système de
+          coordonnées. Si vous les modifiez, elles seront sauvegardées dans le
+          système de coordonnées sélectionné sur la page de configuration.
         </p>
 
         <div class="cancel-submit-buttons">
