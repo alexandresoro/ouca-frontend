@@ -9,6 +9,7 @@ import {
 
 @Component({
   templateUrl: "./database.component.html"
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatabaseComponent {
   public isWaitPanelDisplayed: boolean = false;

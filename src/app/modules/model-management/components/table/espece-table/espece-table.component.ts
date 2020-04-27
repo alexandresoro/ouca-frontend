@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { UIEspece } from "src/app/models/espece.model";
@@ -17,7 +17,8 @@ interface EspeceRow {
 @Component({
   selector: "espece-table",
   styleUrls: ["./espece-table.component.scss"],
-  templateUrl: "./espece-table.tpl.html"
+  templateUrl: "./espece-table.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EspeceTableComponent extends EntiteSimpleTableComponent<UIEspece> {
   public displayedColumns: string[] = [

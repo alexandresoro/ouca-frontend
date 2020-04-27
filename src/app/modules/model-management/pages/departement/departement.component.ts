@@ -1,14 +1,15 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import { Departement } from "ouca-common/departement.object";
 import { Observable } from "rxjs";
-import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
-import { MatDialog } from "@angular/material/dialog";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
-import { Router } from "@angular/router";
+import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
-  templateUrl: "./departement.component.html"
+  templateUrl: "./departement.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DepartementComponent extends EntiteSimpleComponent<Departement> {
   constructor(

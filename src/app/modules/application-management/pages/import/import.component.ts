@@ -7,6 +7,7 @@ import {
 } from "../../../shared/helpers/file-downloader.helper";
 @Component({
   templateUrl: "./import.component.html"
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportComponent {
   private file: File;

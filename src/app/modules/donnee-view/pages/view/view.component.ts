@@ -26,6 +26,7 @@ import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
 @Component({
   styleUrls: ["./view.component.scss"],
   templateUrl: "./view.component.html"
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewComponent implements OnDestroy {
   private readonly destroy$ = new Subject();

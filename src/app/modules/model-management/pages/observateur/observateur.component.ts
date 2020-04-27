@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Observateur } from "ouca-common/observateur.object";
@@ -7,7 +7,8 @@ import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 @Component({
-  templateUrl: "./observateur.component.html"
+  templateUrl: "./observateur.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ObservateurComponent extends EntiteSimpleComponent<Observateur> {
   constructor(

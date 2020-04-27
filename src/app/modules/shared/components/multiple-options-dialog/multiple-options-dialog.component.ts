@@ -1,10 +1,11 @@
-import { Component, Inject } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MultipleOptionsDialogData } from "./multiple-options-dialog-data.object";
 
 @Component({
   selector: "multiple-options-dialog",
-  templateUrl: "./multiple-options-dialog.tpl.html"
+  templateUrl: "./multiple-options-dialog.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultipleOptionsDialogComponent {
   constructor(

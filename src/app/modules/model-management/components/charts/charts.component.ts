@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import _ from "lodash";
 import { combineLatest, Observable } from "rxjs";
@@ -8,7 +8,8 @@ import { EntitiesStoreService } from "src/app/services/entities-store.service";
 
 @Component({
   selector: "charts",
-  templateUrl: "./charts.component.html"
+  templateUrl: "./charts.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartsComponent implements OnInit {
   public especes$: Observable<UIEspece[]>;

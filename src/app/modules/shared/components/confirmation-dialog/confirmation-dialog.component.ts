@@ -1,10 +1,11 @@
-import { Component, Inject } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ConfirmationDialogData } from "./confirmation-dialog-data.object";
 
 @Component({
   selector: "confirmation-dialog",
-  templateUrl: "./confirmation-dialog.tpl.html"
+  templateUrl: "./confirmation-dialog.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmationDialogComponent {
   constructor(

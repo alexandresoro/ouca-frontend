@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Comportement } from "ouca-common/comportement.object";
 import { Observable } from "rxjs";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
@@ -10,7 +10,8 @@ import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et
     "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component.scss"
   ],
   templateUrl:
-    "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.tpl.html"
+    "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComportementTableComponent extends EntiteAvecLibelleEtCodeTableComponent<
   Comportement

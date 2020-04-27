@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import {
   CoordinatesSystem,
@@ -18,7 +18,8 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
 @Component({
   selector: "lieudit-form",
   styleUrls: ["./lieudit-form.component.scss"],
-  templateUrl: "./lieudit-form.component.html"
+  templateUrl: "./lieudit-form.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LieuditFormComponent extends EntitySubFormComponent<UILieudit>
   implements OnInit {

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -8,7 +8,8 @@ import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
-  templateUrl: "./lieudit.component.html"
+  templateUrl: "./lieudit.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LieuditComponent extends EntiteSimpleComponent<UILieudit> {
   constructor(

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { UICommune } from "src/app/models/commune.model";
@@ -16,7 +16,8 @@ interface CommunetRow {
 @Component({
   selector: "commune-table",
   styleUrls: ["./commune-table.component.scss"],
-  templateUrl: "./commune-table.tpl.html"
+  templateUrl: "./commune-table.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommuneTableComponent extends EntiteSimpleTableComponent<
   UICommune

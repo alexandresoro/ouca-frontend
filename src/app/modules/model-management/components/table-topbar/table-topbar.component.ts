@@ -1,9 +1,16 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output
+} from "@angular/core";
 
 @Component({
   selector: "table-topbar",
   styleUrls: ["./table-topbar.component.scss"],
-  templateUrl: "./table-topbar.component.html"
+  templateUrl: "./table-topbar.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableTopbarComponent {
   @Input() public selectedId: number;

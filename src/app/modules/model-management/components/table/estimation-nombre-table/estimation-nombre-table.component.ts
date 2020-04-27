@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import * as _ from "lodash";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { Observable } from "rxjs";
@@ -15,7 +15,8 @@ interface EstimationNombreRow {
 @Component({
   selector: "estimation-nombre-table",
   styleUrls: ["./estimation-nombre-table.component.scss"],
-  templateUrl: "./estimation-nombre-table.tpl.html"
+  templateUrl: "./estimation-nombre-table.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EstimationNombreTableComponent extends EntiteSimpleTableComponent<
   EstimationNombre

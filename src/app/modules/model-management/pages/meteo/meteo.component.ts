@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Meteo } from "ouca-common/meteo.object";
@@ -8,7 +8,8 @@ import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 @Component({
-  templateUrl: "./meteo.component.html"
+  templateUrl: "./meteo.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeteoComponent extends EntiteSimpleComponent<Meteo> {
   constructor(

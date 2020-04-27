@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Classe } from "ouca-common/classe.object";
 import { Espece } from "ouca-common/espece.model";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
@@ -8,7 +8,8 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
 
 @Component({
   selector: "espece-form",
-  templateUrl: "./espece-form.tpl.html"
+  templateUrl: "./espece-form.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EspeceFormComponent extends EntitySubFormComponent<Espece> {
   public classes: Classe[];

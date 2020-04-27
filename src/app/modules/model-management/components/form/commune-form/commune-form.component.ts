@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Commune } from "ouca-common/commune.model";
 import { Departement } from "ouca-common/departement.object";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
@@ -8,7 +8,8 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
 
 @Component({
   selector: "commune-form",
-  templateUrl: "./commune-form.tpl.html"
+  templateUrl: "./commune-form.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommuneFormComponent extends EntitySubFormComponent<Commune> {
   public departements: Departement[];

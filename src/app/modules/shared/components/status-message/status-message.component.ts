@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { MAT_SNACK_BAR_DATA } from "@angular/material/snack-bar";
 
 export enum StatusMessageSeverity {
@@ -9,18 +9,19 @@ export enum StatusMessageSeverity {
 }
 
 export interface StatusMessageParameters {
-
   severity: StatusMessageSeverity;
 
   error?: any;
 
   message: string;
-
 }
 
 @Component({
-  templateUrl: "./status-message.tpl.html"
+  templateUrl: "./status-message.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatusMessageComponent {
-  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: StatusMessageParameters) { }
+  constructor(
+    @Inject(MAT_SNACK_BAR_DATA) public data: StatusMessageParameters
+  ) {}
 }

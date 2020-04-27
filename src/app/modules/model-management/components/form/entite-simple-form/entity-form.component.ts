@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ComponentFactoryResolver,
   EventEmitter,
@@ -17,7 +18,8 @@ import { EntitySubFormDirective } from "./entity-sub-form.directive";
 @Component({
   selector: "entity-form",
   styleUrls: ["./entity-form.component.scss"],
-  templateUrl: "./entity-form.tpl.html"
+  templateUrl: "./entity-form.tpl.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntityFormComponent<T extends EntiteSimple> implements OnInit {
   @Input() componentType: Type<EntitySubFormComponent<T>>;
