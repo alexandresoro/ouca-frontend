@@ -233,7 +233,7 @@
         type="submit"
         color="primary"
         (click)="onSearchButtonClicked()"
-        [disabled]="displayWaitPanel"
+        [disabled]="displayWaitPanel$ | async"
       >
         Lancer la recherche
       </button>
@@ -251,7 +251,7 @@
   <!-- RESULTS PANEL-->
   <ng-container
     *ngIf="
-      !displayWaitPanel &&
+      !(displayWaitPanel$ | async) &&
       (donneesToDisplay.length > 0 || especesWithNbDonnees.length > 0)
     "
   >
@@ -270,7 +270,7 @@
   </ng-container>
 
   <!-- NO DATA PANEL -->
-  <div *ngIf="displayNoDataPanel" style="text-align: center;">
+  <div *ngIf="displayNoDataPanel$ | async" style="text-align: center;">
     <img
       src="../../../../../assets/img/blue-green-bird.svg"
       alt="Oiseaux"
@@ -280,7 +280,7 @@
   </div>
 
   <!-- WAIT PANEL-->
-  <div *ngIf="displayWaitPanel" style="text-align: center;">
+  <div *ngIf="displayWaitPanel$ | async" style="text-align: center;">
     <img
       src="../../../../../assets/img/green-bird.svg"
       alt="Oiseaux"

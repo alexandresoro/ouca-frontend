@@ -1,11 +1,11 @@
 <div class="page-container">
   <h1>Import de données</h1>
 
-  <ng-container *ngIf="isWaitPanelDisplayed">
+  <ng-container *ngIf="isWaitPanelDisplayed$ | async">
     <h2><mat-icon>loop</mat-icon> Veuillez patienter pendant l'import...</h2>
   </ng-container>
 
-  <ng-container *ngIf="!isWaitPanelDisplayed">
+  <ng-container *ngIf="!(isWaitPanelDisplayed$ | async)">
     <h2>Tutoriel d'import</h2>
     <h3>Préparation du fichier d'entrée</h3>
     <p>

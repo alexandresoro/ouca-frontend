@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
@@ -8,11 +9,13 @@ import {
 } from "../../../shared/helpers/file-downloader.helper";
 
 @Component({
-  templateUrl: "./database.component.html"
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: "./database.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatabaseComponent {
-  public isWaitPanelDisplayed: boolean = false;
+  public isWaitPanelDisplayed$: BehaviorSubject<boolean> = new BehaviorSubject<
+    boolean
+  >(false);
 
   constructor(
     private backendApiService: BackendApiService,
@@ -35,10 +38,10 @@ export class DatabaseComponent {
   };
 
   private displayWaitPanel = (): void => {
-    this.isWaitPanelDisplayed = true;
+    this.isWaitPanelDisplayed$.next(true);
   };
 
   private hideWaitPanel = (): void => {
-    this.isWaitPanelDisplayed = false;
+    this.isWaitPanelDisplayed$.next(false);
   };
 }

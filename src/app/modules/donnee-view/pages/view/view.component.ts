@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import * as _ from "lodash";
 import { Age } from "ouca-common/age.object";
@@ -11,7 +11,7 @@ import { Meteo } from "ouca-common/meteo.object";
 import { Milieu } from "ouca-common/milieu.object";
 import { Observateur } from "ouca-common/observateur.object";
 import { Sexe } from "ouca-common/sexe.object";
-import { Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { withLatestFrom } from "rxjs/operators";
 import { UIEspece } from "src/app/models/espece.model";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
@@ -25,8 +25,8 @@ import {
 import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
 @Component({
   styleUrls: ["./view.component.scss"],
-  templateUrl: "./view.component.html"
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: "./view.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewComponent implements OnDestroy {
   private readonly destroy$ = new Subject();
@@ -77,9 +77,13 @@ export class ViewComponent implements OnDestroy {
   public milieux$: Observable<Milieu[]>;
   public meteos$: Observable<Meteo[]>;
 
-  public displayWaitPanel: boolean = false;
+  public displayWaitPanel$: BehaviorSubject<boolean> = new BehaviorSubject<
+    boolean
+  >(false);
 
-  public displayNoDataPanel: boolean = false;
+  public displayNoDataPanel$: BehaviorSubject<boolean> = new BehaviorSubject<
+    boolean
+  >(false);
 
   public donneesToDisplay: FlatDonnee[] = [];
 
@@ -115,8 +119,8 @@ export class ViewComponent implements OnDestroy {
   }
 
   public onSearchButtonClicked(): void {
-    this.displayWaitPanel = true;
-    this.displayNoDataPanel = false;
+    this.displayWaitPanel$.next(true);
+    this.displayNoDataPanel$.next(false);
     this.donneesToDisplay = [];
     this.especesWithNbDonnees = [];
 
@@ -137,7 +141,7 @@ export class ViewComponent implements OnDestroy {
       this.backendApiService
         .exportDonneesByCustomizedFilters(filters)
         .subscribe((response) => {
-          this.displayWaitPanel = false;
+          this.displayWaitPanel$.next(false);
 
           // This is an ugly "bidouille"
           // The export can exceed tha maximum supported number of data (set in backend)
@@ -172,10 +176,10 @@ export class ViewComponent implements OnDestroy {
         .getDonneesByCustomizedFilters(filters)
         .pipe(withLatestFrom(this.especes$))
         .subscribe(([results, especes]) => {
-          this.displayWaitPanel = false;
+          this.displayWaitPanel$.next(false);
           this.donneesToDisplay = results;
           this.setEspecesWithNbDonnees(this.donneesToDisplay, especes);
-          this.displayNoDataPanel = this.donneesToDisplay.length === 0;
+          this.displayNoDataPanel$.next(this.donneesToDisplay.length === 0);
         });
     }
   }

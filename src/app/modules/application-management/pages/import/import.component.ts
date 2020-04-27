@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
@@ -6,13 +7,15 @@ import {
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
 @Component({
-  templateUrl: "./import.component.html"
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: "./import.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportComponent {
   private file: File;
 
-  public isWaitPanelDisplayed: boolean = false;
+  public isWaitPanelDisplayed$: BehaviorSubject<boolean> = new BehaviorSubject<
+    boolean
+  >(false);
 
   constructor(
     private backendApiService: BackendApiService,
@@ -46,10 +49,10 @@ export class ImportComponent {
   };
 
   private displayWaitPanel = (): void => {
-    this.isWaitPanelDisplayed = true;
+    this.isWaitPanelDisplayed$.next(true);
   };
 
   private hideWaitPanel = (): void => {
-    this.isWaitPanelDisplayed = false;
+    this.isWaitPanelDisplayed$.next(false);
   };
 }
