@@ -11,12 +11,15 @@ import {
   MatAutocomplete,
   MatAutocompleteTrigger
 } from "@angular/material/autocomplete";
-import { untilDestroyed } from "ngx-take-until-destroy";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Directive({
   selector: "[autocomplete-active-selection]"
 })
 export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
+  private readonly destroy$ = new Subject();
+
   @Input()
   matAutocomplete: MatAutocomplete;
 
@@ -29,7 +32,7 @@ export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.autoCompleteTrigger.panelClosingActions
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         if (
           this.autoCompleteTrigger.activeOption &&
@@ -42,5 +45,8 @@ export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {} // eslint-disable-line @typescript-eslint/no-empty-function
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
