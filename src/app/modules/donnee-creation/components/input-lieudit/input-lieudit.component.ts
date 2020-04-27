@@ -220,6 +220,8 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
             latitude: coordinates.latitude
           };
         }
+
+        this.areCoordinatesTransformed$.next(false);
         return {
           altitude: null,
           longitude: null,
