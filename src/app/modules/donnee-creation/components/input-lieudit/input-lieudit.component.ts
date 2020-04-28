@@ -145,11 +145,13 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       this.displayCoordinates(
         coordinates.altitude,
         coordinates.longitude,
-        coordinates.latitude
+        coordinates.latitude,
+        coordinates.areTransformed
       );
     });
 
     this.updateAreCoordinatesCustomized$();
+    this.updateAreCoordinatesTransformed$();
   }
 
   public ngOnDestroy(): void {
@@ -207,7 +209,12 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
 
   private getCoordinatesToDisplay$ = (
     lieuditControl: AbstractControl
-  ): Observable<{ altitude: number; longitude: number; latitude: number }> => {
+  ): Observable<{
+    altitude: number;
+    longitude: number;
+    latitude: number;
+    areTransformed: boolean;
+  }> => {
     return combineLatest(
       lieuditControl.valueChanges.pipe(distinctUntilChanged()),
       this.appConfigurationService.getAppCoordinatesSystemType$(),
@@ -221,20 +228,19 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
             coordinatesSystemType
           );
 
-          this.areCoordinatesTransformed$.next(coordinates.isTransformed);
-
           return {
             altitude: selectedLieudit.altitude,
             longitude: coordinates.longitude,
-            latitude: coordinates.latitude
+            latitude: coordinates.latitude,
+            areTransformed: !!coordinates.areTransformed
           };
         }
 
-        this.areCoordinatesTransformed$.next(false);
         return {
           altitude: null,
           longitude: null,
-          latitude: null
+          latitude: null,
+          areTransformed: false
         };
       }
     ).pipe(takeUntil(this.destroy$));
@@ -276,15 +282,27 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       });
   };
 
+  private updateAreCoordinatesTransformed$ = (): void => {
+    this.controlGroup.controls.areCoordinatesTransformed.valueChanges.subscribe(
+      (value) => {
+        this.areCoordinatesTransformed$.next(!!value);
+      }
+    );
+  };
+
   private displayCoordinates = (
     altitude: number,
     longitude: number,
-    latitude: number
+    latitude: number,
+    areTransformed: boolean
   ): void => {
     if (!this.hideCoordinates) {
       this.controlGroup.controls.altitude.setValue(altitude);
       this.controlGroup.controls.longitude.setValue(longitude);
       this.controlGroup.controls.latitude.setValue(latitude);
+      this.controlGroup.controls.areCoordinatesTransformed.setValue(
+        !!areTransformed
+      );
     }
   };
 
