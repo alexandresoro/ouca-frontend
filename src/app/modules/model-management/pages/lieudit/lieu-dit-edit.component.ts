@@ -160,7 +160,7 @@ export class LieuDitEditComponent
           const coordinates = getCoordinates(lieuDit, coordinatesSystem.code);
           this.getForm().controls.longitude.setValue(coordinates?.longitude);
           this.getForm().controls.latitude.setValue(coordinates?.latitude);
-          this.areCoordinatesTransformed$.next(coordinates.isTransformed);
+          this.areCoordinatesTransformed$.next(!!coordinates?.areTransformed);
         }
       });
   }
@@ -228,7 +228,7 @@ export class LieuDitEditComponent
         longitude: formValue.longitude,
         latitude: formValue.latitude,
         system: formValue.coordinatesSystem,
-        isTransformed: false
+        areTransformed: false
       }
     };
     return lieuDit;

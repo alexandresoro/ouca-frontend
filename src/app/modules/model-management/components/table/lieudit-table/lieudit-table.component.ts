@@ -23,7 +23,7 @@ interface LieuditRow {
   longitude: number;
   latitude: number;
   coordinatesSystem: string;
-  isTransformed: boolean;
+  areTransformed: boolean;
   nbDonnees: number;
 }
 
@@ -115,7 +115,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<UILieudit>
       longitude: coordinates.longitude,
       latitude: coordinates.latitude,
       coordinatesSystem: COORDINATES_SYSTEMS_CONFIG[coordinates.system].name,
-      isTransformed: coordinates.isTransformed,
+      areTransformed: !!coordinates.areTransformed,
       nbDonnees: lieudit.nbDonnees
     };
   }

@@ -118,7 +118,7 @@ export class LieuditFormComponent extends EntitySubFormComponent<UILieudit>
         const coordinates = getCoordinates(lieudit, coordinatesSystem.code);
         this.entityForm.controls.longitude.setValue(coordinates?.longitude);
         this.entityForm.controls.latitude.setValue(coordinates?.latitude);
-        this.areCoordinatesTransformed$.next(coordinates.isTransformed);
+        this.areCoordinatesTransformed$.next(!!coordinates?.areTransformed);
       }
     });
 
