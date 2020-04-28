@@ -23,3 +23,9 @@
     Générer
   </button>
 </mat-form-field>
+<mat-error
+  *ngIf="control.hasError('forbiddenValue')"
+  class="creation-page-error"
+>
+  La numéro de regroupement doit être un nombre entier compris entre 1 et 65535.
+</mat-error>

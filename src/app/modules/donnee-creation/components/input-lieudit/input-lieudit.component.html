@@ -109,6 +109,36 @@
         />
       </mat-form-field>
 
+      <div>
+        <mat-error
+          *ngIf="controlGroup.controls['altitude'].hasError('forbiddenValue')"
+          class="creation-page-error"
+        >
+          L'altitude doit être un nombre entier compris entre 0 et 65535.
+        </mat-error>
+        <mat-error
+          *ngIf="
+            controlGroup.controls['longitude'].hasError('min') ||
+            controlGroup.controls['longitude'].hasError('max')
+          "
+          class="creation-page-error"
+        >
+          La longitude doit être un nombre compris entre
+          {{ coordinatesSystem?.longitudeRange.min }} et
+          {{ coordinatesSystem?.longitudeRange.max }}.
+        </mat-error>
+        <mat-error
+          *ngIf="
+            controlGroup.controls['latitude'].hasError('min') ||
+            controlGroup.controls['latitude'].hasError('max')
+          "
+          class="creation-page-error"
+        >
+          La latitude doit être un nombre compris entre
+          {{ coordinatesSystem?.latitudeRange.min }} et
+          {{ coordinatesSystem?.latitudeRange.max }}.
+        </mat-error>
+      </div>
       <div
         *ngIf="areCoordinatesCustomized$ | async"
         class="coordinates-customized-message"

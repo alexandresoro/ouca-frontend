@@ -58,7 +58,7 @@ $custom-typography: mat-typography-config(
       mat-font-size($defaultConfig, input)-0.125,
       mat-line-height($defaultConfig, input)-0.125,
       mat-font-weight($defaultConfig, input)
-    ),
+    )
 );
 
 @include angular-material-theme($candy-app-theme);
@@ -154,5 +154,11 @@ body.base-naturaliste {
     mat-form-field {
       margin-bottom: 15px;
     }
+  }
+
+  .creation-page-error {
+    font-size: 75%;
+    margin-top: -1.25em;
+    margin-bottom: 1.25em;
   }
 }

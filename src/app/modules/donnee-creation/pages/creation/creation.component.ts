@@ -541,4 +541,14 @@ export class CreationComponent implements OnInit, OnDestroy {
   private isEditingBothInventaireAndDonnee = (): boolean => {
     return this.inventaireForm.enabled && this.donneeForm.enabled;
   };
+
+  public isDistanceFieldInvalid = (): boolean => {
+    return (this.donneeForm.controls
+      .distanceGroup as FormGroup).controls.distance.hasError("forbiddenValue");
+  };
+
+  public isNombreFieldInvalid = (): boolean => {
+    return (this.donneeForm.controls
+      .nombreGroup as FormGroup).controls.nombre.hasError("forbiddenValue");
+  };
 }

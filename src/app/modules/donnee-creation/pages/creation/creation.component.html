@@ -199,6 +199,20 @@
                 [meteos]="meteos$ | async"
                 [control]="inventaireForm.controls['meteos']"
               ></input-meteos>
+
+              <div>
+                <mat-error
+                  *ngIf="
+                    inventaireForm.controls['temperature'].hasError(
+                      'forbiddenValue'
+                    )
+                  "
+                  class="creation-page-error"
+                >
+                  La température doit être un nombre entier compris entre -128
+                  et 127.
+                </mat-error>
+              </div>
             </mat-card>
             <!-- END CARD TEMPERATURE + METEO -->
           </div>
@@ -261,6 +275,14 @@
                   [ages]="ages$ | async"
                 ></input-age>
               </div>
+              <div>
+                <mat-error
+                  *ngIf="isNombreFieldInvalid()"
+                  class="creation-page-error"
+                >
+                  Le nombre doit être un nombre entier compris entre 1 et 65535.
+                </mat-error>
+              </div>
 
               <!-- DISTANCE AND ESTIMATION DISTANCE -->
               <div
@@ -289,6 +311,14 @@
                   fxFlexOffset="10%"
                   [control]="donneeForm.controls['regroupement']"
                 ></input-regroupement>
+
+                <mat-error
+                  *ngIf="isDistanceFieldInvalid()"
+                  class="creation-page-error"
+                >
+                  La distance doit être un nombre entier compris entre 0 et
+                  65535.
+                </mat-error>
               </div>
             </mat-card>
             <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
