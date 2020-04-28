@@ -81,7 +81,8 @@ export class InventaireFormService {
           this.altitudeValidator()
         ]),
         longitude: new FormControl(),
-        latitude: new FormControl()
+        latitude: new FormControl(),
+        coordinatesSystem: new FormControl()
       }),
       temperature: new FormControl("", [this.temperatureValidator()]),
       meteos: new FormControl("", [this.meteosValidator()])
@@ -168,7 +169,8 @@ export class InventaireFormService {
       observateursAssocies: [],
       date: today,
       lieu: {
-        departement: defaultDepartement
+        departement: defaultDepartement,
+        coordinatesSystem: appConfiguration.coordinatesSystem
       },
       meteos: []
     };
@@ -244,7 +246,8 @@ export class InventaireFormService {
         lieudit,
         altitude,
         longitude: coordinates.longitude,
-        latitude: coordinates.latitude
+        latitude: coordinates.latitude,
+        coordinatesSystem
       },
       temperature: inventaire.temperature,
       meteos

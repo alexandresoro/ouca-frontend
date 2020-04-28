@@ -109,6 +109,14 @@
     </mat-form-field>
 
     <div
+      *ngIf="areCoordinatesCustomized$ | async"
+      class="coordinates-customized-message"
+    >
+      <mat-icon [inline]="true">info</mat-icon> Les coordonnées du lieu-dit sont
+      personnalisées pour cet inventaire.
+    </div>
+
+    <div
       *ngIf="areCoordinatesTransformed$ | async"
       class="coordinates-transformed-message"
     >

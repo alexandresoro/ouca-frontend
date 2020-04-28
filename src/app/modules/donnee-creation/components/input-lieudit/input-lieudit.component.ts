@@ -6,12 +6,15 @@ import {
   OnInit
 } from "@angular/core";
 import { AbstractControl, FormGroup } from "@angular/forms";
+import * as _ from "lodash";
 import { Commune } from "ouca-common/commune.model";
 import {
+  areSameCoordinates,
   CoordinatesSystem,
   CoordinatesSystemType,
   getCoordinates
 } from "ouca-common/coordinates-system";
+import { Coordinates } from "ouca-common/coordinates.object";
 import { Departement } from "ouca-common/departement.object";
 import { Lieudit } from "ouca-common/lieudit.model";
 import {
@@ -61,6 +64,10 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   public filteredCommunes$: Observable<UICommune[]>;
 
   public areCoordinatesTransformed$: BehaviorSubject<
+    boolean
+  > = new BehaviorSubject<boolean>(false);
+
+  public areCoordinatesCustomized$: BehaviorSubject<
     boolean
   > = new BehaviorSubject<boolean>(false);
 
@@ -141,6 +148,8 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
         coordinates.latitude
       );
     });
+
+    this.updateAreCoordinatesCustomized$();
   }
 
   public ngOnDestroy(): void {
@@ -229,6 +238,42 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
         };
       }
     ).pipe(takeUntil(this.destroy$));
+  };
+
+  private updateAreCoordinatesCustomized$ = (): void => {
+    combineLatest(
+      this.controlGroup.controls.altitude.valueChanges.pipe(
+        distinctUntilChanged()
+      ),
+      this.controlGroup.controls.longitude.valueChanges.pipe(
+        distinctUntilChanged()
+      ),
+      this.controlGroup.controls.latitude.valueChanges.pipe(
+        distinctUntilChanged()
+      )
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([altitude, longitude, latitude]) => {
+        this.areCoordinatesCustomized$.next(false);
+
+        if (!_.isNil(altitude) && !_.isNil(longitude) && !_.isNil(latitude)) {
+          const lieudit = this.controlGroup.controls.lieudit.value;
+          if (lieudit?.id) {
+            const inventaireCoordinates: Coordinates = {
+              longitude,
+              latitude,
+              system: this.controlGroup.controls.coordinatesSystem.value
+            };
+
+            if (
+              altitude !== lieudit.altitude ||
+              !areSameCoordinates(lieudit.coordinates, inventaireCoordinates)
+            ) {
+              this.areCoordinatesCustomized$.next(true);
+            }
+          }
+        }
+      });
   };
 
   private displayCoordinates = (
