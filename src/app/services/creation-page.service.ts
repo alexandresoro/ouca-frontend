@@ -164,7 +164,10 @@ export class CreationPageService {
               ? "La fiche espèce et sa fiche inventaire ont été mises à jour avec succès."
               : "La fiche espèce a été sauvegardée avec succès."
           );
-          this.donneeService.setPreviousDonneeId(response.insertId);
+
+          if (!isUpdateMode) {
+            this.donneeService.setPreviousDonneeId(response.insertId);
+          }
         } else {
           this.statusMessageService.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de la fiche espèce. " +
