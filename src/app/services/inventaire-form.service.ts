@@ -11,6 +11,7 @@ import { AppConfiguration } from "ouca-common/app-configuration.object";
 import {
   areCoordinatesCustomized,
   CoordinatesSystemType,
+  COORDINATES_SYSTEMS_CONFIG,
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
@@ -211,6 +212,14 @@ export class InventaireFormService {
         altitude = inventaire.customizedAltitude;
         coordinates = getCoordinates(inventaire, coordinatesSystem);
       }
+    }
+
+    if (coordinates.areInvalid) {
+      // If the coordinates are invalid we will hide the coordinates fields
+      // but in order to be able to validate the form we set the fields with their min value
+      const system = COORDINATES_SYSTEMS_CONFIG[coordinatesSystem];
+      coordinates.longitude = system.longitudeRange.min;
+      coordinates.latitude = system.latitudeRange.min;
     }
 
     const meteos = ListHelper.getEntitiesFromIDs(

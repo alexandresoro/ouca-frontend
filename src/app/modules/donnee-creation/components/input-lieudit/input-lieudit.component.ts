@@ -306,7 +306,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     this.controlGroup.controls.areCoordinatesInvalid.valueChanges
       .pipe(distinctUntilChanged())
       .pipe(takeUntil(this.destroy$))
-      .subscribe((areInvalid) => {
+      .subscribe((areInvalid: boolean) => {
         this.areCoordinatesInvalid$.next(!!areInvalid);
 
         if (areInvalid) {
