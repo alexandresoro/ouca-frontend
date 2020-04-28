@@ -1,6 +1,7 @@
 @use "src/styles/variables";
 
-.coordinates-transformed-message {
+.coordinates-transformed-message,
+.coordinates-invalid-message {
   color: variables.$main-color;
   margin-bottom: 1.25em;
 }

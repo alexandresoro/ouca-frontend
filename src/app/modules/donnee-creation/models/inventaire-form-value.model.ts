@@ -21,6 +21,7 @@ export interface InventaireFormValue {
     latitude: number;
     coordinatesSystem: CoordinatesSystemType;
     areCoordinatesTransformed: boolean;
+    areCoordinatesInvalid: boolean;
   };
   temperature: number;
   meteos: Meteo[];

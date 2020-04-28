@@ -12,6 +12,7 @@ import {
   areSameCoordinates,
   CoordinatesSystem,
   CoordinatesSystemType,
+  COORDINATES_SYSTEMS_CONFIG,
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
@@ -70,6 +71,10 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   public areCoordinatesCustomized$: BehaviorSubject<
     boolean
   > = new BehaviorSubject<boolean>(false);
+
+  public areCoordinatesInvalid$: BehaviorSubject<boolean> = new BehaviorSubject<
+    boolean
+  >(false);
 
   public departementAutocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -146,12 +151,14 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
         coordinates.altitude,
         coordinates.longitude,
         coordinates.latitude,
-        coordinates.areTransformed
+        coordinates.areTransformed,
+        coordinates.areInvalid
       );
     });
 
     this.updateAreCoordinatesCustomized$();
     this.updateAreCoordinatesTransformed$();
+    this.updateAreCoordinatesInvalid$();
   }
 
   public ngOnDestroy(): void {
@@ -214,6 +221,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     longitude: number;
     latitude: number;
     areTransformed: boolean;
+    areInvalid: boolean;
   }> => {
     return combineLatest(
       lieuditControl.valueChanges.pipe(distinctUntilChanged()),
@@ -232,7 +240,8 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
             altitude: selectedLieudit.altitude,
             longitude: coordinates.longitude,
             latitude: coordinates.latitude,
-            areTransformed: !!coordinates.areTransformed
+            areTransformed: !!coordinates.areTransformed,
+            areInvalid: !!coordinates.areInvalid
           };
         }
 
@@ -240,7 +249,8 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
           altitude: null,
           longitude: null,
           latitude: null,
-          areTransformed: false
+          areTransformed: false,
+          areInvalid: false
         };
       }
     ).pipe(takeUntil(this.destroy$));
@@ -283,18 +293,44 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   };
 
   private updateAreCoordinatesTransformed$ = (): void => {
-    this.controlGroup.controls.areCoordinatesTransformed.valueChanges.subscribe(
-      (value) => {
+    this.controlGroup.controls.areCoordinatesTransformed.valueChanges
+      .pipe(distinctUntilChanged())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
         this.areCoordinatesTransformed$.next(!!value);
-      }
-    );
+      });
+  };
+
+  private updateAreCoordinatesInvalid$ = (): void => {
+    this.controlGroup.controls.areCoordinatesInvalid.valueChanges
+      .pipe(distinctUntilChanged())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((areInvalid) => {
+        this.areCoordinatesInvalid$.next(!!areInvalid);
+
+        if (areInvalid) {
+          // If the coordinates are invalid we will hide the coordinates fields
+          // but in order to be able to validate the form we set the fields with their min value
+          const coordinatesSystem: CoordinatesSystem =
+            COORDINATES_SYSTEMS_CONFIG[
+              this.controlGroup.controls.coordinatesSystem.value
+            ];
+          this.controlGroup.controls.longitude.setValue(
+            coordinatesSystem?.longitudeRange.min
+          );
+          this.controlGroup.controls.latitude.setValue(
+            coordinatesSystem?.latitudeRange.min
+          );
+        }
+      });
   };
 
   private displayCoordinates = (
     altitude: number,
     longitude: number,
     latitude: number,
-    areTransformed: boolean
+    areTransformed: boolean,
+    areInvalid: boolean
   ): void => {
     if (!this.hideCoordinates) {
       this.controlGroup.controls.altitude.setValue(altitude);
@@ -303,6 +339,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       this.controlGroup.controls.areCoordinatesTransformed.setValue(
         !!areTransformed
       );
+      this.controlGroup.controls.areCoordinatesInvalid.setValue(!!areInvalid);
     }
   };
 

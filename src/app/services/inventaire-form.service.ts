@@ -83,7 +83,8 @@ export class InventaireFormService {
         longitude: new FormControl(),
         latitude: new FormControl(),
         coordinatesSystem: new FormControl(),
-        areCoordinatesTransformed: new FormControl()
+        areCoordinatesTransformed: new FormControl(),
+        areCoordinatesInvalid: new FormControl()
       }),
       temperature: new FormControl("", [this.temperatureValidator()]),
       meteos: new FormControl("", [this.meteosValidator()])
@@ -248,7 +249,8 @@ export class InventaireFormService {
         longitude: coordinates.longitude,
         latitude: coordinates.latitude,
         coordinatesSystem,
-        areCoordinatesTransformed: !!coordinates.areTransformed
+        areCoordinatesTransformed: !!coordinates.areTransformed,
+        areCoordinatesInvalid: !!coordinates.areInvalid
       },
       temperature: inventaire.temperature,
       meteos
@@ -289,6 +291,7 @@ export class InventaireFormService {
     };
 
     if (
+      !!inventaireFormValue.lieu.areCoordinatesInvalid ||
       !areCoordinatesCustomized(
         lieudit,
         inventaireAltitude,

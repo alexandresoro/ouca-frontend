@@ -66,63 +66,74 @@
   </div>
 
   <div *ngIf="!hideCoordinates" fxLayout="row wrap" fxLayoutGap="20px">
-    <!-- ALTITUDE -->
-    <mat-form-field fxFlex="1 0 100px">
-      <input
-        [formControl]="controlGroup.controls['altitude']"
-        matInput
-        min="0"
-        max="65535"
-        type="number"
-        placeholder="Altitude"
-        id="input-altitude"
-        name="altitude"
-      />
-    </mat-form-field>
+    <ng-container *ngIf="!(areCoordinatesInvalid$ | async)">
+      <!-- ALTITUDE -->
+      <mat-form-field fxFlex="1 0 100px">
+        <input
+          [formControl]="controlGroup.controls['altitude']"
+          matInput
+          min="0"
+          max="65535"
+          type="number"
+          placeholder="Altitude"
+          id="input-altitude"
+          name="altitude"
+        />
+      </mat-form-field>
 
-    <!-- LONGITUDE -->
-    <mat-form-field fxFlex="1 0 100px">
-      <input
-        [formControl]="controlGroup.controls['longitude']"
-        matInput
-        [min]="coordinatesSystem?.longitudeRange.min"
-        [max]="coordinatesSystem?.longitudeRange.max"
-        type="number"
-        placeholder="Longitude"
-        id="input-longitude"
-        name="longitude"
-      />
-    </mat-form-field>
+      <!-- LONGITUDE -->
+      <mat-form-field fxFlex="1 0 100px">
+        <input
+          [formControl]="controlGroup.controls['longitude']"
+          matInput
+          [min]="coordinatesSystem?.longitudeRange.min"
+          [max]="coordinatesSystem?.longitudeRange.max"
+          type="number"
+          placeholder="Longitude"
+          id="input-longitude"
+          name="longitude"
+        />
+      </mat-form-field>
 
-    <!-- LATITUDE -->
-    <mat-form-field fxFlex="1 0 100px">
-      <input
-        [formControl]="controlGroup.controls['latitude']"
-        matInput
-        [min]="coordinatesSystem?.latitudeRange.min"
-        [max]="coordinatesSystem?.latitudeRange.max"
-        type="number"
-        placeholder="Latitude"
-        id="input-latitude"
-        name="latitude"
-      />
-    </mat-form-field>
+      <!-- LATITUDE -->
+      <mat-form-field fxFlex="1 0 100px">
+        <input
+          [formControl]="controlGroup.controls['latitude']"
+          matInput
+          [min]="coordinatesSystem?.latitudeRange.min"
+          [max]="coordinatesSystem?.latitudeRange.max"
+          type="number"
+          placeholder="Latitude"
+          id="input-latitude"
+          name="latitude"
+        />
+      </mat-form-field>
 
+      <div
+        *ngIf="areCoordinatesCustomized$ | async"
+        class="coordinates-customized-message"
+      >
+        <mat-icon [inline]="true">info</mat-icon> Les coordonnées du lieu-dit
+        sont personnalisées pour cet inventaire.
+      </div>
+
+      <div
+        *ngIf="areCoordinatesTransformed$ | async"
+        class="coordinates-transformed-message"
+      >
+        <mat-icon [inline]="true">info</mat-icon> Les coordonnées de cet
+        inventaire sont converties à partir d'un autre système de coordonnées.
+        Si vous les modifiez, elles seront sauvegardées dans le système de
+        coordonnées courant de l'application (voir page de configuration).
+      </div>
+    </ng-container>
     <div
-      *ngIf="areCoordinatesCustomized$ | async"
-      class="coordinates-customized-message"
-    >
-      <mat-icon [inline]="true">info</mat-icon> Les coordonnées du lieu-dit sont
-      personnalisées pour cet inventaire.
-    </div>
-
-    <div
-      *ngIf="areCoordinatesTransformed$ | async"
-      class="coordinates-transformed-message"
+      *ngIf="areCoordinatesInvalid$ | async"
+      class="coordinates-invalid-message"
     >
       <mat-icon [inline]="true">info</mat-icon> Les coordonnées de cet
-      inventaire sont converties à partir d'un autre système de coordonnées. Si
-      vous les modifiez, elles seront sauvegardées dans le système de
+      inventaire ne peuvent pas être affichées car elles sont renseignées dans
+      un système de coordonnées qui ne peut pas être converti vers le système de
       coordonnées courant de l'application (voir page de configuration).
     </div>
   </div>
