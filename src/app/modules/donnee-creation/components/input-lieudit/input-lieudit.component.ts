@@ -29,7 +29,6 @@ import {
 import { distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
-import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
@@ -104,10 +103,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(
-    private appConfigurationService: AppConfigurationService,
-    private entitiesStoreService: EntitiesStoreService
-  ) {
+  constructor(private entitiesStoreService: EntitiesStoreService) {
     this.departements$ = this.entitiesStoreService.getDepartements$();
   }
 
@@ -225,12 +221,17 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   }> => {
     return combineLatest(
       lieuditControl.valueChanges.pipe(distinctUntilChanged()),
-      this.appConfigurationService.getAppCoordinatesSystemType$(),
+      this.controlGroup.controls.coordinatesSystem.valueChanges.pipe(
+        distinctUntilChanged()
+      ),
       (
         selectedLieudit: Lieudit,
         coordinatesSystemType: CoordinatesSystemType
       ) => {
-        if (selectedLieudit?.id && coordinatesSystemType) {
+        this.coordinatesSystem =
+          COORDINATES_SYSTEMS_CONFIG[coordinatesSystemType];
+
+        if (!!selectedLieudit?.id && !!coordinatesSystemType) {
           const coordinates = getCoordinates(
             selectedLieudit,
             coordinatesSystemType
