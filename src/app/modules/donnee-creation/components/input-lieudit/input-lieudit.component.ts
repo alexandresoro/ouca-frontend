@@ -5,7 +5,13 @@ import {
   OnDestroy,
   OnInit
 } from "@angular/core";
-import { AbstractControl, FormGroup } from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import * as _ from "lodash";
 import { Commune } from "ouca-common/commune.model";
 import {
@@ -27,6 +33,7 @@ import {
 import { distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
+import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { CoordinatesService } from "src/app/services/coordinates.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
@@ -145,6 +152,13 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     });
 
     this.updateAreCoordinatesCustomized$();
+
+    this.getAreCoordinatesInvalid$()
+      .pipe(distinctUntilChanged())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((areInvalid) => {
+        this.updateCoordinatesControls(this.controlGroup, areInvalid);
+      });
   }
 
   public ngOnDestroy(): void {
@@ -283,11 +297,34 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     areInvalid: boolean
   ): void => {
     if (!this.hideCoordinates) {
-      this.controlGroup.controls.altitude.setValue(altitude);
-      this.controlGroup.controls.longitude.setValue(longitude);
-      this.controlGroup.controls.latitude.setValue(latitude);
+      if (!areInvalid && this.controlGroup.contains("altitude")) {
+        this.controlGroup.controls.altitude.setValue(altitude);
+        this.controlGroup.controls.longitude.setValue(longitude);
+        this.controlGroup.controls.latitude.setValue(latitude);
+      }
       this.coordinatesService.setAreCoordinatesTransformed(!!areTransformed);
       this.coordinatesService.setAreCoordinatesInvalid(!!areInvalid);
+    }
+  };
+
+  private updateCoordinatesControls = (
+    lieuditGroup: FormGroup,
+    areInvalid: boolean
+  ): void => {
+    if (areInvalid && lieuditGroup.contains("altitude")) {
+      lieuditGroup.removeControl("altitude");
+      lieuditGroup.removeControl("longitude");
+      lieuditGroup.removeControl("latitude");
+    } else if (!lieuditGroup.contains("altitude")) {
+      const altitudeControl = new FormControl("", [
+        Validators.required,
+        this.altitudeValidator()
+      ]);
+      const longitudeControl = new FormControl();
+      const latitudeControl = new FormControl();
+      lieuditGroup.addControl("altitude", altitudeControl);
+      lieuditGroup.addControl("longitude", longitudeControl);
+      lieuditGroup.addControl("latitude", latitudeControl);
     }
   };
 
@@ -313,5 +350,12 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
 
   public displayLieuDitFormat = (lieudit: Lieudit): string => {
     return lieudit ? lieudit.nom : null;
+  };
+
+  /**
+   * The altitude should be filled and should be an integer
+   */
+  private altitudeValidator = (): ValidatorFn => {
+    return FormValidatorHelper.isAnIntegerValidator(0, 65535);
   };
 }

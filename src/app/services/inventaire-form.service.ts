@@ -115,6 +115,10 @@ export class InventaireFormService {
         },
         appConfiguration
       );
+
+      this.coordinatesService.setAreCoordinatesInvalid(false);
+      this.coordinatesService.setAreCoordinatesTransformed(false);
+
       form.reset(defaultOptions);
     } else {
       const inventaireFormValue = this.getInventaireFormValue(
@@ -126,6 +130,7 @@ export class InventaireFormService {
         inventaire,
         appConfiguration.coordinatesSystem
       );
+
       form.reset(inventaireFormValue);
     }
   };
@@ -270,29 +275,6 @@ export class InventaireFormService {
       inventaireFormValue.lieu.lieudit
     );
 
-    const coordinatesSystem: CoordinatesSystemType = this.coordinatesService.getCoordinatesSystemType();
-
-    let inventaireAltitude: number = inventaireFormValue.lieu.altitude;
-    let inventaireCoordinates: Coordinates = {
-      longitude: inventaireFormValue.lieu.longitude,
-      latitude: inventaireFormValue.lieu.latitude,
-      system: coordinatesSystem
-    };
-
-    if (
-      !!this.coordinatesService.getAreCoordinatesInvalid() ||
-      !areCoordinatesCustomized(
-        lieudit,
-        inventaireAltitude,
-        inventaireCoordinates.longitude,
-        inventaireCoordinates.latitude,
-        coordinatesSystem
-      )
-    ) {
-      inventaireAltitude = null;
-      inventaireCoordinates = null;
-    }
-
     const meteosIds: number[] = ListHelper.getIDsFromEntities(
       inventaireFormValue.meteos
     );
@@ -307,11 +289,35 @@ export class InventaireFormService {
       heure,
       duree,
       lieuditId: lieudit?.id ? lieudit.id : null,
-      customizedAltitude: inventaireAltitude,
-      coordinates: inventaireCoordinates,
       temperature: inventaireFormValue.temperature,
       meteosIds
     };
+
+    if (_.has(inventaireFormValue.lieu, "altitude")) {
+      const coordinatesSystem: CoordinatesSystemType = this.coordinatesService.getCoordinatesSystemType();
+
+      let inventaireAltitude: number = inventaireFormValue.lieu.altitude;
+      let inventaireCoordinates: Coordinates = {
+        longitude: inventaireFormValue.lieu.longitude,
+        latitude: inventaireFormValue.lieu.latitude,
+        system: coordinatesSystem
+      };
+
+      if (
+        !areCoordinatesCustomized(
+          lieudit,
+          inventaireAltitude,
+          inventaireCoordinates.longitude,
+          inventaireCoordinates.latitude,
+          coordinatesSystem
+        )
+      ) {
+        inventaireAltitude = null;
+        inventaireCoordinates = null;
+      }
+      inventaire.customizedAltitude = inventaireAltitude;
+      inventaire.coordinates = inventaireCoordinates;
+    }
 
     console.log("Inventaire généré depuis le formulaire:", inventaire);
 
@@ -383,14 +389,7 @@ export class InventaireFormService {
    * The altitude should be filled and should be an integer
    */
   private altitudeValidator = (): ValidatorFn => {
-    return this.coordinatesValidator(0, 65535);
-  };
-
-  /**
-   * The coordinates should be integer
-   */
-  private coordinatesValidator = (min: number, max: number): ValidatorFn => {
-    return FormValidatorHelper.isAnIntegerValidator(min, max);
+    return FormValidatorHelper.isAnIntegerValidator(0, 65535);
   };
 
   /**

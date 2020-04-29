@@ -15,9 +15,9 @@ export interface InventaireFormValue {
     departement: Departement;
     commune: UICommune;
     lieudit: UILieudit;
-    altitude: number;
-    longitude: number;
-    latitude: number;
+    altitude?: number;
+    longitude?: number;
+    latitude?: number;
   };
   temperature: number;
   meteos: Meteo[];
