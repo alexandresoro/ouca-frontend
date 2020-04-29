@@ -1,0 +1,99 @@
+<div class="page-container">
+  <h1>Comportements</h1>
+
+  <mat-card>
+    <mat-card-title>
+      <h2 *ngIf="!(getIsEditionMode$() | async)">Création d'un comportement</h2>
+      <h2 *ngIf="getIsEditionMode$() | async">Edition d'un comportement</h2>
+    </mat-card-title>
+
+    <mat-card-content>
+      <form [formGroup]="getForm()" class="entity-form">
+        <!-- ID -->
+        <mat-form-field *ngIf="getIsEditionMode$() | async">
+          <input
+            [formControl]="getForm().controls['id']"
+            id="input-id"
+            matInput
+            name="id"
+            placeholder="ID"
+            readonly
+            type="text"
+          />
+        </mat-form-field>
+
+        <!-- CODE -->
+        <mat-form-field>
+          <input
+            [errorStateMatcher]="codeErrorStateMatcher"
+            [formControl]="getForm().controls['code']"
+            id="input-code"
+            matInput
+            maxlength="6"
+            name="code"
+            placeholder="Code"
+            type="text"
+          />
+          <mat-error *ngIf="getForm().controls['code'].hasError('required')">
+            Le champ "Code" ne peut pas être vide.
+          </mat-error>
+          <mat-error *ngIf="getForm().hasError('alreadyExistingCode')">
+            {{ getForm().getError("alreadyExistingCode").message }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- LIBELLE -->
+        <mat-form-field>
+          <input
+            [errorStateMatcher]="libelleErrorStateMatcher"
+            [formControl]="getForm().controls['libelle']"
+            id="input-libelle"
+            matInput
+            maxlength="100"
+            name="libelle"
+            placeholder="Libellé"
+            type="text"
+          />
+
+          <mat-error *ngIf="getForm().controls['libelle'].hasError('required')">
+            Le champ "Libellé" ne peut pas être vide.
+          </mat-error>
+          <mat-error *ngIf="getForm().hasError('alreadyExistingLibelle')">
+            {{ getForm().getError("alreadyExistingLibelle").message }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- IS NICHEUR -->
+        <mat-checkbox
+          [formControl]="getForm().controls['isNicheur']"
+          id="input-nicheur"
+          name="nicheur"
+          >Nicheur</mat-checkbox
+        >
+
+        <div class="cancel-submit-buttons">
+          <button
+            mat-raised-button
+            type="button"
+            color="accent"
+            (click)="backToEntityPage()"
+          >
+            <mat-icon>cancel</mat-icon>
+            Annuler
+          </button>
+          <span class="button-spacer"></span>
+          <button
+            mat-raised-button
+            type="submit"
+            color="primary"
+            [disabled]="!getForm().valid"
+            (click)="saveEntity(getForm().value)"
+          >
+            <mat-icon>save</mat-icon>
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

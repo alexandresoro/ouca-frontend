@@ -1,0 +1,64 @@
+<table-topbar
+  [selectedId]="selectedObjectId"
+  (onClickEditObject)="editObject()"
+  (onClickDeleteObject)="deleteObject()"
+  (onFilterChange)="applyFilter($event)"
+>
+</table-topbar>
+
+<div class="mat-elevation-z8">
+  <table
+    class="entite-avec-libelle-et-code-table"
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+  >
+    <!-- Code -->
+    <ng-container matColumnDef="code">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="code">
+        Code
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.code }}</td>
+    </ng-container>
+
+    <!-- Libelle -->
+    <ng-container matColumnDef="libelle">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="libelle">
+        Libellé
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.libelle }}</td>
+    </ng-container>
+
+    <!-- Nicheur -->
+    <ng-container matColumnDef="isNicheur">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="nicheur">
+        Nicheur
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.isNicheur ? "Oui" : "Non" }}
+      </td>
+    </ng-container>
+
+    <!-- Nombre de fiches espèces -->
+    <ng-container matColumnDef="nbDonnees">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="nb-donnees">
+        Nombre de fiches espèces
+      </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.nbDonnees }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="onRowClicked(row.id)"
+      [ngClass]="{
+        'selected-row': !!selectedObjectId && selectedObjectId == row.id
+      }"
+    ></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[50, 100, 150]"></mat-paginator>
+</div>

@@ -9,13 +9,19 @@ import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et
   styleUrls: [
     "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component.scss"
   ],
-  templateUrl:
-    "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.tpl.html",
+  templateUrl: "./comportement-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComportementTableComponent extends EntiteAvecLibelleEtCodeTableComponent<
   Comportement
 > {
+  public displayedColumns: string[] = [
+    "code",
+    "libelle",
+    "isNicheur",
+    "nbDonnees"
+  ];
+
   constructor(private entitiesStoreService: EntitiesStoreService) {
     super();
   }

@@ -44,7 +44,7 @@ export class EstimationNombreEditComponent
     const { nonCompte, ...estimationAttributes } = formValue;
     return {
       ...estimationAttributes,
-      nonCompte: nonCompte ? true : false
+      nonCompte: !!nonCompte
     };
   }
 
