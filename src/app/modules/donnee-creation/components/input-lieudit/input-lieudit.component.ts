@@ -141,24 +141,25 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
 
     this.filteredLieuxdits$ = this.getLieuxditsToDisplay$(communeControl);
 
-    this.getCoordinatesToDisplay$(lieuditControl).subscribe((coordinates) => {
-      this.displayCoordinates(
-        coordinates.altitude,
-        coordinates.longitude,
-        coordinates.latitude,
-        coordinates.areTransformed,
-        coordinates.areInvalid
-      );
-    });
-
-    this.updateAreCoordinatesCustomized$();
-
-    this.getAreCoordinatesInvalid$()
-      .pipe(distinctUntilChanged())
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((areInvalid) => {
-        this.updateCoordinatesControls(this.controlGroup, areInvalid);
+    if (!this.isMultipleSelectMode) {
+      this.getCoordinatesToDisplay$(lieuditControl).subscribe((coordinates) => {
+        this.displayCoordinates(
+          coordinates.altitude,
+          coordinates.longitude,
+          coordinates.latitude,
+          coordinates.areTransformed,
+          coordinates.areInvalid
+        );
       });
+      this.updateAreCoordinatesCustomized$();
+
+      this.getAreCoordinatesInvalid$()
+        .pipe(distinctUntilChanged())
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((areInvalid) => {
+          this.updateCoordinatesControls(this.controlGroup, areInvalid);
+        });
+    }
   }
 
   public ngOnDestroy(): void {
