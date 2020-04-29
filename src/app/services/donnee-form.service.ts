@@ -410,11 +410,11 @@ export class DonneeFormService {
    * @param entitesCodeEtLibelle list of entities
    * @param index index of the entity to return
    */
-  private getEntiteCodeEtLibelle = (
-    entities: EntiteAvecLibelleEtCode[],
+  private getEntiteCodeEtLibelle = <T extends EntiteAvecLibelleEtCode>(
+    entities: T[],
     ids: number[],
     index: number
-  ): EntiteAvecLibelleEtCode => {
+  ): T => {
     const id: number =
       ids.length >= index && !!ids[index - 1] ? ids[index - 1] : null;
 
