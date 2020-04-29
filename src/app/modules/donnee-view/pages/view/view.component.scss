@@ -18,11 +18,16 @@
 }
 
 #input-excel {
-  margin-left: 20px;
+  margin-left: 30px;
 }
 
 .view-tab-group {
   div.mat-tab-body-wrapper {
     @include mixins.view-table-body-wrapper;
   }
+}
+
+.search-coordinates-field {
+  margin-left: 30px;
+  width: 200px;
 }

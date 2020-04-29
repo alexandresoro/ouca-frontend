@@ -3,6 +3,10 @@ import { FormControl, FormGroup } from "@angular/forms";
 import * as _ from "lodash";
 import { Age } from "ouca-common/age.object";
 import { Comportement } from "ouca-common/comportement.object";
+import {
+  CoordinatesSystem,
+  COORDINATES_SYSTEMS_CONFIG
+} from "ouca-common/coordinates-system";
 import { DonneesFilter } from "ouca-common/donnees-filter.object";
 import { EstimationDistance } from "ouca-common/estimation-distance.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
@@ -15,6 +19,7 @@ import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { withLatestFrom } from "rxjs/operators";
 import { UIEspece } from "src/app/models/espece.model";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
+import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
@@ -30,6 +35,10 @@ import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
 })
 export class ViewComponent implements OnDestroy {
   private readonly destroy$ = new Subject();
+
+  public coordinatesSystems: CoordinatesSystem[] = Object.values(
+    COORDINATES_SYSTEMS_CONFIG
+  );
 
   public searchForm: FormGroup = new FormGroup({
     id: new FormControl(),
@@ -64,6 +73,7 @@ export class ViewComponent implements OnDestroy {
     commentaire: new FormControl(),
     comportements: new FormControl(),
     milieux: new FormControl(),
+    coordinatesSystemType: new FormControl(),
     excelMode: new FormControl()
   });
 
@@ -98,6 +108,7 @@ export class ViewComponent implements OnDestroy {
   ] as FormGroup;
 
   constructor(
+    private appConfigurationService: AppConfigurationService,
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService,
     private entitiesStoreService: EntitiesStoreService
@@ -111,6 +122,12 @@ export class ViewComponent implements OnDestroy {
     this.comportements$ = this.entitiesStoreService.getComportements$();
     this.milieux$ = this.entitiesStoreService.getMilieux$();
     this.meteos$ = this.entitiesStoreService.getMeteos$();
+
+    this.appConfigurationService
+      .getAppCoordinatesSystemType$()
+      .subscribe((system) => {
+        this.searchForm.controls.coordinatesSystemType.setValue(system);
+      });
   }
 
   public ngOnDestroy(): void {

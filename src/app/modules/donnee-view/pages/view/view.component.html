@@ -238,6 +238,19 @@
         Lancer la recherche
       </button>
 
+      <!-- Coordinates system -->
+      <mat-form-field class="search-coordinates-field">
+        <mat-select
+          id="input-coordinates"
+          placeholder="Système de coordonnées"
+          [formControl]="searchForm.controls['coordinatesSystemType']"
+        >
+          <mat-option *ngFor="let s of coordinatesSystems" [value]="s.code">
+            {{ s.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <!-- RETURNS AN EXCEL FILE -->
       <mat-checkbox
         id="input-excel"
