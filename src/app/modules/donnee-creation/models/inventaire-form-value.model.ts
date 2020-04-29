@@ -1,4 +1,3 @@
-import { CoordinatesSystemType } from "ouca-common/coordinates-system";
 import { Departement } from "ouca-common/departement.object";
 import { Meteo } from "ouca-common/meteo.object";
 import { Observateur } from "ouca-common/observateur.object";
@@ -19,9 +18,6 @@ export interface InventaireFormValue {
     altitude: number;
     longitude: number;
     latitude: number;
-    coordinatesSystem: CoordinatesSystemType;
-    areCoordinatesTransformed: boolean;
-    areCoordinatesInvalid: boolean;
   };
   temperature: number;
   meteos: Meteo[];

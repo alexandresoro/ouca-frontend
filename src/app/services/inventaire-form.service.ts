@@ -11,7 +11,6 @@ import { AppConfiguration } from "ouca-common/app-configuration.object";
 import {
   areCoordinatesCustomized,
   CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG,
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
@@ -32,11 +31,14 @@ import {
   interpretDateTimestampAsBrowserDate,
   TimeHelper
 } from "../modules/shared/helpers/time.helper";
+import { CoordinatesService } from "./coordinates.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class InventaireFormService {
+  constructor(private coordinatesService: CoordinatesService) {}
+
   public createForm = (): FormGroup => {
     const form = new FormGroup({
       id: new FormControl(),
@@ -66,10 +68,7 @@ export class InventaireFormService {
           this.altitudeValidator()
         ]),
         longitude: new FormControl(),
-        latitude: new FormControl(),
-        coordinatesSystem: new FormControl(),
-        areCoordinatesTransformed: new FormControl(),
-        areCoordinatesInvalid: new FormControl()
+        latitude: new FormControl()
       }),
       temperature: new FormControl("", [this.temperatureValidator()]),
       meteos: new FormControl("", [this.meteosValidator()])
@@ -103,6 +102,10 @@ export class InventaireFormService {
     }
 
     console.log("Affichage de l'inventaire dans le formulaire.", inventaire);
+
+    this.coordinatesService.setCoordinatesSystemType(
+      appConfiguration.coordinatesSystem
+    );
 
     if (!inventaire) {
       const defaultOptions = this.getDefaultOptions(
@@ -170,7 +173,7 @@ export class InventaireFormService {
       meteos: Meteo[];
     },
     inventaire: Inventaire | InventaireFormObject,
-    coordinatesSystem: CoordinatesSystemType
+    coordinatesSystemType: CoordinatesSystemType
   ): InventaireFormValue => {
     const observateur = ListHelper.findEntityInListByID(
       entities.observateurs,
@@ -197,7 +200,7 @@ export class InventaireFormService {
     let coordinates: Coordinates = {
       longitude: null,
       latitude: null,
-      system: coordinatesSystem
+      system: coordinatesSystemType
     };
 
     if (lieudit?.id) {
@@ -205,22 +208,19 @@ export class InventaireFormService {
         // Coordinates are not updated for the inventaire
         // We display the lieudit coordinates
         altitude = lieudit.altitude;
-        coordinates = getCoordinates(lieudit, coordinatesSystem);
+        coordinates = getCoordinates(lieudit, coordinatesSystemType);
       } else {
         // Coordinates are updated for the inventaire
         // We display the inventaire coordinates
         altitude = inventaire.customizedAltitude;
-        coordinates = getCoordinates(inventaire, coordinatesSystem);
+        coordinates = getCoordinates(inventaire, coordinatesSystemType);
       }
     }
 
-    if (coordinates.areInvalid) {
-      // If the coordinates are invalid we will hide the coordinates fields
-      // but in order to be able to validate the form we set the fields with their min value
-      const system = COORDINATES_SYSTEMS_CONFIG[coordinatesSystem];
-      coordinates.longitude = system.longitudeRange.min;
-      coordinates.latitude = system.latitudeRange.min;
-    }
+    this.coordinatesService.setAreCoordinatesTransformed(
+      !!coordinates.areTransformed
+    );
+    this.coordinatesService.setAreCoordinatesInvalid(!!coordinates.areInvalid);
 
     const meteos = ListHelper.getEntitiesFromIDs(
       entities.meteos,
@@ -240,10 +240,7 @@ export class InventaireFormService {
         lieudit,
         altitude,
         longitude: coordinates.longitude,
-        latitude: coordinates.latitude,
-        coordinatesSystem,
-        areCoordinatesTransformed: !!coordinates.areTransformed,
-        areCoordinatesInvalid: !!coordinates.areInvalid
+        latitude: coordinates.latitude
       },
       temperature: inventaire.temperature,
       meteos
@@ -273,8 +270,7 @@ export class InventaireFormService {
       inventaireFormValue.lieu.lieudit
     );
 
-    const coordinatesSystem: CoordinatesSystemType =
-      inventaireFormValue.lieu.coordinatesSystem;
+    const coordinatesSystem: CoordinatesSystemType = this.coordinatesService.getCoordinatesSystemType();
 
     let inventaireAltitude: number = inventaireFormValue.lieu.altitude;
     let inventaireCoordinates: Coordinates = {
@@ -284,7 +280,7 @@ export class InventaireFormService {
     };
 
     if (
-      !!inventaireFormValue.lieu.areCoordinatesInvalid ||
+      !!this.coordinatesService.getAreCoordinatesInvalid() ||
       !areCoordinatesCustomized(
         lieudit,
         inventaireAltitude,

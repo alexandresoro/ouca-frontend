@@ -11,8 +11,6 @@ import { Commune } from "ouca-common/commune.model";
 import {
   areSameCoordinates,
   CoordinatesSystem,
-  CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG,
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
@@ -29,6 +27,7 @@ import {
 import { distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
+import { CoordinatesService } from "src/app/services/coordinates.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
@@ -44,8 +43,6 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   @Input() public hideCoordinates?: boolean = false;
 
   @Input() public isMultipleSelectMode?: boolean;
-
-  @Input() public coordinatesSystem?: CoordinatesSystem;
 
   private readonly destroy$ = new Subject();
 
@@ -63,17 +60,9 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
 
   public filteredCommunes$: Observable<UICommune[]>;
 
-  public areCoordinatesTransformed$: BehaviorSubject<
-    boolean
-  > = new BehaviorSubject<boolean>(false);
-
   public areCoordinatesCustomized$: BehaviorSubject<
     boolean
   > = new BehaviorSubject<boolean>(false);
-
-  public areCoordinatesInvalid$: BehaviorSubject<boolean> = new BehaviorSubject<
-    boolean
-  >(false);
 
   public departementAutocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -103,7 +92,10 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+  constructor(
+    private coordinatesService: CoordinatesService,
+    private entitiesStoreService: EntitiesStoreService
+  ) {
     this.departements$ = this.entitiesStoreService.getDepartements$();
   }
 
@@ -153,8 +145,6 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     });
 
     this.updateAreCoordinatesCustomized$();
-    this.updateAreCoordinatesTransformed$();
-    this.updateAreCoordinatesInvalid$();
   }
 
   public ngOnDestroy(): void {
@@ -221,20 +211,12 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   }> => {
     return combineLatest(
       lieuditControl.valueChanges.pipe(distinctUntilChanged()),
-      this.controlGroup.controls.coordinatesSystem.valueChanges.pipe(
-        distinctUntilChanged()
-      ),
-      (
-        selectedLieudit: Lieudit,
-        coordinatesSystemType: CoordinatesSystemType
-      ) => {
-        this.coordinatesSystem =
-          COORDINATES_SYSTEMS_CONFIG[coordinatesSystemType];
-
-        if (!!selectedLieudit?.id && !!coordinatesSystemType) {
+      this.getCoordinatesSystem$().pipe(distinctUntilChanged()),
+      (selectedLieudit: Lieudit, coordinatesSystem: CoordinatesSystem) => {
+        if (!!selectedLieudit?.id && !!coordinatesSystem?.code) {
           const coordinates = getCoordinates(
             selectedLieudit,
-            coordinatesSystemType
+            coordinatesSystem.code
           );
 
           return {
@@ -279,7 +261,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
             const inventaireCoordinates: Coordinates = {
               longitude,
               latitude,
-              system: this.controlGroup.controls.coordinatesSystem.value
+              system: this.coordinatesService.getCoordinatesSystemType()
             };
 
             if (
@@ -289,39 +271,6 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
               this.areCoordinatesCustomized$.next(true);
             }
           }
-        }
-      });
-  };
-
-  private updateAreCoordinatesTransformed$ = (): void => {
-    this.controlGroup.controls.areCoordinatesTransformed.valueChanges
-      .pipe(distinctUntilChanged())
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        this.areCoordinatesTransformed$.next(!!value);
-      });
-  };
-
-  private updateAreCoordinatesInvalid$ = (): void => {
-    this.controlGroup.controls.areCoordinatesInvalid.valueChanges
-      .pipe(distinctUntilChanged())
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((areInvalid: boolean) => {
-        this.areCoordinatesInvalid$.next(!!areInvalid);
-
-        if (areInvalid) {
-          // If the coordinates are invalid we will hide the coordinates fields
-          // but in order to be able to validate the form we set the fields with their min value
-          const coordinatesSystem: CoordinatesSystem =
-            COORDINATES_SYSTEMS_CONFIG[
-              this.controlGroup.controls.coordinatesSystem.value
-            ];
-          this.controlGroup.controls.longitude.setValue(
-            coordinatesSystem?.longitudeRange.min
-          );
-          this.controlGroup.controls.latitude.setValue(
-            coordinatesSystem?.latitudeRange.min
-          );
         }
       });
   };
@@ -337,11 +286,21 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       this.controlGroup.controls.altitude.setValue(altitude);
       this.controlGroup.controls.longitude.setValue(longitude);
       this.controlGroup.controls.latitude.setValue(latitude);
-      this.controlGroup.controls.areCoordinatesTransformed.setValue(
-        !!areTransformed
-      );
-      this.controlGroup.controls.areCoordinatesInvalid.setValue(!!areInvalid);
+      this.coordinatesService.setAreCoordinatesTransformed(!!areTransformed);
+      this.coordinatesService.setAreCoordinatesInvalid(!!areInvalid);
     }
+  };
+
+  public getCoordinatesSystem$ = (): Observable<CoordinatesSystem> => {
+    return this.coordinatesService.getCoordinatesSystem$();
+  };
+
+  public getAreCoordinatesInvalid$ = (): Observable<boolean> => {
+    return this.coordinatesService.getAreCoordinatesInvalid$();
+  };
+
+  public getAreCoordinatesTransformed$ = (): Observable<boolean> => {
+    return this.coordinatesService.getAreCoordinatesTransformed$();
   };
 
   public displayCommuneFormat = (commune: Commune): string => {

@@ -66,7 +66,7 @@
   </div>
 
   <div *ngIf="!hideCoordinates" fxLayout="row wrap" fxLayoutGap="20px">
-    <ng-container *ngIf="!(areCoordinatesInvalid$ | async)">
+    <ng-container *ngIf="!(getAreCoordinatesInvalid$() | async)">
       <!-- ALTITUDE -->
       <mat-form-field fxFlex="1 0 100px">
         <input
@@ -86,8 +86,8 @@
         <input
           [formControl]="controlGroup.controls['longitude']"
           matInput
-          [min]="coordinatesSystem?.longitudeRange.min"
-          [max]="coordinatesSystem?.longitudeRange.max"
+          [min]="(getCoordinatesSystem$() | async)?.longitudeRange.min"
+          [max]="(getCoordinatesSystem$() | async)?.longitudeRange.max"
           type="number"
           placeholder="Longitude"
           id="input-longitude"
@@ -100,8 +100,8 @@
         <input
           [formControl]="controlGroup.controls['latitude']"
           matInput
-          [min]="coordinatesSystem?.latitudeRange.min"
-          [max]="coordinatesSystem?.latitudeRange.max"
+          [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
+          [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
           type="number"
           placeholder="Latitude"
           id="input-latitude"
@@ -124,8 +124,8 @@
           class="creation-page-error"
         >
           La longitude doit être un nombre compris entre
-          {{ coordinatesSystem?.longitudeRange.min }} et
-          {{ coordinatesSystem?.longitudeRange.max }}.
+          {{ (getCoordinatesSystem$() | async)?.longitudeRange.min }} et
+          {{ (getCoordinatesSystem$() | async)?.longitudeRange.max }}.
         </mat-error>
         <mat-error
           *ngIf="
@@ -135,8 +135,8 @@
           class="creation-page-error"
         >
           La latitude doit être un nombre compris entre
-          {{ coordinatesSystem?.latitudeRange.min }} et
-          {{ coordinatesSystem?.latitudeRange.max }}.
+          {{ (getCoordinatesSystem$() | async)?.latitudeRange.min }} et
+          {{ (getCoordinatesSystem$() | async)?.latitudeRange.max }}.
         </mat-error>
       </div>
       <div
@@ -148,7 +148,7 @@
       </div>
 
       <div
-        *ngIf="areCoordinatesTransformed$ | async"
+        *ngIf="getAreCoordinatesTransformed$() | async"
         class="coordinates-transformed-message"
       >
         <mat-icon [inline]="true">info</mat-icon> Les coordonnées de cet
@@ -158,7 +158,7 @@
       </div>
     </ng-container>
     <div
-      *ngIf="areCoordinatesInvalid$ | async"
+      *ngIf="getAreCoordinatesInvalid$() | async"
       class="coordinates-invalid-message"
     >
       <mat-icon [inline]="true">info</mat-icon> Les coordonnées de cet
