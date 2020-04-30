@@ -36,7 +36,6 @@ import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-fi
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
-import { LieuditFormComponent } from "../../components/form/lieudit-form/lieudit-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
 @Component({
@@ -254,8 +253,8 @@ export class LieuDitEditComponent
     return lieuDit;
   }
 
-  public getFormType(): typeof LieuditFormComponent {
-    return LieuditFormComponent;
+  public getFormType(): null {
+    return null;
   }
 
   public getEntityName = (): string => {
