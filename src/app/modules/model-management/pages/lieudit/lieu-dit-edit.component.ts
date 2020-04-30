@@ -57,11 +57,17 @@ export class LieuDitEditComponent
     UICommune[]
   >(null);
 
+  public coordinatesSystem$: BehaviorSubject<
+    CoordinatesSystem
+  > = new BehaviorSubject(null);
+
   public areCoordinatesTransformed$: BehaviorSubject<
     boolean
-  > = new BehaviorSubject<boolean>(false);
+  > = new BehaviorSubject(false);
 
-  public coordinatesSystem$: Observable<CoordinatesSystem>;
+  public areCoordinatesInvalid$: BehaviorSubject<boolean> = new BehaviorSubject(
+    false
+  );
 
   public lieuditNomErrorStateMatcher = new CrossFieldErrorMatcher(
     "alreadyExistingNom"
@@ -78,7 +84,11 @@ export class LieuDitEditComponent
     super(entitiesStoreService, router, route, location);
     this.departements$ = this.entitiesStoreService.getDepartements$();
     this.communes$ = this.entitiesStoreService.getCommunes$();
-    this.coordinatesSystem$ = this.appConfigurationService.getAppCoordinatesSystem$();
+    this.appConfigurationService
+      .getAppCoordinatesSystem$()
+      .subscribe((system) => {
+        this.coordinatesSystem$.next(system);
+      });
   }
 
   ngOnInit(): void {
@@ -145,34 +155,43 @@ export class LieuDitEditComponent
     combineLatest(this.coordinatesSystem$, this.getEntityToDisplay$())
       .pipe(takeUntil(this.destroy$))
       .subscribe(([coordinatesSystem, lieuDit]) => {
-        // Update the coordinates validators depending on the current coordinates system
-        this.coordinatesBuilderService.updateCoordinatesValidators(
-          coordinatesSystem.code,
-          this.getForm().controls.longitude,
-          this.getForm().controls.latitude
-        );
-
-        this.getForm().controls.coordinatesSystem.setValue(
-          coordinatesSystem.code
-        );
+        if (!this.getForm().contains("longitude")) {
+          this.getForm().addControl("longitude", new FormControl());
+          this.getForm().addControl("latitude", new FormControl());
+        }
 
         if (lieuDit?.coordinates) {
           const coordinates = getCoordinates(lieuDit, coordinatesSystem.code);
-          this.getForm().controls.longitude.setValue(coordinates?.longitude);
-          this.getForm().controls.latitude.setValue(coordinates?.latitude);
+
+          if (coordinates.areInvalid) {
+            this.getForm().removeControl("longitude");
+            this.getForm().removeControl("latitude");
+          } else {
+            this.getForm().controls.longitude.setValue(coordinates?.longitude);
+            this.getForm().controls.latitude.setValue(coordinates?.latitude);
+          }
           this.areCoordinatesTransformed$.next(!!coordinates?.areTransformed);
+          this.areCoordinatesInvalid$.next(!!coordinates?.areInvalid);
+        }
+
+        // Update the coordinates validators depending on the current coordinates system
+        if (this.getForm().contains("longitude")) {
+          this.coordinatesBuilderService.updateCoordinatesValidators(
+            coordinatesSystem.code,
+            this.getForm().controls.longitude,
+            this.getForm().controls.latitude
+          );
         }
       });
   }
 
   public createForm(): FormGroup {
     return new FormGroup({
-      id: new FormControl("", []),
+      id: new FormControl(),
       departement: new FormControl("", [Validators.required]),
       communeId: new FormControl("", [Validators.required]),
       nomCommune: new FormControl("", [Validators.required]),
       nom: new FormControl("", [Validators.required]),
-      coordinatesSystem: new FormControl(),
       altitude: new FormControl("", [
         Validators.required,
         this.altitudeNumberValidator()
@@ -193,7 +212,6 @@ export class LieuDitEditComponent
     altitude: number;
     longitude: number;
     latitude: number;
-    coordinatesSystem: CoordinatesSystemType;
   } {
     return {
       id: lieuDit.id,
@@ -203,8 +221,7 @@ export class LieuDitEditComponent
       nom: lieuDit.nom,
       altitude: lieuDit.altitude,
       longitude: lieuDit.coordinates.longitude,
-      latitude: lieuDit.coordinates.latitude,
-      coordinatesSystem: lieuDit.coordinates.system
+      latitude: lieuDit.coordinates.latitude
     };
   }
 
@@ -215,22 +232,25 @@ export class LieuDitEditComponent
     communeId: number;
     nom: string;
     altitude: number;
-    longitude: number;
-    latitude: number;
+    longitude?: number;
+    latitude?: number;
     coordinatesSystem: CoordinatesSystemType;
   }): Lieudit {
     const lieuDit: Lieudit = {
-      id: formValue?.id ? formValue.id : null,
+      id: formValue?.id ?? null,
       communeId: formValue.communeId,
       nom: formValue.nom,
-      altitude: formValue.altitude,
-      coordinates: {
+      altitude: formValue.altitude
+    };
+
+    if (_.has(formValue, "longitude")) {
+      lieuDit.coordinates = {
         longitude: formValue.longitude,
         latitude: formValue.latitude,
-        system: formValue.coordinatesSystem,
-        areTransformed: false
-      }
-    };
+        system: this.coordinatesSystem$.value.code
+      };
+    }
+
     return lieuDit;
   }
 

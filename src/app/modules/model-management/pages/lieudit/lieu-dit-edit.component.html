@@ -134,78 +134,88 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Longitude -->
-        <mat-form-field>
-          <input
-            [formControl]="getForm().controls['longitude']"
-            id="input-longitude"
-            matInput
-            min="{{ (coordinatesSystem$ | async)?.longitudeRange.min }}"
-            max="{{ (coordinatesSystem$ | async)?.longitudeRange.max }}"
-            name="longitude"
-            placeholder="Longitude en {{
-              (coordinatesSystem$ | async)?.unitName
-            }}"
-            type="number"
-          />
+        <ng-container *ngIf="!(areCoordinatesInvalid$ | async)">
+          <!-- Longitude -->
+          <mat-form-field>
+            <input
+              [formControl]="getForm().controls['longitude']"
+              id="input-longitude"
+              matInput
+              min="{{ (coordinatesSystem$ | async)?.longitudeRange.min }}"
+              max="{{ (coordinatesSystem$ | async)?.longitudeRange.max }}"
+              name="longitude"
+              placeholder="Longitude en {{
+                (coordinatesSystem$ | async)?.unitName
+              }}"
+              type="number"
+            />
 
-          <mat-error
-            *ngIf="getForm().controls['longitude'].hasError('required')"
-          >
-            Le champ "Longitude" ne peut pas être vide.
-          </mat-error>
-          <mat-error
-            *ngIf="
-              getForm().controls['longitude'].hasError('min') ||
-              getForm().controls['longitude'].hasError('max')
-            "
-          >
-            La longitude doit être un nombre compris entre
-            {{ (coordinatesSystem$ | async)?.longitudeRange.min }} et
-            {{ (coordinatesSystem$ | async)?.longitudeRange.max }}.
-          </mat-error>
-        </mat-form-field>
+            <mat-error
+              *ngIf="getForm().controls['longitude'].hasError('required')"
+            >
+              Le champ "Longitude" ne peut pas être vide.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                getForm().controls['longitude'].hasError('min') ||
+                getForm().controls['longitude'].hasError('max')
+              "
+            >
+              La longitude doit être un nombre compris entre
+              {{ (coordinatesSystem$ | async)?.longitudeRange.min }} et
+              {{ (coordinatesSystem$ | async)?.longitudeRange.max }}.
+            </mat-error>
+          </mat-form-field>
 
-        <!-- Latitude -->
-        <mat-form-field>
-          <input
-            [formControl]="getForm().controls['latitude']"
-            id="input-latitude"
-            matInput
-            min="{{ (coordinatesSystem$ | async)?.latitudeRange.min }}"
-            max="{{ (coordinatesSystem$ | async)?.latitudeRange.max }}"
-            name="latitude"
-            placeholder="Latitude en {{
-              (coordinatesSystem$ | async)?.unitName
-            }}"
-            type="number"
-          />
+          <!-- Latitude -->
+          <mat-form-field>
+            <input
+              [formControl]="getForm().controls['latitude']"
+              id="input-latitude"
+              matInput
+              min="{{ (coordinatesSystem$ | async)?.latitudeRange.min }}"
+              max="{{ (coordinatesSystem$ | async)?.latitudeRange.max }}"
+              name="latitude"
+              placeholder="Latitude en {{
+                (coordinatesSystem$ | async)?.unitName
+              }}"
+              type="number"
+            />
 
-          <mat-error
-            *ngIf="getForm().controls['latitude'].hasError('required')"
-          >
-            Le champ "Latitude" ne peut pas être vide.
-          </mat-error>
-          <mat-error
-            *ngIf="
-              getForm().controls['latitude'].hasError('min') ||
-              getForm().controls['latitude'].hasError('max')
-            "
-          >
-            La latitude doit être un nombre compris entre
-            {{ (coordinatesSystem$ | async)?.latitudeRange.min }} et
-            {{ (coordinatesSystem$ | async)?.latitudeRange.max }}.
-          </mat-error>
-        </mat-form-field>
+            <mat-error
+              *ngIf="getForm().controls['latitude'].hasError('required')"
+            >
+              Le champ "Latitude" ne peut pas être vide.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                getForm().controls['latitude'].hasError('min') ||
+                getForm().controls['latitude'].hasError('max')
+              "
+            >
+              La latitude doit être un nombre compris entre
+              {{ (coordinatesSystem$ | async)?.latitudeRange.min }} et
+              {{ (coordinatesSystem$ | async)?.latitudeRange.max }}.
+            </mat-error>
+          </mat-form-field>
 
-        <p
-          *ngIf="areCoordinatesTransformed$ | async"
-          class="coordinates-warning"
-        >
+          <p
+            *ngIf="areCoordinatesTransformed$ | async"
+            class="coordinates-warning"
+          >
+            <mat-icon [inline]="true">info</mat-icon> Les coordonnées de ce
+            lieu-dit sont converties à partir d'un autre système de coordonnées.
+            Si vous les modifiez, elles seront sauvegardées dans le système de
+            coordonnées courant de l'application (voir page de configuration).
+          </p>
+        </ng-container>
+
+        <p *ngIf="areCoordinatesInvalid$ | async" class="coordinates-warning">
           <mat-icon [inline]="true">info</mat-icon> Les coordonnées de ce
-          lieu-dit sont converties à partir d'un autre système de coordonnées.
-          Si vous les modifiez, elles seront sauvegardées dans le système de
-          coordonnées courant de l'application (voir page de configuration).
+          lieu-dit ne peuvent pas être affichées car elles sont renseignées dans
+          un système de coordonnées qui ne peut pas être converti vers le
+          système de coordonnées courant de l'application (voir page de
+          configuration).
         </p>
 
         <div class="cancel-submit-buttons">
