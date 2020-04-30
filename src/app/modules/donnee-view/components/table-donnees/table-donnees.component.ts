@@ -182,4 +182,16 @@ export class TableDonneesComponent implements OnChanges, OnInit {
   public getRowState = (row: FlatDonnee): string => {
     return this.selectedDonnee?.id === row.id ? "expanded" : "collapsed";
   };
+
+  public getLongitude = (donnee: FlatDonnee): string => {
+    return _.isNil(donnee.longitude)
+      ? "Non supporté"
+      : donnee.longitude + " " + this.getCoordinatesUnitName(donnee);
+  };
+
+  public getLatitude = (donnee: FlatDonnee): string => {
+    return _.isNil(donnee.latitude)
+      ? "Non supporté"
+      : donnee.latitude + " " + this.getCoordinatesUnitName(donnee);
+  };
 }

@@ -286,34 +286,13 @@
                 <strong>Lieu-dit:</strong> {{ element.lieudit }}
                 <br />
                 <strong>Altitude:</strong>
-                {{
-                  !!element.customizedAltitude ||
-                  element.customizedAltitude === 0
-                    ? element.customizedAltitude
-                    : element.altitude
-                }}
-                mètres
+                {{ element.altitude }} mètres
                 <br />
                 <strong>Longitude:</strong>
-                {{
-                  !!element.customizedLongitude ||
-                  element.customizedLongitude === 0
-                    ? element.customizedLongitude
-                    : element.longitude
-                }}
-                {{ getCoordinatesUnitName(element) }}
+                {{ getLongitude(element) }}
                 <br />
                 <strong>Latitude:</strong>
-                {{
-                  !!element.customizedLatitude ||
-                  element.customizedLatitude === 0
-                    ? element.customizedLatitude
-                    : element.latitude
-                }}
-                {{ getCoordinatesUnitName(element) }}
-                <br />
-                <strong>Système de coordonnées:</strong>
-                {{ getCoordinatesSystem(element) }}
+                {{ getLatitude(element) }}
               </div>
               <div>
                 <strong>Classe:</strong> {{ element.classe }}
