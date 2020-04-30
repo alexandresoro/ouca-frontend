@@ -5939,9 +5939,9 @@ osenv@^0.1.5:
     os-tmpdir "^1.0.0"
 
 ouca-common@*:
-  version "0.0.27"
-  resolved "https://registry.yarnpkg.com/ouca-common/-/ouca-common-0.0.27.tgz#6d82675ff51d1eb05abe9083793875ab57630269"
-  integrity sha512-xtiWDCYPG3jWz4sauJ3qUDPoi3SHFoUkhn2ros5kYaXp3eCRmy4NWozCSG4W/q62pmVMbL8TI5MORikXdqy9vQ==
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/ouca-common/-/ouca-common-0.0.29.tgz#5b0b8a7af0fe804265b5fe65ba7496dc983ab38a"
+  integrity sha512-y8C3XYCVhJRP25BVBKnzs67h85xKhoONAUvpRUfmsvo0Bsu6B93T9LWIBLGNkNSOgYmrda8v6RlPkvBEkZxXIQ==
   dependencies:
     "@types/bson" "*"
     proj4 "*"
