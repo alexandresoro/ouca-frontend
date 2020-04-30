@@ -18,15 +18,9 @@ export class CoordinatesService {
     boolean
   > = new BehaviorSubject(false);
 
-  private areCoordinatesCustomized$: BehaviorSubject<
-    boolean
-  > = new BehaviorSubject(false);
-
   private areCoordinatesInvalid$: BehaviorSubject<
     boolean
   > = new BehaviorSubject(false);
-
-  constructor() {}
 
   public getCoordinatesSystem$ = (): Observable<CoordinatesSystem> => {
     return this.coordinatesSystem$;
@@ -55,16 +49,8 @@ export class CoordinatesService {
     this.areCoordinatesTransformed$.next(areTransformed);
   };
 
-  public getAreCoordinatesCustomized$ = (): Observable<boolean> => {
-    return this.areCoordinatesCustomized$;
-  };
-
   public getAreCoordinatesInvalid$ = (): Observable<boolean> => {
     return this.areCoordinatesInvalid$;
-  };
-
-  public getAreCoordinatesInvalid = (): boolean => {
-    return this.areCoordinatesInvalid$.value;
   };
 
   public setAreCoordinatesInvalid = (areInvalid: boolean): void => {
