@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import * as _ from "lodash";
 import {
   CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG,
   getCoordinates
 } from "ouca-common/coordinates-system";
 import { Coordinates } from "ouca-common/coordinates.object";
@@ -20,10 +19,8 @@ interface LieuditRow {
   nomCommune: string;
   nom: string;
   altitude: number;
-  longitude: number;
-  latitude: number;
-  coordinatesSystem: string;
-  areTransformed: boolean;
+  longitude: number | string;
+  latitude: number | string;
   nbDonnees: number;
 }
 
@@ -45,7 +42,6 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<UILieudit>
     "altitude",
     "longitude",
     "latitude",
-    "coordinatesSystem",
     "nbDonnees"
   ];
 
@@ -112,10 +108,10 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<UILieudit>
       nomCommune: lieudit.commune.nom,
       nom: lieudit.nom,
       altitude: lieudit.altitude,
-      longitude: coordinates.longitude,
-      latitude: coordinates.latitude,
-      coordinatesSystem: COORDINATES_SYSTEMS_CONFIG[coordinates.system].name,
-      areTransformed: !!coordinates.areTransformed,
+      longitude: coordinates.areInvalid
+        ? "Non supporté"
+        : coordinates.longitude,
+      latitude: coordinates.areInvalid ? "Non supporté" : coordinates.latitude,
       nbDonnees: lieudit.nbDonnees
     };
   }
