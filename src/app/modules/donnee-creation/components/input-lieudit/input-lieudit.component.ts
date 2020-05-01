@@ -133,9 +133,19 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
         communeControl.setValue(null);
       });
 
-    communeControl.valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
-      lieuditControl.setValue(null);
-    });
+    communeControl.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe((newValue: UICommune) => {
+        const currentValue: UICommune = communeControl.value;
+        // Reset except if the selection remains a commune with the same id
+        if (
+          !currentValue?.id ||
+          !newValue?.id ||
+          currentValue.id !== newValue.id
+        ) {
+          lieuditControl.setValue(null);
+        }
+      });
 
     this.filteredCommunes$ = this.getCommunesToDisplay$(departementControl);
 
