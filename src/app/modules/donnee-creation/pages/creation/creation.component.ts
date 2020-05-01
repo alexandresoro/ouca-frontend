@@ -92,6 +92,10 @@ export class CreationComponent implements OnInit, OnDestroy {
 
   private coordinatesSystem$: Observable<CoordinatesSystemType>;
 
+  public isInitializationCompleted$: BehaviorSubject<
+    boolean
+  > = new BehaviorSubject<boolean>(false);
+
   private isModalOpened$: BehaviorSubject<boolean> = new BehaviorSubject<
     boolean
   >(false);
@@ -294,6 +298,17 @@ export class CreationComponent implements OnInit, OnDestroy {
       .subscribe(([isDonneeReady, enableDonneeForm]) => {
         this.creationModeService.setDonneeEnabled(enableDonneeForm);
       });
+
+    // Set the initialization as completed once we received everything we need
+    forkJoin(
+      this.entitiesStoreService.getInventaireEntities$().pipe(first()),
+      this.entitiesStoreService.getDonneeEntities$().pipe(first()),
+      isInitialDonneeDonneeActive$
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.isInitializationCompleted$.next(true);
+      });
   }
 
   public ngOnDestroy(): void {
@@ -490,8 +505,9 @@ export class CreationComponent implements OnInit, OnDestroy {
     return combineLatest(
       this.donneeService.getIsDonneeCallOngoing$(),
       this.donneeService.hasPreviousDonnee$(),
-      (ongoingCall, hasPreviousDonnee) => {
-        return !ongoingCall && hasPreviousDonnee;
+      this.isInitializationCompleted$,
+      (ongoingCall, hasPreviousDonnee, isInitializationCompleted) => {
+        return !ongoingCall && hasPreviousDonnee && isInitializationCompleted;
       }
     );
   }
@@ -500,8 +516,9 @@ export class CreationComponent implements OnInit, OnDestroy {
     return combineLatest(
       this.donneeService.getIsDonneeCallOngoing$(),
       this.donneeService.hasNextDonnee$(),
-      (ongoingCall, hasNextDonnee) => {
-        return !ongoingCall && hasNextDonnee;
+      this.isInitializationCompleted$,
+      (ongoingCall, hasNextDonnee, isInitializationCompleted) => {
+        return !ongoingCall && hasNextDonnee && isInitializationCompleted;
       }
     );
   }
