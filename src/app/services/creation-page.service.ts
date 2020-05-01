@@ -263,8 +263,8 @@ export class CreationPageService {
   ): Observable<boolean> => {
     if (!this.donneeService.isCurrentDonneeAnExistingOne()) {
       this.saveDonneeInCache(inventaireForm, donneeForm);
-      return this.displayDonneeById(id);
     }
+    return this.displayDonneeById(id);
   };
 
   private displayDonneeById = (id: number): Observable<boolean> => {
