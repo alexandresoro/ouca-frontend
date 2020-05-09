@@ -183,37 +183,35 @@
 
             <!-- CARD TEMPERATURE + METEO -->
             <mat-card
-              fxLayout="row wrap"
-              fxLayoutGap="20px"
               class="mat-card-override"
               *ngIf="(appConfiguration$ | async)?.isMeteoDisplayed"
             >
-              <!-- TEMPERATURE -->
-              <input-temperature
-                fxFlex="100px"
-                [control]="inventaireForm.controls['temperature']"
-              ></input-temperature>
+              <div fxLayout="row wrap" fxLayoutGap="20px">
+                <!-- TEMPERATURE -->
+                <input-temperature
+                  fxFlex="100px"
+                  [control]="inventaireForm.controls['temperature']"
+                ></input-temperature>
 
-              <!-- METEOS -->
-              <input-meteos
-                fxFlex="1 0 120px"
-                [meteos]="meteos$ | async"
-                [control]="inventaireForm.controls['meteos']"
-              ></input-meteos>
-
-              <div>
-                <mat-error
-                  *ngIf="
-                    inventaireForm.controls['temperature'].hasError(
-                      'forbiddenValue'
-                    )
-                  "
-                  class="creation-page-error"
-                >
-                  La température doit être un nombre entier compris entre -128
-                  et 127.
-                </mat-error>
+                <!-- METEOS -->
+                <input-meteos
+                  fxFlex="1 0 120px"
+                  [meteos]="meteos$ | async"
+                  [control]="inventaireForm.controls['meteos']"
+                ></input-meteos>
               </div>
+
+              <mat-error
+                *ngIf="
+                  inventaireForm.controls['temperature'].hasError(
+                    'forbiddenValue'
+                  )
+                "
+                class="creation-page-error"
+              >
+                La température doit être un nombre entier compris entre -128 et
+                127.
+              </mat-error>
             </mat-card>
             <!-- END CARD TEMPERATURE + METEO -->
           </div>

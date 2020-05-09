@@ -65,49 +65,51 @@
     ></multiple-select>
   </div>
 
-  <div *ngIf="!hideCoordinates" fxLayout="row wrap" fxLayoutGap="20px">
+  <div *ngIf="!hideCoordinates">
     <ng-container *ngIf="!(getAreCoordinatesInvalid$() | async)">
-      <!-- ALTITUDE -->
-      <mat-form-field fxFlex="1 0 100px">
-        <input
-          [formControl]="controlGroup.controls['altitude']"
-          matInput
-          min="0"
-          max="65535"
-          type="number"
-          placeholder="Altitude"
-          id="input-altitude"
-          name="altitude"
-        />
-      </mat-form-field>
+      <div fxLayout="row wrap" fxLayoutGap="20px">
+        <!-- ALTITUDE -->
+        <mat-form-field fxFlex="1 0 100px">
+          <input
+            [formControl]="controlGroup.controls['altitude']"
+            matInput
+            min="0"
+            max="65535"
+            type="number"
+            placeholder="Altitude"
+            id="input-altitude"
+            name="altitude"
+          />
+        </mat-form-field>
 
-      <!-- LONGITUDE -->
-      <mat-form-field fxFlex="1 0 100px">
-        <input
-          [formControl]="controlGroup.controls['longitude']"
-          matInput
-          [min]="(getCoordinatesSystem$() | async)?.longitudeRange.min"
-          [max]="(getCoordinatesSystem$() | async)?.longitudeRange.max"
-          type="number"
-          placeholder="Longitude"
-          id="input-longitude"
-          name="longitude"
-        />
-      </mat-form-field>
+        <!-- LONGITUDE -->
+        <mat-form-field fxFlex="1 0 100px">
+          <input
+            [formControl]="controlGroup.controls['longitude']"
+            matInput
+            [min]="(getCoordinatesSystem$() | async)?.longitudeRange.min"
+            [max]="(getCoordinatesSystem$() | async)?.longitudeRange.max"
+            type="number"
+            placeholder="Longitude"
+            id="input-longitude"
+            name="longitude"
+          />
+        </mat-form-field>
 
-      <!-- LATITUDE -->
-      <mat-form-field fxFlex="1 0 100px">
-        <input
-          [formControl]="controlGroup.controls['latitude']"
-          matInput
-          [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
-          [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
-          type="number"
-          placeholder="Latitude"
-          id="input-latitude"
-          name="latitude"
-        />
-      </mat-form-field>
+        <!-- LATITUDE -->
+        <mat-form-field fxFlex="1 0 100px">
+          <input
+            [formControl]="controlGroup.controls['latitude']"
+            matInput
+            [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
+            [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
+            type="number"
+            placeholder="Latitude"
+            id="input-latitude"
+            name="latitude"
+          />
+        </mat-form-field>
+      </div>
 
       <div>
         <mat-error
