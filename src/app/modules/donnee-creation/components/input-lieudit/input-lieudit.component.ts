@@ -30,7 +30,7 @@ import {
   ReplaySubject,
   Subject
 } from "rxjs";
-import { distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { distinctUntilChanged, filter, takeUntil } from "rxjs/operators";
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
@@ -235,7 +235,12 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     areInvalid: boolean;
   }> => {
     return combineLatest(
-      lieuditControl.valueChanges.pipe(distinctUntilChanged()),
+      lieuditControl.valueChanges.pipe(
+        filter(() => {
+          return lieuditControl.dirty;
+        }),
+        distinctUntilChanged()
+      ),
       this.getCoordinatesSystem$().pipe(distinctUntilChanged()),
       (selectedLieudit: Lieudit, coordinatesSystem: CoordinatesSystem) => {
         if (!!selectedLieudit?.id && !!coordinatesSystem?.code) {
