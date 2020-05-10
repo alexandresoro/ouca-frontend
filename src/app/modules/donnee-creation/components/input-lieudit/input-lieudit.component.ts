@@ -144,6 +144,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
           currentValue.id !== newValue.id
         ) {
           lieuditControl.setValue(null);
+          this.displayCoordinates(null, null, null, false, false);
         }
       });
 
