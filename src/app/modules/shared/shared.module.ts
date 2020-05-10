@@ -10,12 +10,12 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
+  MAT_DATE_LOCALE
 } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import {
   MatDialogModule,
-  MAT_DIALOG_DEFAULT_OPTIONS,
+  MAT_DIALOG_DEFAULT_OPTIONS
 } from "@angular/material/dialog";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -24,6 +24,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatSortModule } from "@angular/material/sort";
@@ -37,7 +38,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import {
   DateFnsDateAdapter,
-  MAT_DATE_FNS_DATE_FORMATS,
+  MAT_DATE_FNS_DATE_FORMATS
 } from "src/app/date-adapter/date-fns-adapter";
 import { InputAgeComponent } from "../donnee-creation/components/input-age/input-age.component";
 import { InputDistanceComponent } from "../donnee-creation/components/input-distance/input-distance.component";
@@ -54,6 +55,7 @@ import { AutocompleteComponent } from "./components/autocomplete/autocomplete.co
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { MultipleSelectComponent } from "./components/form/multiple-select/multiple-select.component";
 import { MultipleOptionsDialogComponent } from "./components/multiple-options-dialog/multiple-options-dialog.component";
+import { NetworkUnavailableDialogComponent } from "./components/network-unavailable-dialog/network-unavailable-dialog.component";
 import { StatusMessageComponent } from "./components/status-message/status-message.component";
 
 @NgModule({
@@ -77,6 +79,7 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     MatListModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatSnackBarModule,
     MatSortModule,
@@ -86,12 +89,13 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     MatTooltipModule,
     MatTreeModule,
     NgxChartsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   declarations: [
     AutocompleteActiveSelection,
     AutocompleteComponent,
     ConfirmationDialogComponent,
+    NetworkUnavailableDialogComponent,
     InputAgeComponent,
     InputDistanceComponent,
     InputEspeceComponent,
@@ -104,12 +108,13 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     InputTimeComponent,
     MultipleOptionsDialogComponent,
     MultipleSelectComponent,
-    StatusMessageComponent,
+    StatusMessageComponent
   ],
   entryComponents: [
     ConfirmationDialogComponent,
+    NetworkUnavailableDialogComponent,
     MultipleOptionsDialogComponent,
-    StatusMessageComponent,
+    StatusMessageComponent
   ],
   exports: [
     AutocompleteComponent,
@@ -143,6 +148,7 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     MatListModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatSnackBarModule,
     MatSortModule,
@@ -153,17 +159,18 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     MatTreeModule,
     MultipleOptionsDialogComponent,
     MultipleSelectComponent,
+    NetworkUnavailableDialogComponent,
     NgxChartsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: "fr-FR" },
     {
       provide: DateAdapter,
-      useClass: DateFnsDateAdapter,
+      useClass: DateFnsDateAdapter
     },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_DATE_FORMATS },
-  ],
+    { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_DATE_FORMATS }
+  ]
 })
 export class SharedModule {}
