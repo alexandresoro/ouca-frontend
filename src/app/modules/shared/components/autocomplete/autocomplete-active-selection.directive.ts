@@ -6,7 +6,7 @@ import {
   OnDestroy,
   Self
 } from "@angular/core";
-import { NgControl } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import {
   MatAutocomplete,
   MatAutocompleteTrigger
@@ -23,11 +23,13 @@ export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
   @Input()
   matAutocomplete: MatAutocomplete;
 
+  @Input()
+  formControl: FormControl;
+
   constructor(
     @Host()
     @Self()
-    private readonly autoCompleteTrigger: MatAutocompleteTrigger,
-    private ngControl: NgControl
+    private readonly autoCompleteTrigger: MatAutocompleteTrigger
   ) {}
 
   ngAfterViewInit(): void {
@@ -36,11 +38,13 @@ export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
       .subscribe(() => {
         if (
           this.autoCompleteTrigger.activeOption &&
-          this.autoCompleteTrigger.activeOption.value !== this.ngControl.value
+          this.autoCompleteTrigger.activeOption.value !== this.formControl.value
         ) {
-          this.ngControl.reset(this.autoCompleteTrigger.activeOption.value);
-        } else if (!this.ngControl.valid) {
-          this.ngControl.reset(null);
+          this.formControl.setValue(
+            this.autoCompleteTrigger.activeOption.value
+          );
+        } else if (!this.formControl.valid) {
+          this.formControl.setValue(null);
         }
       });
   }
