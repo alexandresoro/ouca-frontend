@@ -162,7 +162,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
           coordinates.areInvalid
         );
       });
-      this.updateAreCoordinatesCustomized$();
+      this.updateAreCoordinatesCustomized();
 
       this.getAreCoordinatesInvalid$()
         .pipe(distinctUntilChanged())
@@ -270,7 +270,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     ).pipe(takeUntil(this.destroy$));
   };
 
-  private updateAreCoordinatesCustomized$ = (): void => {
+  private updateAreCoordinatesCustomized = (): void => {
     combineLatest(
       this.controlGroup.controls.altitude.valueChanges.pipe(
         distinctUntilChanged()
