@@ -5,14 +5,11 @@ import {
   CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG
 } from "ouca-common/coordinates-system";
-import { AppConfigurationService } from "./app-configuration.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class CoordinatesBuilderService {
-  constructor(private appConfigurationService: AppConfigurationService) {}
-
   public updateCoordinatesValidators = (
     coordinatesSystemType: CoordinatesSystemType,
     longitudeControl: AbstractControl,
