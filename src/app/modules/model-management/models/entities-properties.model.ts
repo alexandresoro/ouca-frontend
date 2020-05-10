@@ -47,21 +47,21 @@ export const ENTITIES_PROPERTIES: {
     anEntityLabel: "une espèce",
     theEntityLabel: "l'espèce",
     theEntityLabelUppercase: "L'espèce",
-    isFeminine: false
+    isFeminine: true
   },
   "estimation-distance": {
     entityName: "estimation-distance",
     anEntityLabel: "une estimation de la distance",
     theEntityLabel: "l'estimation de la distance",
     theEntityLabelUppercase: "L'estimation de la distance",
-    isFeminine: false
+    isFeminine: true
   },
   "estimation-nombre": {
     entityName: "estimation-nombre",
     anEntityLabel: "une estimation du nombre",
     theEntityLabel: "l'estimation du nombre",
     theEntityLabelUppercase: "L'estimation du nombre",
-    isFeminine: false
+    isFeminine: true
   },
   lieudit: {
     entityName: "lieudit",
