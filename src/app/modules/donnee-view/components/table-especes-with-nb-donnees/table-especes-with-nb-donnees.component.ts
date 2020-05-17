@@ -8,6 +8,7 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
+import * as _ from "lodash";
 import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
 
 @Component({
@@ -44,6 +45,16 @@ export class TableEspecesWithNbDonneesComponent {
       this.dataSource.data = changes.especesToDisplay.currentValue;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (
+        data: unknown,
+        sortHeaderId: string
+      ): string => {
+        if (typeof data[sortHeaderId] === "string") {
+          return _.deburr(data[sortHeaderId].toLocaleLowerCase());
+        }
+
+        return data[sortHeaderId];
+      };
     }
   }
 

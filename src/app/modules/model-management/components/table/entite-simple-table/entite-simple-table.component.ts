@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
+import * as _ from "lodash";
 import { EntiteSimple } from "ouca-common/entite-simple.object";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -26,6 +27,16 @@ export abstract class EntiteSimpleTableComponent<T extends EntiteSimple> {
   protected initialize(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (
+      data: unknown,
+      sortHeaderId: string
+    ): string => {
+      if (typeof data[sortHeaderId] === "string") {
+        return _.deburr(data[sortHeaderId].toLocaleLowerCase());
+      }
+
+      return data[sortHeaderId];
+    };
 
     this.getEntities$().subscribe((entities) => {
       this.currentEntities$.next(entities);

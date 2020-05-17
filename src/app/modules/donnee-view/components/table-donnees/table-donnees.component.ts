@@ -132,6 +132,16 @@ export class TableDonneesComponent implements OnChanges, OnInit {
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (
+      data: unknown,
+      sortHeaderId: string
+    ): string => {
+      if (typeof data[sortHeaderId] === "string") {
+        return _.deburr(data[sortHeaderId].toLocaleLowerCase());
+      }
+
+      return data[sortHeaderId];
+    };
     this.dataSource.filterPredicate = this.filterData;
   }
 
