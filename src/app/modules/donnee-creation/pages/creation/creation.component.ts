@@ -568,4 +568,20 @@ export class CreationComponent implements OnInit, OnDestroy {
     return (this.donneeForm.controls
       .nombreGroup as FormGroup).controls.nombre.hasError("forbiddenValue");
   };
+
+  public getFxDistance$ = (): Observable<string> => {
+    return this.appConfiguration$.pipe(
+      map((configuration) => {
+        return configuration.isRegroupementDisplayed ? "auto" : "0 0 50%";
+      })
+    );
+  };
+
+  public getFxRegroupement$ = (): Observable<string> => {
+    return this.appConfiguration$.pipe(
+      map((configuration) => {
+        return configuration.isDistanceDisplayed ? "1 0 220px" : "0 0 250px";
+      })
+    );
+  };
 }

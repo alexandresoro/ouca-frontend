@@ -290,11 +290,12 @@
                   (appConfiguration$ | async)?.isRegroupementDisplayed
                 "
                 fxLayout="row wrap"
+                fxLayoutGap="10%"
               >
                 <!-- ESTIMATION DISTANCE -->
                 <input-distance
                   *ngIf="(appConfiguration$ | async)?.isDistanceDisplayed"
-                  fxFlex="auto"
+                  [fxFlex]="getFxDistance$() | async"
                   fxLayout="row"
                   fxLayoutGap="20px"
                   [controlGroup]="donneeForm.controls['distanceGroup']"
@@ -306,8 +307,7 @@
                 <!-- REGROUPEMENT-->
                 <input-regroupement
                   *ngIf="(appConfiguration$ | async)?.isRegroupementDisplayed"
-                  fxFlex="1 0 220px"
-                  fxFlexOffset="10%"
+                  [fxFlex]="getFxRegroupement$() | async"
                   [control]="donneeForm.controls['regroupement']"
                 ></input-regroupement>
 
