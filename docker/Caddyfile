@@ -1,0 +1,11 @@
+{$DOMAIN_URL}
+
+root * /srv
+
+reverse_proxy /api/* {$BACKEND_HOST}:{$BACKEND_PORT}
+reverse_proxy /ws/* {$BACKEND_HOST}:{$BACKEND_PORT}
+
+file_server
+
+encode gzip
+log

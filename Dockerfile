@@ -14,18 +14,15 @@ COPY src/ /app/frontend/src
 
 RUN yarn build:prod
 
-# 2. Build the nginx image along with the built project
-FROM nginx:alpine
+# 2. Build the webserver image along with the built project
+FROM caddy
 
-COPY docker/nginx/docker-entrypoint.sh /
+COPY docker/Caddyfile /etc/caddy/Caddyfile
+COPY --from=node /app/frontend/dist /srv
 
-COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf.template
-COPY --from=node /app/frontend/dist /usr/share/nginx/html
-
+ENV DOMAIN_URL http://localhost
 ENV BACKEND_HOST backend
 ENV BACKEND_PORT 4000
 
-RUN ["chmod", "+x", "/docker-entrypoint.sh"]
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80
+EXPOSE 443
