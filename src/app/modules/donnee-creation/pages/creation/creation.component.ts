@@ -142,6 +142,7 @@ export class CreationComponent implements OnInit, OnDestroy {
      */
     fromEvent(document, "keyup")
       .pipe(
+        takeUntil(this.destroy$),
         withLatestFrom(this.isModalOpened$),
         filter(([event, isModalOpened]) => {
           return (
