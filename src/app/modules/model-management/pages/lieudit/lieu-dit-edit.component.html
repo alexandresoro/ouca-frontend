@@ -109,32 +109,39 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Altitude -->
-        <mat-form-field>
-          <input
-            [formControl]="getForm().controls['altitude']"
-            id="input-altitude"
-            matInput
-            min="0"
-            max="65535"
-            name="altitude"
-            placeholder="Altitude en mètres"
-            type="number"
-          />
-
-          <mat-error
-            *ngIf="getForm().controls['altitude'].hasError('required')"
-          >
-            Le champ "Altitude" ne peut pas être vide.
-          </mat-error>
-          <mat-error
-            *ngIf="getForm().controls['altitude'].hasError('forbiddenValue')"
-          >
-            L'altitude doit être un entier compris entre 0 et 65535.
-          </mat-error>
-        </mat-form-field>
-
         <ng-container *ngIf="!(areCoordinatesInvalid$ | async)">
+          <!-- Latitude -->
+          <mat-form-field>
+            <input
+              [formControl]="getForm().controls['latitude']"
+              id="input-latitude"
+              matInput
+              min="{{ (coordinatesSystem$ | async)?.latitudeRange.min }}"
+              max="{{ (coordinatesSystem$ | async)?.latitudeRange.max }}"
+              name="latitude"
+              placeholder="Latitude en {{
+                (coordinatesSystem$ | async)?.unitName
+              }}"
+              type="number"
+            />
+
+            <mat-error
+              *ngIf="getForm().controls['latitude'].hasError('required')"
+            >
+              Le champ "Latitude" ne peut pas être vide.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                getForm().controls['latitude'].hasError('min') ||
+                getForm().controls['latitude'].hasError('max')
+              "
+            >
+              La latitude doit être un nombre compris entre
+              {{ (coordinatesSystem$ | async)?.latitudeRange.min }} et
+              {{ (coordinatesSystem$ | async)?.latitudeRange.max }}.
+            </mat-error>
+          </mat-form-field>
+
           <!-- Longitude -->
           <mat-form-field>
             <input
@@ -167,35 +174,28 @@
             </mat-error>
           </mat-form-field>
 
-          <!-- Latitude -->
+          <!-- Altitude -->
           <mat-form-field>
             <input
-              [formControl]="getForm().controls['latitude']"
-              id="input-latitude"
+              [formControl]="getForm().controls['altitude']"
+              id="input-altitude"
               matInput
-              min="{{ (coordinatesSystem$ | async)?.latitudeRange.min }}"
-              max="{{ (coordinatesSystem$ | async)?.latitudeRange.max }}"
-              name="latitude"
-              placeholder="Latitude en {{
-                (coordinatesSystem$ | async)?.unitName
-              }}"
+              min="0"
+              max="65535"
+              name="altitude"
+              placeholder="Altitude en mètres"
               type="number"
             />
 
             <mat-error
-              *ngIf="getForm().controls['latitude'].hasError('required')"
+              *ngIf="getForm().controls['altitude'].hasError('required')"
             >
-              Le champ "Latitude" ne peut pas être vide.
+              Le champ "Altitude" ne peut pas être vide.
             </mat-error>
             <mat-error
-              *ngIf="
-                getForm().controls['latitude'].hasError('min') ||
-                getForm().controls['latitude'].hasError('max')
-              "
+              *ngIf="getForm().controls['altitude'].hasError('forbiddenValue')"
             >
-              La latitude doit être un nombre compris entre
-              {{ (coordinatesSystem$ | async)?.latitudeRange.min }} et
-              {{ (coordinatesSystem$ | async)?.latitudeRange.max }}.
+              L'altitude doit être un entier compris entre 0 et 65535.
             </mat-error>
           </mat-form-field>
 

@@ -68,17 +68,17 @@
   <div *ngIf="!hideCoordinates">
     <ng-container *ngIf="!(getAreCoordinatesInvalid$() | async)">
       <div fxLayout="row wrap" fxLayoutGap="20px">
-        <!-- ALTITUDE -->
+        <!-- LATITUDE -->
         <mat-form-field fxFlex="1 0 100px">
           <input
-            [formControl]="controlGroup.controls['altitude']"
+            [formControl]="controlGroup.controls['latitude']"
             matInput
-            min="0"
-            max="65535"
+            [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
+            [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
             type="number"
-            placeholder="Altitude"
-            id="input-altitude"
-            name="altitude"
+            placeholder="Latitude"
+            id="input-latitude"
+            name="latitude"
           />
         </mat-form-field>
 
@@ -96,17 +96,17 @@
           />
         </mat-form-field>
 
-        <!-- LATITUDE -->
+        <!-- ALTITUDE -->
         <mat-form-field fxFlex="1 0 100px">
           <input
-            [formControl]="controlGroup.controls['latitude']"
+            [formControl]="controlGroup.controls['altitude']"
             matInput
-            [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
-            [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
+            min="0"
+            max="65535"
             type="number"
-            placeholder="Latitude"
-            id="input-latitude"
-            name="latitude"
+            placeholder="Altitude"
+            id="input-altitude"
+            name="altitude"
           />
         </mat-form-field>
       </div>
