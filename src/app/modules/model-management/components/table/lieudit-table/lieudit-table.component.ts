@@ -39,9 +39,9 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<UILieudit>
     "codeCommune",
     "nomCommune",
     "nom",
-    "altitude",
-    "longitude",
     "latitude",
+    "longitude",
+    "altitude",
     "nbDonnees"
   ];
 

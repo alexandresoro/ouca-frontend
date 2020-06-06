@@ -285,14 +285,14 @@
                 <br />
                 <strong>Lieu-dit:</strong> {{ element.lieudit }}
                 <br />
-                <strong>Altitude:</strong>
-                {{ element.altitude }} mètres
+                <strong>Latitude:</strong>
+                {{ getLatitude(element) }}
                 <br />
                 <strong>Longitude:</strong>
                 {{ getLongitude(element) }}
                 <br />
-                <strong>Latitude:</strong>
-                {{ getLatitude(element) }}
+                <strong>Altitude:</strong>
+                {{ element.altitude }} mètres
               </div>
               <div>
                 <strong>Classe:</strong> {{ element.classe }}
