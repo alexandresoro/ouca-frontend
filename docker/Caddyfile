@@ -2,10 +2,18 @@
 
 root * /srv
 
-reverse_proxy /api/* {$BACKEND_HOST}:{$BACKEND_PORT}
-reverse_proxy /ws/* {$BACKEND_HOST}:{$BACKEND_PORT}
+handle /api/* {
+  reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
+}
 
-file_server
+handle /ws/* {
+  reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
+}
+
+handle {
+  try_files {path} index.html
+  file_server
+}
 
 encode gzip
 log
