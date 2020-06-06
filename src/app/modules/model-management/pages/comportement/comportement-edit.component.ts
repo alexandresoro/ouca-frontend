@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Comportement } from "ouca-common/comportement.object";
+import { Nicheur, NICHEUR_VALUES } from "ouca-common/nicheur.model";
 import { Observable } from "rxjs";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
@@ -22,6 +23,8 @@ export class ComportementEditComponent
   public libelleErrorStateMatcher = new CrossFieldErrorMatcher(
     "alreadyExistingLibelle"
   );
+
+  public nicheurValues: Nicheur[] = Object.values(NICHEUR_VALUES);
 
   constructor(
     entitiesStoreService: EntitiesStoreService,
@@ -46,23 +49,9 @@ export class ComportementEditComponent
 
   public createForm(): FormGroup {
     const form = super.createForm();
-    form.addControl("isNicheur", new FormControl());
+    form.addControl("nicheur", new FormControl());
     return form;
   }
-
-  protected getEntityFromFormValue(formValue: {
-    id: number;
-    code: string;
-    libelle: string;
-    isNicheur: boolean;
-  }): Comportement {
-    const { isNicheur, ...comportementAttributes } = formValue;
-    return {
-      ...comportementAttributes,
-      isNicheur: !!isNicheur
-    };
-  }
-
   public getPageTitle = (): string => {
     return "Comportements";
   };

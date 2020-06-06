@@ -30,12 +30,12 @@
     </ng-container>
 
     <!-- Nicheur -->
-    <ng-container matColumnDef="isNicheur">
+    <ng-container matColumnDef="nicheur">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="nicheur">
         Nicheur
       </th>
       <td mat-cell *matCellDef="let row" [style.color]="row.color">
-        {{ row.isNicheur ? "Oui" : "Non" }}
+        {{ getNicheur(row.nicheur) }}
       </td>
     </ng-container>
 

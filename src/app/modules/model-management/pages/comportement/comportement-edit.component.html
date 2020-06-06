@@ -63,13 +63,19 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- IS NICHEUR -->
-        <mat-checkbox
-          [formControl]="getForm().controls['isNicheur']"
-          id="input-nicheur"
-          name="nicheur"
-          >Nicheur</mat-checkbox
-        >
+        <!-- NICHEUR -->
+        <mat-form-field>
+          <mat-select
+            id="input-nicheur"
+            placeholder="Nicheur"
+            [formControl]="getForm().controls['nicheur']"
+          >
+            <mat-option [value]="null"></mat-option>
+            <mat-option *ngFor="let n of nicheurValues" [value]="n.code">
+              {{ n.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
         <div class="cancel-submit-buttons">
           <button

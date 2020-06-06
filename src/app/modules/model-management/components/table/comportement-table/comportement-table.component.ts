@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Comportement } from "ouca-common/comportement.object";
+import { NicheurCode, NICHEUR_VALUES } from "ouca-common/nicheur.model";
 import { Observable } from "rxjs";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component";
@@ -18,7 +19,7 @@ export class ComportementTableComponent extends EntiteAvecLibelleEtCodeTableComp
   public displayedColumns: string[] = [
     "code",
     "libelle",
-    "isNicheur",
+    "nicheur",
     "nbDonnees"
   ];
 
@@ -32,5 +33,9 @@ export class ComportementTableComponent extends EntiteAvecLibelleEtCodeTableComp
 
   public getEntities$ = (): Observable<Comportement[]> => {
     return this.entitiesStoreService.getComportements$();
+  };
+
+  public getNicheur = (code: NicheurCode): string => {
+    return !code ? "" : NICHEUR_VALUES[code].name;
   };
 }
