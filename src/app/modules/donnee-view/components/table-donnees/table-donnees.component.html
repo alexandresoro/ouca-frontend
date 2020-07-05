@@ -334,6 +334,11 @@
                 </span>
               </div>
               <div>
+                <span>
+                  <strong>Nicheur:</strong>
+                  {{ !element.nicheur ? "Non" : element.nicheur }}
+                  <br />
+                </span>
                 <span *ngIf="element.comportements.length > 0">
                   <strong>Comportements:</strong>
                   <br />
