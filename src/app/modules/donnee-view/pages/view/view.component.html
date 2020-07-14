@@ -191,11 +191,29 @@
             />
           </mat-form-field>
 
-          <!-- REGROUPEMENT -->
+          <!-- REGROUPEMENT 
           <input-regroupement
             [control]="searchForm.controls['regroupement']"
             [hideButton]="true"
           ></input-regroupement>
+          -->
+
+          <!-- NICHEUR -->
+          <mat-form-field>
+            <mat-select
+              placeholder="Nicheurs"
+              id="multiple-select-nicheurs"
+              [formControl]="searchForm.controls['nicheurs']"
+              multiple
+            >
+              <mat-option
+                *ngFor="let nicheur of nicheursStatuses"
+                [value]="nicheur.code"
+              >
+                {{ nicheur.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
           <!-- COMPORTEMENT -->
           <multiple-select

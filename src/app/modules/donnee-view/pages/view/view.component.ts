@@ -13,6 +13,7 @@ import { EstimationNombre } from "ouca-common/estimation-nombre.object";
 import { FlatDonnee } from "ouca-common/flat-donnee.object";
 import { Meteo } from "ouca-common/meteo.object";
 import { Milieu } from "ouca-common/milieu.object";
+import { Nicheur, NICHEUR_VALUES } from "ouca-common/nicheur.model";
 import { Observateur } from "ouca-common/observateur.object";
 import { Sexe } from "ouca-common/sexe.object";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
@@ -71,6 +72,7 @@ export class ViewComponent implements OnDestroy {
     fromDate: new FormControl(),
     toDate: new FormControl(),
     commentaire: new FormControl(),
+    nicheurs: new FormControl(),
     comportements: new FormControl(),
     milieux: new FormControl(),
     coordinatesSystemType: new FormControl(),
@@ -86,6 +88,7 @@ export class ViewComponent implements OnDestroy {
   public comportements$: Observable<Comportement[]>;
   public milieux$: Observable<Milieu[]>;
   public meteos$: Observable<Meteo[]>;
+  public nicheursStatuses: Nicheur[] = Object.values(NICHEUR_VALUES);
 
   public displayWaitPanel$: BehaviorSubject<boolean> = new BehaviorSubject<
     boolean
