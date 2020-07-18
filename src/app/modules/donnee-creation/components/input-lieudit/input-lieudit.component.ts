@@ -128,7 +128,18 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     }
 
     departementControl.valueChanges
-      .pipe(distinctUntilChanged())
+      .pipe(
+        distinctUntilChanged(),
+        filter((newValue) => {
+          const currentValue: Departement = departementControl.value;
+          // Reset except if the selection remains a departement with the same id
+          return (
+            !currentValue?.id ||
+            !newValue?.id ||
+            currentValue.id !== newValue.id
+          );
+        })
+      )
       .subscribe(() => {
         communeControl.setValue(null);
       });
