@@ -37,10 +37,10 @@
       <td mat-cell *matCellDef="let row">{{ row.nomFrancais }}</td>
     </ng-container>
 
-    <!-- Nom latin -->
+    <!-- Nom scientifique -->
     <ng-container matColumnDef="nomLatin">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="nom-latin">
-        Nom latin
+        Nom scientifique
       </th>
       <td mat-cell *matCellDef="let row" [style.color]="row.color">
         {{ row.nomLatin }}

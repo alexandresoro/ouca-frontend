@@ -267,7 +267,7 @@
                 </span>
 
                 <span *ngIf="element.temperature">
-                  <strong>Température:</strong> {{ element.temperature }} degrès
+                  <strong>Température:</strong> {{ element.temperature }} °C
                   <br />
                 </span>
 
@@ -304,12 +304,16 @@
                 <strong>Nom français:</strong> {{ element.nomFrancais }}
                 <br />
 
-                <strong>Nom latin:</strong> {{ element.nomLatin }}
+                <strong>Nom scientifique:</strong> {{ element.nomLatin }}
                 <br />
 
                 <strong>Nombre:</strong>
-                <span *ngIf="element.nombre"> {{ element.nombre }} -</span>
-                {{ element.estimationNombre }}
+                <span *ngIf="element.nombre">
+                  {{ element.nombre }} ({{ element.estimationNombre }})</span
+                >
+                <span *ngIf="!element.nombre">
+                  {{ element.estimationNombre }}
+                </span>
                 <br />
 
                 <strong>Sexe:</strong> {{ element.sexe }}
@@ -321,9 +325,9 @@
                 <span *ngIf="element.distance || element.estimationDistance">
                   <strong>Distance:</strong
                   ><span *ngIf="element.estimationDistance">
-                    {{ element.estimationDistance }} -</span
-                  >
-                  <span *ngIf="element.distance">
+                    {{ element.estimationDistance }}
+                  </span>
+                  <span *ngIf="element.distance || element.distance === 0">
                     {{ element.distance }} mètres</span
                   >
                   <br />

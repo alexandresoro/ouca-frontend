@@ -57,7 +57,7 @@
   </mat-error>
 </mat-form-field>
 
-<!-- Nom latin -->
+<!-- Nom scientifique -->
 <mat-form-field>
   <input
     [errorStateMatcher]="especeNomLatinErrorStateMatcher"
@@ -66,12 +66,12 @@
     matInput
     maxlength="100"
     name="nom-latin"
-    placeholder="Nom latin"
+    placeholder="Nom scientifique"
     type="text"
   />
 
   <mat-error *ngIf="entityForm.controls['nomLatin'].hasError('required')">
-    Le champ "Nom latin" ne peut pas être vide.
+    Le champ "Nom scientifique" ne peut pas être vide.
   </mat-error>
   <mat-error *ngIf="entityForm.hasError('alreadyExistingNomLatin')">
     {{ entityForm.getError("alreadyExistingNomLatin").message }}

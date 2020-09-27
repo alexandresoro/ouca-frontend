@@ -173,7 +173,7 @@ export class EspeceEditComponent
       return isAnExistingEntity
         ? {
             alreadyExistingNomLatin: {
-              message: "Il existe déjà une espèce avec ce nom latin."
+              message: "Il existe déjà une espèce avec ce nom scientifique."
             }
           }
         : null;
