@@ -8430,14 +8430,9 @@ typedarray@^0.0.6:
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
 typeface-lato@*:
-  version "0.0.75"
-  resolved "https://registry.yarnpkg.com/typeface-lato/-/typeface-lato-0.0.75.tgz#8aa11c5611dc38416837c089b265a2abd1f7dd31"
-  integrity sha512-iA5uJD4PSTyIE4BDiSOexQeXkDkiJuX4Hu3wh3saJ06EB2TvJayab1Lbbmqq2je/LQv7KCQZHZmC0k4hedd8sw==
-
-typeface-roboto@*:
-  version "0.0.75"
-  resolved "https://registry.yarnpkg.com/typeface-roboto/-/typeface-roboto-0.0.75.tgz#98d5ba35ec234bbc7172374c8297277099cc712b"
-  integrity sha512-VrR/IiH00Z1tFP4vDGfwZ1esNqTiDMchBEXYY9kilT6wRGgFoCAlgkEUMHb1E3mB0FsfZhv756IF0+R+SFPfdg==
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/typeface-lato/-/typeface-lato-1.1.13.tgz#630ec75394d7fd2c63148005e6e23f2d8014e931"
+  integrity sha512-sTn5k3+fagGOi8FQfN2MPeUiTdvG0Z3LVqCaQdsg2sYa0fzNteFZussizdwiPxF45OoFN3zdU/ci+PtjolNSPQ==
 
 typescript@3.6.5:
   version "3.6.5"
