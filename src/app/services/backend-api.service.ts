@@ -90,7 +90,7 @@ export class BackendApiService {
 
   private httpPost<T>(
     relativePath: string,
-    objectToPost: object
+    objectToPost: any
   ): Observable<T> {
     const requestPath: string = this.getApiUrl() + relativePath;
     return this.http.post<T>(requestPath, objectToPost).pipe(
