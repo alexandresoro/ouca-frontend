@@ -22,8 +22,7 @@ import { CreationComponent } from "./pages/creation/creation.component";
     InputObservateursAssociesComponent,
     SearchByIdDialogComponent
   ],
-  entryComponents: [SearchByIdDialogComponent],
   exports: [],
   providers: []
 })
-export class DonneeCreationModule {}
+export class DonneeCreationModule { }
