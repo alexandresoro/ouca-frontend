@@ -1,5 +1,5 @@
-import { Classe } from "ouca-common/classe.object";
-import { Donnee } from "ouca-common/donnee.object";
+import { Classe } from "@ou-ca/ouca-model/classe.object";
+import { Donnee } from "@ou-ca/ouca-model/donnee.object";
 import { InventaireFormObject } from "./inventaire-form-object.model";
 
 export interface DonneeFormObject extends Donnee {

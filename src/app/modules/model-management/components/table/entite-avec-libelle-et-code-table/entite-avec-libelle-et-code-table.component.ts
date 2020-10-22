@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { EntiteAvecLibelleEtCode } from "ouca-common/entite-avec-libelle-et-code.object";
+import { EntiteAvecLibelleEtCode } from "@ou-ca/ouca-model/entite-avec-libelle-et-code.object";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 @Component({
@@ -7,6 +7,6 @@ import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple
 })
 export abstract class EntiteAvecLibelleEtCodeTableComponent<
   T extends EntiteAvecLibelleEtCode
-> extends EntiteSimpleTableComponent<T> {
+  > extends EntiteSimpleTableComponent<T> {
   public displayedColumns: string[] = ["code", "libelle", "nbDonnees"];
 }

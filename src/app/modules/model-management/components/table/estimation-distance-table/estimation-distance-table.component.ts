@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EstimationDistance } from "ouca-common/estimation-distance.object";
+import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
 import { Observable } from "rxjs";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
@@ -14,7 +14,7 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EstimationDistanceTableComponent extends EntiteAvecLibelleTableComponent<
-  EstimationDistance
+EstimationDistance
 > {
   constructor(private entitiesStoreService: EntitiesStoreService) {
     super();

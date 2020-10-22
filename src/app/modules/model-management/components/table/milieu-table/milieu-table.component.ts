@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Milieu } from "ouca-common/milieu.object";
+import { Milieu } from "@ou-ca/ouca-model/milieu.object";
 import { Observable } from "rxjs";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component";
@@ -14,7 +14,7 @@ import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MilieuTableComponent extends EntiteAvecLibelleEtCodeTableComponent<
-  Milieu
+Milieu
 > {
   constructor(private entitiesStoreService: EntitiesStoreService) {
     super();

@@ -1,5 +1,5 @@
-import { CommuneCommon } from "ouca-common/commune-common.model";
-import { Departement } from "ouca-common/departement.object";
+import { CommuneCommon } from "@ou-ca/ouca-model/commune-common.model";
+import { Departement } from "@ou-ca/ouca-model/departement.object";
 
 export interface UICommune extends CommuneCommon {
   departement: Departement;

@@ -1,20 +1,20 @@
 import { Injectable } from "@angular/core";
 import * as _ from "lodash";
-import { Age } from "ouca-common/age.object";
-import { Classe } from "ouca-common/classe.object";
-import { Commune } from "ouca-common/commune.model";
-import { Comportement } from "ouca-common/comportement.object";
-import { Departement } from "ouca-common/departement.object";
-import { EntiteSimple } from "ouca-common/entite-simple.object";
-import { Espece } from "ouca-common/espece.model";
-import { EstimationDistance } from "ouca-common/estimation-distance.object";
-import { EstimationNombre } from "ouca-common/estimation-nombre.object";
-import { Lieudit } from "ouca-common/lieudit.model";
-import { Meteo } from "ouca-common/meteo.object";
-import { Milieu } from "ouca-common/milieu.object";
-import { Observateur } from "ouca-common/observateur.object";
-import { PostResponse } from "ouca-common/post-response.object";
-import { Sexe } from "ouca-common/sexe.object";
+import { Age } from "@ou-ca/ouca-model/age.object";
+import { Classe } from "@ou-ca/ouca-model/classe.object";
+import { Commune } from "@ou-ca/ouca-model/commune.model";
+import { Comportement } from "@ou-ca/ouca-model/comportement.object";
+import { Departement } from "@ou-ca/ouca-model/departement.object";
+import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
+import { Espece } from "@ou-ca/ouca-model/espece.model";
+import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
+import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
+import { Lieudit } from "@ou-ca/ouca-model/lieudit.model";
+import { Meteo } from "@ou-ca/ouca-model/meteo.object";
+import { Milieu } from "@ou-ca/ouca-model/milieu.object";
+import { Observateur } from "@ou-ca/ouca-model/observateur.object";
+import { PostResponse } from "@ou-ca/ouca-model/post-response.object";
+import { Sexe } from "@ou-ca/ouca-model/sexe.object";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { UICommune } from "../models/commune.model";
@@ -101,7 +101,7 @@ export class EntitiesStoreService {
     private backendWsService: BackendWsService,
 
     private statusMessageService: StatusMessageService
-  ) {}
+  ) { }
 
   public initializeEntitiesStore = (): void => {
     this.backendWsService
@@ -438,9 +438,9 @@ export class EntitiesStoreService {
         if (response.isSuccess) {
           this.statusMessageService.showSuccessMessage(
             ENTITIES_PROPERTIES[entityName].theEntityLabelUppercase +
-              " a été sauvegardé" +
-              (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
-              " avec succès."
+            " a été sauvegardé" +
+            (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
+            " avec succès."
           );
         } else {
           this.statusMessageService.showErrorMessage(
@@ -462,9 +462,9 @@ export class EntitiesStoreService {
         if (response.isSuccess) {
           this.statusMessageService.showSuccessMessage(
             ENTITIES_PROPERTIES[entityName].theEntityLabelUppercase +
-              " a été supprimé" +
-              (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
-              " avec succès."
+            " a été supprimé" +
+            (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
+            " avec succès."
           );
         } else {
           this.statusMessageService.showErrorMessage(

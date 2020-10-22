@@ -13,15 +13,15 @@ import {
   Validators
 } from "@angular/forms";
 import * as _ from "lodash";
-import { Commune } from "ouca-common/commune.model";
+import { Commune } from "@ou-ca/ouca-model/commune.model";
 import {
   areSameCoordinates,
   CoordinatesSystem,
   getCoordinates
-} from "ouca-common/coordinates-system";
-import { Coordinates } from "ouca-common/coordinates.object";
-import { Departement } from "ouca-common/departement.object";
-import { Lieudit } from "ouca-common/lieudit.model";
+} from "@ou-ca/ouca-model/coordinates-system";
+import { Coordinates } from "@ou-ca/ouca-model/coordinates.object";
+import { Departement } from "@ou-ca/ouca-model/departement.object";
+import { Lieudit } from "@ou-ca/ouca-model/lieudit.model";
 import {
   BehaviorSubject,
   combineLatest,

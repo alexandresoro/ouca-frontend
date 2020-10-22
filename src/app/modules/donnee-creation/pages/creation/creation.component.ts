@@ -7,21 +7,21 @@ import {
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Age } from "ouca-common/age.object";
-import { AppConfiguration } from "ouca-common/app-configuration.object";
-import { Comportement } from "ouca-common/comportement.object";
+import { Age } from "@ou-ca/ouca-model/age.object";
+import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
+import { Comportement } from "@ou-ca/ouca-model/comportement.object";
 import {
   CoordinatesSystem,
   CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG
-} from "ouca-common/coordinates-system";
-import { Donnee } from "ouca-common/donnee.object";
-import { EstimationDistance } from "ouca-common/estimation-distance.object";
-import { EstimationNombre } from "ouca-common/estimation-nombre.object";
-import { Meteo } from "ouca-common/meteo.object";
-import { Milieu } from "ouca-common/milieu.object";
-import { Observateur } from "ouca-common/observateur.object";
-import { Sexe } from "ouca-common/sexe.object";
+} from "@ou-ca/ouca-model/coordinates-system";
+import { Donnee } from "@ou-ca/ouca-model/donnee.object";
+import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
+import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
+import { Meteo } from "@ou-ca/ouca-model/meteo.object";
+import { Milieu } from "@ou-ca/ouca-model/milieu.object";
+import { Observateur } from "@ou-ca/ouca-model/observateur.object";
+import { Sexe } from "@ou-ca/ouca-model/sexe.object";
 import {
   BehaviorSubject,
   combineLatest,
@@ -358,10 +358,10 @@ export class CreationComponent implements OnInit, OnDestroy {
         isInventaireUpdated
           ? this.openInventaireDialog()
           : this.creationPageService.updateInventaireAndDonnee(
-              this.inventaireForm,
-              this.donneeForm,
-              false
-            );
+            this.inventaireForm,
+            this.donneeForm,
+            false
+          );
       });
   };
 

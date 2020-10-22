@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import * as _ from "lodash";
-import { Age } from "ouca-common/age.object";
-import { Comportement } from "ouca-common/comportement.object";
+import { Age } from "@ou-ca/ouca-model/age.object";
+import { Comportement } from "@ou-ca/ouca-model/comportement.object";
 import {
   CoordinatesSystem,
   COORDINATES_SYSTEMS_CONFIG
-} from "ouca-common/coordinates-system";
-import { DonneesFilter } from "ouca-common/donnees-filter.object";
-import { EstimationDistance } from "ouca-common/estimation-distance.object";
-import { EstimationNombre } from "ouca-common/estimation-nombre.object";
-import { FlatDonnee } from "ouca-common/flat-donnee.object";
-import { Meteo } from "ouca-common/meteo.object";
-import { Milieu } from "ouca-common/milieu.object";
-import { Nicheur, NICHEUR_VALUES } from "ouca-common/nicheur.model";
-import { Observateur } from "ouca-common/observateur.object";
-import { Sexe } from "ouca-common/sexe.object";
+} from "@ou-ca/ouca-model/coordinates-system";
+import { DonneesFilter } from "@ou-ca/ouca-model/donnees-filter.object";
+import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
+import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
+import { FlatDonnee } from "@ou-ca/ouca-model/flat-donnee.object";
+import { Meteo } from "@ou-ca/ouca-model/meteo.object";
+import { Milieu } from "@ou-ca/ouca-model/milieu.object";
+import { Nicheur, NICHEUR_VALUES } from "@ou-ca/ouca-model/nicheur.model";
+import { Observateur } from "@ou-ca/ouca-model/observateur.object";
+import { Sexe } from "@ou-ca/ouca-model/sexe.object";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { withLatestFrom } from "rxjs/operators";
 import { UIEspece } from "src/app/models/espece.model";
@@ -148,13 +148,13 @@ export class ViewComponent implements OnDestroy {
     // Send the dates in UTC
     filters.fromDate = filters.fromDate
       ? interpretBrowserDateAsTimestampDate(
-          this.searchForm.controls.fromDate.value
-        )
+        this.searchForm.controls.fromDate.value
+      )
       : null;
     filters.toDate = filters.toDate
       ? interpretBrowserDateAsTimestampDate(
-          this.searchForm.controls.toDate.value
-        )
+        this.searchForm.controls.toDate.value
+      )
       : null;
 
     if (this.searchForm.controls.excelMode.value) {

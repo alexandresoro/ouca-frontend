@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { INIT } from "ouca-common/websocket/websocket-request-message.model";
+import { INIT } from "@ou-ca/ouca-model/websocket/websocket-request-message.model";
 import { AppConfigurationService } from "./services/app-configuration.service";
 import { BackendWsService } from "./services/backend-ws.service";
 import { EntitiesStoreService } from "./services/entities-store.service";
@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     private backendWsService: BackendWsService,
     private appConfigurationService: AppConfigurationService,
     private entitiesStoreService: EntitiesStoreService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.appConfigurationService.initializeConfigurationStore();

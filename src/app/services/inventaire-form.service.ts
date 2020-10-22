@@ -7,18 +7,18 @@ import {
 } from "@angular/forms";
 import { set } from "date-fns";
 import * as _ from "lodash";
-import { AppConfiguration } from "ouca-common/app-configuration.object";
+import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
 import {
   areCoordinatesCustomized,
   CoordinatesSystemType,
   getCoordinates
-} from "ouca-common/coordinates-system";
-import { Coordinates } from "ouca-common/coordinates.object";
-import { Departement } from "ouca-common/departement.object";
-import { Inventaire } from "ouca-common/inventaire.object";
-import { Lieudit } from "ouca-common/lieudit.model";
-import { Meteo } from "ouca-common/meteo.object";
-import { Observateur } from "ouca-common/observateur.object";
+} from "@ou-ca/ouca-model/coordinates-system";
+import { Coordinates } from "@ou-ca/ouca-model/coordinates.object";
+import { Departement } from "@ou-ca/ouca-model/departement.object";
+import { Inventaire } from "@ou-ca/ouca-model/inventaire.object";
+import { Lieudit } from "@ou-ca/ouca-model/lieudit.model";
+import { Meteo } from "@ou-ca/ouca-model/meteo.object";
+import { Observateur } from "@ou-ca/ouca-model/observateur.object";
 import { buildLieuditFromUILieudit } from "../helpers/lieudit.helper";
 import { UILieudit } from "../models/lieudit.model";
 import { DefaultInventaireOptions } from "../modules/donnee-creation/models/default-inventaire-options.model";
@@ -37,7 +37,7 @@ import { CoordinatesService } from "./coordinates.service";
   providedIn: "root"
 })
 export class InventaireFormService {
-  constructor(private coordinatesService: CoordinatesService) {}
+  constructor(private coordinatesService: CoordinatesService) { }
 
   public createForm = (): FormGroup => {
     const form = new FormGroup({

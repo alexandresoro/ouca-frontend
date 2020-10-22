@@ -2,20 +2,20 @@ import { Location } from "@angular/common";
 import { FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
-import { EntiteSimple } from "ouca-common/entite-simple.object";
+import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 
 export abstract class EntiteSimpleEditAbstractComponent<
   T extends EntiteSimple
-> {
+  > {
   constructor(
     protected entitiesStoreService: EntitiesStoreService,
     protected router: Router,
     protected route: ActivatedRoute,
     protected location: Location
-  ) {}
+  ) { }
 
   private form: FormGroup;
 
