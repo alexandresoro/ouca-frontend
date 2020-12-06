@@ -1,0 +1,287 @@
+<div class="page-container">
+  <h1>Documentation</h1>
+
+  <h2>Spécifications fonctionnelles</h2>
+  <h3>Saisie des observations</h3>
+  <p>La page permet différentes actions:</p>
+
+  <ul>
+    <li>Saisie de nouvelles observations</li>
+    <li>Visualisation des données existantes</li>
+    <li>Modification ou suppression des données existantes</li>
+  </ul>
+
+  <p>
+    Sur cette page l’enregistrement se fait soit en cliquant sur le bouton
+    d’enregistrement en bas à droite soit en appuyant sur la touche entrée.
+  </p>
+
+  <h4>Saisie de nouvelles observations</h4>
+  <p>
+    La première utilité de la page « Saisie des observations » est d’enregistrer
+    les nouvelles observations de l’utilisateur. D’abord l’utilisateur est
+    invité à renseigner la fiche inventaire qui correspond au contexte de
+    l’observation (ex: date, lieu…). Dans l’application le formulaire
+    correspondant à la fiche inventaire est actif tandis que celui correspondant
+    à la fiche espèce est inactif. Le focus est initialement positionné sur le
+    champ « Observateur ». Après avoir enregistré la fiche inventaire,
+    l’utilisateur est invité à renseigner une ou plusieurs fiches espèces
+    associées à la fiche inventaire. Dans l’application le formulaire
+    correspondant à la fiche espèce est actif tandis que celui correspondant à
+    la fiche inventaire est inactif. Le focus est initialement positionné sur le
+    champ « Espèce ».
+  </p>
+
+  <h5>Fiche inventaire</h5>
+  <h5>Fiche espèce (ou Donnée)</h5>
+
+  <h3>Visualisation des données existantes</h3>
+  <p>
+    Boutons « Données précédente », « Donnée suivante », « Recherche par ID »
+    Dans l’application le formulaire correspondant à la fiche observateur est
+    actif tout comme celui correspondant à la fiche espèce. Le focus est
+    initialement positionné sur le champ « Observateur ». Les données sont
+    ordonnées par ordre d’ID dans la table « donnees » de la base de données.
+    Les boutons « Donnée précédente » et « Donnée suivante » sont respectivement
+    désactivés s’il n’y a pas de donnée précédente ou de donnée suivante. Un
+    bouton « Revenir à l’édition de la donnée courante » permet de revenir au
+    formulaire d’édition d’une nouvelle donnée dans le même état qu’il avait été
+    laissé.
+    <br />
+    Modification ou suppression des données existantes
+  </p>
+  <br />
+  <h3>Consultation des données</h3>
+  <p>
+    Cette page permet à l’utilisateur de visualiser ses données, c’est-à-dire
+    l’ensemble des fiches espèces qu’il a renseigné depuis la page de saisie des
+    observations ou importé depuis un fichier.
+  </p>
+  <p>
+    Un panneau de filtres permet à l’utilisateur de renseigner des critères de
+    recherches. La recherche s’exécute lorsque l’utilisateur clique sur le
+    bouton « Lancer la recherche » en bas du panneau.
+    <br />
+    Si l’utilisateur ne remplit aucun filtre et clique sur le bouton « Lancer la
+    recherche » alors toutes les données seront retournées.
+    <br />
+    L’utilisateur peut choisir d’afficher les données dans la page courante ou
+    de les exporter dans un fichier Excel en cochant la case « Exporter les
+    résultats dans un fichier Excel ».
+    <br />
+    Si l’utilisateur choisit d’exporter les résultats dans un fichier Excel,
+    l’export sera limité à 50 000 données.
+    <br />
+    Si les résultats de la recherche excède ce nombre, les résultats ne seront
+    pas exportés et un message d’erreur indiquera à l’utilisateur qu’il doit
+    affiner sa recherche. Le fichier Excel contient autant de colonne que de
+    champs disponibles pour une donnée.
+    <br />
+    Si l’utilisateur décide de visualiser les résultats directement dans
+    l’application alors il aura le choix entre deux type d’affichage: Vue
+    « Données » : Cette vue affiche les données correspondant aux critères de
+    recherche dans un tableau.
+    <br />
+    Le tableau contient une ligne par donnée. Les lignes ne contiennent qu’un
+    sous-ensemble des attributs d’une donnée (code espèce, nom français, nombre,
+    sexe, âge, département, code commune, nom commune, lieu-dit, date, heure,
+    durée, observateur). Si l’utilisateur clique sur une des lignes il verra
+    apparaître en dessous, un panneau de détails contenant l’ensemble des
+    attributs de la donnée correspondante. S’il clique à nouveau sur la ligne le
+    panneau des détails disparaitra.
+    <br />
+    Par défaut le panneau des détails est masqué. Vue « Espèces » : Cette vue
+    agrège les données par espèces et indique le nombre de données par espèces
+  </p>
+
+  <h3>Gestion de la base</h3>
+  Les sous-pages du menu « Gestion de la base » permettent de créer les entités
+  qui seront nécessaires à la création de fiches inventaire et de fiches
+  espèces. Chacun des types d’entités est décrit ci-dessous.
+
+  <h4>Observateur</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Champs</th>
+        <th>Description</th>
+        <th>Type de données</th>
+        <th>Contraintes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ID</td>
+        <td>Identifiant unique</td>
+        <td>Nombre entier positif</td>
+        <td>De 1 à XXX</td>
+      </tr>
+      <tr>
+        <td>Libellé</td>
+        <td>Nom de l'observateur</td>
+        <td>Chaîne de caractères</td>
+        <td>De 1 à 100 caractères</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Département</h4>
+
+  <h4>Commune</h4>
+
+  <h4>Lieu-dit</h4>
+
+  <h4>Météo</h4>
+
+  <h4>Classe espèce</h4>
+
+  <h4>Espèce</h4>
+
+  <h4>Âge</h4>
+
+  <h4>Sexe</h4>
+
+  <h4>Estimation du nombre</h4>
+
+  <h4>Estimation de la distance</h4>
+
+  <h4>Comportement</h4>
+
+  <h4>Milieu</h4>
+
+  <h3>Autres actions</h3>
+  <h4>Configuration</h4>
+  Plusieurs fonctionnalités de l’application sont personnalisables
+
+  <h5>Valeurs par défaut</h5>
+  Valeurs par défaut dans la page de « Saisie des observations » Afin de
+  faciliter la saisie des observations il est possible de choisir avec quelle
+  valeur les champs sont pré-remplis. Il est possible de définir une valeur par
+  défaut pour les champs: Observateur Département Âge Sexe Estimation du nombre
+  Nombre
+
+  <h5>Champs optionnels</h5>
+  Affichage/masquage de certains champs optionnels dans la page de « Saisie des
+  observations » Permet de choisir de masquer certains champs de la page de
+  saisie des observations si l’utilisateur ne souhaite pas les utiliser. Cela
+  permet d’alléger l’affichage de la page de saisie et de simplifier
+  l’utilisation. Les champs qu’il est possible de masquer sont: Les observateurs
+  associés La météo (température et météos) La distance (estimation et valeur)
+  Le numéro de regroupement
+
+  <h5>Système de coordonnées</h5>
+  Valeurs possibles :
+  <div class="mat-elevation-z8">
+    <table class="mat-table">
+      <thead>
+        <tr class="mat-header-row">
+          <th class="mat-header-cell"></th>
+          <th class="mat-header-cell">GPS</th>
+          <th class="mat-header-cell">Lambert 93</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mat-row">
+          <td class="mat-cell">EPSG code</td>
+          <td class="mat-cell">WGS84</td>
+          <td class="mat-cell">EPSG:2154</td>
+        </tr>
+        <tr class="mat-row">
+          <td class="mat-cell">Unité</td>
+          <td class="mat-cell">degrés</td>
+          <td class="mat-cell">mètres</td>
+        </tr>
+        <tr class="mat-row">
+          <td class="mat-cell">Précision</td>
+          <td class="mat-cell">5 chiffres après la virgule</td>
+          <td class="mat-cell">1 chiffre après la virgule</td>
+        </tr>
+        <tr class="mat-row">
+          <td class="mat-cell">Bornes de la longitude</td>
+          <td class="mat-cell">-180° à 180°</td>
+          <td class="mat-cell">0 mètre à 1 300 000 mètres</td>
+        </tr>
+        <tr class="mat-row">
+          <td class="mat-cell">Bornes de la latitude</td>
+          <td class="mat-cell">-90° à 90°</td>
+          <td class="mat-cell">-6 000 000 mètres à 7 200 000 mètres</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Le système de coordonnées choisit sera celui utilisé dans l’application sur
+    les pages affichant des coordonnées.
+    <br />
+    Un message d’alerte sera affiché lorsqu’une coordonnée affichée aura été
+    convertie avant l’affichage, c’est-à-dire qu’elle aura initialement été
+    renseignée dans un autre système de coordonnées que celui couramment
+    utilisé.
+  </p>
+
+  <h4>Sauvegarde de la base</h4>
+  Cette page permet de créer une sauvegarde de la base de données : export de la
+  base de données en un fichier unique de type .sql.
+
+  <h4>Import depuis un fichier</h4>
+  Il est possible d’importer chacun des types de données depuis un fichier CSV
+  plutôt de les saisir une à une dans les pages de « Gestion de la base » ou de
+  « Saisie des observations ». Il est possible d’importer les entités suivantes:
+  <ul>
+    <li>Observateur</li>
+    <li>Département</li>
+    <li>Commune</li>
+    <li>Lieu-dit</li>
+    <li>Météo</li>
+    <li>Classe espèce</li>
+    <li>Espèce</li>
+    <li>Âge</li>
+    <li>Sexe</li>
+    <li>Estimation du nombre</li>
+    <li>Estimation de la distance</li>
+    <li>Comportement</li>
+    <li>Milieu</li>
+    <li>Donnée (fiche inventaire + fiche espèce</li>
+  </ul>
+
+  Les données importées doivent respecter les mêmes formats que si elles étaient
+  entrées manuellement depuis les pages dédiées. Pour chaque type d’entités, un
+  panneau indique le format du fichier CSV à respecter (ordre et contenu des
+  colonnes) et permet de téléverser le fichier CSV contenant les données à
+  importer. Pendant le traitement des données, une page de chargement est
+  affichée. A la fin du traitement un fichier est téléchargeable par
+  l’utilisateur. Ce fichier comprend l’ensemble des données qui n’ont pas pu
+  être importées et la raison pour laquelle elles n’ont pas pu l’être dans une
+  colonne additionnelle ajoutée en dernière position. L’utilisateur peut ainsi
+  corriger ses données, supprimer la colonne additionnelle et téléverser à
+  nouveau le fichier des données précédemment en erreur.
+
+  <h2>Architecture technique</h2>
+  <h3>Base de données</h3>
+  <ul>
+    <li>Maria DB</li>
+  </ul>
+
+  <h3>Backend</h3>
+  <ul>
+    <li>Node.js</li>
+    <li>Typescript</li>
+  </ul>
+
+  <h3>Frontend</h3>
+  <ul>
+    <li>Angular 10</li>
+    <li>Angular Material</li>
+    <li>HTML</li>
+    <li>SCSS</li>
+    <li>Typescript</li>
+  </ul>
+  Le frontend communique avec le backend par des requêtes HTTP.
+
+  <h2>Contributeurs</h2>
+  <ul>
+    <li>CARRIER Camille</li>
+    <li>CARRIER Laurent</li>
+    <li>SORO Alexandre</li>
+  </ul>
+</div>

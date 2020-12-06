@@ -4,6 +4,7 @@ import { ApplicationManagementRoutingModule } from "./application-management-rou
 import { ConfigurationFormComponent } from "./components/configuration-form/configuration-form.component";
 import { ConfigurationComponent } from "./pages/configuration/configuration.component";
 import { DatabaseComponent } from "./pages/database/database.component";
+import { DocumentationComponent } from "./pages/documentation/documentation.component";
 import { ImportComponent } from "./pages/import/import.component";
 @NgModule({
   imports: [SharedModule, ApplicationManagementRoutingModule],
@@ -11,9 +12,10 @@ import { ImportComponent } from "./pages/import/import.component";
     ConfigurationComponent,
     ConfigurationFormComponent,
     DatabaseComponent,
-    ImportComponent,
+    DocumentationComponent,
+    ImportComponent
   ],
   exports: [],
-  providers: [],
+  providers: []
 })
 export class ApplicationManagementModule {}
