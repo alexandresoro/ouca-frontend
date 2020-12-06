@@ -1,0 +1,41 @@
+@use "src/styles/variables";
+
+.chip-observateur,
+.chip-date,
+.chip-dateMin,
+.chip-dateMax,
+.chip-heure,
+.chip-duree,
+.chip-departement,
+.chip-commune,
+.chip-lieuDit,
+.chip-temperature,
+.chip-meteo,
+.chip-associe {
+  background-color: variables.$light-orange-color;
+}
+
+.chip-classe,
+.chip-espece,
+.chip-sexe,
+.chip-age,
+.chip-distance,
+.chip-estimationDistance,
+.chip-nombre,
+.chip-estimationNombre,
+.chip-comportement,
+.chip-milieu,
+.chip-regroupement,
+.chip-commentaire,
+.chip-nicheur,
+.chip-id {
+  background-color: variables.$light-purple-color;
+}
+
+.display-more-button {
+  width: 100%;
+  color: variables.$main-color;
+  text-align: left;
+  font-size: 16px;
+  height: 48px;
+}

@@ -1,21 +1,9 @@
 import { Injectable } from "@angular/core";
 import { DateAdapter } from "@angular/material/core";
-import {
-  addDays,
-  addMonths,
-  addYears,
-  format,
-  getDate,
-  getDaysInMonth,
-  getMonth,
-  getYear,
-  parse,
-  setDay,
-  setMonth,
-  toDate
-} from "date-fns";
+import { addDays, addMonths, addYears, format, getDate, getDaysInMonth, getMonth, getYear, parse, setDay, setMonth, toDate } from "date-fns";
 // CONFIG. Use environment or something for a dynamic locale and settings
 import { fr as locale } from "date-fns/locale";
+import { interpretBrowserDateAsTimestampDate } from '../modules/shared/helpers/time.helper';
 
 const WEEK_STARTS_ON = 1; // 0 sunday, 1 monday...
 
@@ -181,3 +169,33 @@ export class DateFnsDateAdapter extends DateAdapter<Date> {
     return new Date();
   }
 }
+
+export const isADate = (value: string): boolean => {
+  const dateFormat = "dd/MM/yyyy";
+
+  const parsedDate = parse(value, dateFormat, new Date(), {
+    locale
+  });
+  // Invalid date is represented by NaN which is not === to itself
+  if (parsedDate.getTime() === parsedDate.getTime()) {
+    return true;
+  }
+
+  return false;
+};
+
+
+export const getDateFromString = (value: string): Date | null => {
+  const dateFormat = "dd/MM/yyyy";
+
+  const parsedDate = parse(value, dateFormat, new Date(), {
+    locale
+  });
+
+  // Invalid date is represented by NaN which is not === to itself
+  if (parsedDate.getTime() === parsedDate.getTime()) {
+    return interpretBrowserDateAsTimestampDate(parsedDate);
+  }
+
+  return null;
+};

@@ -1,5 +1,4 @@
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
-
 export class TimeHelper {
   public static getFormattedTime(timeStr: string): string {
     if (timeStr) {
@@ -27,6 +26,13 @@ export class TimeHelper {
     }
     return null;
   }
+
+  public static isATime = (timeStr: string): boolean => {
+    const value = TimeHelper.getFormattedTime(timeStr);
+
+    const timeRegExp = new RegExp("^[0-9][0-9][:][0-9][0-9]$");
+    return value && timeRegExp.test(value);
+  };
 }
 
 /**

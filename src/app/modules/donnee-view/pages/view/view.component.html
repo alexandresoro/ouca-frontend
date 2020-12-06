@@ -4,248 +4,258 @@
   <!-- SEARCH PANEL -->
   <div class="search-filters-panel">
     <form [formGroup]="searchForm">
-      <div class="search-filters-form" fxLayout="row" fxLayoutGap="30px">
-        <!-- FIRST COLUMN -->
-        <div fxFlex="25%">
-          <!-- ID -->
-          <mat-form-field>
-            <input
-              #input
-              matInput
-              [formControl]="searchForm.controls['id']"
-              placeholder="ID"
-              id="input-id"
-              name="id"
-              type="text"
-            />
-          </mat-form-field>
+      <mat-tab-group #searchTabs class="search-tab-group" >
+        <!-- DONNEES TABLE -->
+        <mat-tab label="Recherche rapide">
+          <search></search>
+        </mat-tab>
+        <!-- ESPECES TABLE -->
+        <mat-tab label="Recherche détaillée">
+          <div class="search-filters-form" fxLayout="row" fxLayoutGap="30px">
+            <!-- FIRST COLUMN -->
+            <div fxFlex="25%">
+              <!-- ID -->
+              <mat-form-field>
+                <input
+                  #input
+                  matInput
+                  [formControl]="searchForm.controls['id']"
+                  placeholder="ID"
+                  id="input-id"
+                  name="id"
+                  type="text"
+                />
+              </mat-form-field>
 
-          <!-- OBSERVATEURS -->
-          <multiple-select
-            [attributesToDisplay]="['libelle']"
-            [control]="searchForm.controls['observateurs']"
-            [id]="'observateurs'"
-            [options]="observateurs$ | async"
-            [placeholder]="'Observateurs'"
-          ></multiple-select>
+              <!-- OBSERVATEURS -->
+              <multiple-select
+                [attributesToDisplay]="['libelle']"
+                [control]="searchForm.controls['observateurs']"
+                [id]="'observateurs'"
+                [options]="observateurs$ | async"
+                [placeholder]="'Observateurs'"
+              ></multiple-select>
 
-          <!-- DATES -->
-          <mat-form-field>
-            <input
-              matInput
-              maxlength="10"
-              [matDatepicker]="picker"
-              placeholder="Date de début"
-              id="input-from-date"
-              name="from-date"
-              [formControl]="searchForm.controls['fromDate']"
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
+              <!-- DATES -->
+              <mat-form-field>
+                <input
+                  matInput
+                  maxlength="10"
+                  [matDatepicker]="picker"
+                  placeholder="Date de début"
+                  id="input-from-date"
+                  name="from-date"
+                  [formControl]="searchForm.controls['fromDate']"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
 
-          <mat-form-field>
-            <input
-              matInput
-              maxlength="10"
-              [matDatepicker]="pickerToDate"
-              placeholder="Date de fin"
-              id="input-to-date"
-              name="to-date"
-              [formControl]="searchForm.controls['toDate']"
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="pickerToDate"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #pickerToDate></mat-datepicker>
-          </mat-form-field>
+              <mat-form-field>
+                <input
+                  matInput
+                  maxlength="10"
+                  [matDatepicker]="pickerToDate"
+                  placeholder="Date de fin"
+                  id="input-to-date"
+                  name="to-date"
+                  [formControl]="searchForm.controls['toDate']"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="pickerToDate"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #pickerToDate></mat-datepicker>
+              </mat-form-field>
 
-          <!-- HEURE -->
-          <input-time
-            [control]="searchForm.controls['heure']"
-            id="heure"
-            label="Heure"
-          ></input-time>
+              <!-- HEURE -->
+              <input-time
+                [control]="searchForm.controls['heure']"
+                id="heure"
+                label="Heure"
+              ></input-time>
 
-          <!-- DUREE -->
-          <input-time
-            [control]="searchForm.controls['duree']"
-            id="duree"
-            label="Durée"
-          ></input-time>
-        </div>
+              <!-- DUREE -->
+              <input-time
+                [control]="searchForm.controls['duree']"
+                id="duree"
+                label="Durée"
+              ></input-time>
+            </div>
 
-        <!-- SECOND COLUMN -->
-        <div fxFlex="25%">
-          <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
-          <input-lieudit
-            formGroupName="lieuditGroup"
-            [controlGroup]="searchForm.controls['lieuditGroup']"
-            [hideCoordinates]="true"
-            [isMultipleSelectMode]="true"
-          >
-          </input-lieudit>
-
-          <!-- TEMPERATURE -->
-          <input-temperature
-            [control]="searchForm.controls['temperature']"
-          ></input-temperature>
-
-          <!-- METEO -->
-          <multiple-select
-            [attributesToDisplay]="['libelle']"
-            [control]="searchForm.controls['meteos']"
-            [id]="'meteos'"
-            [options]="meteos$ | async"
-            [placeholder]="'Météos'"
-          ></multiple-select>
-
-          <!-- OBSERVATEURS ASSOCIES -->
-          <multiple-select
-            [attributesToDisplay]="['libelle']"
-            [control]="searchForm.controls['associes']"
-            [id]="'associes'"
-            [options]="observateurs$ | async"
-            [placeholder]="'Observateurs associés'"
-          ></multiple-select>
-        </div>
-
-        <!-- THIRD COLUMN-->
-        <div fxFlex="25%">
-          <!-- CLASSE / ESPECE -->
-          <input-espece
-            formGroupName="especeGroup"
-            [controlGroup]="searchForm.controls['especeGroup']"
-            [isMultipleSelectMode]="true"
-          ></input-espece>
-
-          <!-- ESTIMATION NOMBRE / NOMBRE -->
-          <multiple-select
-            [attributesToDisplay]="['libelle']"
-            [control]="nombreGroup.controls['estimationsNombre']"
-            [id]="'estimations-nombre'"
-            [options]="estimationsNombre$ | async"
-            [placeholder]="'Estimations du nombre'"
-          ></multiple-select>
-
-          <!-- NOMBRE -->
-          <mat-form-field>
-            <input
-              #input
-              matInput
-              [formControl]="nombreGroup.controls['nombre']"
-              placeholder="Nombre d'individus"
-              id="input-nombre"
-              min="1"
-              max="65535"
-              name="nombre"
-              type="number"
-            />
-          </mat-form-field>
-
-          <!-- SEXE -->
-          <multiple-select
-            [attributesToDisplay]="['libelle']"
-            [control]="searchForm.controls['sexes']"
-            [id]="'sexes'"
-            [options]="sexes$ | async"
-            [placeholder]="'Sexes'"
-          ></multiple-select>
-
-          <!-- AGE  -->
-          <multiple-select
-            [attributesToDisplay]="['libelle']"
-            [control]="searchForm.controls['ages']"
-            [id]="'ages'"
-            [options]="ages$ | async"
-            [placeholder]="'Ages'"
-          ></multiple-select>
-        </div>
-
-        <!-- FOURTH COLUMN-->
-        <div fxFlex="25%">
-          <!-- ESTIMATION DISTANCE / DISTANCE -->
-          <multiple-select
-            [attributesToDisplay]="['libelle']"
-            [control]="distanceGroup.controls['estimationsDistance']"
-            [id]="'estimations-distance'"
-            [options]="estimationsDistance$ | async"
-            [placeholder]="'Estimations de la distance'"
-          ></multiple-select>
-
-          <mat-form-field>
-            <input
-              #input
-              matInput
-              [formControl]="distanceGroup.controls['distance']"
-              placeholder="Distance de contact (m)"
-              id="input-distance"
-              min="0"
-              max="65535"
-              name="distance"
-              type="number"
-            />
-          </mat-form-field>
-
-          <!-- REGROUPEMENT 
-          <input-regroupement
-            [control]="searchForm.controls['regroupement']"
-            [hideButton]="true"
-          ></input-regroupement>
-          -->
-
-          <!-- NICHEUR -->
-          <mat-form-field>
-            <mat-select
-              placeholder="Nicheurs"
-              id="multiple-select-nicheurs"
-              [formControl]="searchForm.controls['nicheurs']"
-              multiple
-            >
-              <mat-option
-                *ngFor="let nicheur of nicheursStatuses"
-                [value]="nicheur.code"
+            <!-- SECOND COLUMN -->
+            <div fxFlex="25%">
+              <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
+              <input-lieudit
+                formGroupName="lieuditGroup"
+                [controlGroup]="searchForm.controls['lieuditGroup']"
+                [hideCoordinates]="true"
+                [isMultipleSelectMode]="true"
               >
-                {{ nicheur.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+              </input-lieudit>
 
-          <!-- COMPORTEMENT -->
-          <multiple-select
-            [attributesToDisplay]="['code', 'libelle']"
-            [control]="searchForm.controls['comportements']"
-            [id]="'comportements'"
-            [options]="comportements$ | async"
-            [placeholder]="'Comportements'"
-          ></multiple-select>
+              <!-- TEMPERATURE -->
+              <input-temperature
+                [control]="searchForm.controls['temperature']"
+              ></input-temperature>
 
-          <!-- MILIEU -->
-          <multiple-select
-            [attributesToDisplay]="['code', 'libelle']"
-            [control]="searchForm.controls['milieux']"
-            [id]="'milieux'"
-            [options]="milieux$ | async"
-            [placeholder]="'Milieux'"
-          ></multiple-select>
+              <!-- METEO -->
+              <multiple-select
+                [attributesToDisplay]="['libelle']"
+                [control]="searchForm.controls['meteos']"
+                [id]="'meteos'"
+                [options]="meteos$ | async"
+                [placeholder]="'Météos'"
+              ></multiple-select>
 
-          <!-- COMMENTAIRES -->
-          <mat-form-field>
-            <input
-              matInput
-              type="text"
-              placeholder="Commentaires"
-              id="input-commentaire"
-              name="input-commentaire"
-              [formControl]="searchForm.controls['commentaire']"
-            />
-          </mat-form-field>
-        </div>
-      </div>
+              <!-- OBSERVATEURS ASSOCIES -->
+              <multiple-select
+                [attributesToDisplay]="['libelle']"
+                [control]="searchForm.controls['associes']"
+                [id]="'associes'"
+                [options]="observateurs$ | async"
+                [placeholder]="'Observateurs associés'"
+              ></multiple-select>
+            </div>
+
+            <!-- THIRD COLUMN-->
+            <div fxFlex="25%">
+              <!-- CLASSE / ESPECE -->
+              <input-espece
+                formGroupName="especeGroup"
+                [controlGroup]="searchForm.controls['especeGroup']"
+                [isMultipleSelectMode]="true"
+              ></input-espece>
+
+              <!-- ESTIMATION NOMBRE / NOMBRE -->
+              <multiple-select
+                [attributesToDisplay]="['libelle']"
+                [control]="nombreGroup.controls['estimationsNombre']"
+                [id]="'estimations-nombre'"
+                [options]="estimationsNombre$ | async"
+                [placeholder]="'Estimations du nombre'"
+              ></multiple-select>
+
+              <!-- NOMBRE -->
+              <mat-form-field>
+                <input
+                  #input
+                  matInput
+                  [formControl]="nombreGroup.controls['nombre']"
+                  placeholder="Nombre d'individus"
+                  id="input-nombre"
+                  min="1"
+                  max="65535"
+                  name="nombre"
+                  type="number"
+                />
+              </mat-form-field>
+
+              <!-- SEXE -->
+              <multiple-select
+                [attributesToDisplay]="['libelle']"
+                [control]="searchForm.controls['sexes']"
+                [id]="'sexes'"
+                [options]="sexes$ | async"
+                [placeholder]="'Sexes'"
+              ></multiple-select>
+
+              <!-- AGE  -->
+              <multiple-select
+                [attributesToDisplay]="['libelle']"
+                [control]="searchForm.controls['ages']"
+                [id]="'ages'"
+                [options]="ages$ | async"
+                [placeholder]="'Ages'"
+              ></multiple-select>
+            </div>
+
+            <!-- FOURTH COLUMN-->
+            <div fxFlex="25%">
+              <!-- ESTIMATION DISTANCE / DISTANCE -->
+              <multiple-select
+                [attributesToDisplay]="['libelle']"
+                [control]="distanceGroup.controls['estimationsDistance']"
+                [id]="'estimations-distance'"
+                [options]="estimationsDistance$ | async"
+                [placeholder]="'Estimations de la distance'"
+              ></multiple-select>
+
+              <mat-form-field>
+                <input
+                  #input
+                  matInput
+                  [formControl]="distanceGroup.controls['distance']"
+                  placeholder="Distance de contact (m)"
+                  id="input-distance"
+                  min="0"
+                  max="65535"
+                  name="distance"
+                  type="number"
+                />
+              </mat-form-field>
+
+              <!-- REGROUPEMENT 
+              <input-regroupement
+                [control]="searchForm.controls['regroupement']"
+                [hideButton]="true"
+              ></input-regroupement>
+              -->
+
+              <!-- NICHEUR -->
+              <mat-form-field>
+                <mat-select
+                  placeholder="Nicheurs"
+                  id="multiple-select-nicheurs"
+                  [formControl]="searchForm.controls['nicheurs']"
+                  multiple
+                >
+                  <mat-option
+                    *ngFor="let nicheur of nicheursStatuses"
+                    [value]="nicheur.code"
+                  >
+                    {{ nicheur.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- COMPORTEMENT -->
+              <multiple-select
+                [attributesToDisplay]="['code', 'libelle']"
+                [control]="searchForm.controls['comportements']"
+                [id]="'comportements'"
+                [options]="comportements$ | async"
+                [placeholder]="'Comportements'"
+              ></multiple-select>
+
+              <!-- MILIEU -->
+              <multiple-select
+                [attributesToDisplay]="['code', 'libelle']"
+                [control]="searchForm.controls['milieux']"
+                [id]="'milieux'"
+                [options]="milieux$ | async"
+                [placeholder]="'Milieux'"
+              ></multiple-select>
+
+              <!-- COMMENTAIRES -->
+              <mat-form-field>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Commentaires"
+                  id="input-commentaire"
+                  name="input-commentaire"
+                  [formControl]="searchForm.controls['commentaire']"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
       <button
         mat-raised-button
         type="submit"
@@ -301,7 +311,7 @@
   </ng-container>
 
   <!-- NO DATA PANEL -->
-  <div *ngIf="displayNoDataPanel$ | async" style="text-align: center;">
+  <div *ngIf="displayNoDataPanel$ | async" style="text-align: center">
     <img
       src="../../../../../assets/img/blue-green-bird.svg"
       alt="Oiseaux"
@@ -311,7 +321,7 @@
   </div>
 
   <!-- WAIT PANEL-->
-  <div *ngIf="displayWaitPanel$ | async" style="text-align: center;">
+  <div *ngIf="displayWaitPanel$ | async" style="text-align: center">
     <img
       src="../../../../../assets/img/green-bird.svg"
       alt="Oiseaux"

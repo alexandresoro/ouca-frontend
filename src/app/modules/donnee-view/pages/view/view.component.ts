@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
+import { MatTabGroup } from '@angular/material/tabs';
 import * as _ from "lodash";
 import { Age } from "ouca-common/age.object";
 import { Comportement } from "ouca-common/comportement.object";
-import {
-  CoordinatesSystem,
-  COORDINATES_SYSTEMS_CONFIG
-} from "ouca-common/coordinates-system";
+import { CoordinatesSystem, COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
 import { DonneesFilter } from "ouca-common/donnees-filter.object";
 import { EstimationDistance } from "ouca-common/estimation-distance.object";
 import { EstimationNombre } from "ouca-common/estimation-nombre.object";
@@ -18,17 +16,16 @@ import { Observateur } from "ouca-common/observateur.object";
 import { Sexe } from "ouca-common/sexe.object";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { withLatestFrom } from "rxjs/operators";
+import { getDateFromString } from 'src/app/date-adapter/date-fns-adapter';
 import { UIEspece } from "src/app/models/espece.model";
-import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
+import { interpretBrowserDateAsTimestampDate } from 'src/app/modules/shared/helpers/time.helper';
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
-import {
-  getContentTypeFromResponse,
-  saveFile
-} from "../../../shared/helpers/file-downloader.helper";
+import { getContentTypeFromResponse, saveFile } from "../../../shared/helpers/file-downloader.helper";
 import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
+import { SearchCriteriaService } from "../../services/search-criteria.service";
 @Component({
   styleUrls: ["./view.component.scss"],
   templateUrl: "./view.component.html",
@@ -89,7 +86,6 @@ export class ViewComponent implements OnDestroy {
   public milieux$: Observable<Milieu[]>;
   public meteos$: Observable<Meteo[]>;
   public nicheursStatuses: Nicheur[] = Object.values(NICHEUR_VALUES);
-
   public displayWaitPanel$: BehaviorSubject<boolean> = new BehaviorSubject<
     boolean
   >(false);
@@ -110,11 +106,15 @@ export class ViewComponent implements OnDestroy {
     "distanceGroup"
   ] as FormGroup;
 
+  @ViewChild('searchTabs') searchTabs: MatTabGroup;
+  private QUICK_SEARCH_TAB_INDEX = 0;
+
   constructor(
     private appConfigurationService: AppConfigurationService,
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService,
-    private entitiesStoreService: EntitiesStoreService
+    private entitiesStoreService: EntitiesStoreService,
+    private searchCriteriaService: SearchCriteriaService
   ) {
     this.observateurs$ = this.entitiesStoreService.getObservateurs$();
     this.estimationsNombre$ = this.entitiesStoreService.getEstimationNombres$();
@@ -138,26 +138,168 @@ export class ViewComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
+  private buildSearchCriteraFromQuickSearchPanel = (): DonneesFilter => {
+    const options = this.searchCriteriaService.getCurrentSearchCriteria();
+
+    const searchCriteria: DonneesFilter = {
+      id: null,
+      observateurs: [],
+      associes: [],
+      fromDate: null,
+      toDate: null,
+      heure: null,
+      duree: null,
+      lieuditGroup: {
+        departements: [],
+        communes: [],
+        lieuxdits: []
+      },
+      temperature: null,
+      meteos: [],
+      especeGroup: {
+        classes: [],
+        especes: []
+      },
+      sexes: [],
+      ages: [],
+      nombreGroup: {
+        estimationsNombre: [],
+        nombre: null
+      },
+      distanceGroup: {
+        estimationsDistance: [],
+        distance: null
+      },
+      regroupement: null,
+      comportements: [],
+      milieux: [],
+      nicheurs: [],
+      commentaire: null,
+      excelMode: this.searchForm.value.excelMode,
+      coordinatesSystemType: this.searchForm.value.coordinatesSystemType
+    };
+
+    if (options) {
+      for (const option of options) {
+        const object = option.object;
+        switch (option.type) {
+          case "id":
+            searchCriteria.id = object;
+            break;
+          case "observateur":
+            searchCriteria.observateurs.push(object.id);
+            break;
+          case "associe":
+            searchCriteria.associes.push(object.id);
+            break;
+          case "date":
+            searchCriteria.fromDate = getDateFromString(object);
+            searchCriteria.toDate = getDateFromString(object);
+            break;
+          case "dateMin":
+            searchCriteria.fromDate = getDateFromString(object);
+            break;
+          case "dateMax":
+            searchCriteria.toDate = getDateFromString(object);
+            break;
+          case "heure":
+            searchCriteria.heure = object;
+            break;
+          case "duree":
+            searchCriteria.duree = object;
+            break;
+          case "departement":
+            searchCriteria.lieuditGroup.departements.push(object.id);
+            break;
+          case "commune":
+            searchCriteria.lieuditGroup.communes.push(object.id);
+            break;
+          case "lieuDit":
+            searchCriteria.lieuditGroup.lieuxdits.push(object.id);
+            break;
+          case "temperature":
+            searchCriteria.temperature = +object;
+            break;
+          case "meteo":
+            searchCriteria.meteos.push(object.id);
+            break;
+          case "classe":
+            searchCriteria.especeGroup.classes.push(object.id);
+            break;
+          case "espece":
+            searchCriteria.especeGroup.especes.push(object.id);
+            break;
+          case "sexe":
+            searchCriteria.sexes.push(object.id);
+            break;
+          case "age":
+            searchCriteria.ages.push(object.id);
+            break;
+          case "nombre":
+            searchCriteria.nombreGroup.nombre = +object;
+            break;
+          case "estimationNombre":
+            searchCriteria.nombreGroup.estimationsNombre.push(object.id);
+            break;
+          case "distance":
+            searchCriteria.distanceGroup.distance = +object;
+            break;
+          case "estimationDistance":
+            searchCriteria.distanceGroup.estimationsDistance.push(object.id);
+            break;
+          case "regroupement":
+            searchCriteria.regroupement = +object;
+            break;
+          case "comportement":
+            searchCriteria.comportements.push(object.id);
+            break;
+          case "milieu":
+            searchCriteria.milieux.push(object.id);
+            break;
+          case "nicheur":
+            searchCriteria.nicheurs.push(object.id);
+            break;
+          case "commentaire":
+            searchCriteria.commentaire = object;
+            break;
+        }
+      }
+    }
+
+    return searchCriteria;
+  };
+
+  private buildSearchCriteriaFromDetailledSearchPanel = (): DonneesFilter => {
+    const filters: DonneesFilter = this.searchForm.value;
+    filters.fromDate = filters.fromDate
+     ? interpretBrowserDateAsTimestampDate(
+         this.searchForm.controls.fromDate.value
+       )
+     : null;
+     filters.toDate = filters.toDate
+     ? interpretBrowserDateAsTimestampDate(
+         this.searchForm.controls.toDate.value
+       )
+     : null;
+     return filters;
+  }
+
   public onSearchButtonClicked(): void {
     this.displayWaitPanel$.next(true);
     this.displayNoDataPanel$.next(false);
     this.donneesToDisplay = [];
     this.especesWithNbDonnees = [];
 
-    const filters: DonneesFilter = this.searchForm.value;
-    // Send the dates in UTC
-    filters.fromDate = filters.fromDate
-      ? interpretBrowserDateAsTimestampDate(
-          this.searchForm.controls.fromDate.value
-        )
-      : null;
-    filters.toDate = filters.toDate
-      ? interpretBrowserDateAsTimestampDate(
-          this.searchForm.controls.toDate.value
-        )
-      : null;
-
-    if (this.searchForm.controls.excelMode.value) {
+    let filters: DonneesFilter;
+    
+    if (this.searchTabs.selectedIndex == this.QUICK_SEARCH_TAB_INDEX) {
+       filters = this.buildSearchCriteraFromQuickSearchPanel();
+    } else {
+      filters = this.buildSearchCriteriaFromDetailledSearchPanel();
+    }
+    
+    // Send the dates in UTC  
+    if (filters.excelMode) {
       this.backendApiService
         .exportDonneesByCustomizedFilters(filters)
         .subscribe((response) => {

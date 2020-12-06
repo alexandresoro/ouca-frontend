@@ -1,0 +1,143 @@
+<mat-form-field>
+  <mat-chip-list #chipList>
+    <mat-chip
+      *ngFor="let criteria of searchCriteria$ | async"
+      [removable]="true"
+      (removed)="removeChip(criteria)"
+      class="chip-{{ criteria.type }}"
+    >
+      {{ getDisplayedChipValue(criteria) }}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input
+      placeholder="Critères de recherche"
+      #searchInput
+      [formControl]="searchCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+    />
+  </mat-chip-list>
+
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    (optionSelected)="selectChip($event)"
+  >
+    <mat-option *ngFor="let other of filteredOthers$ | async" [value]="other">
+      {{ getDisplayedChipValue(other) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let option of filteredDepartements$ | async"
+      [value]="{ type: 'departement', object: option }"
+    >
+      {{ getDisplayedDepartement(option) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let option of filteredCommunes$ | async"
+      [value]="{ type: 'commune', object: option }"
+    >
+      {{ getDisplayedCommune(option) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let option of filteredLieuxDits$ | async"
+      [value]="{ type: 'lieuDit', object: option }"
+    >
+      {{ getDisplayedLieuDit(option) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let espece of filteredEspeces$ | async"
+      [value]="{ type: 'espece', object: espece }"
+    >
+      {{ getDisplayedEspece(espece) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let classe of filteredClasses$ | async"
+      [value]="{ type: 'classe', object: classe }"
+    >
+      {{ getDisplayEntityWithLabel("Classe espèce", classe) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let sexe of filteredSexes$ | async"
+      [value]="{ type: 'sexe', object: sexe }"
+    >
+      {{ getDisplayEntityWithLabel("Sexe", sexe) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let age of filteredAges$ | async"
+      [value]="{ type: 'age', object: age }"
+    >
+      {{ getDisplayEntityWithLabel("Âge", age) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let comp of filteredComportements$ | async"
+      [value]="{ type: 'comportement', object: comp }"
+    >
+      {{ getDisplayEntityWithCodeAndLabel("Comportement", comp) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let milieu of filteredMilieux$ | async"
+      [value]="{ type: 'milieu', object: milieu }"
+    >
+      {{ getDisplayEntityWithCodeAndLabel("Milieu", milieu) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let nicheur of filteredNicheurs$ | async"
+      [value]="{ type: 'nicheur', object: nicheur }"
+    >
+      {{ getDisplayedNicheur(nicheur) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let option of filteredMeteos$ | async"
+      [value]="{ type: 'meteo', object: option }"
+    >
+      {{ getDisplayEntityWithLabel("Météo", option) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let estim of filteredEstimationsNombre$ | async"
+      [value]="{ type: 'estimationNombre', object: estim }"
+    >
+      {{ getDisplayEntityWithLabel("Estimation du nombre", estim) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let estim of filteredEstimationsDistance$ | async"
+      [value]="{ type: 'estimationDistance', object: estim }"
+    >
+      {{ getDisplayEntityWithLabel("Estimation de la distance", estim) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let observateur of filteredObservateurs$ | async"
+      [value]="{ type: 'observateur', object: observateur }"
+    >
+      {{ this.getDisplayEntityWithLabel("Observateur", observateur) }}
+    </mat-option>
+
+    <mat-option
+      *ngFor="let observateur of filteredObservateurs$ | async"
+      [value]="{ type: 'associe', object: observateur }"
+    >
+      {{ this.getDisplayEntityWithLabel("Observateur associé", observateur) }}
+    </mat-option>
+
+    <button
+      mat-button
+      type="button"
+      class="display-more-button"
+      (click)="onMoreResultsClicked()"
+    >
+      Afficher plus de résultats
+    </button>
+  </mat-autocomplete>
+</mat-form-field>
