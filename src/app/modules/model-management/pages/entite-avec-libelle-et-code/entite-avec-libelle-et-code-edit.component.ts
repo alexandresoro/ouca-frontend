@@ -5,8 +5,8 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { EntiteAvecLibelleEtCode } from "ouca-common/entite-avec-libelle-et-code.object";
-import { EntiteSimple } from "ouca-common/entite-simple.object";
+import { EntiteAvecLibelleEtCode } from "@ou-ca/ouca-model/entite-avec-libelle-et-code.object";
+import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { EntiteAvecLibelleEtCodeFormComponent } from "../../components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
 import { ENTITIES_PROPERTIES } from "../../models/entities-properties.model";
@@ -14,7 +14,7 @@ import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/e
 
 export abstract class EntiteAvecLibelleEtCodeEditAbstractComponent<
   T extends EntiteAvecLibelleEtCode
-> extends EntiteAvecLibelleEditAbstractComponent<T> {
+  > extends EntiteAvecLibelleEditAbstractComponent<T> {
   protected initialize(): void {
     super.initialize();
 
@@ -71,10 +71,10 @@ export abstract class EntiteAvecLibelleEtCodeEditAbstractComponent<
 
       return isAnExistingEntity
         ? {
-            alreadyExistingCode: {
-              message: "Il existe déjà " + anEntityLabel + " avec ce code."
-            }
+          alreadyExistingCode: {
+            message: "Il existe déjà " + anEntityLabel + " avec ce code."
           }
+        }
         : null;
     };
   };

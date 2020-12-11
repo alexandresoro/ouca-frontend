@@ -1,4 +1,4 @@
-import { Espece } from "ouca-common/espece.model";
+import { Espece } from "@ou-ca/ouca-model/espece.model";
 import { UIEspece } from "../models/espece.model";
 
 export const buildEspeceFromUIEspece = (uiEspece: UIEspece): Espece => {

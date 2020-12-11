@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Meteo } from "ouca-common/meteo.object";
+import { Meteo } from "@ou-ca/ouca-model/meteo.object";
 import { Observable } from "rxjs";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
@@ -14,7 +14,7 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeteoTableComponent extends EntiteAvecLibelleTableComponent<
-  Meteo
+Meteo
 > {
   constructor(private entitiesStoreService: EntitiesStoreService) {
     super();

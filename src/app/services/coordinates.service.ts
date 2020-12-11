@@ -3,7 +3,7 @@ import {
   CoordinatesSystem,
   CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG
-} from "ouca-common/coordinates-system";
+} from "@ou-ca/ouca-model/coordinates-system";
 import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({

@@ -1,13 +1,13 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { AppConfiguration } from "ouca-common/app-configuration.object";
-import { DonneeWithNavigationData } from "ouca-common/donnee-with-navigation-data.object";
-import { Donnee } from "ouca-common/donnee.object";
-import { DonneesFilter } from "ouca-common/donnees-filter.object";
-import { EntiteSimple } from "ouca-common/entite-simple.object";
-import { FlatDonnee } from "ouca-common/flat-donnee.object";
-import { Inventaire } from "ouca-common/inventaire.object";
-import { PostResponse } from "ouca-common/post-response.object";
+import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
+import { DonneeWithNavigationData } from "@ou-ca/ouca-model/donnee-with-navigation-data.object";
+import { Donnee } from "@ou-ca/ouca-model/donnee.object";
+import { DonneesFilter } from "@ou-ca/ouca-model/donnees-filter.object";
+import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
+import { FlatDonnee } from "@ou-ca/ouca-model/flat-donnee.object";
+import { Inventaire } from "@ou-ca/ouca-model/inventaire.object";
+import { PostResponse } from "@ou-ca/ouca-model/post-response.object";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 
@@ -34,7 +34,7 @@ export class BackendApiService {
 
   private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient) { }
 
   private getApiUrl = (): string => {
     return (
@@ -90,7 +90,7 @@ export class BackendApiService {
 
   private httpPost<T>(
     relativePath: string,
-    objectToPost: object
+    objectToPost: any
   ): Observable<T> {
     const requestPath: string = this.getApiUrl() + relativePath;
     return this.http.post<T>(requestPath, objectToPost).pipe(
@@ -131,11 +131,11 @@ export class BackendApiService {
   ): Observable<PostResponse> {
     return this.httpGet(
       this.DONNEE +
-        this.DELETE +
-        "?donneeId=" +
-        donneeId +
-        "&inventaireId=" +
-        inventaireId
+      this.DELETE +
+      "?donneeId=" +
+      donneeId +
+      "&inventaireId=" +
+      inventaireId
     );
   }
 

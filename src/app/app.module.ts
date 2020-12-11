@@ -29,7 +29,6 @@ const routes: Routes = [
   exports: [],
   declarations: [AppComponent, NotFoundComponent, ServerErrorComponent],
   bootstrap: [AppComponent],
-  entryComponents: [],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -38,4 +37,4 @@ const routes: Routes = [
     }
   ]
 })
-export class AppModule {}
+export class AppModule { }

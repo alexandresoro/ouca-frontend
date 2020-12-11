@@ -3,10 +3,10 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import {
   TEXT,
   UPDATE
-} from "ouca-common/websocket/websocket-message-type.model";
-import { WebsocketMessage } from "ouca-common/websocket/websocket-message.model";
-import { WebsocketUpdateContent } from "ouca-common/websocket/websocket-update-content.model";
-import { WebsocketUpdateMessage } from "ouca-common/websocket/websocket-update-message";
+} from "@ou-ca/ouca-model/websocket/websocket-message-type.model";
+import { WebsocketMessage } from "@ou-ca/ouca-model/websocket/websocket-message.model";
+import { WebsocketUpdateContent } from "@ou-ca/ouca-model/websocket/websocket-update-content.model";
+import { WebsocketUpdateMessage } from "@ou-ca/ouca-model/websocket/websocket-update-message";
 import { BehaviorSubject, Observable, of, race, timer } from "rxjs";
 import {
   catchError,

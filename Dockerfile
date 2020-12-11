@@ -3,13 +3,14 @@ FROM node:lts-alpine as node
 
 WORKDIR /app/frontend
 
-COPY package.json yarn.lock .yarnrc /app/frontend/
+COPY package.json yarn.lock .npmrc .yarnrc /app/frontend/
 
 # Set up the dependencies of the project
+ARG NPM_GITHUB_TOKEN
 RUN yarn install --frozen-lockfile
 
 # Copy the source files for the transpile
-COPY .eslintrc.json angular.json browserslist tsconfig.app.json tsconfig.json /app/frontend/
+COPY .eslintrc.json angular.json .browserslistrc tsconfig.app.json tsconfig.json /app/frontend/
 COPY src/ /app/frontend/src
 
 RUN yarn build:prod

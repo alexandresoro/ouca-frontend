@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import * as _ from "lodash";
-import { EstimationNombre } from "ouca-common/estimation-nombre.object";
+import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
 import { Observable } from "rxjs";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
@@ -19,7 +19,7 @@ interface EstimationNombreRow {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EstimationNombreTableComponent extends EntiteSimpleTableComponent<
-  EstimationNombre
+EstimationNombre
 > {
   public displayedColumns: string[] = ["libelle", "nonCompte", "nbDonnees"];
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Donnee } from "ouca-common/donnee.object";
-import { PostResponse } from "ouca-common/post-response.object";
+import { Donnee } from "@ou-ca/ouca-model/donnee.object";
+import { PostResponse } from "@ou-ca/ouca-model/post-response.object";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
@@ -34,7 +34,7 @@ export class DonneeService {
   constructor(
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService
-  ) {}
+  ) { }
 
   public getCurrentDonnee$ = (): Observable<Donnee | DonneeFormObject> => {
     return this.currentDonnee$.asObservable();

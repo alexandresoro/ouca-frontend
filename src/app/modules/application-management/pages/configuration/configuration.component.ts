@@ -6,8 +6,8 @@ import {
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
-import { AppConfiguration } from "ouca-common/app-configuration.object";
-import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
+import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
+import { COORDINATES_SYSTEMS_CONFIG } from "@ou-ca/ouca-model/coordinates-system";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
@@ -152,7 +152,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
             case ConfigurationParameterID.COORDINATES_SYSTEM:
               value = appConfiguration.coordinatesSystem
                 ? COORDINATES_SYSTEMS_CONFIG[appConfiguration.coordinatesSystem]
-                    .name
+                  .name
                 : "";
               break;
             case ConfigurationParameterID.DEFAULT_ESTIMATION_NOMBRE:

@@ -20,8 +20,8 @@ import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { format } from "date-fns";
 import * as _ from "lodash";
-import { COORDINATES_SYSTEMS_CONFIG } from "ouca-common/coordinates-system";
-import { FlatDonnee } from "ouca-common/flat-donnee.object";
+import { COORDINATES_SYSTEMS_CONFIG } from "@ou-ca/ouca-model/coordinates-system";
+import { FlatDonnee } from "@ou-ca/ouca-model/flat-donnee.object";
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
 
 @Component({
@@ -77,7 +77,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
 
   public selectedDonnee: FlatDonnee | null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   private filterData = (data: FlatDonnee, filterValue: string): boolean => {
     const otherData = _.difference(_.keys(data), [

@@ -13,8 +13,8 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Classe } from "ouca-common/classe.object";
-import { Espece } from "ouca-common/espece.model";
+import { Classe } from "@ou-ca/ouca-model/classe.object";
+import { Espece } from "@ou-ca/ouca-model/espece.model";
 import { Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { UIEspece } from "src/app/models/espece.model";
@@ -124,10 +124,10 @@ export class EspeceEditComponent
 
       return isAnExistingEntity
         ? {
-            alreadyExistingCode: {
-              message: "Il existe déjà une espèce avec ce code."
-            }
+          alreadyExistingCode: {
+            message: "Il existe déjà une espèce avec ce code."
           }
+        }
         : null;
     };
   };
@@ -148,10 +148,10 @@ export class EspeceEditComponent
 
       return isAnExistingEntity
         ? {
-            alreadyExistingNomFrancais: {
-              message: "Il existe déjà une espèce avec ce nom français."
-            }
+          alreadyExistingNomFrancais: {
+            message: "Il existe déjà une espèce avec ce nom français."
           }
+        }
         : null;
     };
   };
@@ -172,10 +172,10 @@ export class EspeceEditComponent
 
       return isAnExistingEntity
         ? {
-            alreadyExistingNomLatin: {
-              message: "Il existe déjà une espèce avec ce nom scientifique."
-            }
+          alreadyExistingNomLatin: {
+            message: "Il existe déjà une espèce avec ce nom scientifique."
           }
+        }
         : null;
     };
   };

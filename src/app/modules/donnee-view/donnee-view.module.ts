@@ -14,8 +14,7 @@ import { ViewComponent } from "./pages/view/view.component";
     TableEspecesWithNbDonneesComponent,
     ViewComponent
   ],
-  entryComponents: [],
   exports: [],
   providers: []
 })
-export class DonneeViewModule {}
+export class DonneeViewModule { }

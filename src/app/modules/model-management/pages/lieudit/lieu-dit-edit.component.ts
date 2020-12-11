@@ -18,9 +18,9 @@ import {
   CoordinatesSystem,
   CoordinatesSystemType,
   getCoordinates
-} from "ouca-common/coordinates-system";
-import { Departement } from "ouca-common/departement.object";
-import { Lieudit } from "ouca-common/lieudit.model";
+} from "@ou-ca/ouca-model/coordinates-system";
+import { Departement } from "@ou-ca/ouca-model/departement.object";
+import { Lieudit } from "@ou-ca/ouca-model/lieudit.model";
 import {
   BehaviorSubject,
   combineLatest,
@@ -282,12 +282,12 @@ export class LieuDitEditComponent
       const matchingLieuDit: UILieudit =
         nom && communeId
           ? _.find(lieuxDits, (lieuDit) => {
-              return (
-                _.deburr(lieuDit.nom.trim().toLowerCase()) ===
-                  _.deburr(nom.trim().toLowerCase()) &&
-                lieuDit.commune.id === communeId
-              );
-            })
+            return (
+              _.deburr(lieuDit.nom.trim().toLowerCase()) ===
+              _.deburr(nom.trim().toLowerCase()) &&
+              lieuDit.commune.id === communeId
+            );
+          })
           : null;
 
       const valueIsAnExistingEntity: boolean =
@@ -295,11 +295,11 @@ export class LieuDitEditComponent
 
       return valueIsAnExistingEntity
         ? {
-            alreadyExistingNom: {
-              message:
-                "Il existe déjà un lieu-dit avec ce nom dans cette commune."
-            }
+          alreadyExistingNom: {
+            message:
+              "Il existe déjà un lieu-dit avec ce nom dans cette commune."
           }
+        }
         : null;
     };
   };

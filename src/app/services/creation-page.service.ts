@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Donnee } from "ouca-common/donnee.object";
-import { Inventaire } from "ouca-common/inventaire.object";
-import { PostResponse } from "ouca-common/post-response.object";
+import { Donnee } from "@ou-ca/ouca-model/donnee.object";
+import { Inventaire } from "@ou-ca/ouca-model/inventaire.object";
+import { PostResponse } from "@ou-ca/ouca-model/post-response.object";
 import { Observable, Subject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { InventaireHelper } from "../modules/donnee-creation/helpers/inventaire.helper";
@@ -28,7 +28,7 @@ export class CreationPageService {
     private donneeService: DonneeService,
     private inventaireFormService: InventaireFormService,
     private statusMessageService: StatusMessageService
-  ) {}
+  ) { }
 
   public createDonnee = (
     inventaireForm: FormGroup,
@@ -139,7 +139,7 @@ export class CreationPageService {
         } else {
           this.statusMessageService.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de la fiche inventaire. " +
-              response.message
+            response.message
           );
         }
       }),
@@ -171,7 +171,7 @@ export class CreationPageService {
         } else {
           this.statusMessageService.showErrorMessage(
             "Une erreur est survenue pendant la sauvegarde de la fiche espèce. " +
-              response.message
+            response.message
           );
         }
       }),

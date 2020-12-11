@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Departement } from "ouca-common/departement.object";
+import { Departement } from "@ou-ca/ouca-model/departement.object";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
@@ -9,7 +9,7 @@ import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.co
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DepartementFormComponent extends EntitySubFormComponent<
-  Departement
+Departement
 > {
   public departementCodeErrorStateMatcher = new CrossFieldErrorMatcher(
     "alreadyExistingCode"

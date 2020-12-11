@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { AppConfiguration } from "ouca-common/app-configuration.object";
+import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
 import {
   CoordinatesSystem,
   CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG
-} from "ouca-common/coordinates-system";
+} from "@ou-ca/ouca-model/coordinates-system";
 import { Observable, ReplaySubject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { BackendApiService } from "./backend-api.service";
@@ -23,7 +23,7 @@ export class AppConfigurationService {
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService,
     private backendWsService: BackendWsService
-  ) {}
+  ) { }
 
   public initializeConfigurationStore = (): void => {
     this.backendWsService

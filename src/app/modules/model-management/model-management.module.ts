@@ -108,15 +108,7 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     TableTopbarComponent,
     TopButtonsComponent
   ],
-  entryComponents: [
-    CommuneFormComponent,
-    DepartementFormComponent,
-    EntiteAvecLibelleFormComponent,
-    EntiteAvecLibelleEtCodeFormComponent,
-    EspeceFormComponent,
-    EstimationNombreFormComponent
-  ],
   exports: [],
   providers: []
 })
-export class ModelManagementModule {}
+export class ModelManagementModule { }

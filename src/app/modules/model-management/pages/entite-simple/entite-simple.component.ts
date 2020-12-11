@@ -1,6 +1,6 @@
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { EntiteSimple } from "ouca-common/entite-simple.object";
+import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
 import { Observable } from "rxjs";
 import { ConfirmationDialogData } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog.component";
@@ -13,7 +13,7 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
     protected entitiesStoreService: EntitiesStoreService,
     private exportService: ExportService,
     private router: Router
-  ) {}
+  ) { }
 
   abstract getEntities$(): Observable<T[]>;
 

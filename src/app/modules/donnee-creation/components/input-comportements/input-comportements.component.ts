@@ -5,7 +5,7 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Comportement } from "ouca-common/comportement.object";
+import { Comportement } from "@ou-ca/ouca-model/comportement.object";
 import { combineLatest, Observable } from "rxjs";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 

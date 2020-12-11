@@ -3,8 +3,8 @@ import * as _ from "lodash";
 import {
   CoordinatesSystemType,
   getCoordinates
-} from "ouca-common/coordinates-system";
-import { Coordinates } from "ouca-common/coordinates.object";
+} from "@ou-ca/ouca-model/coordinates-system";
+import { Coordinates } from "@ou-ca/ouca-model/coordinates.object";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { UILieudit } from "src/app/models/lieudit.model";
