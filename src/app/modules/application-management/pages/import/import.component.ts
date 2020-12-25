@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import {
   getContentTypeFromResponse,
   saveFile
 } from "../../../shared/helpers/file-downloader.helper";
+import { OngoingImportDialog } from '../../components/ongoing-import-dialog/ongoing-import-dialog.component';
 @Component({
   templateUrl: "./import.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -13,14 +14,14 @@ import {
 export class ImportComponent {
   private file: File;
 
-  public isWaitPanelDisplayed$: BehaviorSubject<boolean> = new BehaviorSubject<
-    boolean
-  >(false);
+  private matDialogRef: MatDialogRef<unknown>;
+
 
   constructor(
     private backendApiService: BackendApiService,
+    private dialog: MatDialog,
     private statusMessageService: StatusMessageService
-  ) {}
+  ) { }
 
   public setFile = (event: Event): void => {
     this.file = (event.target as HTMLInputElement & EventTarget).files[0];
@@ -49,10 +50,14 @@ export class ImportComponent {
   };
 
   private displayWaitPanel = (): void => {
-    this.isWaitPanelDisplayed$.next(true);
+    this.matDialogRef = this.dialog.open(OngoingImportDialog, {
+      width: "800px",
+      hasBackdrop: true,
+      disableClose: true
+    });
   };
 
   private hideWaitPanel = (): void => {
-    this.isWaitPanelDisplayed$.next(false);
+    this.matDialogRef?.close();
   };
 }

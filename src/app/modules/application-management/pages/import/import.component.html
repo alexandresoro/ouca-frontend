@@ -1,12 +1,7 @@
 <div class="page-container">
   <h1>Import de données</h1>
 
-  <ng-container *ngIf="isWaitPanelDisplayed$ | async">
-    <h2><mat-icon>loop</mat-icon> Veuillez patienter pendant l'import...</h2>
-  </ng-container>
-
-  <ng-container *ngIf="!(isWaitPanelDisplayed$ | async)">
-    <h2>Tutoriel d'import</h2>
+  <h2>Tutoriel d'import</h2>
     <h3>Préparation du fichier d'entrée</h3>
     <p>
       Copiez les données à importer dans un tableur Excel en respectant le
@@ -533,5 +528,4 @@
         </button>
       </mat-expansion-panel>
     </mat-accordion>
-  </ng-container>
 </div>
