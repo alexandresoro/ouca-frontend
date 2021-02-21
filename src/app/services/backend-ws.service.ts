@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import {
+  HEARTBEAT,
   TEXT,
-  UPDATE, WebsocketMessage, WebsocketUpdateContent, WebsocketUpdateMessage
+  UPDATE, WebsocketMessage, WebSocketMessageType, WebsocketUpdateContent, WebsocketUpdateMessage
 } from "@ou-ca/ouca-model";
 import { BehaviorSubject, Observable, of, race, timer } from "rxjs";
 import {
@@ -70,7 +71,7 @@ export class BackendWsService {
               take(1)
             )
           );
-          this.sendMessage("ping");
+          this.sendMessage("ping", HEARTBEAT);
           return result;
         })
       )
@@ -117,10 +118,11 @@ export class BackendWsService {
     );
   };
 
-  public sendMessage = (message: string): void => {
+  public sendMessage = (message: string, type: WebSocketMessageType = TEXT): void => {
     this.websocket$.next({
-      type: TEXT,
+      type,
       content: message
     });
   };
+
 }
