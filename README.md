@@ -4,7 +4,7 @@ This is the Angular frontend for _Où ça ?_ application.
 
 ## About the project
 
-The aim of the _Où ça ?_ project is to provide naturalists a software where they can record and visualize their wildlife observations.
+The aim of the _Où ça ?_ project is to provide naturalists an application where they can record and visualize their wildlife observations.
 
 Each observation is identified by several characteristics filled in by the user: the context of the observation (e.g. date, location, weather) and the description of the observed specimens (e.g. species, age, behavior).
 
