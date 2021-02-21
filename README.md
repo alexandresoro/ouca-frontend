@@ -1,10 +1,10 @@
-# Base Naturaliste (frontend)
+# Où ça ? - Base Naturaliste (frontend)
 
-This is the Angular frontend for Base Naturaliste application.
+This is the Angular frontend for _Où ça ?_ application.
 
 ## About the project
 
-The aim of the Base Naturaliste project is to provide naturalists a software where they can record and visualize their wildlife observations.
+The aim of the _Où ça ?_ project is to provide naturalists a software where they can record and visualize their wildlife observations.
 
 Each observation is identified by several characteristics filled in by the user: the context of the observation (e.g. date, location, weather) and the description of the observed specimens (e.g. species, age, behavior).
 
@@ -36,34 +36,11 @@ The application contains several features:
 - Import data from a CSV file
 - Export data as a SQL dump file
 
-### Dependencies and related projects
+### Related project
 
-#### Dependencies
+The backend for _Où ça ?_ application which is called from this frontend:
 
-The objects exchanged between the backend and the frontend are defined in a common model:
-
-- [Base Naturaliste (model)](https://github.com/alexandresoro/basenaturaliste-model)
-
-#### Related projects
-
-The backend for Base Naturaliste application which is called from this frontend:
-
-- [Base Naturaliste (backend)](https://github.com/alexandresoro/basenaturaliste-backend)
-
-### Run the project
-
-The following options are available through yarn:
-
-- **build** : Transpiles the TypeScript project to the _dist/_ output folder.
-- **build:prod** : Same as **build** but with production mode set for webpack.
-- **build:aot** : Same as **build:prod** plus AOT compilation. This is usually the build type that should be used for production deployment.
-- **start** : Builds and runs the webpack dev server.
-
-Example:
-
-```
-yarn start
-```
+- [Où ça ? (backend)](https://github.com/ou-ca/ouca-backend)
 
 ### Deployment
 
@@ -79,7 +56,7 @@ This will generate the application files in the _dist/_ folder.
 
 Set the previously built _dist/_ folder as the root of your favorite web server.
 
-The project was mainly developed with nginx in mind. You can find the template for the nginx configuration used for the Docker configuration described below in the _docker/nginx/_ folder.
+The project was mainly developed with Caddy webserver in mind. You can find the template for the Caddy configuration used for the Docker configuration described below in the _docker/caddyfile_.
 
 ## Docker
 
@@ -98,5 +75,5 @@ The backend location can be overridden with the following variables:
 
 ## Authors
 
-- [Camille Carrier](https://github.com/camillecarrier)
 - [Alexandre Soro](https://github.com/alexandresoro)
+- [Camille Carrier](https://github.com/camillecarrier)
