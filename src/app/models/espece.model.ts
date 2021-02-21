@@ -1,5 +1,4 @@
-import { Classe } from "@ou-ca/ouca-model/classe.object";
-import { EspeceCommon } from "@ou-ca/ouca-model/espece-common.model";
+import { Classe, EspeceCommon } from "@ou-ca/ouca-model";
 
 export interface UIEspece extends EspeceCommon {
   classe: Classe;

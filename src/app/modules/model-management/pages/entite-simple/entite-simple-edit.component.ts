@@ -1,8 +1,8 @@
 import { Location } from "@angular/common";
 import { FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { EntiteSimple } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
-import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";

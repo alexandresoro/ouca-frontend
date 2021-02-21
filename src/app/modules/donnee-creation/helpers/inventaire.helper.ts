@@ -1,8 +1,6 @@
+import { Coordinates, getCoordinates, Inventaire } from "@ou-ca/ouca-model";
 import { isSameDay } from "date-fns";
 import * as _ from "lodash";
-import { getCoordinates } from "@ou-ca/ouca-model/coordinates-system";
-import { Coordinates } from "@ou-ca/ouca-model/coordinates.object";
-import { Inventaire } from "@ou-ca/ouca-model/inventaire.object";
 import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";
 
 export class InventaireHelper {

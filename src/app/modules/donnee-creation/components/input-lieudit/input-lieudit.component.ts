@@ -12,16 +12,8 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
+import { areSameCoordinates, Commune, Coordinates, CoordinatesSystem, Departement, getCoordinates, Lieudit } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
-import { Commune } from "@ou-ca/ouca-model/commune.model";
-import {
-  areSameCoordinates,
-  CoordinatesSystem,
-  getCoordinates
-} from "@ou-ca/ouca-model/coordinates-system";
-import { Coordinates } from "@ou-ca/ouca-model/coordinates.object";
-import { Departement } from "@ou-ca/ouca-model/departement.object";
-import { Lieudit } from "@ou-ca/ouca-model/lieudit.model";
 import {
   BehaviorSubject,
   combineLatest,

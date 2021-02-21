@@ -1,7 +1,4 @@
-import { CoordinatesSystemType } from "@ou-ca/ouca-model/coordinates-system";
-import { Departement } from "@ou-ca/ouca-model/departement.object";
-import { Meteo } from "@ou-ca/ouca-model/meteo.object";
-import { Observateur } from "@ou-ca/ouca-model/observateur.object";
+import { CoordinatesSystemType, Departement, Meteo, Observateur } from "@ou-ca/ouca-model";
 
 export interface DefaultInventaireOptions {
   observateur: Observateur;

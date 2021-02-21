@@ -13,14 +13,11 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import _ from "lodash";
 import {
   CoordinatesSystem,
-  CoordinatesSystemType,
-  getCoordinates
-} from "@ou-ca/ouca-model/coordinates-system";
-import { Departement } from "@ou-ca/ouca-model/departement.object";
-import { Lieudit } from "@ou-ca/ouca-model/lieudit.model";
+  CoordinatesSystemType, Departement, getCoordinates, Lieudit
+} from "@ou-ca/ouca-model";
+import _ from "lodash";
 import {
   BehaviorSubject,
   combineLatest,

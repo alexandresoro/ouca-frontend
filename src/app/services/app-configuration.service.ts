@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
-import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
 import {
-  CoordinatesSystem,
+  AppConfiguration, CoordinatesSystem,
   CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG
-} from "@ou-ca/ouca-model/coordinates-system";
+} from "@ou-ca/ouca-model";
 import { Observable, ReplaySubject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { BackendApiService } from "./backend-api.service";

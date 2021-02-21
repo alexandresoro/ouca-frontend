@@ -8,17 +8,10 @@ import {
   Output
 } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { Age } from "@ou-ca/ouca-model/age.object";
-import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
 import {
-  CoordinatesSystem,
-  COORDINATES_SYSTEMS_CONFIG
-} from "@ou-ca/ouca-model/coordinates-system";
-import { Departement } from "@ou-ca/ouca-model/departement.object";
-import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
-import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
-import { Observateur } from "@ou-ca/ouca-model/observateur.object";
-import { Sexe } from "@ou-ca/ouca-model/sexe.object";
+  Age, AppConfiguration, CoordinatesSystem,
+  COORDINATES_SYSTEMS_CONFIG, Departement, EntiteSimple, EstimationNombre, Observateur, Sexe
+} from "@ou-ca/ouca-model";
 import { Observable, Subject } from "rxjs";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";

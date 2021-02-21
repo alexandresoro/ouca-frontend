@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Classe } from "@ou-ca/ouca-model/classe.object";
-import { Espece } from "@ou-ca/ouca-model/espece.model";
+import { Classe, Espece } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";

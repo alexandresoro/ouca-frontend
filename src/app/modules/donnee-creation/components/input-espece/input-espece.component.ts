@@ -6,8 +6,7 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Classe } from "@ou-ca/ouca-model/classe.object";
-import { Espece } from "@ou-ca/ouca-model/espece.model";
+import { Classe, Espece } from "@ou-ca/ouca-model";
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import { distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { UIEspece } from "src/app/models/espece.model";

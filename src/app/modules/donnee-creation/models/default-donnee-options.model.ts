@@ -1,6 +1,4 @@
-import { Age } from "@ou-ca/ouca-model/age.object";
-import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
-import { Sexe } from "@ou-ca/ouca-model/sexe.object";
+import { Age, EstimationNombre, Sexe } from "@ou-ca/ouca-model";
 
 export interface DefaultDonneeOptions {
   age: Age;

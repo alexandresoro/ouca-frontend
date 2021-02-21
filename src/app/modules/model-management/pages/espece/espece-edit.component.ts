@@ -13,8 +13,7 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Classe } from "@ou-ca/ouca-model/classe.object";
-import { Espece } from "@ou-ca/ouca-model/espece.model";
+import { Classe, Espece } from "@ou-ca/ouca-model";
 import { Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { UIEspece } from "src/app/models/espece.model";

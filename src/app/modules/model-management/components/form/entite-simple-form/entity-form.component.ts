@@ -10,7 +10,7 @@ import {
   ViewChild
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
+import { EntiteSimple } from "@ou-ca/ouca-model";
 import { EntityModeHelper } from "../../../helpers/entity-mode.helper";
 import { EntitySubFormComponent } from "./entity-sub-form.component";
 import { EntitySubFormDirective } from "./entity-sub-form.directive";

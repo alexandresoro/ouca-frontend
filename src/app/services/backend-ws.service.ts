@@ -2,11 +2,8 @@ import { Injectable } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import {
   TEXT,
-  UPDATE
-} from "@ou-ca/ouca-model/websocket/websocket-message-type.model";
-import { WebsocketMessage } from "@ou-ca/ouca-model/websocket/websocket-message.model";
-import { WebsocketUpdateContent } from "@ou-ca/ouca-model/websocket/websocket-update-content.model";
-import { WebsocketUpdateMessage } from "@ou-ca/ouca-model/websocket/websocket-update-message";
+  UPDATE, WebsocketMessage, WebsocketUpdateContent, WebsocketUpdateMessage
+} from "@ou-ca/ouca-model";
 import { BehaviorSubject, Observable, of, race, timer } from "rxjs";
 import {
   catchError,

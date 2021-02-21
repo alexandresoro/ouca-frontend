@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Age } from "@ou-ca/ouca-model/age.object";
+import { Age } from "@ou-ca/ouca-model";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

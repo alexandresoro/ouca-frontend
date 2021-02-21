@@ -4,7 +4,7 @@ import {
   CoordinatesSystem,
   CoordinatesSystemType,
   COORDINATES_SYSTEMS_CONFIG
-} from "@ou-ca/ouca-model/coordinates-system";
+} from "@ou-ca/ouca-model";
 
 @Injectable({
   providedIn: "root"

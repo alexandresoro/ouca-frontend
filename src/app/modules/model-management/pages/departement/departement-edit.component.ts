@@ -13,7 +13,7 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Departement } from "@ou-ca/ouca-model/departement.object";
+import { Departement } from "@ou-ca/ouca-model";
 import { Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";

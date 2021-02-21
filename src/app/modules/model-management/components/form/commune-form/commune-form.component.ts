@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Commune } from "@ou-ca/ouca-model/commune.model";
-import { Departement } from "@ou-ca/ouca-model/departement.object";
+import { Commune, Departement } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";

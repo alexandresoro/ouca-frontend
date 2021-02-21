@@ -1,13 +1,6 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
-import { DonneeWithNavigationData } from "@ou-ca/ouca-model/donnee-with-navigation-data.object";
-import { Donnee } from "@ou-ca/ouca-model/donnee.object";
-import { DonneesFilter } from "@ou-ca/ouca-model/donnees-filter.object";
-import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
-import { FlatDonnee } from "@ou-ca/ouca-model/flat-donnee.object";
-import { Inventaire } from "@ou-ca/ouca-model/inventaire.object";
-import { PostResponse } from "@ou-ca/ouca-model/post-response.object";
+import { AppConfiguration, Donnee, DonneesFilter, DonneeWithNavigationData, EntiteSimple, FlatDonnee, Inventaire, PostResponse } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 

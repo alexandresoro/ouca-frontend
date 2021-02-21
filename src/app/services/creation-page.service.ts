@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Donnee } from "@ou-ca/ouca-model/donnee.object";
-import { Inventaire } from "@ou-ca/ouca-model/inventaire.object";
-import { PostResponse } from "@ou-ca/ouca-model/post-response.object";
+import { Donnee, Inventaire, PostResponse } from "@ou-ca/ouca-model";
 import { Observable, Subject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { InventaireHelper } from "../modules/donnee-creation/helpers/inventaire.helper";

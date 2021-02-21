@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
+import { EstimationDistance } from "@ou-ca/ouca-model";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

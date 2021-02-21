@@ -7,21 +7,11 @@ import {
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Age } from "@ou-ca/ouca-model/age.object";
-import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
-import { Comportement } from "@ou-ca/ouca-model/comportement.object";
 import {
-  CoordinatesSystem,
+  Age, AppConfiguration, Comportement, CoordinatesSystem,
   CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG
-} from "@ou-ca/ouca-model/coordinates-system";
-import { Donnee } from "@ou-ca/ouca-model/donnee.object";
-import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
-import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
-import { Meteo } from "@ou-ca/ouca-model/meteo.object";
-import { Milieu } from "@ou-ca/ouca-model/milieu.object";
-import { Observateur } from "@ou-ca/ouca-model/observateur.object";
-import { Sexe } from "@ou-ca/ouca-model/sexe.object";
+  COORDINATES_SYSTEMS_CONFIG, Donnee, EstimationDistance, EstimationNombre, Meteo, Milieu, Observateur, Sexe
+} from "@ou-ca/ouca-model";
 import {
   BehaviorSubject,
   combineLatest,

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { EntiteSimple } from "@ou-ca/ouca-model/entite-simple.object";
+import { EntiteSimple } from "@ou-ca/ouca-model";
 
 @Component({
   selector: "multiple-select",

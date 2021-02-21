@@ -1,18 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatTabGroup } from '@angular/material/tabs';
-import { Age } from "@ou-ca/ouca-model/age.object";
-import { Comportement } from "@ou-ca/ouca-model/comportement.object";
-import { CoordinatesSystem, COORDINATES_SYSTEMS_CONFIG } from "@ou-ca/ouca-model/coordinates-system";
-import { DonneesFilter } from "@ou-ca/ouca-model/donnees-filter.object";
-import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
-import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
-import { FlatDonnee } from "@ou-ca/ouca-model/flat-donnee.object";
-import { Meteo } from "@ou-ca/ouca-model/meteo.object";
-import { Milieu } from "@ou-ca/ouca-model/milieu.object";
-import { Nicheur, NICHEUR_VALUES } from "@ou-ca/ouca-model/nicheur.model";
-import { Observateur } from "@ou-ca/ouca-model/observateur.object";
-import { Sexe } from "@ou-ca/ouca-model/sexe.object";
+import { Age, Comportement, CoordinatesSystem, COORDINATES_SYSTEMS_CONFIG, DonneesFilter, EstimationDistance, EstimationNombre, FlatDonnee, Meteo, Milieu, Nicheur, NICHEUR_VALUES, Observateur, Sexe } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { withLatestFrom } from "rxjs/operators";
@@ -272,16 +261,16 @@ export class ViewComponent implements OnDestroy {
   private buildSearchCriteriaFromDetailledSearchPanel = (): DonneesFilter => {
     const filters: DonneesFilter = this.searchForm.value;
     filters.fromDate = filters.fromDate
-     ? interpretBrowserDateAsTimestampDate(
-         this.searchForm.controls.fromDate.value
-       )
-     : null;
-     filters.toDate = filters.toDate
-     ? interpretBrowserDateAsTimestampDate(
-         this.searchForm.controls.toDate.value
-       )
-     : null;
-     return filters;
+      ? interpretBrowserDateAsTimestampDate(
+        this.searchForm.controls.fromDate.value
+      )
+      : null;
+    filters.toDate = filters.toDate
+      ? interpretBrowserDateAsTimestampDate(
+        this.searchForm.controls.toDate.value
+      )
+      : null;
+    return filters;
   }
 
   public onSearchButtonClicked(): void {
@@ -291,13 +280,13 @@ export class ViewComponent implements OnDestroy {
     this.especesWithNbDonnees = [];
 
     let filters: DonneesFilter;
-    
+
     if (this.searchTabs.selectedIndex == this.QUICK_SEARCH_TAB_INDEX) {
-       filters = this.buildSearchCriteraFromQuickSearchPanel();
+      filters = this.buildSearchCriteraFromQuickSearchPanel();
     } else {
       filters = this.buildSearchCriteriaFromDetailledSearchPanel();
     }
-    
+
     // Send the dates in UTC  
     if (filters.excelMode) {
       this.backendApiService

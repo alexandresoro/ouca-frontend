@@ -2,7 +2,7 @@ import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
+import { EstimationNombre } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EstimationNombreFormComponent } from "../../components/form/estimation-nombre-form/estimation-nombre-form.component";

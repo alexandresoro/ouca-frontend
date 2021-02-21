@@ -1,19 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { Age } from "@ou-ca/ouca-model/age.object";
-import { Classe } from "@ou-ca/ouca-model/classe.object";
-import { Comportement } from "@ou-ca/ouca-model/comportement.object";
-import { Departement } from "@ou-ca/ouca-model/departement.object";
-import { EntiteAvecLibelleEtCode } from "@ou-ca/ouca-model/entite-avec-libelle-et-code.object";
-import { EntiteAvecLibelle } from "@ou-ca/ouca-model/entite-avec-libelle.object";
-import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
-import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
-import { Meteo } from "@ou-ca/ouca-model/meteo.object";
-import { Milieu } from "@ou-ca/ouca-model/milieu.object";
-import { Nicheur, NICHEUR_VALUES } from "@ou-ca/ouca-model/nicheur.model";
-import { Observateur } from "@ou-ca/ouca-model/observateur.object";
-import { Sexe } from "@ou-ca/ouca-model/sexe.object";
+import { Age, Classe, Comportement, Departement, EntiteAvecLibelle, EntiteAvecLibelleEtCode, EstimationDistance, EstimationNombre, Meteo, Milieu, Nicheur, NICHEUR_VALUES, Observateur, Sexe } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import { map, startWith, withLatestFrom } from "rxjs/operators";
@@ -580,7 +568,7 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   public onMoreResultsClicked = (): void => {
     this.numberOfResultsPerType$.next(
       this.numberOfResultsPerType$.value +
-        this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
+      this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
     );
   };
 

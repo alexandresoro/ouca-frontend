@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { INIT } from "@ou-ca/ouca-model/websocket/websocket-request-message.model";
+import { INIT } from "@ou-ca/ouca-model";
 import { AppConfigurationService } from "./services/app-configuration.service";
 import { BackendWsService } from "./services/backend-ws.service";
 import { EntitiesStoreService } from "./services/entities-store.service";

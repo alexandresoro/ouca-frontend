@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
+import { EstimationNombre } from "@ou-ca/ouca-model";
 import { combineLatest, Observable, of } from "rxjs";
 import { distinctUntilChanged, map } from "rxjs/operators";
 import { CreationModeService } from "src/app/services/creation-mode.service";

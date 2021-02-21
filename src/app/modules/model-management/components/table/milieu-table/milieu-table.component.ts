@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Milieu } from "@ou-ca/ouca-model/milieu.object";
+import { Milieu } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component";

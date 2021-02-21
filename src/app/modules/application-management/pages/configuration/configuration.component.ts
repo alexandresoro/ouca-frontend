@@ -5,9 +5,8 @@ import {
   OnInit
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
+import { AppConfiguration, COORDINATES_SYSTEMS_CONFIG } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
-import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
-import { COORDINATES_SYSTEMS_CONFIG } from "@ou-ca/ouca-model/coordinates-system";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";

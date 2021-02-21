@@ -5,17 +5,7 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { Age } from "@ou-ca/ouca-model/age.object";
-import { AppConfiguration } from "@ou-ca/ouca-model/app-configuration.object";
-import { Classe } from "@ou-ca/ouca-model/classe.object";
-import { Comportement } from "@ou-ca/ouca-model/comportement.object";
-import { Donnee } from "@ou-ca/ouca-model/donnee.object";
-import { EntiteAvecLibelleEtCode } from "@ou-ca/ouca-model/entite-avec-libelle-et-code.object";
-import { Espece } from "@ou-ca/ouca-model/espece.model";
-import { EstimationDistance } from "@ou-ca/ouca-model/estimation-distance.object";
-import { EstimationNombre } from "@ou-ca/ouca-model/estimation-nombre.object";
-import { Milieu } from "@ou-ca/ouca-model/milieu.object";
-import { Sexe } from "@ou-ca/ouca-model/sexe.object";
+import { Age, AppConfiguration, Classe, Comportement, Donnee, EntiteAvecLibelleEtCode, Espece, EstimationDistance, EstimationNombre, Milieu, Sexe } from "@ou-ca/ouca-model";
 import { buildEspeceFromUIEspece } from "../helpers/espece.helper";
 import { UIEspece } from "../models/espece.model";
 import { DefaultDonneeOptions } from "../modules/donnee-creation/models/default-donnee-options.model";
