@@ -4,7 +4,7 @@ FROM node:lts-alpine as node
 WORKDIR /app/frontend
 
 COPY package.json yarn.lock .yarnrc.yml /app/frontend/
-COPY .yarn/ /app/backend/.yarn
+COPY .yarn/ /app/frontend/.yarn
 
 # Set up the dependencies of the project
 ARG NPM_GITHUB_TOKEN
