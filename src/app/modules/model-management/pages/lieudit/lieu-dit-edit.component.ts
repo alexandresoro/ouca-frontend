@@ -13,10 +13,6 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import {
-  CoordinatesSystem,
-  CoordinatesSystemType, Departement, getCoordinates, Lieudit
-} from "@ou-ca/ouca-model";
 import _ from "lodash";
 import {
   BehaviorSubject,
@@ -26,6 +22,10 @@ import {
   Subject
 } from "rxjs";
 import { filter, map, takeUntil } from "rxjs/operators";
+import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
+import { CoordinatesSystem, CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
+import { Departement } from 'src/app/model/types/departement.object';
+import { Lieudit } from 'src/app/model/types/lieudit.model';
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";

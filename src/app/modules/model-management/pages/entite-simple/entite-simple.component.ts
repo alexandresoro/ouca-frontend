@@ -1,7 +1,7 @@
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { EntiteSimple } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
+import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { ConfirmationDialogData } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog.component";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";

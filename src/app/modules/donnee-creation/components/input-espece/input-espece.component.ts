@@ -6,9 +6,10 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Classe, Espece } from "@ou-ca/ouca-model";
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import { distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { Classe } from 'src/app/model/types/classe.object';
+import { Espece } from 'src/app/model/types/espece.model';
 import { UIEspece } from "src/app/models/espece.model";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";

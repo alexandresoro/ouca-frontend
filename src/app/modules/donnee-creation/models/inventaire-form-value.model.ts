@@ -1,4 +1,6 @@
-import { Departement, Meteo, Observateur } from "@ou-ca/ouca-model";
+import { Departement } from 'src/app/model/types/departement.object';
+import { Meteo } from 'src/app/model/types/meteo.object';
+import { Observateur } from 'src/app/model/types/observateur.object';
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
 

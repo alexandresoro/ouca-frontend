@@ -1,10 +1,5 @@
 import { Injectable } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
-import {
-  HEARTBEAT,
-  TEXT,
-  UPDATE, WebsocketMessage, WebSocketMessageType, WebsocketUpdateContent, WebsocketUpdateMessage
-} from "@ou-ca/ouca-model";
 import { BehaviorSubject, Observable, of, race, timer } from "rxjs";
 import {
   catchError,
@@ -18,6 +13,10 @@ import {
   tap
 } from "rxjs/operators";
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
+import { HEARTBEAT, TEXT, UPDATE, WebSocketMessageType } from '../model/websocket/websocket-message-type.model';
+import { WebsocketMessage } from '../model/websocket/websocket-message.model';
+import { WebsocketUpdateContent } from '../model/websocket/websocket-update-content.model';
+import { WebsocketUpdateMessage } from '../model/websocket/websocket-update-message';
 import { NetworkUnavailableDialogComponent } from "../modules/shared/components/network-unavailable-dialog/network-unavailable-dialog.component";
 
 @Injectable({

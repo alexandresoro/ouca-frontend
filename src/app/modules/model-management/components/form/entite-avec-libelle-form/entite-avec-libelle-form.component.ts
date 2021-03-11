@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EntiteAvecLibelle } from "@ou-ca/ouca-model";
+import { EntiteAvecLibelle } from 'src/app/model/types/entite-avec-libelle.object';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 

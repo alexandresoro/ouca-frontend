@@ -1,10 +1,10 @@
 import { Location } from "@angular/common";
 import { FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { EntiteSimple } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
+import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 
 export abstract class EntiteSimpleEditAbstractComponent<

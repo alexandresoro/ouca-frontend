@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { EntiteSimple } from "@ou-ca/ouca-model";
+import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 
 @Component({
   template: ""

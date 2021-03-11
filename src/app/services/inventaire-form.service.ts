@@ -5,10 +5,18 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { AppConfiguration, areCoordinatesCustomized, Coordinates, CoordinatesSystemType, Departement, getCoordinates, Inventaire, Lieudit, Meteo, Observateur } from "@ou-ca/ouca-model";
 import { set } from "date-fns";
 import * as _ from "lodash";
 import { buildLieuditFromUILieudit } from "../helpers/lieudit.helper";
+import { areCoordinatesCustomized, getCoordinates } from '../model/coordinates-system/coordinates-helper';
+import { CoordinatesSystemType } from '../model/coordinates-system/coordinates-system.object';
+import { AppConfiguration } from '../model/types/app-configuration.object';
+import { Coordinates } from '../model/types/coordinates.object';
+import { Departement } from '../model/types/departement.object';
+import { Inventaire } from '../model/types/inventaire.object';
+import { Lieudit } from '../model/types/lieudit.model';
+import { Meteo } from '../model/types/meteo.object';
+import { Observateur } from '../model/types/observateur.object';
 import { UILieudit } from "../models/lieudit.model";
 import { DefaultInventaireOptions } from "../modules/donnee-creation/models/default-inventaire-options.model";
 import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";

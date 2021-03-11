@@ -8,11 +8,6 @@ import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import {
-  Age, AppConfiguration, Comportement, CoordinatesSystem,
-  CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG, Donnee, EstimationDistance, EstimationNombre, Meteo, Milieu, Observateur, Sexe
-} from "@ou-ca/ouca-model";
-import {
   BehaviorSubject,
   combineLatest,
   forkJoin,
@@ -29,6 +24,18 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
+import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
+import { CoordinatesSystem, CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
+import { Age } from 'src/app/model/types/age.object';
+import { AppConfiguration } from 'src/app/model/types/app-configuration.object';
+import { Comportement } from 'src/app/model/types/comportement.object';
+import { Donnee } from 'src/app/model/types/donnee.object';
+import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
+import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
+import { Meteo } from 'src/app/model/types/meteo.object';
+import { Milieu } from 'src/app/model/types/milieu.object';
+import { Observateur } from 'src/app/model/types/observateur.object';
+import { Sexe } from 'src/app/model/types/sexe.object';
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";

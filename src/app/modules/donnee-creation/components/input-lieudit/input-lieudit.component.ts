@@ -12,7 +12,6 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { areSameCoordinates, Commune, Coordinates, CoordinatesSystem, Departement, getCoordinates, Lieudit } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import {
   BehaviorSubject,
@@ -23,6 +22,12 @@ import {
   Subject
 } from "rxjs";
 import { distinctUntilChanged, filter, takeUntil } from "rxjs/operators";
+import { areSameCoordinates, getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
+import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
+import { Commune } from 'src/app/model/types/commune.model';
+import { Coordinates } from 'src/app/model/types/coordinates.object';
+import { Departement } from 'src/app/model/types/departement.object';
+import { Lieudit } from 'src/app/model/types/lieudit.model';
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";

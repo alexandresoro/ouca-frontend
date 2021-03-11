@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Donnee, PostResponse } from "@ou-ca/ouca-model";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
+import { Donnee } from '../model/types/donnee.object';
+import { PostResponse } from '../model/types/post-response.object';
 import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { BackendApiService } from "./backend-api.service";
 import { StatusMessageService } from "./status-message.service";

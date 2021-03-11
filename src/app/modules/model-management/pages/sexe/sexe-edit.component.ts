@@ -1,8 +1,9 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observateur, Sexe } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
+import { Observateur } from 'src/app/model/types/observateur.object';
+import { Sexe } from 'src/app/model/types/sexe.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
 

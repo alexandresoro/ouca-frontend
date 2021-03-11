@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
-import {
-  Coordinates, CoordinatesSystemType,
-  getCoordinates
-} from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
+import { CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
+import { Coordinates } from 'src/app/model/types/coordinates.object';
 import { UILieudit } from "src/app/models/lieudit.model";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";

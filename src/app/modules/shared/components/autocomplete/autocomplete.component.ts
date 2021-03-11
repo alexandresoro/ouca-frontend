@@ -7,10 +7,10 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
-import { EntiteSimple } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 
 @Component({

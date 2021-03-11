@@ -1,4 +1,10 @@
-import { Age, Classe, Comportement, EstimationDistance, EstimationNombre, Milieu, Sexe } from "@ou-ca/ouca-model";
+import { Age } from 'src/app/model/types/age.object';
+import { Classe } from 'src/app/model/types/classe.object';
+import { Comportement } from 'src/app/model/types/comportement.object';
+import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
+import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
+import { Milieu } from 'src/app/model/types/milieu.object';
+import { Sexe } from 'src/app/model/types/sexe.object';
 import { UIEspece } from "src/app/models/espece.model";
 
 export interface DonneeFormValue {

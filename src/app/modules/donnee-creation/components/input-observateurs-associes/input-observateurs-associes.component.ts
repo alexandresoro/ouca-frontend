@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Observateur } from "@ou-ca/ouca-model";
-
+import { Observateur } from 'src/app/model/types/observateur.object';
 
 @Component({
   selector: "input-observateurs-associes",

@@ -5,8 +5,8 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Milieu } from "@ou-ca/ouca-model";
 import { combineLatest, Observable } from "rxjs";
+import { Milieu } from 'src/app/model/types/milieu.object';
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 @Component({

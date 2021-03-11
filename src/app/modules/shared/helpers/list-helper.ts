@@ -1,5 +1,5 @@
-import { EntiteSimple } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
+import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 
 export class ListHelper {
   private static findEntityInListByAttribute<T extends EntiteSimple>(

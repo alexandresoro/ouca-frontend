@@ -23,7 +23,6 @@
     "@angular/platform-browser": "10.2.0",
     "@angular/platform-browser-dynamic": "10.2.0",
     "@angular/router": "10.2.0",
-    "@ou-ca/ouca-model": "*",
     "@swimlane/ngx-charts": "*",
     "date-fns": "*",
     "date-fns-tz": "*",

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Age } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
+import { Age } from 'src/app/model/types/age.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
 

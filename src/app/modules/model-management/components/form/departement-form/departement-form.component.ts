@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Departement } from "@ou-ca/ouca-model";
+import { Departement } from 'src/app/model/types/departement.object';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 

@@ -5,7 +5,8 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { EntiteAvecLibelle, EntiteSimple } from "@ou-ca/ouca-model";
+import { EntiteAvecLibelle } from 'src/app/model/types/entite-avec-libelle.object';
+import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { EntiteAvecLibelleFormComponent } from "../../components/form/entite-avec-libelle-form/entite-avec-libelle-form.component";
 import { ENTITIES_PROPERTIES } from "../../models/entities-properties.model";

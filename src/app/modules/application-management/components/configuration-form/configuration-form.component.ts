@@ -8,11 +8,16 @@ import {
   Output
 } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import {
-  Age, AppConfiguration, CoordinatesSystem,
-  COORDINATES_SYSTEMS_CONFIG, Departement, EntiteSimple, EstimationNombre, Observateur, Sexe
-} from "@ou-ca/ouca-model";
 import { Observable, Subject } from "rxjs";
+import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
+import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
+import { Age } from 'src/app/model/types/age.object';
+import { AppConfiguration } from 'src/app/model/types/app-configuration.object';
+import { Departement } from 'src/app/model/types/departement.object';
+import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
+import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
+import { Observateur } from 'src/app/model/types/observateur.object';
+import { Sexe } from 'src/app/model/types/sexe.object';
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 

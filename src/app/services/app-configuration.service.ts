@@ -1,11 +1,9 @@
 import { Injectable } from "@angular/core";
-import {
-  AppConfiguration, CoordinatesSystem,
-  CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG
-} from "@ou-ca/ouca-model";
 import { Observable, ReplaySubject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
+import { COORDINATES_SYSTEMS_CONFIG } from '../model/coordinates-system/coordinates-system-list.object';
+import { CoordinatesSystem, CoordinatesSystemType } from '../model/coordinates-system/coordinates-system.object';
+import { AppConfiguration } from '../model/types/app-configuration.object';
 import { BackendApiService } from "./backend-api.service";
 import { BackendWsService } from "./backend-ws.service";
 import { StatusMessageService } from "./status-message.service";

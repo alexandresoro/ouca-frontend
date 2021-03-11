@@ -1,10 +1,7 @@
 import { Injectable } from "@angular/core";
-import {
-  CoordinatesSystem,
-  CoordinatesSystemType,
-  COORDINATES_SYSTEMS_CONFIG
-} from "@ou-ca/ouca-model";
 import { BehaviorSubject, Observable } from "rxjs";
+import { COORDINATES_SYSTEMS_CONFIG } from '../model/coordinates-system/coordinates-system-list.object';
+import { CoordinatesSystem, CoordinatesSystemType } from '../model/coordinates-system/coordinates-system.object';
 
 @Injectable({
   providedIn: "root"

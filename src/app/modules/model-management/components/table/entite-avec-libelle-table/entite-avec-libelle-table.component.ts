@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { EntiteAvecLibelle } from "@ou-ca/ouca-model";
+import { EntiteAvecLibelle } from 'src/app/model/types/entite-avec-libelle.object';
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
 @Component({

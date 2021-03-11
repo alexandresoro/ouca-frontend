@@ -18,9 +18,10 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
-import { COORDINATES_SYSTEMS_CONFIG, FlatDonnee } from "@ou-ca/ouca-model";
 import { format } from "date-fns";
 import * as _ from "lodash";
+import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
+import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
 
 @Component({

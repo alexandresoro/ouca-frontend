@@ -13,9 +13,10 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Classe, Espece } from "@ou-ca/ouca-model";
 import { Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { Classe } from 'src/app/model/types/classe.object';
+import { Espece } from 'src/app/model/types/espece.model';
 import { UIEspece } from "src/app/models/espece.model";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";

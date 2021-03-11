@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Comportement, NicheurCode, NICHEUR_VALUES } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
+import { Comportement } from 'src/app/model/types/comportement.object';
+import { NicheurCode, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEtCodeTableComponent } from "../entite-avec-libelle-et-code-table/entite-avec-libelle-et-code-table.component";
 

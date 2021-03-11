@@ -2,9 +2,9 @@ import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { EntiteSimple } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import { BehaviorSubject, Observable } from "rxjs";
+import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 
 @Component({
   template: ""

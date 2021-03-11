@@ -1,4 +1,4 @@
-import { Lieudit } from "@ou-ca/ouca-model";
+import { Lieudit } from '../model/types/lieudit.model';
 import { UILieudit } from "../models/lieudit.model";
 
 export const buildLieuditFromUILieudit = (uiLieudit: UILieudit): Lieudit => {

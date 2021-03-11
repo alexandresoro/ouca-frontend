@@ -5,10 +5,11 @@ import {
   OnInit
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { AppConfiguration, COORDINATES_SYSTEMS_CONFIG } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
+import { AppConfiguration } from 'src/app/model/types/app-configuration.object';
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 
 export enum ConfigurationParameterID {

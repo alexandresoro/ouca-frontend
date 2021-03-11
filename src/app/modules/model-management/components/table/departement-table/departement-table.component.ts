@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Departement } from "@ou-ca/ouca-model";
 import { Observable } from "rxjs";
+import { Departement } from 'src/app/model/types/departement.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 

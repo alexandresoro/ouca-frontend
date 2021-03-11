@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EstimationNombre } from "@ou-ca/ouca-model";
 import * as _ from "lodash";
 import { Observable } from "rxjs";
+import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
 
