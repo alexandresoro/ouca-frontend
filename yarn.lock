@@ -1968,6 +1968,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/proj4@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "@types/proj4@npm:2.5.0"
+  checksum: 743741f98f8358fd4c303f831fdfcd42c880b5b79517de53ff698d89225afabb68495bdcfa38ab6bdab2aca7bbc500f7c105e2600ed6225651503d74e7f2c02d
+  languageName: node
+  linkType: hard
+
 "@types/q@npm:^1.5.1":
   version: 1.5.2
   resolution: "@types/q@npm:1.5.2"
@@ -2912,6 +2919,7 @@ __metadata:
     "@swimlane/ngx-charts": "*"
     "@types/file-saver": "*"
     "@types/lodash": "*"
+    "@types/proj4": ^2.5.0
     "@typescript-eslint/eslint-plugin": "*"
     "@typescript-eslint/parser": "*"
     date-fns: "*"
@@ -2920,6 +2928,7 @@ __metadata:
     file-saver: "*"
     lodash: "*"
     material-design-icons-iconfont: "*"
+    proj4: ^2.7.2
     rxjs: "*"
     tslib: ^2.0.0
     typeface-lato: "*"
@@ -9693,6 +9702,16 @@ fsevents@~2.1.2:
     mgrs: 1.0.0
     wkt-parser: ^1.2.4
   checksum: 2f44e6b52306566f7752d0f6c5c609879c628fe1418d02ce7242e879043f39ff26203e6f7d19adc9c312e605c636338107db6824ca285ee5f5db8ffe6ec19792
+  languageName: node
+  linkType: hard
+
+"proj4@npm:^2.7.2":
+  version: 2.7.2
+  resolution: "proj4@npm:2.7.2"
+  dependencies:
+    mgrs: 1.0.0
+    wkt-parser: ^1.2.4
+  checksum: 4be2e50f99ddeedabbc1a9977a006b88239982af9940bf9d73aeac5a8ab41a233be19d11e020aac30cd60715b6552842981b2809e3cca00c8c8dda0ece1921d1
   languageName: node
   linkType: hard
 

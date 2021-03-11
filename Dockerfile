@@ -1,19 +1,16 @@
 # 1. Transpile the project
-FROM node:lts-alpine as node
+FROM node:14-alpine as node
 
 WORKDIR /app/frontend
 
-COPY package.json yarn.lock .yarnrc.yml /app/frontend/
-COPY .yarn/ /app/frontend/.yarn
+RUN apk add git
 
-# Set up the dependencies of the project
-ARG NPM_GITHUB_TOKEN
+COPY ./ /app/frontend/
+
+RUN git submodule init
+RUN git submodule update
+
 RUN yarn install --immutable
-
-# Copy the source files for the transpile
-COPY .eslintrc.json angular.json .browserslistrc tsconfig.app.json tsconfig.json /app/frontend/
-COPY src/ /app/frontend/src
-
 RUN yarn build:prod
 
 # 2. Build the webserver image along with the built project
