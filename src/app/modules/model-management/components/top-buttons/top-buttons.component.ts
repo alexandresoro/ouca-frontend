@@ -15,10 +15,6 @@ import {
 export class TopButtonsComponent {
   @Input() public title: string;
 
-  @Input() public createButtonLibelle: string = "Créer";
-
-  @Input() public exportButtonLibelle: string = "Exporter";
-
   @Output() public onClickNewObject = new EventEmitter();
 
   @Output() public onClickExportObjects = new EventEmitter();
