@@ -13,7 +13,9 @@ import {
   tap
 } from "rxjs/operators";
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
-import { HEARTBEAT, TEXT, UPDATE, WebSocketMessageType } from '../model/websocket/websocket-message-type.model';
+import { ImportErrorMessage, ImportUpdateMessage } from '../model/import/import-update-message';
+import { WebsocketImportUpdateMessage } from '../model/websocket/websocket-import-update-message';
+import { HEARTBEAT, IMPORT, UPDATE } from '../model/websocket/websocket-message-type.model';
 import { WebsocketMessage } from '../model/websocket/websocket-message.model';
 import { WebsocketUpdateContent } from '../model/websocket/websocket-update-content.model';
 import { WebsocketUpdateMessage } from '../model/websocket/websocket-update-message';
@@ -70,7 +72,7 @@ export class BackendWsService {
               take(1)
             )
           );
-          this.sendMessage("ping", HEARTBEAT);
+          this.sendMessage({ type: HEARTBEAT, content: "ping" });
           return result;
         })
       )
@@ -117,11 +119,19 @@ export class BackendWsService {
     );
   };
 
-  public sendMessage = (message: string, type: WebSocketMessageType = TEXT): void => {
-    this.websocket$.next({
-      type,
-      content: message
-    });
+  public getImportMessageContent$ = (): Observable<ImportUpdateMessage | ImportErrorMessage> => {
+    return this.getMessage$().pipe(
+      filter((message) => {
+        return message.type === IMPORT;
+      }),
+      map((importMessage: WebsocketImportUpdateMessage) => {
+        return importMessage.content;
+      })
+    );
+  }
+
+  public sendMessage = (message: WebsocketMessage): void => {
+    this.websocket$.next(message);
   };
 
 }

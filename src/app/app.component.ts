@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { INIT } from './model/websocket/websocket-request-message.model';
+import { INIT } from './model/websocket/websocket-message-type.model';
 import { AppConfigurationService } from "./services/app-configuration.service";
 import { BackendWsService } from "./services/backend-ws.service";
 import { EntitiesStoreService } from "./services/entities-store.service";
@@ -19,6 +19,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.appConfigurationService.initializeConfigurationStore();
     this.entitiesStoreService.initializeEntitiesStore();
-    this.backendWsService.sendMessage(INIT);
+    this.backendWsService.sendMessage({ type: INIT });
   }
 }
