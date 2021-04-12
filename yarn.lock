@@ -185,19 +185,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cdk@npm:10.2.5":
-  version: 10.2.5
-  resolution: "@angular/cdk@npm:10.2.5"
+"@angular/cdk@npm:11.2.8":
+  version: 11.2.8
+  resolution: "@angular/cdk@npm:11.2.8"
   dependencies:
     parse5: ^5.0.0
     tslib: ^2.0.0
   peerDependencies:
-    "@angular/common": ^10.0.0 || ^11.0.0-0
-    "@angular/core": ^10.0.0 || ^11.0.0-0
+    "@angular/common": ^11.0.0 || ^12.0.0-0
+    "@angular/core": ^11.0.0 || ^12.0.0-0
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: f0fd6d2415946485567f1477213d92b814bb8e7950f84abfb3b8d70d6eb45b6ac17203cff459978cbdaa4b2077d781fc7687737c6fc38f9fac69512c4c364afb
+  checksum: 6c6c99e2d4c4e57e3ba460349c9424f4f5bffd3c58e0bfe28d7351d2eba01df1233273994cd35a4669dc3548cd69efee9bb421bb1bee3928347c60bb6d0d1ad8
   languageName: node
   linkType: hard
 
@@ -297,18 +297,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/flex-layout@npm:^10.0.0-beta.32":
-  version: 10.0.0-beta.32
-  resolution: "@angular/flex-layout@npm:10.0.0-beta.32"
+"@angular/flex-layout@npm:^11.0.0-beta.33":
+  version: 11.0.0-beta.33
+  resolution: "@angular/flex-layout@npm:11.0.0-beta.33"
   dependencies:
     tslib: ^2.0.0
   peerDependencies:
-    "@angular/cdk": ^10.0.0-rc.0
-    "@angular/common": ">=10.0.0-rc.0"
-    "@angular/core": ">=10.0.0-rc.0"
-    "@angular/platform-browser": ">=10.0.0-rc.0"
+    "@angular/cdk": ^11.0.0
+    "@angular/common": ">=11.0.0"
+    "@angular/core": ">=11.0.0"
+    "@angular/platform-browser": ">=11.0.0"
     rxjs: ^6.0.0
-  checksum: b6212761f025c266af6cd9e80e0de8e79e763253a582d19090becff50cf28bfa3938f7cbaeecf31d305cf0e01915fe3df4e86ab9f60dfd11f8144280d9cbe6cc
+  checksum: 054d970beddcf08c226eeaf2f92d4fc36294159a8f6b4f70137f8e6197439f23c7562ecec34e109fcfbf69c14a86bc331bad5cdc7a8f42d2e80249bb2f6c645d
   languageName: node
   linkType: hard
 
@@ -326,18 +326,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/material@npm:10.2.5":
-  version: 10.2.5
-  resolution: "@angular/material@npm:10.2.5"
+"@angular/material@npm:11.2.8":
+  version: 11.2.8
+  resolution: "@angular/material@npm:11.2.8"
   dependencies:
     tslib: ^2.0.0
   peerDependencies:
-    "@angular/animations": ^10.0.0 || ^11.0.0-0
-    "@angular/cdk": 10.2.5
-    "@angular/common": ^10.0.0 || ^11.0.0-0
-    "@angular/core": ^10.0.0 || ^11.0.0-0
-    "@angular/forms": ^10.0.0 || ^11.0.0-0
-  checksum: ba7df4273b5248f764a77728f7442215b880ad954a09a218e36d979180f289db2178d548acb8478cba9893d37f8cef599e8236c2b61b93205891529e930d5e8c
+    "@angular/animations": ^11.0.0 || ^12.0.0-0
+    "@angular/cdk": 11.2.8
+    "@angular/common": ^11.0.0 || ^12.0.0-0
+    "@angular/core": ^11.0.0 || ^12.0.0-0
+    "@angular/forms": ^11.0.0 || ^12.0.0-0
+  checksum: ab4bb94f72434d371b6bf7d16a5465f114ec6690523e8a5472471175266ecd8af8bee88b6532dff4494a3c6d46b3301887d87819cabcbc06b0931278fbf9be54
   languageName: node
   linkType: hard
 
@@ -3222,15 +3222,15 @@ __metadata:
   dependencies:
     "@angular-devkit/build-angular": 0.1102.8
     "@angular/animations": 11.2.9
-    "@angular/cdk": 10.2.5
+    "@angular/cdk": 11.2.8
     "@angular/cli": 11.2.8
     "@angular/common": 11.2.9
     "@angular/compiler": 11.2.9
     "@angular/compiler-cli": 11.2.9
     "@angular/core": 11.2.9
-    "@angular/flex-layout": ^10.0.0-beta.32
+    "@angular/flex-layout": ^11.0.0-beta.33
     "@angular/forms": 11.2.9
-    "@angular/material": 10.2.5
+    "@angular/material": 11.2.8
     "@angular/platform-browser": 11.2.9
     "@angular/platform-browser-dynamic": 11.2.9
     "@angular/router": 11.2.9
