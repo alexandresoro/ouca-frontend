@@ -2331,6 +2331,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/papaparse@npm:^5.2.5":
+  version: 5.2.5
+  resolution: "@types/papaparse@npm:5.2.5"
+  dependencies:
+    "@types/node": "*"
+  checksum: c212250add6ab83825b3ebb7afbe4df47888dd800ea2e1bf06758394efaab047beb12c50bfaf45a6066cf5ead95b250042fa92675ef1fff1c235990c8ec14d8b
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
@@ -3257,6 +3266,7 @@ __metadata:
     "@swimlane/ngx-charts": ^17.0.1
     "@types/file-saver": ^2.0.2
     "@types/lodash": ^4.14.168
+    "@types/papaparse": ^5.2.5
     "@types/proj4": ^2.5.0
     "@typescript-eslint/eslint-plugin": ^4.21.0
     "@typescript-eslint/parser": ^4.21.0
@@ -3266,6 +3276,7 @@ __metadata:
     file-saver: "*"
     lodash: "*"
     material-design-icons-iconfont: ^6.1.0
+    papaparse: ^5.3.0
     proj4: ^2.7.2
     rxjs: ^6.6.7
     tslib: ^2.0.0
@@ -9299,6 +9310,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"papaparse@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "papaparse@npm:5.3.0"
+  checksum: 65a492e6dcfd03ea39114cdedbc3bf71be3ec16e622e94e09f6ffbba5a964bba6bd11c6aecec6a93d2f700d6f847716357266f9f6206a23ee1ee896c3f2bb2b4
+  languageName: node
+  linkType: hard
+
 "parallel-transform@npm:^1.1.0":
   version: 1.2.0
   resolution: "parallel-transform@npm:1.2.0"
@@ -12396,21 +12414,21 @@ typescript@4.1.5:
 
 "typescript@patch:typescript@4.0.3#builtin<compat/typescript>":
   version: 4.0.3
-  resolution: "typescript@patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=cc6730"
+  resolution: "typescript@patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=a45b0e"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: c92843a6af50170f49158b6eb5726b80c5c22074a337d066eee278a7d08d1109667e435e96207ab1314f63f4629555e89c26645ef55b937ea6baf80d190768f6
+  checksum: 50be92a771498a19e65dc7f80cc6ff754cb91f44e59b197f6dfd5bb47371c313e7af830cbcd1cd2fa0d104b6ba6a11aabcd7a6fd705091c4758ea11aaae39345
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@4.1.5#builtin<compat/typescript>":
   version: 4.1.5
-  resolution: "typescript@patch:typescript@npm%3A4.1.5#builtin<compat/typescript>::version=4.1.5&hash=cc6730"
+  resolution: "typescript@patch:typescript@npm%3A4.1.5#builtin<compat/typescript>::version=4.1.5&hash=a45b0e"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 58cc7786be0f8485c124944883b1384287532e4867ec37f1fb5cb2811dbc10f7a9decccad89097f924043285f3515bfd8223c61dbb4f88af00b2d8dc2ef73207
+  checksum: 9c57e19536e978f130694888fbda2f8fe60f92c388c6b2945881dd7c912078bf52663dcb3278100cf9f4689805fbaec86b3de42ef600fb9672545b24fc1b7b15
   languageName: node
   linkType: hard
 

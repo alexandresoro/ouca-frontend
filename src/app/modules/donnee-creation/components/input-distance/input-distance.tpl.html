@@ -4,7 +4,7 @@
   fxFlex="1 0 100px"
   [type]="'Estimation de la distance'"
   [values]="estimationsDistance"
-  [control]="controlGroup.controls['estimationDistance']"
+  [control]="$any(controlGroup.controls['estimationDistance'])"
   [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayEstimationDistanceFormat"
 >
@@ -14,7 +14,7 @@
   *ngIf="isMultipleSelectMode"
   fxFlex="1 0 100px"
   [attributesToDisplay]="['libelle']"
-  [control]="controlGroup.controls['estimationsDistance']"
+  [control]="$any(controlGroup.controls['estimationsDistance'])"
   [id]="'estimations-distance'"
   [options]="estimationsDistance"
   [placeholder]="'Estimations de la distance'"
@@ -25,7 +25,7 @@
   <input
     #input
     matInput
-    [formControl]="controlGroup.controls['distance']"
+    [formControl]="$any(controlGroup.controls['distance'])"
     placeholder="Distance de contact (m)"
     id="input-distance"
     min="0"

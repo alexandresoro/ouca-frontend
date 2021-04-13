@@ -12,7 +12,7 @@
         <!-- ID -->
         <mat-form-field *ngIf="getIsEditionMode$() | async">
           <input
-            [formControl]="getForm().controls['id']"
+            formControlName="id"
             id="input-id"
             matInput
             name="id"
@@ -25,7 +25,7 @@
         <!-- Departement -->
         <mat-form-field>
           <mat-select
-            [formControl]="getForm().controls['departement']"
+            formControlName="departement"
             id="input-departement"
             name="departement"
             placeholder="Département"
@@ -47,7 +47,7 @@
         <!-- Code Commune -->
         <mat-form-field>
           <mat-select
-            [formControl]="getForm().controls['communeId']"
+            formControlName="communeId"
             id="input-code-commune"
             name="code-commune"
             placeholder="Code de la commune"
@@ -69,7 +69,7 @@
         <!-- Nom Commune -->
         <mat-form-field>
           <mat-select
-            [formControl]="getForm().controls['nomCommune']"
+            formControlName="nomCommune"
             id="input-nom-commune"
             name="nom-commune"
             placeholder="Nom de la commune"
@@ -92,7 +92,7 @@
         <mat-form-field>
           <input
             [errorStateMatcher]="lieuditNomErrorStateMatcher"
-            [formControl]="getForm().controls['nom']"
+            formControlName="nom"
             id="input-nom"
             matInput
             maxlength="150"
@@ -113,7 +113,7 @@
           <!-- Latitude -->
           <mat-form-field>
             <input
-              [formControl]="getForm().controls['latitude']"
+              formControlName="latitude"
               id="input-latitude"
               matInput
               min="{{ (coordinatesSystem$ | async)?.latitudeRange.min }}"
@@ -145,7 +145,7 @@
           <!-- Longitude -->
           <mat-form-field>
             <input
-              [formControl]="getForm().controls['longitude']"
+              formControlName="longitude"
               id="input-longitude"
               matInput
               min="{{ (coordinatesSystem$ | async)?.longitudeRange.min }}"
@@ -177,7 +177,7 @@
           <!-- Altitude -->
           <mat-form-field>
             <input
-              [formControl]="getForm().controls['altitude']"
+              formControlName="altitude"
               id="input-altitude"
               matInput
               min="0"

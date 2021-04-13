@@ -1,7 +1,7 @@
 <!-- Departement -->
 <mat-form-field>
   <mat-select
-    [formControl]="entityForm.controls['departementId']"
+    [formControl]="$any(entityForm.controls['departementId'])"
     id="input-departement"
     name="departement"
     placeholder="Département"
@@ -22,7 +22,7 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="communeCodeErrorStateMatcher"
-    [formControl]="entityForm.controls['code']"
+    [formControl]="$any(entityForm.controls['code'])"
     id="input-code"
     matInput
     max="65535"
@@ -47,7 +47,7 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="communeNomErrorStateMatcher"
-    [formControl]="entityForm.controls['nom']"
+    [formControl]="$any(entityForm.controls['nom'])"
     id="input-nom"
     matInput
     maxlength="100"

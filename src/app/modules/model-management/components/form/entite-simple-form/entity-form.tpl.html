@@ -9,7 +9,7 @@
       <!-- ID -->
       <mat-form-field *ngIf="isEditionMode">
         <input
-          [formControl]="entityForm.controls['id']"
+          [formControl]="$any(entityForm.controls['id'])"
           id="input-id"
           matInput
           name="id"

@@ -12,7 +12,7 @@
         <!-- ID -->
         <mat-form-field *ngIf="getIsEditionMode$() | async">
           <input
-            [formControl]="getForm().controls['id']"
+            formControlName="id"
             id="input-id"
             matInput
             name="id"
@@ -26,7 +26,7 @@
         <mat-form-field>
           <input
             [errorStateMatcher]="codeErrorStateMatcher"
-            [formControl]="getForm().controls['code']"
+            formControlName="code"
             id="input-code"
             matInput
             maxlength="6"
@@ -46,7 +46,7 @@
         <mat-form-field>
           <input
             [errorStateMatcher]="libelleErrorStateMatcher"
-            [formControl]="getForm().controls['libelle']"
+            formControlName="libelle"
             id="input-libelle"
             matInput
             maxlength="100"
@@ -68,7 +68,7 @@
           <mat-select
             id="input-nicheur"
             placeholder="Nicheur"
-            [formControl]="getForm().controls['nicheur']"
+            formControlName="nicheur"
           >
             <mat-option [value]="null"></mat-option>
             <mat-option *ngFor="let n of nicheurValues" [value]="n.code">

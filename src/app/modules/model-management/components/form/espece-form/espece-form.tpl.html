@@ -1,7 +1,7 @@
 <!-- Classe -->
 <mat-form-field>
   <mat-select
-    [formControl]="entityForm.controls['classe']"
+    [formControl]="$any(entityForm.controls['classe'])"
     id="input-classe"
     name="classe"
     placeholder="Classe de l'espèce"
@@ -19,7 +19,7 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="especeCodeErrorStateMatcher"
-    [formControl]="entityForm.controls['code']"
+    [formControl]="$any(entityForm.controls['code'])"
     id="input-code"
     matInput
     maxlength="20"
@@ -40,7 +40,7 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="especeNomFrancaisErrorStateMatcher"
-    [formControl]="entityForm.controls['nomFrancais']"
+    [formControl]="$any(entityForm.controls['nomFrancais'])"
     id="input-nom-francais"
     matInput
     maxlength="100"
@@ -61,7 +61,7 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="especeNomLatinErrorStateMatcher"
-    [formControl]="entityForm.controls['nomLatin']"
+    [formControl]="$any(entityForm.controls['nomLatin'])"
     id="input-nom-latin"
     matInput
     maxlength="100"

@@ -2,7 +2,7 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="estimationLibelleErrorStateMatcher"
-    [formControl]="entityForm.controls['libelle']"
+    [formControl]="$any(entityForm.controls['libelle'])"
     id="input-libelle"
     matInput
     maxlength="100"
@@ -21,7 +21,7 @@
 
 <!-- Non compte -->
 <mat-checkbox
-  [formControl]="entityForm.controls['nonCompte']"
+  [formControl]="$any(entityForm.controls['nonCompte'])"
   id="input-non-compte"
   name="non-compte"
   >Non compté</mat-checkbox

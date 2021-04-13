@@ -124,7 +124,7 @@
               <!-- OBSERVATEUR -->
               <div>
                 <input-observateur
-                  [control]="inventaireForm.controls['observateur']"
+                  [control]="$any(inventaireForm.controls['observateur'])"
                   [observateurs]="observateurs$ | async"
                 >
                 </input-observateur>
@@ -133,7 +133,7 @@
               <!-- ASSOCIES -->
               <div *ngIf="(appConfiguration$ | async)?.areAssociesDisplayed">
                 <input-observateurs-associes
-                  [control]="inventaireForm.controls['observateursAssocies']"
+                  [control]="$any(inventaireForm.controls['observateursAssocies'])"
                   [observateurs]="observateurs$ | async"
                 >
                 </input-observateurs-associes>
@@ -150,13 +150,13 @@
               <!-- DATE -->
               <input-date
                 fxFlex="2 0 100px"
-                [control]="inventaireForm.controls['date']"
+                [control]="$any(inventaireForm.controls['date'])"
               ></input-date>
 
               <!-- HEURE -->
               <input-time
                 fxFlex="1 0 70px"
-                [control]="inventaireForm.controls['heure']"
+                [control]="$any(inventaireForm.controls['heure'])"
                 id="heure"
                 label="Heure"
               ></input-time>
@@ -164,7 +164,7 @@
               <!-- DUREE -->
               <input-time
                 fxFlex="1 0 70px"
-                [control]="inventaireForm.controls['duree']"
+                [control]="$any(inventaireForm.controls['duree'])"
                 id="duree"
                 label="Durée"
               ></input-time>
@@ -175,7 +175,7 @@
             <mat-card class="mat-card-override">
               <input-lieudit
                 formGroupName="lieu"
-                [controlGroup]="inventaireForm.controls['lieu']"
+                [controlGroup]="$any(inventaireForm.controls['lieu'])"
               >
               </input-lieudit>
             </mat-card>
@@ -190,14 +190,14 @@
                 <!-- TEMPERATURE -->
                 <input-temperature
                   fxFlex="100px"
-                  [control]="inventaireForm.controls['temperature']"
+                  [control]="$any(inventaireForm.controls['temperature'])"
                 ></input-temperature>
 
                 <!-- METEOS -->
                 <input-meteos
                   fxFlex="1 0 120px"
                   [meteos]="meteos$ | async"
-                  [control]="inventaireForm.controls['meteos']"
+                  [control]="$any(inventaireForm.controls['meteos'])"
                 ></input-meteos>
               </div>
 
@@ -241,7 +241,7 @@
               <input-espece
                 class="card-espece"
                 formGroupName="especeGroup"
-                [controlGroup]="donneeForm.controls['especeGroup']"
+                [controlGroup]="$any(donneeForm.controls['especeGroup'])"
               ></input-espece>
             </mat-card>
             <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
@@ -253,7 +253,7 @@
                   fxFlex="auto"
                   fxLayout="row"
                   fxLayoutGap="20px"
-                  [controlGroup]="donneeForm.controls['nombreGroup']"
+                  [controlGroup]="$any(donneeForm.controls['nombreGroup'])"
                   [defaultNombre]="(appConfiguration$ | async)?.defaultNombre"
                   [estimationsNombre]="estimationsNombre$ | async"
                   formGroupName="nombreGroup"
@@ -263,14 +263,14 @@
                 <!-- SEXE -->
                 <input-sexe
                   fxFlex="1 0 120px"
-                  [control]="donneeForm.controls['sexe']"
+                  [control]="$any(donneeForm.controls['sexe'])"
                   [sexes]="sexes$ | async"
                 ></input-sexe>
 
                 <!-- AGE  -->
                 <input-age
                   fxFlex="1 0 120px"
-                  [control]="donneeForm.controls['age']"
+                  [control]="$any(donneeForm.controls['age'])"
                   [ages]="ages$ | async"
                 ></input-age>
               </div>
@@ -298,7 +298,7 @@
                   [fxFlex]="getFxDistance$() | async"
                   fxLayout="row"
                   fxLayoutGap="20px"
-                  [controlGroup]="donneeForm.controls['distanceGroup']"
+                  [controlGroup]="$any(donneeForm.controls['distanceGroup'])"
                   [estimationsDistance]="estimationsDistance$ | async"
                   formGroupName="distanceGroup"
                 >
@@ -308,7 +308,7 @@
                 <input-regroupement
                   *ngIf="(appConfiguration$ | async)?.isRegroupementDisplayed"
                   [fxFlex]="getFxRegroupement$() | async"
-                  [control]="donneeForm.controls['regroupement']"
+                  [control]="$any(donneeForm.controls['regroupement'])"
                 ></input-regroupement>
 
                 <mat-error
@@ -330,7 +330,7 @@
                 <input-comportements
                   formGroupName="comportementsGroup"
                   [donneeForm]="donneeForm"
-                  [controlGroup]="donneeForm.controls['comportementsGroup']"
+                  [controlGroup]="$any(donneeForm.controls['comportementsGroup'])"
                   [comportements]="comportements$ | async"
                 ></input-comportements>
               </mat-card-content>
@@ -343,7 +343,7 @@
                 <input-milieux
                   formGroupName="milieuxGroup"
                   [donneeForm]="donneeForm"
-                  [controlGroup]="donneeForm.controls['milieuxGroup']"
+                  [controlGroup]="$any(donneeForm.controls['milieuxGroup'])"
                   [milieux]="milieux$ | async"
                 ></input-milieux>
               </mat-card-content>
@@ -355,7 +355,7 @@
               <mat-card-content class="full-width-container">
                 <!-- COMMENTAIRE -->
                 <input-commentaire
-                  [control]="donneeForm.controls['commentaire']"
+                  [control]="$any(donneeForm.controls['commentaire'])"
                 ></input-commentaire>
               </mat-card-content>
             </mat-card>

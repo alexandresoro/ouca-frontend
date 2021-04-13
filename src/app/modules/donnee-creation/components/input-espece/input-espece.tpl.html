@@ -4,7 +4,7 @@
   [attributesToFilter]="classeAutocompleteAttributes"
   type="Classe"
   [values]="classes$ | async"
-  [control]="controlGroup.controls['classe']"
+  [control]="$any(controlGroup.controls['classe'])"
   [displayFn]="displayClasseFormat"
 >
 </autocomplete>
@@ -12,7 +12,7 @@
 <multiple-select
   *ngIf="isMultipleSelectMode"
   [attributesToDisplay]="['libelle']"
-  [control]="controlGroup.controls['classes']"
+  [control]="$any(controlGroup.controls['classes'])"
   [id]="'classes'"
   [options]="classes$ | async"
   [placeholder]="'Classes espèces'"
@@ -24,7 +24,7 @@
   [attributesToFilter]="especeAutocompleteAttributes"
   type="Espèce"
   [values]="filteredEspeces$ | async"
-  [control]="controlGroup.controls['espece']"
+  [control]="$any(controlGroup.controls['espece'])"
   [displayFn]="displayEspeceFormat"
 >
 </autocomplete>
@@ -32,7 +32,7 @@
 <multiple-select
   *ngIf="isMultipleSelectMode"
   [attributesToDisplay]="['code', 'nomFrancais', 'nomLatin']"
-  [control]="controlGroup.controls['especes']"
+  [control]="$any(controlGroup.controls['especes'])"
   [id]="'especes'"
   [options]="filteredEspeces$ | async"
   [placeholder]="'Espèces'"

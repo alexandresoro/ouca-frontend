@@ -6,7 +6,7 @@
       [attributesToFilter]="departementAutocompleteAttributes"
       type="Département"
       [values]="departements$ | async"
-      [control]="controlGroup.controls['departement']"
+      [control]="$any(controlGroup.controls['departement'])"
       [displayFn]="displayDepartementFormat"
     >
     </autocomplete>
@@ -14,7 +14,7 @@
     <multiple-select
       *ngIf="isMultipleSelectMode"
       [attributesToDisplay]="['code']"
-      [control]="controlGroup.controls['departements']"
+      [control]="$any(controlGroup.controls['departements'])"
       [id]="'communes'"
       [options]="departements$ | async"
       [placeholder]="'Départements'"
@@ -27,7 +27,7 @@
       *ngIf="!isMultipleSelectMode"
       [type]="'Commune'"
       [values]="filteredCommunes$ | async"
-      [control]="controlGroup.controls['commune']"
+      [control]="$any(controlGroup.controls['commune'])"
       [attributesToFilter]="communeAutocompleteAttributes"
       [displayFn]="displayCommuneFormat"
     >
@@ -36,7 +36,7 @@
     <multiple-select
       *ngIf="isMultipleSelectMode"
       [attributesToDisplay]="['code', 'nom']"
-      [control]="controlGroup.controls['communes']"
+      [control]="$any(controlGroup.controls['communes'])"
       [id]="'communes'"
       [options]="filteredCommunes$ | async"
       [placeholder]="'Communes'"
@@ -49,7 +49,7 @@
       *ngIf="!isMultipleSelectMode"
       [type]="'Lieu-dit'"
       [values]="filteredLieuxdits$ | async"
-      [control]="controlGroup.controls['lieudit']"
+      [control]="$any(controlGroup.controls['lieudit'])"
       [attributesToFilter]="lieuditAutocompleteAttributes"
       [displayFn]="displayLieuDitFormat"
     >
@@ -58,7 +58,7 @@
     <multiple-select
       *ngIf="isMultipleSelectMode"
       [attributesToDisplay]="['nom']"
-      [control]="controlGroup.controls['lieuxdits']"
+      [control]="$any(controlGroup.controls['lieuxdits'])"
       [id]="'lieuxdits'"
       [options]="filteredLieuxdits$ | async"
       [placeholder]="'Lieux-dits'"
@@ -71,7 +71,7 @@
         <!-- LATITUDE -->
         <mat-form-field fxFlex="1 0 100px">
           <input
-            [formControl]="controlGroup.controls['latitude']"
+            [formControl]="$any(controlGroup.controls['latitude'])"
             matInput
             [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
             [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
@@ -85,7 +85,7 @@
         <!-- LONGITUDE -->
         <mat-form-field fxFlex="1 0 100px">
           <input
-            [formControl]="controlGroup.controls['longitude']"
+            [formControl]="$any(controlGroup.controls['longitude'])"
             matInput
             [min]="(getCoordinatesSystem$() | async)?.longitudeRange.min"
             [max]="(getCoordinatesSystem$() | async)?.longitudeRange.max"
@@ -99,7 +99,7 @@
         <!-- ALTITUDE -->
         <mat-form-field fxFlex="1 0 100px">
           <input
-            [formControl]="controlGroup.controls['altitude']"
+            [formControl]="$any(controlGroup.controls['altitude'])"
             matInput
             min="0"
             max="65535"

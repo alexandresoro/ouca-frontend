@@ -3,7 +3,7 @@
   <input
     #input
     matInput
-    [formControl]="controlGroup.controls['nombre']"
+    [formControl]="$any(controlGroup.controls['nombre'])"
     placeholder="Nombre d'individus"
     id="input-nombre"
     min="1"
@@ -19,7 +19,7 @@
   fxFlex="1 0 100px"
   [type]="'Estimation du nombre'"
   [values]="estimationsNombre"
-  [control]="controlGroup.controls['estimationNombre']"
+  [control]="$any(controlGroup.controls['estimationNombre'])"
   [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayEstimationNombreFormat"
 >
@@ -29,7 +29,7 @@
   *ngIf="isMultipleSelectMode"
   fxFlex="1 0 100px"
   [attributesToDisplay]="['libelle']"
-  [control]="controlGroup.controls['estimationsNombre']"
+  [control]="$any(controlGroup.controls['estimationsNombre'])"
   [id]="'estimations-nombre'"
   [options]="estimationsNombre"
   [placeholder]="'Estimations du nombre'"

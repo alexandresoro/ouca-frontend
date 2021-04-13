@@ -2,7 +2,7 @@
 <mat-form-field>
   <input
     [errorStateMatcher]="libelleErrorStateMatcher"
-    [formControl]="entityForm.controls['libelle']"
+    [formControl]="$any(entityForm.controls['libelle'])"
     id="input-libelle"
     matInput
     maxlength="100"

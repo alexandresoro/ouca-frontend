@@ -19,7 +19,7 @@
                 <input
                   #input
                   matInput
-                  [formControl]="searchForm.controls['id']"
+                  [formControl]="$any(searchForm.controls['id'])"
                   placeholder="ID"
                   id="input-id"
                   name="id"
@@ -30,7 +30,7 @@
               <!-- OBSERVATEURS -->
               <multiple-select
                 [attributesToDisplay]="['libelle']"
-                [control]="searchForm.controls['observateurs']"
+                [control]="$any(searchForm.controls['observateurs'])"
                 [id]="'observateurs'"
                 [options]="observateurs$ | async"
                 [placeholder]="'Observateurs'"
@@ -45,7 +45,7 @@
                   placeholder="Date de début"
                   id="input-from-date"
                   name="from-date"
-                  [formControl]="searchForm.controls['fromDate']"
+                  [formControl]="$any(searchForm.controls['fromDate'])"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -62,7 +62,7 @@
                   placeholder="Date de fin"
                   id="input-to-date"
                   name="to-date"
-                  [formControl]="searchForm.controls['toDate']"
+                  [formControl]="$any(searchForm.controls['toDate'])"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -73,14 +73,14 @@
 
               <!-- HEURE -->
               <input-time
-                [control]="searchForm.controls['heure']"
+                [control]="$any(searchForm.controls['heure'])"
                 id="heure"
                 label="Heure"
               ></input-time>
 
               <!-- DUREE -->
               <input-time
-                [control]="searchForm.controls['duree']"
+                [control]="$any(searchForm.controls['duree'])"
                 id="duree"
                 label="Durée"
               ></input-time>
@@ -91,7 +91,7 @@
               <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
               <input-lieudit
                 formGroupName="lieuditGroup"
-                [controlGroup]="searchForm.controls['lieuditGroup']"
+                [controlGroup]="$any(searchForm.controls['lieuditGroup'])"
                 [hideCoordinates]="true"
                 [isMultipleSelectMode]="true"
               >
@@ -99,13 +99,13 @@
 
               <!-- TEMPERATURE -->
               <input-temperature
-                [control]="searchForm.controls['temperature']"
+                [control]="$any(searchForm.controls['temperature'])"
               ></input-temperature>
 
               <!-- METEO -->
               <multiple-select
                 [attributesToDisplay]="['libelle']"
-                [control]="searchForm.controls['meteos']"
+                [control]="$any(searchForm.controls['meteos'])"
                 [id]="'meteos'"
                 [options]="meteos$ | async"
                 [placeholder]="'Météos'"
@@ -114,7 +114,7 @@
               <!-- OBSERVATEURS ASSOCIES -->
               <multiple-select
                 [attributesToDisplay]="['libelle']"
-                [control]="searchForm.controls['associes']"
+                [control]="$any(searchForm.controls['associes'])"
                 [id]="'associes'"
                 [options]="observateurs$ | async"
                 [placeholder]="'Observateurs associés'"
@@ -126,14 +126,14 @@
               <!-- CLASSE / ESPECE -->
               <input-espece
                 formGroupName="especeGroup"
-                [controlGroup]="searchForm.controls['especeGroup']"
+                [controlGroup]="$any(searchForm.controls['especeGroup'])"
                 [isMultipleSelectMode]="true"
               ></input-espece>
 
               <!-- ESTIMATION NOMBRE / NOMBRE -->
               <multiple-select
                 [attributesToDisplay]="['libelle']"
-                [control]="nombreGroup.controls['estimationsNombre']"
+                [control]="$any(nombreGroup.controls['estimationsNombre'])"
                 [id]="'estimations-nombre'"
                 [options]="estimationsNombre$ | async"
                 [placeholder]="'Estimations du nombre'"
@@ -144,7 +144,7 @@
                 <input
                   #input
                   matInput
-                  [formControl]="nombreGroup.controls['nombre']"
+                  [formControl]="$any(nombreGroup.controls['nombre'])"
                   placeholder="Nombre d'individus"
                   id="input-nombre"
                   min="1"
@@ -157,7 +157,7 @@
               <!-- SEXE -->
               <multiple-select
                 [attributesToDisplay]="['libelle']"
-                [control]="searchForm.controls['sexes']"
+                [control]="$any(searchForm.controls['sexes'])"
                 [id]="'sexes'"
                 [options]="sexes$ | async"
                 [placeholder]="'Sexes'"
@@ -166,7 +166,7 @@
               <!-- AGE  -->
               <multiple-select
                 [attributesToDisplay]="['libelle']"
-                [control]="searchForm.controls['ages']"
+                [control]="$any(searchForm.controls['ages'])"
                 [id]="'ages'"
                 [options]="ages$ | async"
                 [placeholder]="'Ages'"
@@ -178,7 +178,7 @@
               <!-- ESTIMATION DISTANCE / DISTANCE -->
               <multiple-select
                 [attributesToDisplay]="['libelle']"
-                [control]="distanceGroup.controls['estimationsDistance']"
+                [control]="$any(distanceGroup.controls['estimationsDistance'])"
                 [id]="'estimations-distance'"
                 [options]="estimationsDistance$ | async"
                 [placeholder]="'Estimations de la distance'"
@@ -188,7 +188,7 @@
                 <input
                   #input
                   matInput
-                  [formControl]="distanceGroup.controls['distance']"
+                  [formControl]="$any(distanceGroup.controls['distance'])"
                   placeholder="Distance de contact (m)"
                   id="input-distance"
                   min="0"
@@ -210,7 +210,7 @@
                 <mat-select
                   placeholder="Nicheurs"
                   id="multiple-select-nicheurs"
-                  [formControl]="searchForm.controls['nicheurs']"
+                  [formControl]="$any(searchForm.controls['nicheurs'])"
                   multiple
                 >
                   <mat-option
@@ -225,7 +225,7 @@
               <!-- COMPORTEMENT -->
               <multiple-select
                 [attributesToDisplay]="['code', 'libelle']"
-                [control]="searchForm.controls['comportements']"
+                [control]="$any(searchForm.controls['comportements'])"
                 [id]="'comportements'"
                 [options]="comportements$ | async"
                 [placeholder]="'Comportements'"
@@ -234,7 +234,7 @@
               <!-- MILIEU -->
               <multiple-select
                 [attributesToDisplay]="['code', 'libelle']"
-                [control]="searchForm.controls['milieux']"
+                [control]="$any(searchForm.controls['milieux'])"
                 [id]="'milieux'"
                 [options]="milieux$ | async"
                 [placeholder]="'Milieux'"
@@ -248,7 +248,7 @@
                   placeholder="Commentaires"
                   id="input-commentaire"
                   name="input-commentaire"
-                  [formControl]="searchForm.controls['commentaire']"
+                  [formControl]="$any(searchForm.controls['commentaire'])"
                 />
               </mat-form-field>
             </div>
@@ -271,7 +271,7 @@
         <mat-select
           id="input-coordinates"
           placeholder="Système de coordonnées"
-          [formControl]="searchForm.controls['coordinatesSystemType']"
+          [formControl]="$any(searchForm.controls['coordinatesSystemType'])"
         >
           <mat-option *ngFor="let s of coordinatesSystems" [value]="s.code">
             {{ s.name }}
@@ -283,7 +283,7 @@
       <mat-checkbox
         id="input-excel"
         name="input-excel"
-        [formControl]="searchForm.controls['excelMode']"
+        [formControl]="$any(searchForm.controls['excelMode'])"
         >Exporter les résultats dans un fichier Excel</mat-checkbox
       >
     </form>

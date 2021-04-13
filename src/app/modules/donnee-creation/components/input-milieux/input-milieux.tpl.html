@@ -1,7 +1,7 @@
 <autocomplete
   [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayMilieuFormat"
-  [control]="controlGroup.controls['milieu1']"
+  [control]="$any(controlGroup.controls['milieu1'])"
   [type]="'Milieu 1'"
   [values]="milieux"
 >
@@ -9,7 +9,7 @@
 <autocomplete
   [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayMilieuFormat"
-  [control]="controlGroup.controls['milieu2']"
+  [control]="$any(controlGroup.controls['milieu2'])"
   [type]="'Milieu 2'"
   [values]="milieux"
 >
@@ -17,7 +17,7 @@
 <autocomplete
   [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayMilieuFormat"
-  [control]="controlGroup.controls['milieu3']"
+  [control]="$any(controlGroup.controls['milieu3'])"
   [type]="'Milieu 3'"
   [values]="milieux"
 >
@@ -25,7 +25,7 @@
 <autocomplete
   [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayMilieuFormat"
-  [control]="controlGroup.controls['milieu4']"
+  [control]="$any(controlGroup.controls['milieu4'])"
   [type]="'Milieu 4'"
   [values]="milieux"
 >

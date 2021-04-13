@@ -10,7 +10,7 @@
         <mat-select
           id="input-observateur"
           placeholder="Observateur par défaut"
-          [formControl]="form.controls['defaultObservateur']"
+          formControlName="defaultObservateur"
           [compareWith]="compareEntities"
         >
           <mat-option *ngFor="let o of observateurs$ | async" [value]="o">
@@ -24,7 +24,7 @@
         <mat-select
           id="input-departement"
           placeholder="Département par défaut"
-          [formControl]="form.controls['defaultDepartement']"
+          formControlName="defaultDepartement"
           [compareWith]="compareEntities"
         >
           <mat-option *ngFor="let d of departements$ | async" [value]="d">
@@ -38,7 +38,7 @@
         <mat-select
           id="input-estimation-nombre"
           placeholder="Estimation du nombre par défaut"
-          [formControl]="form.controls['defaultEstimationNombre']"
+          formControlName="defaultEstimationNombre"
           [compareWith]="compareEntities"
         >
           <mat-option *ngFor="let e of estimationsNombre$ | async" [value]="e">
@@ -57,7 +57,7 @@
           placeholder="Nombre par défaut"
           id="input-nombre"
           name="input-nombre"
-          [formControl]="form.controls['defaultNombre']"
+          formControlName="defaultNombre"
         />
       </mat-form-field>
 
@@ -66,7 +66,7 @@
         <mat-select
           id="input-sexe"
           placeholder="Sexe par défaut"
-          [formControl]="form.controls['defaultSexe']"
+          formControlName="defaultSexe"
           [compareWith]="compareEntities"
         >
           <mat-option *ngFor="let s of sexes$ | async" [value]="s">
@@ -80,7 +80,7 @@
         <mat-select
           id="input-age"
           placeholder="Âge par défaut"
-          [formControl]="form.controls['defaultAge']"
+          formControlName="defaultAge"
           [compareWith]="compareEntities"
         >
           <mat-option *ngFor="let a of ages$ | async" [value]="a">
@@ -93,7 +93,7 @@
       <mat-checkbox
         id="input-associes"
         name="input-associes"
-        [formControl]="form.controls['areAssociesDisplayed']"
+        formControlName="areAssociesDisplayed"
         >Afficher les observateurs associés</mat-checkbox
       >
 
@@ -101,7 +101,7 @@
       <mat-checkbox
         id="input-meteo"
         name="input-meteo"
-        [formControl]="form.controls['isMeteoDisplayed']"
+        formControlName="isMeteoDisplayed"
         >Afficher la météo</mat-checkbox
       >
 
@@ -109,7 +109,7 @@
       <mat-checkbox
         id="input-distance"
         name="input-distance"
-        [formControl]="form.controls['isDistanceDisplayed']"
+        formControlName="isDistanceDisplayed"
         >Afficher la distance</mat-checkbox
       >
 
@@ -117,7 +117,7 @@
       <mat-checkbox
         id="input-regroupement"
         name="input-regroupement"
-        [formControl]="form.controls['isRegroupementDisplayed']"
+        formControlName="isRegroupementDisplayed"
         >Afficher le numéro de regroupement</mat-checkbox
       >
 
@@ -126,7 +126,7 @@
         <mat-select
           id="input-coordinates"
           placeholder="Système de coordonnées"
-          [formControl]="form.controls['coordinatesSystem']"
+          formControlName="coordinatesSystem"
         >
           <mat-option *ngFor="let s of coordinatesSystems" [value]="s.code">
             {{ s.name }}
