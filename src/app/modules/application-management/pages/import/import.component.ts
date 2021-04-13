@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BackendApiService } from "src/app/services/backend-api.service";
-import { StatusMessageService } from "../../../../services/status-message.service";
-import {
-  getContentTypeFromResponse,
-  saveFile
-} from "../../../shared/helpers/file-downloader.helper";
+import { MatDialog } from '@angular/material/dialog';
+import { IMPORT } from 'src/app/model/websocket/websocket-message-type.model';
+import { BackendWsService } from 'src/app/services/backend-ws.service';
 import { OngoingImportDialog } from '../../components/ongoing-import-dialog/ongoing-import-dialog.component';
 @Component({
   templateUrl: "./import.component.html",
@@ -14,13 +10,10 @@ import { OngoingImportDialog } from '../../components/ongoing-import-dialog/ongo
 export class ImportComponent {
   private file: File;
 
-  private matDialogRef: MatDialogRef<unknown>;
-
-
   constructor(
-    private backendApiService: BackendApiService,
+    private backendWsService: BackendWsService,
+
     private dialog: MatDialog,
-    private statusMessageService: StatusMessageService
   ) { }
 
   public setFile = (event: Event): void => {
@@ -30,34 +23,28 @@ export class ImportComponent {
   public onImportClicked = (entityName: string): void => {
     this.displayWaitPanel();
 
-    this.backendApiService.importData(entityName, this.file).subscribe(
-      (response) => {
-        saveFile(
-          response.body,
-          this.file.name.split(".csv")[0] + ".erreurs.csv",
-          getContentTypeFromResponse(response)
-        );
-        this.hideWaitPanel();
-      },
-      (error) => {
-        this.hideWaitPanel();
-        this.statusMessageService.showErrorMessage(
-          "Une erreur est survenue pendant l'import",
-          error
-        );
-      }
-    );
+    const fileReader = new FileReader();
+
+    fileReader.onload = (event) => {
+      this.backendWsService.sendMessage({
+        type: IMPORT,
+        content: {
+          dataType: entityName,
+          data: event.target.result
+        }
+      });
+    }
+
+    fileReader.readAsText(this.file);
+
   };
 
   private displayWaitPanel = (): void => {
-    this.matDialogRef = this.dialog.open(OngoingImportDialog, {
+    this.dialog.open(OngoingImportDialog, {
       width: "800px",
       hasBackdrop: true,
       disableClose: true
     });
   };
 
-  private hideWaitPanel = (): void => {
-    this.matDialogRef?.close();
-  };
 }

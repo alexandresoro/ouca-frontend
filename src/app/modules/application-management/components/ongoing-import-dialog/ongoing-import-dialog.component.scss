@@ -2,6 +2,24 @@
   text-align: center;
 }
 
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.progressContent {
+  height: 200px;
+}
+
+.errorFileContent {
+  margin-top: 30px;
+  margin-bottom: 30px;
+
+  .textDescription {
+    margin-bottom: 20px;
+  }
+}
+
 .spinner {
   margin-top: 2em;
   margin-bottom: 2em;

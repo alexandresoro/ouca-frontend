@@ -1,8 +1,61 @@
-<h2 class="center">Veuillez patienter pendant l'import</h2>
+<h2 mat-dialog-title class="center">Import des données</h2>
 
-<div class="center">
-  L'import des données du fichier est en cours. Cette opération peut durer plusieurs minutes.
-</div>
+<mat-dialog-content class="mat-typography">
+  
+  <ng-container *ngIf="!(isImportFinished$ | async)">
+    <div class="center">
+      L'import des données du fichier est en cours. Cette opération peut durer plusieurs minutes.
+    </div>
 
-<mat-progress-spinner class="spinner" color="accent" mode="indeterminate">
-</mat-progress-spinner>
+    <div class="progressContent" fxLayout="row" fxLayoutAlign="center center">
+
+      <div fxFlex="1 1 500px" fxLayout="row" fxLayoutAlign="center center">
+        <ul fxFlex="1 1 500px">
+          <li><b>Étape courante :</b> {{currentStepText$ | async}}</li>
+          <li><b>Nombre de lignes du document (commentaires inclus) :</b> {{(importProgressStatus$ | async)?.totalEntries}}</li>
+          <li><b>Nombre total de lignes de données :</b> {{(importProgressStatus$ | async)?.entriesToBeValidated}}</li>
+          <li><b>Données validées :</b> {{(importProgressStatus$ | async)?.validatedEntries}}</li>
+          <li><b>Données en erreur :</b> {{(importProgressStatus$ | async)?.errors}}</li>
+        </ul>
+      </div>
+
+      <mat-progress-spinner class="spinner" color="accent" mode="determinate" [value]="(importProgressPercentage$ | async)">
+      </mat-progress-spinner>
+
+    </div>
+    
+  </ng-container>
+
+  <ng-container *ngIf="(isImportSuccessful$ | async)">
+    <div class="center">
+      L'import est terminé avec succès. Aucune erreur n'a été détectée.
+    </div>
+
+    <ng-container *ngIf="(fileInputError$ | async) as fileError">
+      <div class="center">
+        Une erreur sur le fichier a été détectée et aucune donnée n'a été importé.
+        <br/>
+        Le message d'erreur est : "{{fileError}}"
+      </div>
+    </ng-container>
+  </ng-container>
+
+
+  <ng-container *ngIf="(lineErrors$| async) as errorLines">
+    <div class="center">
+      L'import est terminé mais comporte des erreurs sur {{errorLines.length}} ligne(s).
+
+      <div class="errorFileContent">
+        <div class="textDescription">
+          Vous avez la possibilité de télécharger le fichier récapitulatif des erreurs via le bouton ci-dessous.
+        </div>
+        <button mat-button mat-raised-button color="warn" (click)="onSaveErrorFileClicked($event)">Télécharger la liste des erreurs</button>
+      </div>
+    </div>
+  </ng-container>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="primary" [disabled]="!(isImportFinished$ | async)">Fermer</button>
+</mat-dialog-actions>
