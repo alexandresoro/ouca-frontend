@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { saveAs } from "file-saver";
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import Papa from 'papaparse';
 import { Observable, Subject } from 'rxjs';
-import { filter, map, shareReplay, withLatestFrom } from 'rxjs/operators';
+import { filter, map, shareReplay } from 'rxjs/operators';
 import { DATA_VALIDATION_START, ImportErrorMessage, ImportNotifyProgressMessage, ImportNotifyProgressMessageContent, ImportNotifyStatusUpdateMessage, ImportPostCompleteMessage, ImportUpdateMessage, IMPORT_COMPLETE, IMPORT_ERROR, IMPORT_PROCESS_STARTED, INSERT_DB_START, RETRIEVE_DB_INFO_START, StatusUpdate, VALIDATION_PROGRESS } from 'src/app/model/import/import-update-message';
 import { BackendWsService } from 'src/app/services/backend-ws.service';
 
@@ -12,7 +12,7 @@ import { BackendWsService } from 'src/app/services/backend-ws.service';
   templateUrl: "./ongoing-import-dialog.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OngoingImportDialog implements OnInit {
+export class OngoingImportDialog implements OnInit, OnDestroy {
 
   importMessage$: Observable<ImportUpdateMessage | ImportErrorMessage>;
 
@@ -34,6 +34,11 @@ export class OngoingImportDialog implements OnInit {
 
   private saveErrorFileClick$ = new Subject<Event>();
 
+
+  errorFileUrl: string;
+
+  errorFileUrlSafe: SafeUrl;
+
   private STATUS_MESSAGE_MAPPING: Record<StatusUpdate, string> = {
     IMPORT_PROCESS_STARTED: "Début de la procédure d'import",
     RETRIEVE_DB_INFO_START: "Récupération des informations nécéssaires à la validation",
@@ -42,9 +47,15 @@ export class OngoingImportDialog implements OnInit {
   }
 
   constructor(
+    private sanitizer: DomSanitizer,
     private backendWsService: BackendWsService
   ) {
 
+  }
+  ngOnDestroy(): void {
+    if (this.errorFileUrl) {
+      URL.revokeObjectURL(this.errorFileUrl);
+    }
   }
 
   ngOnInit(): void {
@@ -80,6 +91,20 @@ export class OngoingImportDialog implements OnInit {
       map(message => message.lineErrors),
     );
 
+    this.lineErrors$.subscribe((lineErrors) => {
+      if (!lineErrors) {
+        return;
+      }
+
+      const errorsCsv = Papa.unparse(lineErrors, {
+        delimiter: ";"
+      });
+      const errorsBlob = new Blob([errorsCsv], { type: "text/csv;charset=utf-8" });
+      this.errorFileUrl = URL.createObjectURL(errorsBlob);
+      this.errorFileUrlSafe = this.sanitizer.bypassSecurityTrustUrl(this.errorFileUrl);
+
+    });
+
     this.isImportSuccessful$ = this.importCompleteInformation$.pipe(
       map(message => !message.fileInputError && !message.lineErrors)
     );
@@ -88,14 +113,6 @@ export class OngoingImportDialog implements OnInit {
       filter(message => !!message.fileInputError),
       map(message => message.fileInputError)
     );
-
-    this.saveErrorFileClick$.pipe(withLatestFrom(this.lineErrors$)).subscribe(([e, lineErrors]) => {
-      const errorsCsv = Papa.unparse(lineErrors, {
-        delimiter: ";"
-      });
-      const errorsBlob = new Blob([errorsCsv], { type: "text/csv;charset=utf-8" });
-      saveAs(errorsBlob, "erreurs.csv");
-    })
 
   }
 

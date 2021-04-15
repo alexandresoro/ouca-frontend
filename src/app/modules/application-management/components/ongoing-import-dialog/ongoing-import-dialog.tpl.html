@@ -49,7 +49,7 @@
         <div class="textDescription">
           Vous avez la possibilité de télécharger le fichier récapitulatif des erreurs via le bouton ci-dessous.
         </div>
-        <button mat-button mat-raised-button color="warn" (click)="onSaveErrorFileClicked($event)">Télécharger la liste des erreurs</button>
+        <a mat-button mat-raised-button color="warn" [href]="errorFileUrlSafe" download="erreurs.csv">Télécharger la liste des erreurs</a>
       </div>
     </div>
   </ng-container>
