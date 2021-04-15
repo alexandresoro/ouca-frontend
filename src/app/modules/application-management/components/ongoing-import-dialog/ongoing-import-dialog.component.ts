@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import Papa from 'papaparse';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
 import { DATA_VALIDATION_START, ImportErrorMessage, ImportNotifyProgressMessage, ImportNotifyProgressMessageContent, ImportNotifyStatusUpdateMessage, ImportPostCompleteMessage, ImportUpdateMessage, IMPORT_COMPLETE, IMPORT_ERROR, IMPORT_PROCESS_STARTED, INSERT_DB_START, RETRIEVE_DB_INFO_START, StatusUpdate, VALIDATION_PROGRESS } from 'src/app/model/import/import-update-message';
+import { exportAsCsv } from 'src/app/modules/shared/helpers/csv-utils.helper';
 import { BackendWsService } from 'src/app/services/backend-ws.service';
 
 @Component({
@@ -96,9 +96,7 @@ export class OngoingImportDialog implements OnInit, OnDestroy {
         return;
       }
 
-      const errorsCsv = Papa.unparse(lineErrors, {
-        delimiter: ";"
-      });
+      const errorsCsv = exportAsCsv(lineErrors, { delimiter: ";", isCrLf: true });
       const errorsBlob = new Blob([errorsCsv], { type: "text/csv;charset=utf-8" });
       this.errorFileUrl = URL.createObjectURL(errorsBlob);
       this.errorFileUrlSafe = this.sanitizer.bypassSecurityTrustUrl(this.errorFileUrl);

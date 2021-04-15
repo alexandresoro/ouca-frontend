@@ -2331,15 +2331,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/papaparse@npm:^5.2.5":
-  version: 5.2.5
-  resolution: "@types/papaparse@npm:5.2.5"
-  dependencies:
-    "@types/node": "*"
-  checksum: c212250add6ab83825b3ebb7afbe4df47888dd800ea2e1bf06758394efaab047beb12c50bfaf45a6066cf5ead95b250042fa92675ef1fff1c235990c8ec14d8b
-  languageName: node
-  linkType: hard
-
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
@@ -3266,7 +3257,6 @@ __metadata:
     "@swimlane/ngx-charts": ^17.0.1
     "@types/file-saver": ^2.0.2
     "@types/lodash": ^4.14.168
-    "@types/papaparse": ^5.2.5
     "@types/proj4": ^2.5.0
     "@typescript-eslint/eslint-plugin": ^4.21.0
     "@typescript-eslint/parser": ^4.21.0
@@ -3276,7 +3266,6 @@ __metadata:
     file-saver: "*"
     lodash: "*"
     material-design-icons-iconfont: ^6.1.0
-    papaparse: ^5.3.0
     proj4: ^2.7.2
     rxjs: ^6.6.7
     tslib: ^2.0.0
@@ -9307,13 +9296,6 @@ fsevents@~2.3.1:
   version: 1.0.11
   resolution: "pako@npm:1.0.11"
   checksum: 71c60150b68220ec52a404f3c39a4ed38f750e42452b88fe0eb2e6b5c98e91f73f706444359b097aca1e6db83ef8fef50b5a9ec100e30a606cda6da8d45e5439
-  languageName: node
-  linkType: hard
-
-"papaparse@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "papaparse@npm:5.3.0"
-  checksum: 65a492e6dcfd03ea39114cdedbc3bf71be3ec16e622e94e09f6ffbba5a964bba6bd11c6aecec6a93d2f700d6f847716357266f9f6206a23ee1ee896c3f2bb2b4
   languageName: node
   linkType: hard
 
