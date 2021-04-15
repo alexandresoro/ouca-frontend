@@ -1,23 +1,29 @@
 import { HttpResponse } from "@angular/common/http";
-import { saveAs } from "file-saver";
 
 const DEFAULT_FILE_NAME = "untitled";
 
 /**
  * Saves a file by opening file-save-as dialog in the browser
- * using file-save library.
- * @param blobContent file content as a Blob
- * @param fileName name file should be saved as
  */
 export const saveFile = (
-  blobContent: Blob,
+  blobContent: BlobPart,
   fileName: string,
-  mediaType?: string
+  mediaType = "application/octet-stream"
 ): void => {
+
   const blob = new Blob([blobContent], {
-    type: mediaType ? mediaType : "application/octet-stream"
+    type: mediaType
   });
-  saveAs(blob, fileName);
+
+  const blobUrl = URL.createObjectURL(blob);
+  const temporaryA = document.createElement('a');
+  temporaryA.href = blobUrl;
+  temporaryA.download = fileName;
+
+  temporaryA.click();
+
+  temporaryA.remove();
+  URL.revokeObjectURL(blobUrl);
 };
 
 export const getContentTypeFromResponse = (
