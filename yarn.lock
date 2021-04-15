@@ -185,9 +185,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cdk@npm:11.2.8":
-  version: 11.2.8
-  resolution: "@angular/cdk@npm:11.2.8"
+"@angular/cdk@npm:11.2.9":
+  version: 11.2.9
+  resolution: "@angular/cdk@npm:11.2.9"
   dependencies:
     parse5: ^5.0.0
     tslib: ^2.0.0
@@ -197,7 +197,7 @@ __metadata:
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: 6c6c99e2d4c4e57e3ba460349c9424f4f5bffd3c58e0bfe28d7351d2eba01df1233273994cd35a4669dc3548cd69efee9bb421bb1bee3928347c60bb6d0d1ad8
+  checksum: 26f3bbb1a7876801be7b925923b7e74d953bec4657a1efa76a103639673c6f7ce3e60426c4dd29e2f6382885b5bc967496c421c207e63a9a2a17b477cf3f7fcd
   languageName: node
   linkType: hard
 
@@ -326,18 +326,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/material@npm:11.2.8":
-  version: 11.2.8
-  resolution: "@angular/material@npm:11.2.8"
+"@angular/material@npm:11.2.9":
+  version: 11.2.9
+  resolution: "@angular/material@npm:11.2.9"
   dependencies:
     tslib: ^2.0.0
   peerDependencies:
     "@angular/animations": ^11.0.0 || ^12.0.0-0
-    "@angular/cdk": 11.2.8
+    "@angular/cdk": 11.2.9
     "@angular/common": ^11.0.0 || ^12.0.0-0
     "@angular/core": ^11.0.0 || ^12.0.0-0
     "@angular/forms": ^11.0.0 || ^12.0.0-0
-  checksum: ab4bb94f72434d371b6bf7d16a5465f114ec6690523e8a5472471175266ecd8af8bee88b6532dff4494a3c6d46b3301887d87819cabcbc06b0931278fbf9be54
+  checksum: e7a87aa5dcfb74c28cbda57c05335604c7904ef9d2ea56b9256d0027038595e17bdbdc3c03b5426ff6d3e16203104ac3e6c8b0a595fda7fe53457d4a734734e1
   languageName: node
   linkType: hard
 
@@ -3235,7 +3235,7 @@ __metadata:
   dependencies:
     "@angular-devkit/build-angular": 0.1102.9
     "@angular/animations": 11.2.10
-    "@angular/cdk": 11.2.8
+    "@angular/cdk": 11.2.9
     "@angular/cli": 11.2.9
     "@angular/common": 11.2.10
     "@angular/compiler": 11.2.10
@@ -3243,7 +3243,7 @@ __metadata:
     "@angular/core": 11.2.10
     "@angular/flex-layout": ^11.0.0-beta.33
     "@angular/forms": 11.2.10
-    "@angular/material": 11.2.8
+    "@angular/material": 11.2.9
     "@angular/platform-browser": 11.2.10
     "@angular/platform-browser-dynamic": 11.2.10
     "@angular/router": 11.2.10
