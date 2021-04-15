@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import * as _ from "lodash";
+import deburr from 'lodash.deburr';
 import { BehaviorSubject, Observable } from "rxjs";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 
@@ -32,7 +32,7 @@ export abstract class EntiteSimpleTableComponent<T extends EntiteSimple> {
       sortHeaderId: string
     ): string => {
       if (typeof data[sortHeaderId] === "string") {
-        return _.deburr(data[sortHeaderId].toLocaleLowerCase());
+        return deburr(data[sortHeaderId].toLocaleLowerCase());
       }
 
       return data[sortHeaderId];

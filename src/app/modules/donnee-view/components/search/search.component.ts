@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import * as _ from "lodash";
+import deburr from 'lodash.deburr';
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import { map, startWith, withLatestFrom } from "rxjs/operators";
 import { isADate } from "src/app/date-adapter/date-fns-adapter";
@@ -585,7 +585,7 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   };
 
   private transformValue = (initialValue: string): string => {
-    return _.deburr(initialValue.toLowerCase()).replace(
+    return deburr(initialValue.toLowerCase()).replace(
       this.CHARACTERS_TO_IGNORE,
       ""
     );

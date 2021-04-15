@@ -1,7 +1,6 @@
 import { Location } from "@angular/common";
 import { FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import * as _ from "lodash";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
@@ -32,7 +31,7 @@ export abstract class EntiteSimpleEditAbstractComponent<
           const id = Number(params.get("id"));
           return this.getEntities$().pipe(
             map((entities) => {
-              const entityMatching = _.find(entities, (entity) => {
+              const entityMatching = entities?.find((entity) => {
                 return entity.id === id;
               });
               return {

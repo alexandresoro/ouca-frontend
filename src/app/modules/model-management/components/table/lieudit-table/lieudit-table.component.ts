@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
-import * as _ from "lodash";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
@@ -84,7 +83,7 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<UILieudit>
     coordinatesSystemType: CoordinatesSystemType
   ): LieuditRow[] => {
     const rows: LieuditRow[] = [];
-    _.forEach(lieuxdits, (lieudit) => {
+    lieuxdits?.forEach((lieudit) => {
       rows.push(this.buildRowFromLieudit(lieudit, coordinatesSystemType));
     });
     return rows;

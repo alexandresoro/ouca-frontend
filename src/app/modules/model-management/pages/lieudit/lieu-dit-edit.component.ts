@@ -13,7 +13,7 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import _ from "lodash";
+import deburr from 'lodash.deburr';
 import {
   BehaviorSubject,
   combineLatest,
@@ -29,6 +29,7 @@ import { Lieudit } from 'src/app/model/types/lieudit.model';
 import { UICommune } from "src/app/models/commune.model";
 import { UILieudit } from "src/app/models/lieudit.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
+import { has } from 'src/app/modules/shared/helpers/utils';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
@@ -239,7 +240,7 @@ export class LieuDitEditComponent
       altitude: formValue.altitude
     };
 
-    if (_.has(formValue, "longitude")) {
+    if (has(formValue, "longitude")) {
       lieuDit.coordinates = {
         longitude: formValue.longitude,
         latitude: formValue.latitude,
@@ -278,10 +279,10 @@ export class LieuDitEditComponent
 
       const matchingLieuDit: UILieudit =
         nom && communeId
-          ? _.find(lieuxDits, (lieuDit) => {
+          ? lieuxDits?.find((lieuDit) => {
             return (
-              _.deburr(lieuDit.nom.trim().toLowerCase()) ===
-              _.deburr(nom.trim().toLowerCase()) &&
+              deburr(lieuDit.nom.trim().toLowerCase()) ===
+              deburr(nom.trim().toLowerCase()) &&
               lieuDit.commune.id === communeId
             );
           })

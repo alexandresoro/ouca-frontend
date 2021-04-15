@@ -1,21 +1,21 @@
 import { isSameDay } from "date-fns";
-import * as _ from "lodash";
 import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
 import { Coordinates } from 'src/app/model/types/coordinates.object';
 import { Inventaire } from 'src/app/model/types/inventaire.object';
 import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";
+import { areArraysWithoutDuplicatesContainingSameValues } from '../../shared/helpers/utils';
 
 export class InventaireHelper {
   /**
    * Method that returns true if both values represent a different number, or if only one is a number
    */
   private static areDifferentNumbers = (
-    firstNumber: number | null | undefined,
-    secondNumber: number | null | undefined
+    firstNumber: number,
+    secondNumber: number
   ): boolean => {
     return (
-      !_.isEqual(firstNumber, secondNumber) &&
-      _.some([firstNumber, secondNumber], (number) => _.isNumber(number))
+      (firstNumber !== secondNumber) &&
+      [firstNumber, secondNumber].some((number) => Number.isFinite(number))
     );
   };
 
@@ -23,8 +23,8 @@ export class InventaireHelper {
     coordinates: Coordinates
   ): boolean => {
     return (
-      _.isNil(coordinates) ||
-      (_.isNil(coordinates.latitude) && _.isNil(coordinates.longitude))
+      (coordinates == null) ||
+      ((coordinates.latitude == null) && (coordinates.longitude == null))
     );
   };
 
@@ -33,7 +33,7 @@ export class InventaireHelper {
     secondCoordinates: Coordinates
   ): boolean {
     if (
-      _.every([firstCoordinates, secondCoordinates], (coordinates) => {
+      [firstCoordinates, secondCoordinates].every((coordinates) => {
         return this.isNullOrEmptyCoordinates(coordinates);
       })
     ) {
@@ -41,7 +41,7 @@ export class InventaireHelper {
     }
 
     if (
-      _.some([firstCoordinates, secondCoordinates], (coordinates) => {
+      [firstCoordinates, secondCoordinates].some((coordinates) => {
         return this.isNullOrEmptyCoordinates(coordinates);
       })
     ) {
@@ -88,13 +88,13 @@ export class InventaireHelper {
         inventaireFromForm.coordinates
       ) ||
       inventaireFromDB.temperature !== inventaireFromForm.temperature ||
-      !_.isEqual(
-        _.sortBy(inventaireFromDB.associesIds),
-        _.sortBy(inventaireFromForm.associesIds)
+      !areArraysWithoutDuplicatesContainingSameValues(
+        inventaireFromDB.associesIds,
+        inventaireFromForm.associesIds
       ) ||
-      !_.isEqual(
-        _.sortBy(inventaireFromDB.meteosIds),
-        _.sortBy(inventaireFromForm.meteosIds)
+      !areArraysWithoutDuplicatesContainingSameValues(
+        inventaireFromDB.meteosIds,
+        inventaireFromForm.meteosIds
       )
     ) {
       return true;

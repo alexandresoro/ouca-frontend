@@ -2303,7 +2303,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.168":
+"@types/lodash.deburr@npm:^4.1.6":
+  version: 4.1.6
+  resolution: "@types/lodash.deburr@npm:4.1.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 1a8b2d1ba78c52c976907edfb6f161ba1ca8e8400c18b39d09aaaa075695ed8497d2858381438960f3ad92bcd35c477c799949846ead8a551ef6f232d8d840d2
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
   version: 4.14.168
   resolution: "@types/lodash@npm:4.14.168"
   checksum: 9a4e25f89fc035b9f0388f1f7be85e5eff49f9e6db0d93432c9a89fce0916f8a89db4e8290415f7ea02de6b00d3573826378dcb655b7b2d20530a6e8d6dd6fd0
@@ -3248,14 +3257,14 @@ __metadata:
     "@angular/platform-browser-dynamic": 11.2.10
     "@angular/router": 11.2.10
     "@swimlane/ngx-charts": ^17.0.1
-    "@types/lodash": ^4.14.168
+    "@types/lodash.deburr": ^4.1.6
     "@types/proj4": ^2.5.0
     "@typescript-eslint/eslint-plugin": ^4.22.0
     "@typescript-eslint/parser": ^4.22.0
     date-fns: ^2.21.1
     date-fns-tz: ^1.1.4
     eslint: ^7.24.0
-    lodash: "*"
+    lodash.deburr: ^4.1.0
     material-design-icons-iconfont: ^6.1.0
     proj4: ^2.7.2
     rxjs: ^6.6.7
@@ -7856,6 +7865,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"lodash.deburr@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "lodash.deburr@npm:4.1.0"
+  checksum: 65d20d5352e198de2037e5dd80e0932df5d0b6c84438e7a5f06fdbdda49aaca3377ae4e339569c6a6eeff884372f1ef65857a18c40359c071cdcf7b6eafec23f
+  languageName: node
+  linkType: hard
+
 "lodash.flatten@npm:^4.4.0":
   version: 4.4.0
   resolution: "lodash.flatten@npm:4.4.0"
@@ -7884,17 +7900,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"lodash@npm:*, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19":
-  version: 4.17.20
-  resolution: "lodash@npm:4.17.20"
-  checksum: c62101d2500c383b5f174a7e9e6fe8098149ddd6e9ccfa85f36d4789446195f5c4afd3cfba433026bcaf3da271256566b04a2bf2618e5a39f6e67f8c12030cb6
-  languageName: node
-  linkType: hard
-
 "lodash@npm:^4.17.11, lodash@npm:^4.17.13":
   version: 4.17.19
   resolution: "lodash@npm:4.17.19"
   checksum: ff2b7a95f0129dba9101e346d44e0eda0f159d76bbbf23721eec1969b87a32bde3de0cfef0733218c64620e9be08040a973278d46a686540233b356115f3527c
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19":
+  version: 4.17.20
+  resolution: "lodash@npm:4.17.20"
+  checksum: c62101d2500c383b5f174a7e9e6fe8098149ddd6e9ccfa85f36d4789446195f5c4afd3cfba433026bcaf3da271256566b04a2bf2618e5a39f6e67f8c12030cb6
   languageName: node
   linkType: hard
 

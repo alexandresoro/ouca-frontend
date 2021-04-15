@@ -8,7 +8,7 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import * as _ from "lodash";
+import deburr from 'lodash.deburr';
 import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
 
 @Component({
@@ -50,7 +50,7 @@ export class TableEspecesWithNbDonneesComponent {
         sortHeaderId: string
       ): string => {
         if (typeof data[sortHeaderId] === "string") {
-          return _.deburr(data[sortHeaderId].toLocaleLowerCase());
+          return deburr(data[sortHeaderId].toLocaleLowerCase());
         }
 
         return data[sortHeaderId];

@@ -13,7 +13,7 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import _ from "lodash";
+import deburr from 'lodash.deburr';
 import { Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { UICommune } from "src/app/models/commune.model";
@@ -116,7 +116,7 @@ export class CommuneEditComponent
       const departementId: number = form.controls.departementId.value;
       const currentCommuneId: number = form.controls.id.value;
 
-      const matchingCommune = _.find(communes, (commune) => {
+      const matchingCommune = communes?.find((commune) => {
         return (
           commune.code === code && commune.departement.id === departementId
         );
@@ -127,9 +127,9 @@ export class CommuneEditComponent
 
       return isAnExistingEntity
         ? FormValidatorHelper.getValidatorResult(
-            "alreadyExistingCode",
-            "Il existe déjà une commune avec ce code dans ce département."
-          )
+          "alreadyExistingCode",
+          "Il existe déjà une commune avec ce code dans ce département."
+        )
         : null;
     };
   };
@@ -145,13 +145,13 @@ export class CommuneEditComponent
       const currentCommuneId: number = form.controls.id.value;
 
       const matchingCommune: UICommune = nom
-        ? _.find(communes, (commune) => {
-            return (
-              _.deburr(commune.nom.trim().toLowerCase()) ===
-                _.deburr(nom.trim().toLowerCase()) &&
-              commune.departement.id === departementId
-            );
-          })
+        ? communes?.find((commune) => {
+          return (
+            deburr(commune.nom.trim().toLowerCase()) ===
+            deburr(nom.trim().toLowerCase()) &&
+            commune.departement.id === departementId
+          );
+        })
         : null;
 
       const valueIsAnExistingEntity: boolean =
@@ -159,9 +159,9 @@ export class CommuneEditComponent
 
       return valueIsAnExistingEntity
         ? FormValidatorHelper.getValidatorResult(
-            "alreadyExistingNom",
-            "Il existe déjà une commune avec ce nom dans ce département."
-          )
+          "alreadyExistingNom",
+          "Il existe déjà une commune avec ce nom dans ce département."
+        )
         : null;
     };
   };

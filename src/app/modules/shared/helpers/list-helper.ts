@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import deburr from 'lodash.deburr';
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 
 export class ListHelper {
@@ -46,10 +46,10 @@ export class ListHelper {
       return null;
     }
 
-    return _.find(entities, (entity: T) => {
+    return entities?.find((entity) => {
       return (
-        _.deburr(entity[comparedAttributeName].trim().toLowerCase()) ===
-        _.deburr(searchedValue.trim().toLowerCase())
+        deburr(entity[comparedAttributeName].trim().toLowerCase()) ===
+        deburr(searchedValue.trim().toLowerCase())
       );
     });
   }
@@ -62,21 +62,21 @@ export class ListHelper {
   }
 
   public static getIDsFromEntities = (entities: EntiteSimple[]): number[] => {
-    return _.map(entities, (entity: EntiteSimple) => {
+    return entities?.map((entity: EntiteSimple) => {
       return entity.id;
-    });
+    }) ?? [];
   };
 
   public static getEntitiesFromIDs = <T extends EntiteSimple>(
     allEntities: T[],
     idsToGet: number[]
   ): T[] => {
-    return _.map(idsToGet, (id) => {
+    return idsToGet?.map((id) => {
       return ListHelper.findEntityInListByNumberAttribute(
         allEntities,
         "id",
         id
       );
-    });
+    }) ?? [];
   };
 }

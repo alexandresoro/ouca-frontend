@@ -6,7 +6,6 @@ import {
   Validators
 } from "@angular/forms";
 import { set } from "date-fns";
-import * as _ from "lodash";
 import { buildLieuditFromUILieudit } from "../helpers/lieudit.helper";
 import { areCoordinatesCustomized, getCoordinates } from '../model/coordinates-system/coordinates-helper';
 import { CoordinatesSystemType } from '../model/coordinates-system/coordinates-system.object';
@@ -28,6 +27,7 @@ import {
   interpretDateTimestampAsBrowserDate,
   TimeHelper
 } from "../modules/shared/helpers/time.helper";
+import { has } from '../modules/shared/helpers/utils';
 import { CoordinatesService } from "./coordinates.service";
 
 @Injectable({
@@ -206,7 +206,7 @@ export class InventaireFormService {
     };
 
     if (lieudit?.id) {
-      if (_.isNil(inventaire.customizedAltitude)) {
+      if (inventaire.customizedAltitude == null) {
         // Coordinates are not updated for the inventaire
         // We display the lieudit coordinates
         altitude = lieudit.altitude;
@@ -290,7 +290,7 @@ export class InventaireFormService {
       meteosIds
     };
 
-    if (_.has(inventaireFormValue.lieu, "altitude")) {
+    if (has(inventaireFormValue, "altitude")) {
       const coordinatesSystem: CoordinatesSystemType = this.coordinatesService.getCoordinatesSystemType();
 
       let inventaireAltitude: number = inventaireFormValue.lieu.altitude;

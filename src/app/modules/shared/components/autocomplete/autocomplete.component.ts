@@ -7,10 +7,11 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
-import * as _ from "lodash";
+import deburr from 'lodash.deburr';
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
+import { sortBy } from '../../helpers/utils';
 import { AutocompleteAttribute } from "./autocomplete-attribute.object";
 
 @Component({
@@ -50,7 +51,7 @@ export class AutocompleteComponent implements OnInit {
   }
 
   private _filter(value: string): EntiteSimple[] {
-    const filterValue: string = _.deburr(value.toLowerCase()).replace(
+    const filterValue: string = deburr(value.toLowerCase()).replace(
       this.CHARACTERS_TO_IGNORE,
       ""
     );
@@ -69,18 +70,16 @@ export class AutocompleteComponent implements OnInit {
       });
 
       // Keep only the elements that match
-      const filteredValuesWithPriorities = _.filter(
-        valuesWithPriorities,
+      const filteredValuesWithPriorities = valuesWithPriorities?.filter(
         valuesWithPriority => {
           return valuesWithPriority.priority <= 0;
         }
-      );
+      ) ?? [];
 
       // Return the elements by priority
-      return _.map(
-        _.sortBy(filteredValuesWithPriorities, filteredValuesWithPriority => {
-          return filteredValuesWithPriority.priority;
-        }),
+      return sortBy(filteredValuesWithPriorities, (first, second) => {
+        return first.priority - second.priority;
+      })?.map(
         sortedValueWithPriority => {
           return sortedValueWithPriority.valueFromList;
         }
@@ -94,9 +93,8 @@ export class AutocompleteComponent implements OnInit {
   ): number {
     let priority = 1;
 
-    _.forEach(
-      this.attributesToFilter,
-      (attributeToFilter: AutocompleteAttribute) => {
+    this.attributesToFilter?.forEach(
+      (attributeToFilter) => {
         const weight: number = this.searchWithWeight(
           valueFromList,
           filterValue,
@@ -179,7 +177,7 @@ export class AutocompleteComponent implements OnInit {
         ? valueFromList[attributeToFilter]
         : "" + valueFromList[attributeToFilter];
 
-    return _.deburr(valueFromListStr)
+    return deburr(valueFromListStr)
       .toLowerCase()
       .replace(this.CHARACTERS_TO_IGNORE, "")
       .indexOf(filterValue);

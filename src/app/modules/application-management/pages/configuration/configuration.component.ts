@@ -5,7 +5,6 @@ import {
   OnInit
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import * as _ from "lodash";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
@@ -133,8 +132,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   }
 
   public buildDataSource = (appConfiguration: AppConfiguration): void => {
-    const newConfiguration = _.map(
-      this.configurationParametersToDisplay,
+    const newConfiguration = this.configurationParametersToDisplay?.map(
       (parameter) => {
         let value = "";
         if (appConfiguration) {
@@ -197,7 +195,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
           value
         };
       }
-    );
+    ) ?? [];
     this.dataSource.data = newConfiguration;
   };
 

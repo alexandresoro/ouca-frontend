@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import _ from "lodash";
 import { combineLatest, Observable } from "rxjs";
 import { UIEspece } from "src/app/models/espece.model";
 import { BackendApiService } from "src/app/services/backend-api.service";
@@ -50,7 +49,7 @@ export class ChartsComponent implements OnInit {
       this.especes$,
       (params, especes) => {
         const id = Number(params.get("id"));
-        return _.find(especes, (espece) => {
+        return especes?.find((espece) => {
           return espece.id === id;
         });
       }

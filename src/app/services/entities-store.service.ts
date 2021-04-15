@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import * as _ from "lodash";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { Age } from '../model/types/age.object';
@@ -21,6 +20,7 @@ import { UICommune } from "../models/commune.model";
 import { UIEspece } from "../models/espece.model";
 import { UILieudit } from "../models/lieudit.model";
 import { ENTITIES_PROPERTIES } from "../modules/model-management/models/entities-properties.model";
+import { has } from '../modules/shared/helpers/utils';
 import { BackendApiService } from "./backend-api.service";
 import { BackendWsService } from "./backend-ws.service";
 import { StatusMessageService } from "./status-message.service";
@@ -107,7 +107,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "observateurs")),
+        filter((updateContent) => has(updateContent, "observateurs")),
         map((updateContent) => {
           return updateContent.observateurs;
         })
@@ -119,7 +119,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "lieuxdits")),
+        filter((updateContent) => has(updateContent, "lieuxdits")),
         map((updateContent) => {
           return updateContent.lieuxdits;
         })
@@ -131,7 +131,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "communes")),
+        filter((updateContent) => has(updateContent, "communes")),
         map((updateContent) => {
           return updateContent.communes;
         })
@@ -143,7 +143,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "departements")),
+        filter((updateContent) => has(updateContent, "departements")),
         map((updateContent) => {
           return updateContent.departements;
         })
@@ -155,7 +155,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "classes")),
+        filter((updateContent) => has(updateContent, "classes")),
         map((updateContent) => {
           return updateContent.classes;
         })
@@ -167,7 +167,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "especes")),
+        filter((updateContent) => has(updateContent, "especes")),
         map((updateContent) => {
           return updateContent.especes;
         })
@@ -179,7 +179,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "sexes")),
+        filter((updateContent) => has(updateContent, "sexes")),
         map((updateContent) => {
           return updateContent.sexes;
         })
@@ -191,7 +191,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "ages")),
+        filter((updateContent) => has(updateContent, "ages")),
         map((updateContent) => {
           return updateContent.ages;
         })
@@ -203,7 +203,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "estimationsDistance")),
+        filter((updateContent) => has(updateContent, "estimationsDistance")),
         map((updateContent) => {
           return updateContent.estimationsDistance;
         })
@@ -215,7 +215,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "estimationsNombre")),
+        filter((updateContent) => has(updateContent, "estimationsNombre")),
         map((updateContent) => {
           return updateContent.estimationsNombre;
         })
@@ -227,7 +227,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "comportements")),
+        filter((updateContent) => has(updateContent, "comportements")),
         map((updateContent) => {
           return updateContent.comportements;
         })
@@ -239,7 +239,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "milieux")),
+        filter((updateContent) => has(updateContent, "milieux")),
         map((updateContent) => {
           return updateContent.milieux;
         })
@@ -251,7 +251,7 @@ export class EntitiesStoreService {
     this.backendWsService
       .getUpdateMessageContent$()
       .pipe(
-        filter((updateContent) => _.has(updateContent, "meteos")),
+        filter((updateContent) => has(updateContent, "meteos")),
         map((updateContent) => {
           return updateContent.meteos;
         })
@@ -262,43 +262,43 @@ export class EntitiesStoreService {
 
     this.communes$ = combineLatest(this.communesFlat$, this.departements$).pipe(
       map(([communes, departements]) => {
-        return _.map(communes, (commune) => {
-          const matchingDepartement = _.find(departements, (departement) => {
+        return communes?.map((commune) => {
+          const matchingDepartement = departements?.find((departement) => {
             return commune.departementId === departement.id;
           });
           return {
             ...commune,
             departement: matchingDepartement
           };
-        });
+        }) ?? [];
       })
     );
 
     this.lieuxdits$ = combineLatest(this.lieuxditsFlat$, this.communes$).pipe(
       map(([lieuxdits, communes]) => {
-        return _.map(lieuxdits, (lieudit) => {
-          const matchingCommune = _.find(communes, (commune) => {
+        return lieuxdits?.map((lieudit) => {
+          const matchingCommune = communes?.find((commune) => {
             return lieudit.communeId === commune.id;
           });
           return {
             ...lieudit,
             commune: matchingCommune
           };
-        });
+        }) ?? [];
       })
     );
 
     this.especes$ = combineLatest(this.especesFlat$, this.classes$).pipe(
       map(([especes, classes]) => {
-        return _.map(especes, (espece) => {
-          const matchingClasse = _.find(classes, (classe) => {
+        return especes?.map((espece) => {
+          const matchingClasse = classes?.find((classe) => {
             return espece.classeId === classe.id;
           });
           return {
             ...espece,
             classe: matchingClasse
           };
-        });
+        }) ?? [];
       })
     );
 

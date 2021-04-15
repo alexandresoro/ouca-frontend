@@ -19,7 +19,7 @@ import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { format } from "date-fns";
-import * as _ from "lodash";
+import deburr from 'lodash.deburr';
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
 import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
 import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
@@ -80,39 +80,37 @@ export class TableDonneesComponent implements OnChanges, OnInit {
   constructor(private router: Router) { }
 
   private filterData = (data: FlatDonnee, filterValue: string): boolean => {
-    const otherData = _.difference(_.keys(data), [
-      "date",
-      "comportements",
-      "milieux"
-    ]);
+    const { date, comportements, milieux, ...otherDataKeyValue } = data;
+    const otherData = Object.keys(otherDataKeyValue);
 
-    const otherDataFilter = _.some(otherData, (dataField) => {
-      if (_.isNumber(data[dataField])) {
+
+    const otherDataFilter = otherData?.some((dataField) => {
+      if (Number.isFinite(data[dataField])) {
         return "" + data[dataField] === filterValue;
       }
 
       return ("" + data[dataField]).trim().toLowerCase().includes(filterValue);
-    });
+    }) ?? false;
     if (otherDataFilter) {
       return true;
     }
 
-    const comportementsFilter = _.some(data.comportements, (comportement) => {
+    const comportementsFilter = data.comportements?.some((comportement) => {
       return (
-        _.toNumber(comportement.code) === _.toNumber(filterValue) ||
+        Number(comportement.code) === Number(filterValue) ||
         comportement.libelle.trim().toLowerCase().includes(filterValue)
       );
-    });
+    }) ?? false;
     if (comportementsFilter) {
       return true;
     }
 
-    const milieuxFilter = _.some(data.milieux, (milieu) => {
+    const milieuxFilter = data.milieux?.some((milieu) => {
       return (
-        _.toNumber(milieu.code) === _.toNumber(filterValue) ||
+        Number(milieu.code) === Number(filterValue) ||
         milieu.libelle.trim().toLowerCase().includes(filterValue)
       );
-    });
+    }) ?? false;
     if (milieuxFilter) {
       return true;
     }
@@ -137,7 +135,7 @@ export class TableDonneesComponent implements OnChanges, OnInit {
       sortHeaderId: string
     ): string => {
       if (typeof data[sortHeaderId] === "string") {
-        return _.deburr(data[sortHeaderId].toLocaleLowerCase());
+        return deburr(data[sortHeaderId].toLocaleLowerCase());
       }
 
       return data[sortHeaderId];
@@ -194,13 +192,13 @@ export class TableDonneesComponent implements OnChanges, OnInit {
   };
 
   public getLongitude = (donnee: FlatDonnee): string => {
-    return _.isNil(donnee.longitude)
+    return (donnee.longitude == null)
       ? "Non supporté"
       : donnee.longitude + " " + this.getCoordinatesUnitName(donnee);
   };
 
   public getLatitude = (donnee: FlatDonnee): string => {
-    return _.isNil(donnee.latitude)
+    return (donnee.latitude == null)
       ? "Non supporté"
       : donnee.latitude + " " + this.getCoordinatesUnitName(donnee);
   };

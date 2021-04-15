@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
@@ -39,7 +38,7 @@ EstimationNombre
     estimations: EstimationNombre[]
   ): EstimationNombreRow[] {
     const rows: EstimationNombreRow[] = [];
-    _.forEach(estimations, (value: EstimationNombre) => {
+    estimations?.forEach((value: EstimationNombre) => {
       rows.push(this.buildRowFromEstimation(value));
     });
     return rows;

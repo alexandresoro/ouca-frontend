@@ -12,7 +12,6 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import * as _ from "lodash";
 import {
   BehaviorSubject,
   combineLatest,
@@ -294,7 +293,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       .subscribe(([altitude, longitude, latitude]) => {
         this.areCoordinatesCustomized$.next(false);
 
-        if (!_.isNil(altitude) && !_.isNil(longitude) && !_.isNil(latitude)) {
+        if (altitude != null && longitude != null && latitude != null) {
           const lieudit = this.controlGroup.controls.lieudit.value;
           if (lieudit?.id) {
             const inventaireCoordinates: Coordinates = {

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { UIEspece } from "src/app/models/espece.model";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
@@ -43,7 +42,7 @@ export class EspeceTableComponent extends EntiteSimpleTableComponent<UIEspece> {
 
   protected getDataSource(especes: UIEspece[]): EspeceRow[] {
     const rows: EspeceRow[] = [];
-    _.forEach(especes, (espece: UIEspece) => {
+    especes?.forEach((espece: UIEspece) => {
       rows.push(this.buildRowFromEspece(espece));
     });
     return rows;

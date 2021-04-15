@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { UICommune } from "src/app/models/commune.model";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
@@ -20,7 +19,7 @@ interface CommunetRow {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommuneTableComponent extends EntiteSimpleTableComponent<
-  UICommune
+UICommune
 > {
   public displayedColumns: string[] = [
     "departement",
@@ -44,7 +43,7 @@ export class CommuneTableComponent extends EntiteSimpleTableComponent<
 
   protected getDataSource(communes: UICommune[]): CommunetRow[] {
     const rows: CommunetRow[] = [];
-    _.forEach(communes, (commune: UICommune) => {
+    communes?.forEach((commune: UICommune) => {
       rows.push(this.buildRowFromLieudit(commune));
     });
     return rows;

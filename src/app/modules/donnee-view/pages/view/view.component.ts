@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatTabGroup } from '@angular/material/tabs';
-import * as _ from "lodash";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { withLatestFrom } from "rxjs/operators";
 import { getDateFromString } from 'src/app/date-adapter/date-fns-adapter';
@@ -354,15 +353,16 @@ export class ViewComponent implements OnDestroy {
     donnees: FlatDonnee[],
     especes: UIEspece[]
   ): void => {
-    const nbDonneesByEspeceMap: { [key: string]: number } = _.countBy(
-      donnees,
-      (donnee) => {
-        return donnee.codeEspece;
-      }
-    );
 
-    this.especesWithNbDonnees = _.map(nbDonneesByEspeceMap, (value, key) => {
-      const espece: UIEspece = _.find(especes, (espece) => {
+
+    const nbDonneesByEspeceMap = donnees?.reduce<Record<string, number>>((acc, value) => {
+      const codeEspece = value.codeEspece;
+      acc[codeEspece] = (acc[codeEspece] ?? 0) + 1;
+      return acc;
+    }, {}) ?? {};
+
+    this.especesWithNbDonnees = Object.entries(nbDonneesByEspeceMap)?.map(([key, value]) => {
+      const espece: UIEspece = especes?.find((espece) => {
         return espece.code === key;
       });
 
@@ -373,6 +373,6 @@ export class ViewComponent implements OnDestroy {
         nomLatin: espece.nomLatin,
         nbDonnees: value
       };
-    });
+    }) ?? [];
   };
 }
