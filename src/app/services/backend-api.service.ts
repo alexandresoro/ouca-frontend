@@ -29,6 +29,7 @@ export class BackendApiService {
   private NEXT_REGROUPEMENT: string = "next_regroupement";
   private UPDATE: string = "update";
   private SAVE: string = "save";
+  private CLEAR: string = "clear";
   private LAST: string = "last";
   private SEARCH: string = "search";
 
@@ -195,6 +196,14 @@ export class BackendApiService {
 
   public saveDatabase(): Observable<HttpResponse<any>> {
     return this.httpGetObserveResponse(this.DATABASE + this.SAVE);
+  }
+
+  public updateDatabase(): Observable<void> {
+    return this.httpGet(this.DATABASE + this.UPDATE);
+  }
+
+  public clearDatabase(): Observable<void> {
+    return this.httpGet(this.DATABASE + this.CLEAR);
   }
 
   public getEspeceDetailsByAge = (
