@@ -1,0 +1,21 @@
+<h2 mat-dialog-title class="center">Mise à jour de l'application requise</h2>
+
+<mat-dialog-content class="mat-typography center">
+
+    L'application a été mise à jour et une mise à niveau de la base de données est nécessaire avant de poursuivre.
+    Veuillez cliquer sur le bouton-ci-dessous pour effectuer cette mise à niveau.
+    <br>
+    Cette fenêtre se fermera automatiquement à la fin du processus de mise à jour.
+
+    <br>
+
+    <ul>
+      <li>Version actuelle de l'application: {{data.application}}</li>
+      <li>Version actuelle de la base de données: {{data.database}}</li>
+    </ul>
+
+    <br>
+
+    <button mat-raised-button color="accent" (click)="updateDatabaseClicked()">Mettre à jour la base de données</button>
+    
+</mat-dialog-content>

@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "../shared/shared.module";
 import { ApplicationManagementRoutingModule } from "./application-management-routing.module";
+import { ApplicationUpgradeDialog } from './components/application-upgrade-dialog/application-upgrade-dialog';
 import { ConfigurationFormComponent } from "./components/configuration-form/configuration-form.component";
 import { OngoingImportDialog } from './components/ongoing-import-dialog/ongoing-import-dialog.component';
 import { AdminComponent } from './pages/admin/admin.component';
@@ -17,7 +18,8 @@ import { ImportComponent } from "./pages/import/import.component";
     DatabaseComponent,
     DocumentationComponent,
     ImportComponent,
-    OngoingImportDialog
+    OngoingImportDialog,
+    ApplicationUpgradeDialog
   ],
   exports: [],
   providers: []
