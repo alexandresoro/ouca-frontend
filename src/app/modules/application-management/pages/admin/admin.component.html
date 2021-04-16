@@ -1,0 +1,44 @@
+<div class="page-container">
+  <h1>Administration</h1>
+
+  <mat-card *ngIf="!(isWaitPanelDisplayed$ | async)">
+    <mat-card-header>
+      <div mat-card-avatar class="header-image"></div>
+      <mat-card-title>Mise à niveau de la base de données</mat-card-title>
+      <mat-card-subtitle>Cette action va initialiser ou mettre à jour la base de données vers la dernière version disponible</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <button 
+        mat-stroked-button 
+        color="accent" 
+        (click)="onUpdateDatabaseButtonClicked()">
+        Mettre à niveau la base de données
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card *ngIf="!(isWaitPanelDisplayed$ | async)">
+    <mat-card-header>
+      <div mat-card-avatar class="header-image"></div>
+      <mat-card-title>Réinitialisation de la base de données</mat-card-title>
+      <mat-card-subtitle>Attention : cette action va entièrement vider la base de données (données, inventaires, lieux-dits, espèces...)</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <button 
+        mat-stroked-button 
+        color="accent" 
+        (click)="onClearDatabaseButtonClicked()">
+        Réinitialiser la base de données
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card *ngIf="(isWaitPanelDisplayed$ | async)">
+    <mat-card-header>
+      <div mat-card-avatar class="header-image"></div>
+      <mat-card-title>Veuillez patentier</mat-card-title>
+      <mat-card-subtitle>Une opération est en cours et peut durer quelques minutes</mat-card-subtitle>
+      </mat-card-header>
+  </mat-card> 
+  
+</div>
