@@ -233,15 +233,6 @@
             <div class="donnee-details-panel">
               <div>
                 <strong>ID:</strong> {{ element.id }}
-                <button
-                  mat-icon-button
-                  type="button"
-                  color="primary"
-                  (click)="editDonnee(element.id)"
-                  class="edit-donnee-button"
-                >
-                  <mat-icon>find_in_page</mat-icon>
-                </button>
                 <br />
 
                 <strong>Observateur:</strong> {{ element.observateur }}
@@ -275,6 +266,15 @@
                   <strong>Météos:</strong>
                   {{ element.meteos }}
                 </span>
+
+                <button
+                  mat-stroked-button       
+                  color="primary"
+                  (click)="editDonnee(element.id)"
+                >
+                  <mat-icon>find_in_page</mat-icon>Ouvrir la donnée
+                </button>
+
               </div>
               <div>
                 <strong>Département:</strong> {{ element.departement }}

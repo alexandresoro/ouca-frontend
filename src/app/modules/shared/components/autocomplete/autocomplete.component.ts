@@ -2,11 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnInit,
-  ViewChild
+  OnInit
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import deburr from 'lodash.deburr';
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -29,9 +27,6 @@ export class AutocompleteComponent implements OnInit {
   @Input() public control: FormControl;
 
   @Input() public displayFn: ((value: any) => string) | null;
-
-  @ViewChild(MatAutocompleteTrigger)
-  trigger: MatAutocompleteTrigger;
 
   filteredValues: Observable<EntiteSimple[]>;
 
