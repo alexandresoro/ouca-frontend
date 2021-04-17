@@ -1,20 +1,20 @@
-<div class="page-container">
-  <div class="configuration-container-header">
-    <h1>Préférences</h1>
-    <span class="flex-spacer"></span>
-    <ng-container *ngIf="!(isCurrentlyEditing$ | async)">
-      <span class="button-spacer"></span>
-      <button
-        mat-raised-button
-        color="primary"
-        type="button"
-        (click)="switchToEditionMode()"
-      >
-        <mat-icon>create</mat-icon>
-        <span>Modifier les préférences</span>
-      </button>
-    </ng-container>
+<div class="configuration-container-header panel-header">
+  <h1>Préférences</h1>
+  <span class="flex-spacer"></span>
+  <div *ngIf="!(isCurrentlyEditing$ | async)">
+    <span class="button-spacer"></span>
+    <button
+      mat-raised-button
+      color="accent"
+      type="button"
+      (click)="switchToEditionMode()"
+    >
+      <mat-icon>create</mat-icon>
+      <span>Modifier les préférences</span>
+    </button>
   </div>
+</div>
+<div class="page-container">
 
   <configuration-form
     *ngIf="isCurrentlyEditing$ | async"

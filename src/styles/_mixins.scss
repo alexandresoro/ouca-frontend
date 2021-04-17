@@ -1,3 +1,5 @@
+@use "src/styles/variables";
+
 @mixin default-form {
   width: 500px;
 
@@ -29,4 +31,17 @@
 
 @mixin full-width-table {
   width: 100%;
+}
+
+@mixin panel-header {
+  background-color: variables.$main-color;
+  color: white;
+  height: 76px;
+  line-height: 76px;
+  h1 {
+    margin: 0;
+    line-height: inherit;
+  }
+  width: 100%;
+  box-sizing: border-box;
 }

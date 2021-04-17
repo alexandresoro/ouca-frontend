@@ -28,39 +28,6 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
 // Create a config with the default typography levels.
 $defaultConfig: mat-typography-config();
 
-$custom-typography: mat-typography-config(
-  $headline:
-    mat-typography-level(
-      mat-font-size($defaultConfig, headline)-2px,
-      mat-line-height($defaultConfig, headline)-2px,
-      mat-font-weight($defaultConfig, headline)
-    ),
-  $title:
-    mat-typography-level(
-      mat-font-size($defaultConfig, title)-2px,
-      mat-line-height($defaultConfig, title)-2px,
-      mat-font-weight($defaultConfig, title)
-    ),
-  $body-1:
-    mat-typography-level(
-      mat-font-size($defaultConfig, body-1)-2px,
-      mat-line-height($defaultConfig, body-1)-2px,
-      mat-font-weight($defaultConfig, body-1)
-    ),
-  $button:
-    mat-typography-level(
-      mat-font-size($defaultConfig, button)-2px,
-      mat-line-height($defaultConfig, button)-2px,
-      mat-font-weight($defaultConfig, button)
-    ),
-  $input:
-    mat-typography-level(
-      mat-font-size($defaultConfig, input)-0.125,
-      mat-line-height($defaultConfig, input)-0.125,
-      mat-font-weight($defaultConfig, input)
-    )
-);
-
 @include angular-material-theme($candy-app-theme);
 
 // Common styles
@@ -74,8 +41,6 @@ body.base-naturaliste {
   }
 
   table.mat-table {
-    table-layout: fixed;
-
     tr.mat-row {
       height: 20px;
     }
@@ -145,10 +110,17 @@ body.base-naturaliste {
   }
 
   .page-container {
-    padding-right: 50px;
-    padding-left: 50px;
+    padding-right: variables.$page-padding;
+    padding-left: variables.$page-padding;
     padding-top: 20px;
     padding-bottom: 20px;
+  }
+
+  .entity-page-header,
+  .panel-header {
+    @include mixins.panel-header;
+    padding-left: variables.$page-padding;
+    padding-right: variables.$page-padding;
   }
 
   .entity-form {

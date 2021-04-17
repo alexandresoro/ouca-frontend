@@ -1,9 +1,9 @@
+<top-buttons
+  title="Espèces"
+  (onClickNewObject)="newObject()"
+  (onClickExportObjects)="exportObjects()"
+></top-buttons>
 <div class="page-container">
-  <top-buttons
-    title="Espèces"
-    (onClickNewObject)="newObject()"
-    (onClickExportObjects)="exportObjects()"
-  ></top-buttons>
 
   <espece-table
     (delete)="deleteObject($event)"

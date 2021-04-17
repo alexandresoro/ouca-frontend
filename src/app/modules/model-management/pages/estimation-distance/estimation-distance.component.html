@@ -1,9 +1,9 @@
+<top-buttons
+  title="Estimations de la distance"
+  (onClickNewObject)="newObject()"
+  (onClickExportObjects)="exportObjects()"
+></top-buttons>
 <div class="page-container">
-  <top-buttons
-    title="Estimations de la distance"
-    (onClickNewObject)="newObject()"
-    (onClickExportObjects)="exportObjects()"
-  ></top-buttons>
 
   <estimation-distance-table
     (delete)="deleteObject($event)"

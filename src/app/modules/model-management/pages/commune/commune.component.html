@@ -1,9 +1,9 @@
+<top-buttons
+  title="Communes"
+  (onClickNewObject)="newObject()"
+  (onClickExportObjects)="exportObjects()"
+></top-buttons>
 <div class="page-container">
-  <top-buttons
-    title="Communes"
-    (onClickNewObject)="newObject()"
-    (onClickExportObjects)="exportObjects()"
-  ></top-buttons>
 
   <commune-table (delete)="deleteObject($event)" (edit)="editObject($event)">
   </commune-table>

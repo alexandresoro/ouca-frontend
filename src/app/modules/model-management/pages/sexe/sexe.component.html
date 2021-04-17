@@ -1,9 +1,9 @@
+<top-buttons
+  title="Sexes"
+  (onClickNewObject)="newObject()"
+  (onClickExportObjects)="exportObjects()"
+></top-buttons>
 <div class="page-container">
-  <top-buttons
-    title="Sexes"
-    (onClickNewObject)="newObject()"
-    (onClickExportObjects)="exportObjects()"
-  ></top-buttons>
 
   <sexe-table (delete)="deleteObject($event)" (edit)="editObject($event)">
   </sexe-table>

@@ -1,9 +1,9 @@
+<top-buttons
+  title="Météos"
+  (onClickNewObject)="newObject()"
+  (onClickExportObjects)="exportObjects()"
+></top-buttons>
 <div class="page-container">
-  <top-buttons
-    title="Météos"
-    (onClickNewObject)="newObject()"
-    (onClickExportObjects)="exportObjects()"
-  ></top-buttons>
 
   <meteo-table (delete)="deleteObject($event)" (edit)="editObject($event)">
   </meteo-table>

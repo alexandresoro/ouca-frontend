@@ -1,78 +1,80 @@
 <div class="creation-page">
   <!-- Row containing the top buttons -->
   <div class="creation-page-header">
-    <!-- Top left buttons -->
-    <span class="creation-page-left-buttons">
-      <button
-        class="no-text-button"
-        mat-raised-button
-        type="button"
-        matTooltip="Donnée précédente"
-        matTooltipClass="default-tooltip"
-        color="accent"
-        [disabled]="!(isPreviousDonneeBtnDisplayed$() | async)"
-        (click)="onPreviousDonneeBtnClicked()"
-      >
-        <mat-icon>navigate_before</mat-icon>
-      </button>
-
-      <button
-        class="no-text-button"
-        mat-raised-button
-        type="button"
-        matTooltip="Donnée suivante"
-        matTooltipClass="default-tooltip"
-        color="accent"
-        [disabled]="!(isNextDonneeBtnDisplayed$() | async)"
-        (click)="onNextDonneeBtnClicked()"
-      >
-        <mat-icon>navigate_next</mat-icon>
-      </button>
-
-      <button
-        class="no-text-button"
-        mat-raised-button
-        type="button"
-        matTooltip="Recherche par ID"
-        matTooltipClass="default-tooltip"
-        [disabled]="!(isInitializationCompleted$ | async)"
-        (click)="onSearchByIdBtnClicked()"
-      >
-        <mat-icon>search</mat-icon>
-      </button>
-
-      <button
-        class="no-text-button"
-        mat-raised-button
-        type="button"
-        matTooltip="Retour à l'édition de la donnée courante"
-        matTooltipClass="default-tooltip"
-        *ngIf="isCurrentDonneeAnExistingOne$() | async"
-        (click)="onBackToCurrentEditionButtonClicked()"
-      >
-        <mat-icon>redo</mat-icon>
-      </button>
-
-      <button
-        class="no-text-button"
-        color="warn"
-        mat-raised-button
-        type="button"
-        matTooltip="Réinitialiser le formulaire"
-        matTooltipClass="default-tooltip"
-        *ngIf="!(isCurrentDonneeAnExistingOne$() | async)"
-        [disabled]="!(isInitializationCompleted$ | async)"
-        (click)="onClearFormButtonClicked()"
-      >
-        <mat-icon>clear</mat-icon>
-      </button>
-    </span>
-
-    <span class="flex-spacer"></span>
+    <div class="creation-page-header-content max-width-limited">
+      <!-- Top left buttons -->
+      <span class="creation-page-left-buttons">
+        <button
+          class="no-text-button"
+          mat-raised-button
+          type="button"
+          matTooltip="Donnée précédente"
+          matTooltipClass="default-tooltip"
+          color="accent"
+          [disabled]="!(isPreviousDonneeBtnDisplayed$() | async)"
+          (click)="onPreviousDonneeBtnClicked()"
+        >
+          <mat-icon>navigate_before</mat-icon>
+        </button>
+  
+        <button
+          class="no-text-button"
+          mat-raised-button
+          type="button"
+          matTooltip="Donnée suivante"
+          matTooltipClass="default-tooltip"
+          color="accent"
+          [disabled]="!(isNextDonneeBtnDisplayed$() | async)"
+          (click)="onNextDonneeBtnClicked()"
+        >
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+  
+        <button
+          class="no-text-button"
+          mat-raised-button
+          type="button"
+          matTooltip="Recherche par ID"
+          matTooltipClass="default-tooltip"
+          [disabled]="!(isInitializationCompleted$ | async)"
+          (click)="onSearchByIdBtnClicked()"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+  
+        <button
+          class="no-text-button"
+          mat-raised-button
+          type="button"
+          matTooltip="Retour à l'édition de la donnée courante"
+          matTooltipClass="default-tooltip"
+          *ngIf="isCurrentDonneeAnExistingOne$() | async"
+          (click)="onBackToCurrentEditionButtonClicked()"
+        >
+          <mat-icon>redo</mat-icon>
+        </button>
+  
+        <button
+          class="no-text-button"
+          color="warn"
+          mat-raised-button
+          type="button"
+          matTooltip="Réinitialiser le formulaire"
+          matTooltipClass="default-tooltip"
+          *ngIf="!(isCurrentDonneeAnExistingOne$() | async)"
+          [disabled]="!(isInitializationCompleted$ | async)"
+          (click)="onClearFormButtonClicked()"
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
+      </span>
+  
+      <span class="flex-spacer"></span>
+    </div>
   </div>
 
   <!-- FORM TO CREATE DONNEES -->
-  <div class="creation-page-form" style="position: relative;">
+  <div class="creation-page-form max-width-limited" style="position: relative;">
     <div fxLayout="row" fxLayoutGap="50px">
       <div fxFlex="33">
         <div class="creation-page-inventaire-header">

@@ -1,9 +1,9 @@
+<top-buttons
+  title="Comportements"
+  (onClickNewObject)="newObject()"
+  (onClickExportObjects)="exportObjects()"
+></top-buttons>
 <div class="page-container">
-  <top-buttons
-    title="Comportements"
-    (onClickNewObject)="newObject()"
-    (onClickExportObjects)="exportObjects()"
-  ></top-buttons>
 
   <comportement-table
     (delete)="deleteObject($event)"

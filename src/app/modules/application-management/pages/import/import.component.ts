@@ -5,6 +5,7 @@ import { BackendWsService } from 'src/app/services/backend-ws.service';
 import { OngoingImportDialog } from '../../components/ongoing-import-dialog/ongoing-import-dialog.component';
 @Component({
   templateUrl: "./import.component.html",
+  styleUrls: ["./import.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportComponent {

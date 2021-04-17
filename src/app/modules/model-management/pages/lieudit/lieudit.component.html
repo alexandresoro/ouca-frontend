@@ -1,10 +1,10 @@
+<top-buttons
+  title="Lieux-dits"
+  (onClickNewObject)="newObject()"
+  (onClickExportObjects)="exportObjects()"
+>
+</top-buttons>
 <div class="page-container">
-  <top-buttons
-    title="Lieux-dits"
-    (onClickNewObject)="newObject()"
-    (onClickExportObjects)="exportObjects()"
-  >
-  </top-buttons>
 
   <lieudit-table (delete)="deleteObject($event)" (edit)="editObject($event)">
   </lieudit-table>

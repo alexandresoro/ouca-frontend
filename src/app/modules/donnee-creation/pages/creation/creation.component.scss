@@ -1,7 +1,6 @@
 @use "~@angular/material/theming" as mat;
 @use "src/styles/variables";
 
-$creation-header-footer-color: variables.$main-color;
 $standardColumnGap: 20px;
 $temperatureFieldWidth: 100px;
 
@@ -14,15 +13,24 @@ mat-card.mat-card-override {
 .creation-page {
   height: 100%;
 
+  .max-width-limited {
+    max-width: 1600px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
   div.creation-page-header {
-    display: flex;
-    flex: 0 0 auto;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 30px;
-    padding-bottom: 10px;
-    background-color: $creation-header-footer-color;
+    background-color: variables.$main-color;
     min-height: 30px;
+
+    .creation-page-header-content {
+      display: flex;
+      flex: 0 0 auto;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 30px;
+      padding-bottom: 10px;
+    }
 
     .creation-page-left-buttons {
       button {

@@ -1,9 +1,9 @@
+<top-buttons
+  title="Milieux"
+  (onClickNewObject)="newObject()"
+  (onClickExportObjects)="exportObjects()"
+></top-buttons>
 <div class="page-container">
-  <top-buttons
-    title="Milieux"
-    (onClickNewObject)="newObject()"
-    (onClickExportObjects)="exportObjects()"
-  ></top-buttons>
 
   <milieu-table (delete)="deleteObject($event)" (edit)="editObject($event)">
   </milieu-table>

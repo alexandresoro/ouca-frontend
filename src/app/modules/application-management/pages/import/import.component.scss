@@ -1,0 +1,8 @@
+mat-expansion-panel-header {
+  mat-panel-title {
+    h2 {
+      width: 100%; // Fix to avoid line breaks when expanding/collapsing some elements
+      margin: 0;
+    }
+  }
+}
