@@ -1,18 +1,18 @@
 @use "~@angular/material/theming" as mat;
+@use "src/styles/variables";
 
-$creation-header-footer-color: mat.mat-color(mat.$mat-cyan, 800);
-$creation-body-color: mat.mat-color(mat.$mat-grey, 300);
+$creation-header-footer-color: variables.$main-color;
 $standardColumnGap: 20px;
 $temperatureFieldWidth: 100px;
 
 mat-card.mat-card-override {
-  padding: 12px;
-  padding-bottom: 0;
+  padding-bottom: 8px;
+  border: 2px solid variables.$main-color;
+  box-shadow: none;
 }
 
 .creation-page {
   height: 100%;
-  background-color: $creation-body-color;
 
   div.creation-page-header {
     display: flex;
@@ -38,7 +38,6 @@ mat-card.mat-card-override {
   }
 
   .creation-page-form {
-    background-color: $creation-body-color;
     padding-left: 50px;
     padding-right: 50px;
     padding-top: 10px;
@@ -54,7 +53,7 @@ mat-card.mat-card-override {
     .inventaire-form,
     .espece-form {
       mat-card:not(:last-child) {
-        margin-bottom: 8px;
+        margin-bottom: 16px;
       }
     }
 

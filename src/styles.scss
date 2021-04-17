@@ -65,6 +65,7 @@ $custom-typography: mat-typography-config(
 
 // Common styles
 body.base-naturaliste {
+  background-color: variables.$background-color;
   margin: 0;
 
   .default-tooltip {
