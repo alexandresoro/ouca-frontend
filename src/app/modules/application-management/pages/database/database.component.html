@@ -1,22 +1,27 @@
 <h1 class="panel-header">Sauvegarde de la base de données</h1>
 <div class="page-container">
 
-  <button
-    *ngIf="!(isWaitPanelDisplayed$ | async)"
-    mat-raised-button
-    type="button"
-    color="accent"
-    (click)="onSaveDatabaseClicked()"
-  >
-    Créer une sauvegarde de la base de données
-  </button>
+  <mat-card *ngIf="!(isWaitPanelDisplayed$ | async)">
+    <mat-card-header>
+      <div mat-card-avatar class="card-header-image"></div>
+      <mat-card-title>Sauvegarde de la base de données</mat-card-title>
+      <mat-card-subtitle>Cette action va générer une sauvegarde complète de la base de données (données, espèces, lieux-dits...). Veuillez conserver le fichier de sauvegarde dans un endroit sécurisé.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <button 
+        mat-stroked-button 
+        color="accent" 
+        (click)="onSaveDatabaseClicked()">
+        Télécharger le fichier de sauvegarde de ma base de données 
+      </button>
+    </mat-card-actions>
+  </mat-card>
 
-  <div *ngIf="isWaitPanelDisplayed$ | async" style="text-align: center;">
-    <img
-      src="../../../../../assets/img/green-bird.svg"
-      alt="Oiseaux"
-      height="200px"
-    />
-    <div>Génération de la sauvegarde en cours...</div>
-  </div>
+  <mat-card *ngIf="(isWaitPanelDisplayed$ | async)">
+    <mat-card-header>
+      <div mat-card-avatar class="card-header-image"></div>
+      <mat-card-title>Veuillez patentier</mat-card-title>
+      <mat-card-subtitle>Génération du fichier de sauvegarde en cours...</mat-card-subtitle>
+      </mat-card-header>
+  </mat-card> 
 </div>
