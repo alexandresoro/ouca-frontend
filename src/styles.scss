@@ -87,7 +87,7 @@ body.base-naturaliste {
     flex: 0 1 20px;
   }
 
-  button:not(.mat-fab) mat-icon:first-child {
+  button:not(.mat-fab):not(.mat-icon-button) mat-icon:first-child {
     margin-right: 10px;
   }
 

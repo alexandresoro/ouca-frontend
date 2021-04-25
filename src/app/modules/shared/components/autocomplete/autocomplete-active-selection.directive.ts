@@ -8,7 +8,6 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import {
-  MatAutocomplete,
   MatAutocompleteTrigger
 } from "@angular/material/autocomplete";
 import { Subject } from "rxjs";
@@ -21,16 +20,13 @@ export class AutocompleteActiveSelection implements AfterViewInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
   @Input()
-  matAutocomplete: MatAutocomplete;
-
-  @Input()
   formControl: FormControl;
 
   constructor(
     @Host()
     @Self()
     private readonly autoCompleteTrigger: MatAutocompleteTrigger
-  ) {}
+  ) { }
 
   ngAfterViewInit(): void {
     this.autoCompleteTrigger.panelClosingActions
