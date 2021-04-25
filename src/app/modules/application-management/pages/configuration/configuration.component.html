@@ -5,7 +5,7 @@
     <span class="button-spacer"></span>
     <button
       mat-raised-button
-      color="accent"
+      color="basic"
       type="button"
       (click)="switchToEditionMode()"
     >
@@ -22,26 +22,27 @@
     (confirm)="saveAppConfiguration($event)"
     (back)="switchToViewAllMode()"
   ></configuration-form>
-
-  <div *ngIf="!(isCurrentlyEditing$ | async)" class="table-responsive">
-    <mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="label">
-        <mat-header-cell *matHeaderCellDef> Propriété </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.label }} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="value">
-        <mat-header-cell mat-header-cell *matHeaderCellDef>
-          Valeur
-        </mat-header-cell>
-        <mat-cell mat-cell *matCellDef="let element">
-          {{ element.value }}
-        </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-    </mat-table>
-  </div>
+  <mat-card *ngIf="!(isCurrentlyEditing$ | async)">
+    <mat-card-content>
+      <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="label">
+          <mat-header-cell *matHeaderCellDef> Propriété </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.label }} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="value">
+          <mat-header-cell mat-header-cell *matHeaderCellDef>
+            Valeur
+          </mat-header-cell>
+          <mat-cell mat-cell *matCellDef="let element">
+            {{ element.value }}
+          </mat-cell>
+        </ng-container>
+  
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+    </mat-card-content>
+    </mat-card>
 </div>
