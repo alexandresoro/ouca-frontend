@@ -231,141 +231,106 @@
         >
           <div class="donnee-detail" [@detailExpand]="getRowState(element)">
             <div class="donnee-details-panel">
+              <!-- FIRST COLUMN -->
               <div>
-                <b>ID:</b> {{ element.id }}
-                <br />
-
-                <b>Observateur:</b> {{ element.observateur }}
-                <br />
-
-                <span *ngIf="element.associes"
-                  ><b>Observateurs associés:</b>
-                  {{ element.associes }}
-                  <br />
-                </span>
-
-                <b>Date:</b> {{ element.date | date: "dd/MM/yyyy" }}
-                <br />
-
-                <span *ngIf="element.heure">
-                  <b>Heure:</b> {{ element.heure }}
-                  <br />
-                </span>
-
-                <span *ngIf="element.duree">
-                  <b>Durée:</b> {{ element.duree }}
-                  <br />
-                </span>
-
-                <span *ngIf="element.temperature">
-                  <b>Température:</b> {{ element.temperature }} °C
-                  <br />
-                </span>
-
-                <span *ngIf="element.meteos.length > 0">
-                  <b>Météos:</b>
-                  {{ element.meteos }}
-                </span>
-
                 <button
-                  mat-stroked-button       
-                  color="primary"
+                  mat-raised-button
+                  color="basic"
                   (click)="editDonnee(element.id)"
                 >
-                  <mat-icon>find_in_page</mat-icon>Ouvrir la donnée
+                  <mat-icon>open_in_browser</mat-icon> Ouvrir la donnée
                 </button>
+                
+                <ul class="donnee-details-list">
+                  <li><b>ID:</b> {{ element.id }}</li>
 
+                  <li><b>Observateur:</b> {{ element.observateur }}</li>
+
+                  <li *ngIf="element.associes"><b>Observateurs associés:</b> {{ element.associes }}</li>
+
+                  <li><b>Date:</b> {{ element.date | date: "dd/MM/yyyy" }}</li>
+
+                  <li *ngIf="element.heure"><b>Heure:</b> {{ element.heure }}</li>
+
+                  <li *ngIf="element.duree"><b>Durée:</b> {{ element.duree }}</li>
+
+                  <li *ngIf="element.temperature"><b>Température:</b> {{ element.temperature }} °C</li>
+
+                  <li *ngIf="element.meteos.length > 0"><b>Météos:</b> {{ element.meteos }}</li>
+                </ul>
               </div>
+
+              <!-- SECOND COLUMN -->
               <div>
-                <b>Département:</b> {{ element.departement }}
-                <br />
-                <b>Code commune:</b> {{ element.codeCommune }}
-                <br />
-                <b>Nom commune:</b> {{ element.nomCommune }}
-                <br />
-                <b>Lieu-dit:</b> {{ element.lieudit }}
-                <br />
-                <b>Latitude:</b>
-                {{ getLatitude(element) }}
-                <br />
-                <b>Longitude:</b>
-                {{ getLongitude(element) }}
-                <br />
-                <b>Altitude:</b>
-                {{ element.altitude }} mètres
+                <ul class="donnee-details-list">
+                  <li><b>Département:</b> {{ element.departement }}</li>
+
+                  <li><b>Code commune:</b> {{ element.codeCommune }}</li>
+
+                  <li><b>Nom commune:</b> {{ element.nomCommune }}</li>
+
+                  <li><b>Lieu-dit:</b> {{ element.lieudit }}</li>
+
+                  <li><b>Latitude:</b> {{ getLatitude(element) }}</li>
+
+                  <li><b>Longitude:</b> {{ getLongitude(element) }}</li>
+
+                  <li><b>Altitude:</b> {{ element.altitude }} mètres</li>
+                </ul>
               </div>
+
+              <!-- THIRD COLUMN -->
               <div>
-                <b>Classe:</b> {{ element.classe }}
-                <br />
+                <ul class="donnee-details-list">
+                  <li><b>Classe:</b> {{ element.classe }}</li>
 
-                <b>Code espèce:</b> {{ element.codeEspece }}
-                <br />
+                  <li><b>Code espèce:</b> {{ element.codeEspece }}</li>
 
-                <b>Nom français:</b> {{ element.nomFrancais }}
-                <br />
+                  <li><b>Nom français:</b> {{ element.nomFrancais }}</li>
 
-                <b>Nom scientifique:</b> {{ element.nomLatin }}
-                <br />
+                  <li><b>Nom scientifique:</b> {{ element.nomLatin }}</li>
 
-                <b>Nombre:</b>
-                <span *ngIf="element.nombre">
-                  {{ element.nombre }} ({{ element.estimationNombre }})</span
-                >
-                <span *ngIf="!element.nombre">
-                  {{ element.estimationNombre }}
-                </span>
-                <br />
+                  <li>
+                    <b>Nombre:</b> 
+                    <span *ngIf="element.nombre"> {{ element.nombre }} ({{ element.estimationNombre }})</span>
+                    <span *ngIf="!element.nombre"> {{ element.estimationNombre }}</span>
+                  </li>
 
-                <b>Sexe:</b> {{ element.sexe }}
-                <br />
+                  <li><b>Sexe:</b> {{ element.sexe }}</li>
 
-                <b>Âge:</b> {{ element.age }}
-                <br />
+                  <li><b>Âge:</b> {{ element.age }}</li>
 
-                <span *ngIf="element.distance || element.estimationDistance">
-                  <b>Distance:</b
-                  ><span *ngIf="element.estimationDistance">
-                    {{ element.estimationDistance }}
-                  </span>
-                  <span *ngIf="element.distance || element.distance === 0">
-                    {{ element.distance }} mètres</span
-                  >
-                  <br />
-                </span>
+                  <li *ngIf="element.distance || element.estimationDistance">
+                    <b>Distance:</b> 
+                    <span *ngIf="element.estimationDistance"> {{ element.estimationDistance }}</span>
+                    <span *ngIf="element.distance || element.distance === 0"> {{ element.distance }} mètres</span>
+                  </li>
 
-                <span *ngIf="element.regroupement">
-                  <b>Regroupement:</b> {{ element.regroupement }}
-                </span>
+                  <li *ngIf="element.regroupement"><b>Regroupement:</b> {{ element.regroupement }}</li>
+                </ul>
               </div>
+
+              <!-- FOURTH COLUMN -->
               <div>
-                <span>
-                  <b>Nicheur:</b>
-                  {{ !element.nicheur ? "Non" : element.nicheur }}
-                  <br />
-                </span>
-                <span *ngIf="element.comportements.length > 0">
-                  <b>Comportements:</b>
-                  <br />
-                  <span *ngFor="let c of element.comportements; last as last">
-                    {{ c.code }} - {{ c.libelle }}
-                    <br *ngIf="!last" />
-                  </span>
-                  <br />
-                </span>
+                <ul class="donnee-details-list">
+                  <li><b>Nicheur:</b> {{ !element.nicheur ? "Non" : element.nicheur }}</li>
 
-                <span *ngIf="element.milieux.length > 0">
-                  <b>Milieux:</b>
-                  <br />
-                  <span *ngFor="let m of element.milieux; last as last">
-                    {{ m.code }} - {{ m.libelle }}
-                    <br *ngIf="!last" />
-                  </span>
-                  <br />
-                </span>
+                  <li *ngIf="element.comportements.length > 0">
+                    <b>Comportements:</b>
+                    <ul>
+                      <li *ngFor="let c of element.comportements; last as last">{{ c.code }} - {{ c.libelle }}</li>
+                    </ul>
+                  </li>
 
-                <span *ngIf="element.commentaire">
-                  <b>Commentaires:</b> {{ element.commentaire }}
-                </span>
+                  <li *ngIf="element.milieux.length > 0">
+                    <b>Milieux:</b>
+                    <ul>
+                      <li *ngFor="let m of element.milieux; last as last">{{ m.code }} - {{ m.libelle }}</li>
+                    </ul>
+                  </li>
+
+                  <li *ngIf="element.commentaire"><b>Commentaires:</b> {{ element.commentaire }}</li>
+                </ul>
               </div>
             </div>
           </div>
