@@ -232,38 +232,38 @@
           <div class="donnee-detail" [@detailExpand]="getRowState(element)">
             <div class="donnee-details-panel">
               <div>
-                <strong>ID:</strong> {{ element.id }}
+                <b>ID:</b> {{ element.id }}
                 <br />
 
-                <strong>Observateur:</strong> {{ element.observateur }}
+                <b>Observateur:</b> {{ element.observateur }}
                 <br />
 
                 <span *ngIf="element.associes"
-                  ><strong>Observateurs associés:</strong>
+                  ><b>Observateurs associés:</b>
                   {{ element.associes }}
                   <br />
                 </span>
 
-                <strong>Date:</strong> {{ element.date | date: "dd/MM/yyyy" }}
+                <b>Date:</b> {{ element.date | date: "dd/MM/yyyy" }}
                 <br />
 
                 <span *ngIf="element.heure">
-                  <strong>Heure:</strong> {{ element.heure }}
+                  <b>Heure:</b> {{ element.heure }}
                   <br />
                 </span>
 
                 <span *ngIf="element.duree">
-                  <strong>Durée:</strong> {{ element.duree }}
+                  <b>Durée:</b> {{ element.duree }}
                   <br />
                 </span>
 
                 <span *ngIf="element.temperature">
-                  <strong>Température:</strong> {{ element.temperature }} °C
+                  <b>Température:</b> {{ element.temperature }} °C
                   <br />
                 </span>
 
                 <span *ngIf="element.meteos.length > 0">
-                  <strong>Météos:</strong>
+                  <b>Météos:</b>
                   {{ element.meteos }}
                 </span>
 
@@ -277,37 +277,37 @@
 
               </div>
               <div>
-                <strong>Département:</strong> {{ element.departement }}
+                <b>Département:</b> {{ element.departement }}
                 <br />
-                <strong>Code commune:</strong> {{ element.codeCommune }}
+                <b>Code commune:</b> {{ element.codeCommune }}
                 <br />
-                <strong>Nom commune:</strong> {{ element.nomCommune }}
+                <b>Nom commune:</b> {{ element.nomCommune }}
                 <br />
-                <strong>Lieu-dit:</strong> {{ element.lieudit }}
+                <b>Lieu-dit:</b> {{ element.lieudit }}
                 <br />
-                <strong>Latitude:</strong>
+                <b>Latitude:</b>
                 {{ getLatitude(element) }}
                 <br />
-                <strong>Longitude:</strong>
+                <b>Longitude:</b>
                 {{ getLongitude(element) }}
                 <br />
-                <strong>Altitude:</strong>
+                <b>Altitude:</b>
                 {{ element.altitude }} mètres
               </div>
               <div>
-                <strong>Classe:</strong> {{ element.classe }}
+                <b>Classe:</b> {{ element.classe }}
                 <br />
 
-                <strong>Code espèce:</strong> {{ element.codeEspece }}
+                <b>Code espèce:</b> {{ element.codeEspece }}
                 <br />
 
-                <strong>Nom français:</strong> {{ element.nomFrancais }}
+                <b>Nom français:</b> {{ element.nomFrancais }}
                 <br />
 
-                <strong>Nom scientifique:</strong> {{ element.nomLatin }}
+                <b>Nom scientifique:</b> {{ element.nomLatin }}
                 <br />
 
-                <strong>Nombre:</strong>
+                <b>Nombre:</b>
                 <span *ngIf="element.nombre">
                   {{ element.nombre }} ({{ element.estimationNombre }})</span
                 >
@@ -316,14 +316,14 @@
                 </span>
                 <br />
 
-                <strong>Sexe:</strong> {{ element.sexe }}
+                <b>Sexe:</b> {{ element.sexe }}
                 <br />
 
-                <strong>Âge:</strong> {{ element.age }}
+                <b>Âge:</b> {{ element.age }}
                 <br />
 
                 <span *ngIf="element.distance || element.estimationDistance">
-                  <strong>Distance:</strong
+                  <b>Distance:</b
                   ><span *ngIf="element.estimationDistance">
                     {{ element.estimationDistance }}
                   </span>
@@ -334,17 +334,17 @@
                 </span>
 
                 <span *ngIf="element.regroupement">
-                  <strong>Regroupement:</strong> {{ element.regroupement }}
+                  <b>Regroupement:</b> {{ element.regroupement }}
                 </span>
               </div>
               <div>
                 <span>
-                  <strong>Nicheur:</strong>
+                  <b>Nicheur:</b>
                   {{ !element.nicheur ? "Non" : element.nicheur }}
                   <br />
                 </span>
                 <span *ngIf="element.comportements.length > 0">
-                  <strong>Comportements:</strong>
+                  <b>Comportements:</b>
                   <br />
                   <span *ngFor="let c of element.comportements; last as last">
                     {{ c.code }} - {{ c.libelle }}
@@ -354,7 +354,7 @@
                 </span>
 
                 <span *ngIf="element.milieux.length > 0">
-                  <strong>Milieux:</strong>
+                  <b>Milieux:</b>
                   <br />
                   <span *ngFor="let m of element.milieux; last as last">
                     {{ m.code }} - {{ m.libelle }}
@@ -364,7 +364,7 @@
                 </span>
 
                 <span *ngIf="element.commentaire">
-                  <strong>Commentaires:</strong> {{ element.commentaire }}
+                  <b>Commentaires:</b> {{ element.commentaire }}
                 </span>
               </div>
             </div>
