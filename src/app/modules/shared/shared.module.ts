@@ -41,7 +41,6 @@ import { InputRegroupementComponent } from "../donnee-creation/components/input-
 import { InputSexeComponent } from "../donnee-creation/components/input-sexe/input-sexe.component";
 import { InputTemperatureComponent } from "../donnee-creation/components/input-temperature/input-temperature.component";
 import { InputTimeComponent } from "../donnee-creation/components/input-time/input-time.component";
-import { AutocompleteActiveSelection } from "./components/autocomplete/autocomplete-active-selection.directive";
 import { AutocompleteComponent } from "./components/autocomplete/autocomplete.component";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { MultipleSelectComponent } from "./components/form/multiple-select/multiple-select.component";
@@ -84,7 +83,6 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     ReactiveFormsModule
   ],
   declarations: [
-    AutocompleteActiveSelection,
     AutocompleteComponent,
     ConfirmationDialogComponent,
     NetworkUnavailableDialogComponent,
