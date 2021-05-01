@@ -17,15 +17,15 @@
     <span fxFlex="1 1 auto"></span>
     <a mat-button routerLink="creation">
       <mat-icon>add</mat-icon>
-      Saisie des observations</a
+      <span>Saisie des observations</span></a
     >
     <a mat-button routerLink="vue">
       <mat-icon>search</mat-icon>
-      Consultation des données</a
+      <span>Consultation des données</span></a
     >
     <button mat-button [matMenuTriggerFor]="gestionBase">
       <mat-icon>list</mat-icon>
-      Gestion de la base
+      <span>Gestion de la base</span>
     </button>
     <mat-menu #gestionBase="matMenu" [overlapTrigger]="false">
       <a mat-menu-item routerLink="/observateur">
@@ -84,7 +84,7 @@
 
     <button mat-button [matMenuTriggerFor]="autresActions">
       <mat-icon>more_vert</mat-icon>
-      Autres actions
+      <span>Autres actions</span>
     </button>
     <mat-menu #autresActions="matMenu" [overlapTrigger]="false">
       <a mat-menu-item routerLink="/configuration">

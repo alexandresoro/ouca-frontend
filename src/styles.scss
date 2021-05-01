@@ -87,12 +87,12 @@ body.base-naturaliste {
     flex: 0 1 20px;
   }
 
-  button:not(.mat-fab):not(.mat-icon-button) mat-icon:first-child {
-    margin-right: 10px;
-  }
-
-  button.no-text-button mat-icon:first-child {
-    margin-right: 0px;
+  // Apply a margin for the element that is next to an icon in a button
+  button,
+  a.mat-button {
+    mat-icon ~ :nth-child(2) {
+      margin-left: 10px;
+    }
   }
 
   .mat-snack-bar-container {
@@ -134,7 +134,6 @@ body.base-naturaliste {
     margin-top: -1.25em;
     padding-bottom: 1.25em;
   }
-
 
   .card-header-image {
     background-image: url("./assets/img/red-bird.svg");
