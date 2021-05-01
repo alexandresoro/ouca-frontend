@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  OnDestroy,
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { combineLatest, Observable } from "rxjs";
+import { combineLatest, Observable, Subject } from "rxjs";
+import { takeUntil } from 'rxjs/operators';
 import { Comportement } from 'src/app/model/types/comportement.object';
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
@@ -14,12 +16,14 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   templateUrl: "./input-comportements.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputComportementsComponent implements OnInit {
+export class InputComportementsComponent implements OnInit, OnDestroy {
   @Input() public comportements: Comportement[];
 
   @Input() public donneeForm: FormGroup;
 
   @Input() public controlGroup: FormGroup;
+
+  private readonly destroy$ = new Subject();
 
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -37,7 +41,9 @@ export class InputComportementsComponent implements OnInit {
 
   ngOnInit(): void {
     // First comportement should be enabled if and only if the donnee form is enabled
-    this.donneeForm.statusChanges.subscribe((status: string) => {
+    this.donneeForm.statusChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((status: string) => {
       if (status !== "DISABLED") {
         this.controlGroup.controls.comportement1.enable({
           onlySelf: true
@@ -69,25 +75,33 @@ export class InputComportementsComponent implements OnInit {
             selectedComportementInPreviousElt
           };
         }
-      ).subscribe(status => {
-        if (
-          !!status.selectedComportementInPreviousElt &&
-          status.statusComportementInPreviousElt === "VALID"
-        ) {
-          this.controlGroup.controls["comportement" + indexComportement].enable(
-            {
+      )
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe(status => {
+          if (
+            !!status.selectedComportementInPreviousElt &&
+            status.statusComportementInPreviousElt === "VALID"
+          ) {
+            this.controlGroup.controls["comportement" + indexComportement].enable(
+              {
+                onlySelf: true
+              }
+            );
+          } else {
+            this.controlGroup.controls[
+              "comportement" + indexComportement
+            ].disable({
               onlySelf: true
-            }
-          );
-        } else {
-          this.controlGroup.controls[
-            "comportement" + indexComportement
-          ].disable({
-            onlySelf: true
-          });
-        }
-      });
+            });
+          }
+        });
     }
+  }
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   public displayComportementFormat = (comportement: Comportement): string => {

@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  OnDestroy,
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { combineLatest, Observable } from "rxjs";
+import { combineLatest, Observable, Subject } from "rxjs";
+import { takeUntil } from 'rxjs/operators';
 import { Milieu } from 'src/app/model/types/milieu.object';
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
@@ -14,12 +16,14 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   templateUrl: "./input-milieux.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputMilieuxComponent implements OnInit {
+export class InputMilieuxComponent implements OnInit, OnDestroy {
   @Input() public milieux: Milieu[];
 
   @Input() public donneeForm: FormGroup;
 
   @Input() public controlGroup: FormGroup;
+
+  private readonly destroy$ = new Subject();
 
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -37,7 +41,9 @@ export class InputMilieuxComponent implements OnInit {
 
   ngOnInit(): void {
     // First milieu should be enabled if and only if the donnee form is enabled
-    this.donneeForm.statusChanges.subscribe((status: string) => {
+    this.donneeForm.statusChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((status: string) => {
       if (status !== "DISABLED") {
         this.controlGroup.controls.milieu1.enable({
           onlySelf: true
@@ -62,21 +68,30 @@ export class InputMilieuxComponent implements OnInit {
             selectedMilieuInPreviousElt
           };
         }
-      ).subscribe(status => {
-        if (
-          !!status.selectedMilieuInPreviousElt &&
-          status.statusMilieuInPreviousElt === "VALID"
-        ) {
-          this.controlGroup.controls["milieu" + indexMilieu].enable({
-            onlySelf: true
-          });
-        } else {
-          this.controlGroup.controls["milieu" + indexMilieu].disable({
-            onlySelf: true
-          });
-        }
-      });
+      )
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe(status => {
+          if (
+            !!status.selectedMilieuInPreviousElt &&
+            status.statusMilieuInPreviousElt === "VALID"
+          ) {
+            this.controlGroup.controls["milieu" + indexMilieu].enable({
+              onlySelf: true
+            });
+          } else {
+            this.controlGroup.controls["milieu" + indexMilieu].disable({
+              onlySelf: true
+            });
+          }
+        });
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   public displayMilieuFormat = (milieu: Milieu): string => {
