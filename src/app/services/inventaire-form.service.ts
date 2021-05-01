@@ -290,7 +290,7 @@ export class InventaireFormService {
       meteosIds
     };
 
-    if (has(inventaireFormValue, "altitude")) {
+    if (has(inventaireFormValue?.lieu, "altitude")) {
       const coordinatesSystem: CoordinatesSystemType = this.coordinatesService.getCoordinatesSystemType();
 
       let inventaireAltitude: number = inventaireFormValue.lieu.altitude;
