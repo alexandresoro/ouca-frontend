@@ -1,7 +1,7 @@
 <span>
   <mat-form-field>
     <input
-      autocomplete-active-selection
+      #autocompleteInput
       type="text"
       matInput
       [placeholder]="type"
@@ -14,6 +14,8 @@
       autoActiveFirstOption
       #auto="matAutocomplete"
       [displayWith]="displayFn"
+      (optionActivated)="onOptionActivated($event)"
+      (closed)="onAutocompleteClosed()"
     >
       <mat-option *ngFor="let value of filteredValues | async" [value]="value">
         {{ getDisplayedValue(value) }}
