@@ -36,7 +36,7 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
 
   @Input() public type: string;
 
-  @Input() public values: EntiteSimple[];
+  @Input() public values?: EntiteSimple[];
 
   @Input() public valuesObs?: Observable<EntiteSimple[]>;
 
@@ -61,17 +61,21 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
   private CHARACTERS_TO_IGNORE = /(\s|\'|\-|\,)/g;
 
   ngOnInit(): void {
+
     this.filteredValues = this.control.valueChanges.pipe(
-      withLatestFrom(this.valuesObs ?? of(this.values)),
+      withLatestFrom(this.valuesObs ?? of<EntiteSimple[]>(undefined)),
       map(([value, allValues]) => {
+
+        const valuesToUse = allValues ?? this.values;
+
         if ((typeof value === "string") || value == null) {
           // If the value is a string or null, then look for entities that are matching
-          return this._filter(value);
+          return this._filter(value, valuesToUse);
         } else {
           // If not, we assume that it is an entite simple that is selected, so we only display this one as matching
           const valueIdentifier = value[this.attributesToFilter[0].key];
 
-          const matchingEntity = allValues?.find((oneValue) => {
+          const matchingEntity = valuesToUse?.find((oneValue) => {
             return oneValue[this.attributesToFilter[0].key] === valueIdentifier;
           });
 
@@ -79,7 +83,6 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
         }
       })
     );
-
 
     this.optionActivated$
       .pipe(
@@ -117,7 +120,8 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
         // then we clear the field => filteredValues will become empty
         // In that case, the option is still "selected" but is not valid anymore
 
-        if (filteredValues.includes(optionActivated) && optionActivated !== this.control.value) {
+        const isActivatedOptionValid = !!filteredValues.find((filteredValue) => filteredValue.id === optionActivated?.id);
+        if (isActivatedOptionValid && optionActivated !== this.control.value) {
           this.control.setValue(optionActivated);
         } if (!this.control.valid) {
           this.control.setValue(null);
@@ -135,7 +139,7 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
     this.optionActivated$.next(event?.option?.value as T);
   }
 
-  private _filter(value: string): EntiteSimple[] {
+  private _filter(value: string, allValues: EntiteSimple[]): EntiteSimple[] {
 
     if (!value) {
       return [];
@@ -146,9 +150,9 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
       ""
     );
 
-    if (this.values) {
+    if (allValues) {
       // We sort the values by their proority (i.e. the opposite of the weight)
-      const valuesWithPriorities = this.values.map(valueFromList => {
+      const valuesWithPriorities = allValues.map(valueFromList => {
         const priority: number = this.computePriorityInList(
           valueFromList,
           filterValue
