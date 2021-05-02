@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { Observable } from 'rxjs';
 import { Observateur } from 'src/app/model/types/observateur.object';
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
@@ -12,7 +13,7 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
 export class InputObservateurComponent {
   @Input() public control: FormControl;
 
-  @Input() public observateurs: Observateur[];
+  @Input() public observateurs: Observable<Observateur[]>;
 
   @Input() public placeholder?: string = "Observateur";
 
@@ -25,6 +26,6 @@ export class InputObservateurComponent {
   ];
 
   public displayObservateurFormat = (observateur: Observateur): string => {
-    return observateur ? observateur.libelle : null;
+    return observateur?.libelle ?? null;
   };
 }
