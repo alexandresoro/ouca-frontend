@@ -24,9 +24,18 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "./assets"
+              }
             ],
             "styles": [
+              "./node_modules/leaflet/dist/leaflet.css",
+              "./node_modules/leaflet.markercluster/dist/MarkerCluster.css",
+              "./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+              "./node_modules/leaflet.control.opacity/dist/L.Control.Opacity.css",
               "src/styles.scss"
             ],
             "scripts": []
