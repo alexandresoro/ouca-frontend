@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "../shared/shared.module";
+import { CreationMapComponent } from './components/creation-map/creation-map';
 import { InputCommentaireComponent } from "./components/input-commentaire/input-commentaire.component";
 import { InputComportementsComponent } from "./components/input-comportements/input-comportements.component";
 import { InputDateComponent } from "./components/input-date/input-date.component";
@@ -20,7 +21,8 @@ import { CreationComponent } from "./pages/creation/creation.component";
     InputMeteosComponent,
     InputMilieuxComponent,
     InputObservateursAssociesComponent,
-    SearchByIdDialogComponent
+    SearchByIdDialogComponent,
+    CreationMapComponent
   ],
   exports: [],
   providers: []

@@ -1,15 +1,25 @@
 <div>
   <div class="full-width-container">
-    <!-- DEPARTEMENT -->
-    <autocomplete
-      *ngIf="!isMultipleSelectMode"
-      [attributesToFilter]="departementAutocompleteAttributes"
-      type="Département"
-      [values]="departements$ | async"
-      [control]="$any(controlGroup.controls['departement'])"
-      [displayFn]="displayDepartementFormat"
-    >
-    </autocomplete>
+
+    <div *ngIf="!isMultipleSelectMode" fxLayout="row wrap" fxLayoutGap="20px">
+      <!-- DEPARTEMENT -->
+      <autocomplete
+        fxFlex="1 0 100px"
+        [attributesToFilter]="departementAutocompleteAttributes"
+        type="Département"
+        [valuesObs]="departements$"
+        [control]="$any(controlGroup.controls['departement'])"
+        [displayFn]="displayDepartementFormat"
+        (optionActivated)="onDepartementControlActivated($event)"
+        (focus)="onDepartementControlFocused()"
+        >
+        
+      </autocomplete>
+      
+      <button type="button" *ngIf="isCurrentSystemGps$ | async" mat-icon-button color="primary" [disabled]="isSearchInMapButtonDisabled$ | async" (click)="onSearchInMapClicked()">
+        <mat-icon>my_location</mat-icon>
+      </button>
+    </div>
 
     <multiple-select
       *ngIf="isMultipleSelectMode"
@@ -26,10 +36,12 @@
     <autocomplete
       *ngIf="!isMultipleSelectMode"
       [type]="'Commune'"
-      [values]="filteredCommunes$ | async"
+      [valuesObs]="filteredCommunes$"
       [control]="$any(controlGroup.controls['commune'])"
       [attributesToFilter]="communeAutocompleteAttributes"
       [displayFn]="displayCommuneFormat"
+      (optionActivated)="onCommuneControlActivated($event)"
+      (focus)="onCommuneControlFocused()"
     >
     </autocomplete>
 
@@ -48,10 +60,12 @@
     <autocomplete
       *ngIf="!isMultipleSelectMode"
       [type]="'Lieu-dit'"
-      [values]="filteredLieuxdits$ | async"
+      [valuesObs]="filteredLieuxdits$"
       [control]="$any(controlGroup.controls['lieudit'])"
       [attributesToFilter]="lieuditAutocompleteAttributes"
       [displayFn]="displayLieuDitFormat"
+      (optionActivated)="onLieuDitActivated($event)"
+      (focus)="onLieuDitControlFocused()"
     >
     </autocomplete>
 
@@ -141,6 +155,13 @@
           {{ (getCoordinatesSystem$() | async)?.latitudeRange.max }}.
         </mat-error>
       </div>
+
+      <div
+      *ngIf="shouldDisplayOngoingCallForAltitudeMessage$ | async"
+      >
+        <mat-icon [inline]="true">warning</mat-icon> Une mise à jour de l'altitude correspondant aux coordonnées actuelles est en cours. L'altitude actuellement affichée peut ne pas être correcte.
+      </div>
+
       <div
         *ngIf="areCoordinatesCustomized$ | async"
         class="coordinates-customized-message"

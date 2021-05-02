@@ -20,6 +20,8 @@ import {
   filter,
   first,
   map,
+  scan,
+
   takeUntil,
   tap,
   withLatestFrom
@@ -96,6 +98,13 @@ export class CreationComponent implements OnInit, OnDestroy {
   private isModalOpened$: BehaviorSubject<boolean> = new BehaviorSubject<
     boolean
   >(false);
+
+  public isLieuditMapClicked$ = new Subject();
+
+  public isLieuditMapRequested$ = this.isLieuditMapClicked$.pipe(scan((state) => !state, false));
+
+  public isLieuditMapDisplayed$ = new Observable<boolean>();
+
 
   constructor(
     private appConfigurationService: AppConfigurationService,
@@ -307,6 +316,12 @@ export class CreationComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.isInitializationCompleted$.next(true);
       });
+
+    this.isLieuditMapDisplayed$ = combineLatest([this.isLieuditMapRequested$, this.creationModeService.getIsInventaireEnabled$()])
+      .pipe(
+        takeUntil(this.destroy$),
+        map(([isLieuditMapRequested, isInventaireEnabled]) => isLieuditMapRequested && isInventaireEnabled)
+      );
   }
 
   public ngOnDestroy(): void {
@@ -582,4 +597,10 @@ export class CreationComponent implements OnInit, OnDestroy {
       })
     );
   };
+
+
+  public toggleSearchInMap = (): void => {
+    this.isLieuditMapClicked$.next();
+  }
+
 }

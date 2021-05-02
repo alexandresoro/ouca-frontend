@@ -117,3 +117,14 @@ input-milieux {
     margin-right: 0.9rem;
   }
 }
+
+mat-card.lieudit-map {
+  margin-top: 48px;
+  z-index: 200;
+
+  padding: 0;
+
+  mat-card-content {
+    height: 600px;
+  }
+}

@@ -173,6 +173,7 @@
               <input-lieudit
                 formGroupName="lieu"
                 [controlGroup]="$any(inventaireForm.controls['lieu'])"
+                (searchInMapClick)="toggleSearchInMap()"
               >
               </input-lieudit>
             </mat-card>
@@ -218,147 +219,158 @@
 
       <!-- FICHE ESPECE  -->
       <div fxFlex="67">
-        <h2>
-          Fiche espèce
-          <span
-            *ngIf="getCurrentDonneeIndex$() | async"
-            matTooltip="ID = {{ getDisplayedDonneeId$() | async }}"
-            matTooltipClass="default-tooltip"
-          >
-            n°{{ getCurrentDonneeIndex$() | async }}
-          </span>
-        </h2>
 
-        <div class="espece-form">
-          <form [formGroup]="donneeForm">
-            <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
-            <mat-card
-              class="mat-card-override creation-espece-card full-width-container"
+        <mat-card *ngIf="isLieuditMapDisplayed$ | async" class="mat-card-override lieudit-map">
+          <mat-card-content>
+            <creation-map >
+            </creation-map>
+          </mat-card-content>
+        </mat-card>
+
+        <ng-container *ngIf="!(isLieuditMapDisplayed$ | async)">
+          <h2>
+            Fiche espèce
+            <span
+              *ngIf="getCurrentDonneeIndex$() | async"
+              matTooltip="ID = {{ getDisplayedDonneeId$() | async }}"
+              matTooltipClass="default-tooltip"
             >
-              <input-espece
-                class="card-espece"
-                formGroupName="especeGroup"
-                [controlGroup]="$any(donneeForm.controls['especeGroup'])"
-              ></input-espece>
-            </mat-card>
-            <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
-
-            <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
-            <mat-card class="mat-card-override">
-              <div fxLayout="row wrap" fxLayoutGap="10%">
-                <input-nombre
-                  fxFlex="auto"
-                  fxLayout="row"
-                  fxLayoutGap="20px"
-                  [controlGroup]="$any(donneeForm.controls['nombreGroup'])"
-                  [defaultNombre]="(appConfiguration$ | async)?.defaultNombre"
-                  [estimationsNombre]="estimationsNombre$ | async"
-                  formGroupName="nombreGroup"
-                >
-                </input-nombre>
-
-                <!-- SEXE -->
-                <input-sexe
-                  fxFlex="1 0 120px"
-                  [control]="$any(donneeForm.controls['sexe'])"
-                  [sexes]="sexes$ | async"
-                ></input-sexe>
-
-                <!-- AGE  -->
-                <input-age
-                  fxFlex="1 0 120px"
-                  [control]="$any(donneeForm.controls['age'])"
-                  [ages]="ages$ | async"
-                ></input-age>
-              </div>
-              <div>
-                <mat-error
-                  *ngIf="isNombreFieldInvalid()"
-                  class="creation-page-error"
-                >
-                  Le nombre doit être un nombre entier compris entre 1 et 65535.
-                </mat-error>
-              </div>
-
-              <!-- DISTANCE AND ESTIMATION DISTANCE -->
-              <div
-                *ngIf="
-                  (appConfiguration$ | async)?.isDistanceDisplayed ||
-                  (appConfiguration$ | async)?.isRegroupementDisplayed
-                "
-                fxLayout="row wrap"
-                fxLayoutGap="10%"
+              n°{{ getCurrentDonneeIndex$() | async }}
+            </span>
+          </h2>
+  
+          <div class="espece-form">
+            <form [formGroup]="donneeForm">
+              <!-- CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
+              <mat-card
+                class="mat-card-override creation-espece-card full-width-container"
               >
-                <!-- ESTIMATION DISTANCE -->
-                <input-distance
-                  *ngIf="(appConfiguration$ | async)?.isDistanceDisplayed"
-                  [fxFlex]="getFxDistance$() | async"
-                  fxLayout="row"
-                  fxLayoutGap="20px"
-                  [controlGroup]="$any(donneeForm.controls['distanceGroup'])"
-                  [estimationsDistance]="estimationsDistance$ | async"
-                  formGroupName="distanceGroup"
+                <input-espece
+                  class="card-espece"
+                  formGroupName="especeGroup"
+                  [controlGroup]="$any(donneeForm.controls['especeGroup'])"
+                ></input-espece>
+              </mat-card>
+              <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
+  
+              <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+              <mat-card class="mat-card-override">
+                <div fxLayout="row wrap" fxLayoutGap="10%">
+                  <input-nombre
+                    fxFlex="auto"
+                    fxLayout="row"
+                    fxLayoutGap="20px"
+                    [controlGroup]="$any(donneeForm.controls['nombreGroup'])"
+                    [defaultNombre]="(appConfiguration$ | async)?.defaultNombre"
+                    [estimationsNombre]="estimationsNombre$ | async"
+                    formGroupName="nombreGroup"
+                  >
+                  </input-nombre>
+  
+                  <!-- SEXE -->
+                  <input-sexe
+                    fxFlex="1 0 120px"
+                    [control]="$any(donneeForm.controls['sexe'])"
+                    [sexes]="sexes$ | async"
+                  ></input-sexe>
+  
+                  <!-- AGE  -->
+                  <input-age
+                    fxFlex="1 0 120px"
+                    [control]="$any(donneeForm.controls['age'])"
+                    [ages]="ages$ | async"
+                  ></input-age>
+                </div>
+                <div>
+                  <mat-error
+                    *ngIf="isNombreFieldInvalid()"
+                    class="creation-page-error"
+                  >
+                    Le nombre doit être un nombre entier compris entre 1 et 65535.
+                  </mat-error>
+                </div>
+  
+                <!-- DISTANCE AND ESTIMATION DISTANCE -->
+                <div
+                  *ngIf="
+                    (appConfiguration$ | async)?.isDistanceDisplayed ||
+                    (appConfiguration$ | async)?.isRegroupementDisplayed
+                  "
+                  fxLayout="row wrap"
+                  fxLayoutGap="10%"
                 >
-                </input-distance>
-
-                <!-- REGROUPEMENT-->
-                <input-regroupement
-                  *ngIf="(appConfiguration$ | async)?.isRegroupementDisplayed"
-                  [fxFlex]="getFxRegroupement$() | async"
-                  [control]="$any(donneeForm.controls['regroupement'])"
-                ></input-regroupement>
-
-                <mat-error
-                  *ngIf="isDistanceFieldInvalid()"
-                  class="creation-page-error"
+                  <!-- ESTIMATION DISTANCE -->
+                  <input-distance
+                    *ngIf="(appConfiguration$ | async)?.isDistanceDisplayed"
+                    [fxFlex]="getFxDistance$() | async"
+                    fxLayout="row"
+                    fxLayoutGap="20px"
+                    [controlGroup]="$any(donneeForm.controls['distanceGroup'])"
+                    [estimationsDistance]="estimationsDistance$ | async"
+                    formGroupName="distanceGroup"
+                  >
+                  </input-distance>
+  
+                  <!-- REGROUPEMENT-->
+                  <input-regroupement
+                    *ngIf="(appConfiguration$ | async)?.isRegroupementDisplayed"
+                    [fxFlex]="getFxRegroupement$() | async"
+                    [control]="$any(donneeForm.controls['regroupement'])"
+                  ></input-regroupement>
+  
+                  <mat-error
+                    *ngIf="isDistanceFieldInvalid()"
+                    class="creation-page-error"
+                  >
+                    La distance doit être un nombre entier compris entre 0 et
+                    65535.
+                  </mat-error>
+                </div>
+              </mat-card>
+              <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+  
+              <!-- CARD COMPORTEMENT x6 -->
+              <mat-card class="mat-card-override">
+                <mat-card-content
+                  class="comportements-container full-width-container"
                 >
-                  La distance doit être un nombre entier compris entre 0 et
-                  65535.
-                </mat-error>
-              </div>
-            </mat-card>
-            <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
+                  <input-comportements
+                    formGroupName="comportementsGroup"
+                    [donneeForm]="donneeForm"
+                    [controlGroup]="$any(donneeForm.controls['comportementsGroup'])"
+                    [comportements]="comportements$ | async"
+                  ></input-comportements>
+                </mat-card-content>
+              </mat-card>
+              <!-- END CARD COMPORTEMENT x6 -->
+  
+              <!-- CARD MILIEU x4 -->
+              <mat-card class="mat-card-override">
+                <mat-card-content class="milieux-container full-width-container">
+                  <input-milieux
+                    formGroupName="milieuxGroup"
+                    [donneeForm]="donneeForm"
+                    [controlGroup]="$any(donneeForm.controls['milieuxGroup'])"
+                    [milieux]="milieux$ | async"
+                  ></input-milieux>
+                </mat-card-content>
+              </mat-card>
+              <!-- END CARD MILIEU x4 -->
+  
+              <!-- CARD COMMENTAIRE -->
+              <mat-card class="mat-card-override">
+                <mat-card-content class="full-width-container">
+                  <!-- COMMENTAIRE -->
+                  <input-commentaire
+                    [control]="$any(donneeForm.controls['commentaire'])"
+                  ></input-commentaire>
+                </mat-card-content>
+              </mat-card>
+              <!-- END CARD COMMENTAIRE -->
+            </form>
+          </div>
+        </ng-container>
 
-            <!-- CARD COMPORTEMENT x6 -->
-            <mat-card class="mat-card-override">
-              <mat-card-content
-                class="comportements-container full-width-container"
-              >
-                <input-comportements
-                  formGroupName="comportementsGroup"
-                  [donneeForm]="donneeForm"
-                  [controlGroup]="$any(donneeForm.controls['comportementsGroup'])"
-                  [comportements]="comportements$ | async"
-                ></input-comportements>
-              </mat-card-content>
-            </mat-card>
-            <!-- END CARD COMPORTEMENT x6 -->
-
-            <!-- CARD MILIEU x4 -->
-            <mat-card class="mat-card-override">
-              <mat-card-content class="milieux-container full-width-container">
-                <input-milieux
-                  formGroupName="milieuxGroup"
-                  [donneeForm]="donneeForm"
-                  [controlGroup]="$any(donneeForm.controls['milieuxGroup'])"
-                  [milieux]="milieux$ | async"
-                ></input-milieux>
-              </mat-card-content>
-            </mat-card>
-            <!-- END CARD MILIEU x4 -->
-
-            <!-- CARD COMMENTAIRE -->
-            <mat-card class="mat-card-override">
-              <mat-card-content class="full-width-container">
-                <!-- COMMENTAIRE -->
-                <input-commentaire
-                  [control]="$any(donneeForm.controls['commentaire'])"
-                ></input-commentaire>
-              </mat-card-content>
-            </mat-card>
-            <!-- END CARD COMMENTAIRE -->
-          </form>
-        </div>
       </div>
     </div>
     <div class="save-button-container">
