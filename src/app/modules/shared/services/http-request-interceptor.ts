@@ -8,19 +8,20 @@ import {
 import { Injectable } from "@angular/core";
 import { NavigationExtras, Router } from "@angular/router";
 import { Observable, of } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { catchError, retry } from "rxjs/operators";
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   intercept(
-    request: HttpRequest<any>,
+    request: HttpRequest<unknown>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
-      catchError((err: any, caught: any) => {
-        if (err instanceof HttpErrorResponse) {
+      retry(1),
+      catchError((err, caught) => {
+        if (err instanceof HttpErrorResponse && err?.url?.startsWith(window.location.origin)) { // Don't route on external URLs failures
           // In case of HTTP error, redirect to the error page
           const errorPageParams: NavigationExtras = {
             state: {
