@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import L from 'leaflet';
 import 'leaflet.control.opacity';
-import 'Leaflet.markercluster';
+import 'leaflet.markercluster';
 import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { UILieudit } from 'src/app/models/lieudit.model';
