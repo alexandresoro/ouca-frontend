@@ -27,6 +27,39 @@ export class TimeHelper {
     return null;
   }
 
+  public static getFormattedDuration = (durationStr: string): string => {
+    if (durationStr) {
+      let value = durationStr;
+      const dateRegExp1 = new RegExp("^[0-9][0-9][0-5][0-9]$");
+      if (dateRegExp1.test(value)) {
+        value =
+          value.charAt(0) +
+          value.charAt(1) +
+          ":" +
+          value.charAt(2) +
+          value.charAt(3);
+      }
+
+      const dateRegExp2 = new RegExp("^[0-9][0-9][h][0-5][0-9]$");
+      if (dateRegExp2.test(value)) {
+        value = value.replace("h", ":");
+      }
+
+      const dateRegExp3 = new RegExp("^[0-9][0-9][H][0-5][0-9]$");
+      if (dateRegExp3.test(value)) {
+        value = value.replace("H", ":");
+      }
+
+      const dateRegExpOnlyMinutes = new RegExp("^[0-5]?[0-9]$");
+      if (dateRegExpOnlyMinutes.test(value)) {
+        value = "00:" + dateRegExpOnlyMinutes.exec(value)[0];
+      }
+
+      return value;
+    }
+    return null;
+  }
+
   public static isATime = (timeStr: string): boolean => {
     const value = TimeHelper.getFormattedTime(timeStr);
 

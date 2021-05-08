@@ -90,6 +90,26 @@ export class FormValidatorHelper {
     };
   }
 
+  public static durationValidator = (): ValidatorFn => {
+    return (
+      control: AbstractControl
+    ): {
+      forbiddenValue: {
+        value: unknown;
+      };
+    } | null => {
+      const value = TimeHelper.getFormattedDuration(control.value);
+
+      const finalDateRegExp = new RegExp("^[0-9][0-9][:][0-5][0-9]$");
+      const isNotMatchingRegExp: boolean =
+        !!value && !finalDateRegExp.test(value);
+
+      return isNotMatchingRegExp
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
+  }
+
   public static getValidatorResult(
     key: string,
     value: string

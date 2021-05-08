@@ -33,6 +33,7 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { DateFnsDateAdapter, MAT_DATE_FNS_DATE_FORMATS } from "src/app/date-adapter/date-fns-adapter";
 import { InputAgeComponent } from "../donnee-creation/components/input-age/input-age.component";
 import { InputDistanceComponent } from "../donnee-creation/components/input-distance/input-distance.component";
+import { InputDurationComponent } from '../donnee-creation/components/input-duration/input-duration.component';
 import { InputEspeceComponent } from "../donnee-creation/components/input-espece/input-espece.component";
 import { InputLieuditComponent } from "../donnee-creation/components/input-lieudit/input-lieudit.component";
 import { InputNombreComponent } from "../donnee-creation/components/input-nombre/input-nombre.component";
@@ -88,6 +89,7 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     NetworkUnavailableDialogComponent,
     InputAgeComponent,
     InputDistanceComponent,
+    InputDurationComponent,
     InputEspeceComponent,
     InputLieuditComponent,
     InputNombreComponent,
@@ -111,6 +113,7 @@ import { StatusMessageComponent } from "./components/status-message/status-messa
     HttpClientModule,
     InputAgeComponent,
     InputDistanceComponent,
+    InputDurationComponent,
     InputEspeceComponent,
     InputLieuditComponent,
     InputNombreComponent,

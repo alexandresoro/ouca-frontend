@@ -264,7 +264,7 @@ export class InventaireFormService {
       inventaireFormValue.heure
     );
 
-    const duree: string = TimeHelper.getFormattedTime(
+    const duree: string = TimeHelper.getFormattedDuration(
       inventaireFormValue.duree
     );
 
@@ -358,7 +358,7 @@ export class InventaireFormService {
    * The durée should be empty or filled and following the format HH:MM or HHhMM
    */
   private dureeValidator = (): ValidatorFn => {
-    return FormValidatorHelper.timeValidator();
+    return FormValidatorHelper.durationValidator();
   };
 
   /**
