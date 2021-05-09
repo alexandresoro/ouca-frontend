@@ -209,7 +209,7 @@ export class CreationMapComponent implements OnInit, OnDestroy {
 
   private onUpdatedLieuxDits = (lieuxdits: UILieudit[]) => {
     const markers = lieuxdits.map((lieudit) => {
-      const tooltipText = `(${lieudit.commune.departement.code}) ${lieudit.commune.nom.toUpperCase()} - ${lieudit.nom}`;
+      const tooltipText = `${lieudit.nom} -  ${lieudit.commune.nom.toUpperCase()} (${lieudit.commune.departement.code})`;
       const marker = L.marker([lieudit.coordinates.latitude, lieudit.coordinates.longitude]).bindTooltip(tooltipText);
 
       // Handle click on a marker
