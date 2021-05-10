@@ -2,20 +2,24 @@ name: CI/CD
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+    tags:
+      - "v*.*.*"
+      - "v*.*.*-rc*"
   pull_request:
-    branches: [master]
-
-env:
-  NPM_GITHUB_TOKEN: ${{secrets.NPM_DOCKERFILE_TOKEN}}
+    branches:
+      - master
 
 jobs:
-  build:
+  check-build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version:
+          - 14.x
+          - 16.x
 
     steps:
       - uses: actions/checkout@v2
@@ -36,14 +40,24 @@ jobs:
       - name: Check build
         run: yarn build:prod
 
-  docker:
-    needs: build
+  publish-docker:
+    needs: check-build
 
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Retrieve git branch and/or tag
+        id: branch_name
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+
+      - name: Retrieve docker labels
+        id: docker_name
+        run: |
+          echo ::set-output name=DOCKER_TAGS::${{ steps.output.SOURCE_TAG && steps.output.SOURCE_TAG || "latest" }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -65,7 +79,9 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms:
+            - linux/amd64
+            - linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ steps.docker_name.output.DOCKER_TAGS }}
