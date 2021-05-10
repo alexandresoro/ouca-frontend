@@ -79,9 +79,9 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          platforms:
-            - linux/amd64
-            - linux/arm64
+          platforms: |
+            linux/amd64
+            linux/arm64
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ steps.docker_name.output.DOCKER_TAGS }}
