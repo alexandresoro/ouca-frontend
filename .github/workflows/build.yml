@@ -57,7 +57,11 @@ jobs:
       - name: Retrieve docker labels
         id: docker_name
         run: |
-          echo ::set-output name=DOCKER_TAGS::${{ [ -z steps.output.SOURCE_TAG ] && 'latest' || steps.output.SOURCE_TAG }}
+          if [ ${ steps.output.SOURCE_TAG }} != ""]; then
+            echo ::set-output name=DOCKER_TAGS::${{ steps.output.SOURCE_TAG }}
+          elif 
+            echo ::set-output name=DOCKER_TAGS::${{ 'latest' }}
+          fi
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
