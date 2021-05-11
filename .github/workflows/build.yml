@@ -10,6 +10,9 @@ on:
     branches:
       - master
 
+env:
+  NODE_VERSION_FOR_RELEASE: 16.x
+
 jobs:
   check-build:
     runs-on: ubuntu-latest
@@ -45,18 +48,15 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
 
-    env:
-      NODE_VERSION: 16.x
-
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
 
-      - name: Use Node.js ${NODE_VERSION}
+      - name: Use Node.js ${NODE_VERSION_FOR_RELEASE}
         uses: actions/setup-node@v1
         with:
-          node-version: ${NODE_VERSION}
+          node-version: ${NODE_VERSION_FOR_RELEASE}
 
       - name: Install dependencies
         run: yarn install --immutable
