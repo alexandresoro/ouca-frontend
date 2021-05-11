@@ -21,12 +21,12 @@ jobs:
       matrix:
         include:
           - node-version: 14.x
-            type: "lts"
+            type: "lts-check-build-only"
           - node-version: 16.x
             type: "release"
 
     steps:
-      - run: echo ${{ (matrix.type == 'lts' && 'lts') || 'notlts' }}
+      - run: echo ${{ env.NODE_LTS_VERSION }}
 # echo ${{ env.NODE_RELEASE_VERSION }}
 # echo ${{ env.VERSION_TAG }}
 # echo ${{ (env.NODE_LTS_VERSION == matrix.node-version && 'lts') || 'notlts' }}
