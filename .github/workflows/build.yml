@@ -11,111 +11,112 @@ on:
       - master
 
 env:
-  NODE_VERSION_FOR_RELEASE: 16.x
+  NODE_LTS_VERSION: 14.x
+  NODE_RELEASE_VERSION: 16.x
+  VERSION_TAG: ${GITHUB_REF#refs/tags/}
+# jobs:
+#   check-build:
+#     runs-on: ubuntu-latest
 
-jobs:
-  check-build:
-    runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         node-version:
+#           - ${{ env.NODE_LTS_VERSION }}
+#           - ${{ env.NODE_RELEASE_VERSION }}
 
-    strategy:
-      matrix:
-        node-version:
-          - 14.x
-          - 16.x
+#     steps:
+#       - uses: actions/checkout@v2
+#         with:
+#           submodules: true
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
+#       - name: Use Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: ${{ matrix.node-version }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+#       - name: Install dependencies
+#         run: yarn install --immutable
 
-      - name: Install dependencies
-        run: yarn install --immutable
+#       - name: Lint
+#         run: yarn lint
 
-      - name: Lint
-        run: yarn lint
+#       - name: Check build
+#         run: yarn build:prod
 
-      - name: Check build
-        run: yarn build:prod
+#   publish-release:
+#     needs: check-build
 
-  publish-release:
-    needs: check-build
+#     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+#     runs-on: ubuntu-latest
 
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#         with:
+#           submodules: true
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
+#       - name: Use Node.js ${{ env.NODE_VERSION_FOR_RELEASE }}
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: ${{ env.NODE_VERSION_FOR_RELEASE }}
 
-      - name: Use Node.js ${{ env.NODE_VERSION_FOR_RELEASE }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ env.NODE_VERSION_FOR_RELEASE }}
+#       - name: Install dependencies
+#         run: yarn install --immutable
 
-      - name: Install dependencies
-        run: yarn install --immutable
+#       - name: Check build
+#         run: yarn build:prod
 
-      - name: Check build
-        run: yarn build:prod
+#       - name: Create a release for tags
+#         uses: softprops/action-gh-release@v1
+#         if: startsWith(github.ref, 'refs/tags/')
+#         with:
+#           prerelease: true
+#           files: |
+#             LICENSE
+#             dist/**
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create a release for tags
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          prerelease: true
-          files: |
-            LICENSE
-            dist/**
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   publish-docker:
+#     needs: check-build
 
-  publish-docker:
-    needs: check-build
+#     if: github.event_name == 'push'
+#     runs-on: ubuntu-latest
 
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
 
-    steps:
-      - uses: actions/checkout@v2
+#       - name: Set the default docker tag
+#         run: |
+#           echo "DOCKER_TAG=latest" >> $GITHUB_ENV
 
-      - name: Set the default docker tag
-        run: |
-          echo "DOCKER_TAG=latest" >> $GITHUB_ENV
+#       - name: Retrieve docker label if this is a tag push
+#         if: startsWith(github.ref, 'refs/tags/')
+#         run: |
+#           echo "DOCKER_TAG=$(echo ${GITHUB_REF#refs/tags/} )" >> $GITHUB_ENV
 
-      - name: Retrieve docker label if this is a tag push
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          echo "DOCKER_TAG=$(echo ${GITHUB_REF#refs/tags/} )" >> $GITHUB_ENV
+#       - name: Set up QEMU
+#         uses: docker/setup-qemu-action@v1
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+#       - name: Set up Docker Buildx
+#         id: buildx
+#         uses: docker/setup-buildx-action@v1
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
+#       - name: Log into GitHub Container Registry
+#         uses: docker/login-action@v1
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.CR_PAT }}
 
-      - name: Log into GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.CR_PAT }}
-
-      - name: Build and push to GitHub Container Registry
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          platforms: |
-            linux/amd64
-            linux/arm64
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository }}:${{ env.DOCKER_TAG }}
+#       - name: Build and push to GitHub Container Registry
+#         id: docker_build
+#         uses: docker/build-push-action@v2
+#         with:
+#           builder: ${{ steps.buildx.outputs.name }}
+#           context: .
+#           platforms: |
+#             linux/amd64
+#             linux/arm64
+#           push: true
+#           tags: |
+#             ghcr.io/${{ github.repository }}:${{ env.DOCKER_TAG }}
