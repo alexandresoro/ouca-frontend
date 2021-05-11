@@ -25,11 +25,11 @@ jobs:
           - ${{ env.NODE_LTS_VERSION }}
           - ${{ env.NODE_RELEASE_VERSION }}
     steps:
-      - run: >
+      - run: |
         echo ${{ env.NODE_LTS_VERSION }}
-        echo ${{ env.NODE_RELEASE_VERSION }}
-        echo ${{ env.VERSION_TAG }}
-        echo ${{ (env.NODE_LTS_VERSION == matrix.node-version && 'lts') || 'notlts' }}
+# echo ${{ env.NODE_RELEASE_VERSION }}
+# echo ${{ env.VERSION_TAG }}
+# echo ${{ (env.NODE_LTS_VERSION == matrix.node-version && 'lts') || 'notlts' }}
 
 
 
