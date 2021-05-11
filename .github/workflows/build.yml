@@ -25,8 +25,8 @@ jobs:
           - ${{ env.NODE_LTS_VERSION }}
           - ${{ env.NODE_RELEASE_VERSION }}
     steps:
-      - run: |
-        echo ${{ env.NODE_LTS_VERSION }}
+      - name: test
+      - run: echo ${{ env.NODE_LTS_VERSION }}
 # echo ${{ env.NODE_RELEASE_VERSION }}
 # echo ${{ env.VERSION_TAG }}
 # echo ${{ (env.NODE_LTS_VERSION == matrix.node-version && 'lts') || 'notlts' }}
