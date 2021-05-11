@@ -22,8 +22,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - ${{ env.NODE_LTS_VERSION }}
-          - ${{ env.NODE_RELEASE_VERSION }}
+          - "${{ env.NODE_LTS_VERSION }}"
+          - "${{ env.NODE_RELEASE_VERSION }}"
     steps:
       - run: echo ${{ env.NODE_LTS_VERSION }}
 # echo ${{ env.NODE_RELEASE_VERSION }}
