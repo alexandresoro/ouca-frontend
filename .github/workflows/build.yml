@@ -46,6 +46,7 @@ jobs:
         run: |
           cp LICENSE dist/
           tar -cvzf ouca-frontend-dist-${GITHUB_REF#refs/tags/}.tar.gz -C dist/ .
+          echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Publish the release
         uses: softprops/action-gh-release@v1
@@ -53,7 +54,7 @@ jobs:
         with:
           prerelease: true
           files: |
-            ouca-frontend-dist-${GITHUB_REF#refs/tags/}.tar.gz
+            ouca-frontend-dist-${{ env.RELEASE_TAG }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
