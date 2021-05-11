@@ -54,7 +54,7 @@ jobs:
           echo "DOCKER_TAG=latest" >> $GITHUB_ENV
 
       - name: Retrieve docker label if this is a tag push
-        if: contains(github.ref, "tags")
+        if: contains(github.ref, 'tags')
         run: |
           echo "DOCKER_TAG=$(echo ${GITHUB_REF#refs/tags/} )" >> $GITHUB_ENV
 
