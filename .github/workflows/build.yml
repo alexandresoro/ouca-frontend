@@ -26,20 +26,14 @@ jobs:
             type: "release"
 
     steps:
-      - run: echo ${{ env.NODE_LTS_VERSION }}
-# echo ${{ env.NODE_RELEASE_VERSION }}
-# echo ${{ env.VERSION_TAG }}
-# echo ${{ (env.NODE_LTS_VERSION == matrix.node-version && 'lts') || 'notlts' }}
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
 
-#       - uses: actions/checkout@v2
-#         with:
-#           submodules: true
-
-#       - name: Use Node.js ${{ matrix.node-version }}
-#         uses: actions/setup-node@v1
-#         with:
-#           node-version: ${{ matrix.node-version }}
-
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 #       - name: Install dependencies
 #         run: yarn install --immutable
 
