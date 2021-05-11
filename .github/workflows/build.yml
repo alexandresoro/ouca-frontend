@@ -45,9 +45,9 @@ jobs:
         run: yarn build:prod
 
       - run: |
-        cp LICENSE dist/
-        tar -cvzf test.tar.gz -C dist/ .
-        ls -al
+          cp LICENSE dist/
+          tar -cvzf test.tar.gz -C dist/ .
+          ls -al
 #   publish-release:
 #     needs: check-build-and-release
 
