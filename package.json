@@ -1,14 +1,21 @@
 {
   "name": "basenaturaliste",
   "version": "1.0.0",
-  "description": "",
+  "description": "Frontend for Où-ça",
+  "contributors": [
+    {
+      "name": "Camille Carrier"
+    },
+    {
+      "name": "Alexandre Soro"
+    }
+  ],
+  "license": "MIT",
+  "private": true,
   "scripts": {
     "build:prod": "ng build --prod",
     "lint": "eslint 'src/**/*.ts'"
   },
-  "keywords": [],
-  "author": "Camille Carrier",
-  "license": "MIT",
   "dependencies": {
     "@angular/animations": "11.2.13",
     "@angular/cdk": "11.2.12",
@@ -49,7 +56,6 @@
     "typescript": "4.0.3"
   },
   "engines": {
-    "node": ">=12",
-    "yarn": ">=1 <2"
+    "node": ">=14"
   }
 }
