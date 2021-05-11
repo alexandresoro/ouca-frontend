@@ -53,10 +53,10 @@ jobs:
         with:
           submodules: true
 
-      - name: Use Node.js ${NODE_VERSION_FOR_RELEASE}
+      - name: Use Node.js ${{ env.NODE_VERSION_FOR_RELEASE }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${NODE_VERSION_FOR_RELEASE}
+          node-version: ${{ env.NODE_VERSION_FOR_RELEASE }}
 
       - name: Install dependencies
         run: yarn install --immutable
