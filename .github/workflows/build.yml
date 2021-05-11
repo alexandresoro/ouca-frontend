@@ -39,11 +39,38 @@ jobs:
       - name: Check build
         run: yarn build:prod
 
+  publish-release:
+    needs: check-build
+
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version:
+          - 16.x
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Check build
+        run: yarn build:prod
+
       - name: Create a release for tags
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
-        prerelease: true
         with:
+          prerelease: true
           files: |
             LICENSE
             dist/**
