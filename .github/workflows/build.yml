@@ -11,8 +11,6 @@ on:
       - master
 
 env:
-  NODE_LTS_VERSION: 14.x
-  NODE_RELEASE_VERSION: 16.x
   VERSION_TAG: ${GITHUB_REF#refs/tags/}
 
 jobs:
@@ -21,11 +19,14 @@ jobs:
 
     strategy:
       matrix:
-        node-version:
-          - "${{ env.NODE_LTS_VERSION }}"
-          - "${{ env.NODE_RELEASE_VERSION }}"
+        include:
+          - node-version: 14.x
+            type: "lts"
+          - node-version: 16.x
+            type: "release"
+
     steps:
-      - run: echo ${{ env.NODE_LTS_VERSION }}
+      - run: echo ${{ (matrix.type == 'lts' && 'lts') || 'notlts' }}
 # echo ${{ env.NODE_RELEASE_VERSION }}
 # echo ${{ env.VERSION_TAG }}
 # echo ${{ (env.NODE_LTS_VERSION == matrix.node-version && 'lts') || 'notlts' }}
