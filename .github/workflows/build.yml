@@ -14,17 +14,25 @@ env:
   NODE_LTS_VERSION: 14.x
   NODE_RELEASE_VERSION: 16.x
   VERSION_TAG: ${GITHUB_REF#refs/tags/}
-# jobs:
-#   check-build:
-#     runs-on: ubuntu-latest
 
-#     strategy:
-#       matrix:
-#         node-version:
-#           - ${{ env.NODE_LTS_VERSION }}
-#           - ${{ env.NODE_RELEASE_VERSION }}
+jobs:
+  check-build-and-release:
+    runs-on: ubuntu-latest
 
-#     steps:
+    strategy:
+      matrix:
+        node-version:
+          - ${{ env.NODE_LTS_VERSION }}
+          - ${{ env.NODE_RELEASE_VERSION }}
+    steps:
+      - run: |
+        echo ${{ env.NODE_LTS_VERSION }}
+        echo ${{ env.NODE_RELEASE_VERSION }}
+        echo ${{ env.VERSION_TAG }}
+        echo ${{ (env.NODE_LTS_VERSION == matrix.node-version && 'lts') || 'notlts' }}
+
+
+
 #       - uses: actions/checkout@v2
 #         with:
 #           submodules: true
@@ -44,7 +52,7 @@ env:
 #         run: yarn build:prod
 
 #   publish-release:
-#     needs: check-build
+#     needs: check-build-and-release
 
 #     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
 #     runs-on: ubuntu-latest
@@ -77,7 +85,7 @@ env:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #   publish-docker:
-#     needs: check-build
+#     needs: check-build-and-release
 
 #     if: github.event_name == 'push'
 #     runs-on: ubuntu-latest
