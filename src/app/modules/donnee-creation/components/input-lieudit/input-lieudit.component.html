@@ -89,6 +89,7 @@
             matInput
             [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
             [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
+            [step]="getCoordinatesInputStep(getCoordinatesSystem$() | async)"
             type="number"
             placeholder="Latitude"
             id="input-latitude"
@@ -103,6 +104,7 @@
             matInput
             [min]="(getCoordinatesSystem$() | async)?.longitudeRange.min"
             [max]="(getCoordinatesSystem$() | async)?.longitudeRange.max"
+            [step]="getCoordinatesInputStep(getCoordinatesSystem$() | async)"
             type="number"
             placeholder="Longitude"
             id="input-longitude"

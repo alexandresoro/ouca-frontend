@@ -426,6 +426,9 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   public onLieuDitActivated = (lieuDit: Lieudit | UILieudit): void => {
     this.focusOnLieuDit(lieuDit);
   }
+  public getCoordinatesInputStep = (coordinatesSystem: CoordinatesSystem): number => {
+    return coordinatesSystem?.decimalPlaces ? Math.pow(10, -coordinatesSystem.decimalPlaces) : 1;
+  }
 
   private getCommunesToDisplay$ = (
     departementControl: AbstractControl
