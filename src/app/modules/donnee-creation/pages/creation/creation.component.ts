@@ -1,8 +1,12 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnDestroy,
-  OnInit
+  OnInit,
+  QueryList,
+  ViewChildren
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
@@ -60,8 +64,10 @@ import {
   templateUrl: "./creation.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreationComponent implements OnInit, OnDestroy {
+export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly destroy$ = new Subject();
+
+  @ViewChildren("especeInput") especeInput: QueryList<ElementRef>;
 
   private requestedDonneeId: number;
 
@@ -267,17 +273,6 @@ export class CreationComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.creationModeService
-      .getStatus$()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((status) => {
-        const elementToFocus =
-          status.isDonneeEnabled && !status.isInventaireEnabled
-            ? "input-Espèce"
-            : "input-Observateur";
-        document.getElementById(elementToFocus)?.focus();
-      });
-
     this.dialog.afterOpened.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.isModalOpened$.next(true);
     });
@@ -317,11 +312,41 @@ export class CreationComponent implements OnInit, OnDestroy {
         this.isInitializationCompleted$.next(true);
       });
 
-    this.isLieuditMapDisplayed$ = combineLatest([this.isLieuditMapRequested$, this.creationModeService.getIsInventaireEnabled$()])
+    this.isLieuditMapDisplayed$ = combineLatest([this.isLieuditMapRequested$, this.creationModeService.getStatus$()])
       .pipe(
         takeUntil(this.destroy$),
-        map(([isLieuditMapRequested, isInventaireEnabled]) => isLieuditMapRequested && isInventaireEnabled)
+        map(([isLieuditMapRequested, status]) => isLieuditMapRequested && status.isInventaireEnabled && !status.isDonneeEnabled)
       );
+  }
+
+  public ngAfterViewInit(): void {
+    this.creationModeService.getStatus$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((status) => {
+        const elementToFocus =
+          status.isDonneeEnabled && !status.isInventaireEnabled
+            ? "input-Espèce"
+            : "input-Observateur";
+        document.getElementById(elementToFocus)?.focus();
+      });
+
+    // Detect when the input espece is to be displayed
+    // to set the focus on it if needed
+    // There are cases where it is not properly handled as per above,
+    // as it will be triggered before the component exists (because of the ngIf)
+    this.especeInput.changes
+      .pipe(
+        filter(changes => changes.length),
+        withLatestFrom(this.creationModeService.getStatus$()),
+        map(([changes, status]) => status),
+        filter((status) => {
+          return status.isDonneeEnabled && !status.isInventaireEnabled;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        document.getElementById("input-Espèce")?.focus();
+      });
   }
 
   public ngOnDestroy(): void {
