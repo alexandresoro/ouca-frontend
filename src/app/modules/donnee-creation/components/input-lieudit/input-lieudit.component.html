@@ -16,7 +16,7 @@
         
       </autocomplete>
       
-      <button type="button" *ngIf="isCurrentSystemGps$ | async" mat-icon-button color="primary" [disabled]="isSearchInMapButtonDisabled$ | async" (click)="onSearchInMapClicked()">
+      <button tabindex="-1" type="button" *ngIf="isCurrentSystemGps$ | async" mat-icon-button color="primary" [disabled]="isSearchInMapButtonDisabled$ | async" (click)="onSearchInMapClicked()">
         <mat-icon>my_location</mat-icon>
       </button>
     </div>
