@@ -80,7 +80,13 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(() => {
-        this.resetSelectedEspece();
+        // When the value of the classe changes, clear the selected espece
+        // However, do not do that when the control itself is disabled
+        // This can happen for example when 
+        // wanting to edit back the inventaire after an espece has been set
+        if (!classeControl.disabled) {
+          this.resetSelectedEspece();
+        }
       });
 
     if (
