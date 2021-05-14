@@ -12,10 +12,9 @@
       <div fxFlex="1 1 500px" fxLayout="row" fxLayoutAlign="center center">
         <ul fxFlex="1 1 500px">
           <li><b>Étape courante :</b> {{currentStepText$ | async}}</li>
-          <li><b>Nombre de lignes du document (commentaires inclus) :</b> {{(importProgressStatus$ | async)?.totalEntries}}</li>
-          <li><b>Nombre total de lignes de données :</b> {{(importProgressStatus$ | async)?.entriesToBeValidated}}</li>
-          <li><b>Données validées :</b> {{(importProgressStatus$ | async)?.validatedEntries}}</li>
-          <li><b>Données en erreur :</b> {{(importProgressStatus$ | async)?.errors}}</li>
+          <li><b>Données à importer :</b> {{(importProgressStatus$ | async)?.entriesToBeValidated}}</li>
+          <li><b>Données valides :</b> {{(importProgressStatus$ | async)?.validatedEntries}}</li>
+          <li><b>Données érronées :</b> {{(importProgressStatus$ | async)?.errors}}</li>
         </ul>
       </div>
 
@@ -33,7 +32,7 @@
 
     <ng-container *ngIf="(fileInputError$ | async) as fileError">
       <div class="center">
-        Une erreur sur le fichier a été détectée et aucune donnée n'a été importé.
+        Une erreur sur le fichier a été détectée et aucune donnée n'a été importée.
         <br/>
         Le message d'erreur est : "{{fileError}}"
       </div>
@@ -47,7 +46,7 @@
 
       <div class="errorFileContent">
         <div class="textDescription">
-          Vous avez la possibilité de télécharger le fichier récapitulatif des erreurs via le bouton ci-dessous.
+          Vous pouvez télécharger le fichier récapitulant les erreurs en cliquant sur le bouton ci-dessous.
         </div>
         <a mat-button mat-raised-button color="warn" [href]="errorFileUrlSafe" download="erreurs.csv">Télécharger la liste des erreurs</a>
       </div>

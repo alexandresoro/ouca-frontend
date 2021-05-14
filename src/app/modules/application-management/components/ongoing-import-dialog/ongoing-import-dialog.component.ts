@@ -41,9 +41,9 @@ export class OngoingImportDialog implements OnInit, OnDestroy {
 
   private STATUS_MESSAGE_MAPPING: Record<StatusUpdate, string> = {
     IMPORT_PROCESS_STARTED: "Début de la procédure d'import",
-    RETRIEVE_DB_INFO_START: "Récupération des informations nécéssaires à la validation",
+    RETRIEVE_DB_INFO_START: "Préparation des données nécessaires pour l'import",
     DATA_VALIDATION_START: "Validation des données à importer",
-    INSERT_DB_START: "Insertion dans la base en cours"
+    INSERT_DB_START: "Insertion des données valides dans la base de données"
   }
 
   constructor(
