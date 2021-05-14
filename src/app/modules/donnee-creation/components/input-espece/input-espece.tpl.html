@@ -23,8 +23,9 @@
   *ngIf="!isMultipleSelectMode"
   [attributesToFilter]="especeAutocompleteAttributes"
   type="Espèce"
-  [values]="filteredEspeces$ | async"
+  [valuesObs]="filteredEspeces$"
   [control]="$any(controlGroup.controls['espece'])"
+  [maxDisplayedEntries]="50"
   [displayFn]="displayEspeceFormat"
 >
 </autocomplete>

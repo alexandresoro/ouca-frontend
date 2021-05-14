@@ -44,6 +44,9 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
 
   @Input() public control: FormControl;
 
+  // The maximum number of elements to be displayed in the autocomplete
+  @Input() public maxDisplayedEntries?: number;
+
   @Input() public displayFn: ((value: any) => string) | null;
 
   @Output() public optionActivated: EventEmitter<T> = new EventEmitter<T>();
@@ -171,13 +174,19 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
       ) ?? [];
 
       // Return the elements by priority
-      return sortBy(filteredValuesWithPriorities, (first, second) => {
+      const sortedElements = sortBy(filteredValuesWithPriorities, (first, second) => {
         return first.priority - second.priority;
       })?.map(
         sortedValueWithPriority => {
           return sortedValueWithPriority.valueFromList;
         }
       );
+
+      if (this.maxDisplayedEntries) {
+        return sortedElements.slice(0, this.maxDisplayedEntries);
+      } else {
+        return sortedElements;
+      }
     }
   }
 

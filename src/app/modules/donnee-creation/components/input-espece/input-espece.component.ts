@@ -74,26 +74,33 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
       ? this.controlGroup.get("classes")
       : this.controlGroup.get("classe");
 
-    classeControl.valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
-      this.resetSelectedEspece();
-    });
+    classeControl.valueChanges
+      .pipe(
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.resetSelectedEspece();
+      });
 
     if (
       this.controlGroup.controls.espece &&
       this.controlGroup.controls.classe
     ) {
-      this.controlGroup.controls.espece.valueChanges.subscribe(
-        (selectedEspece) => {
-          if (selectedEspece?.id) {
-            this.controlGroup.controls.classe.setValue(selectedEspece.classe, {
-              emitEvent: false
-            });
+      this.controlGroup.controls.espece.valueChanges
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+          (selectedEspece) => {
+            if (selectedEspece?.id) {
+              this.controlGroup.controls.classe.setValue(selectedEspece.classe, {
+                emitEvent: false
+              });
+            }
           }
-        }
-      );
+        );
     }
 
-    classeControl.valueChanges.subscribe((newValue) => {
+    classeControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((newValue) => {
       // This is done because when we first reach this component, we may have no value changes triggered,
       // so we need to initialize it with null (see the BehaviorSubject above)
       this.selectedClasse$.next(newValue);
@@ -142,15 +149,9 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
    * When selecting a classe, filter the list of especes
    */
   public resetSelectedEspece(): void {
-    if (
-      this.controlGroup.controls.espece &&
-      !!this.controlGroup.controls.espece.value
-    ) {
+    if (this.controlGroup?.controls?.espece?.value) {
       this.controlGroup.controls.espece.setValue(null);
-    } else if (
-      this.controlGroup.controls.especes &&
-      !!this.controlGroup.controls.especes.value
-    ) {
+    } else if (this.controlGroup?.controls?.especes?.value) {
       this.controlGroup.controls.especes.setValue(null);
     }
   }
