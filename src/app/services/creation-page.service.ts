@@ -36,7 +36,7 @@ export class CreationPageService {
     clearDonnee$: Subject<Donnee>
   ): void => {
     const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
-      inventaireForm
+      inventaireForm.value
     );
 
     this.saveInventaire(inventaire).subscribe((savedInventaireId) => {
@@ -59,7 +59,7 @@ export class CreationPageService {
 
   public updateInventaire(inventaireForm: FormGroup): void {
     const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
-      inventaireForm
+      inventaireForm.value
     );
     if (inventaire.id) {
       // Update the existing inventaire and switch to donnee mode
@@ -84,7 +84,7 @@ export class CreationPageService {
     shouldCreateNewInventaire?: boolean
   ): void => {
     const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
-      inventaireForm
+      inventaireForm.value
     );
 
     if (shouldCreateNewInventaire) {
@@ -112,7 +112,7 @@ export class CreationPageService {
     inventaireForm: FormGroup
   ): Observable<boolean> => {
     const newInventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
-      inventaireForm
+      inventaireForm.getRawValue()
     );
 
     return this.backendApiService.getInventaireById(newInventaire.id).pipe(
@@ -229,7 +229,7 @@ export class CreationPageService {
     const donnee: DonneeFormObject = {
       isDonneeEmpty: true,
       inventaire: this.inventaireFormService.getInventaireFromForm(
-        inventaireForm
+        inventaireForm.value
       )
     } as DonneeFormObject;
     this.donneeService.setCurrentlyEditingDonnee(donnee);

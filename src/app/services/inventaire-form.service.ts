@@ -249,8 +249,7 @@ export class InventaireFormService {
     };
   };
 
-  public getInventaireFromForm = (form: FormGroup): Inventaire => {
-    const inventaireFormValue: InventaireFormValue = form.value;
+  public getInventaireFromForm = (inventaireFormValue: InventaireFormValue): Inventaire => {
 
     const associesIds: number[] = ListHelper.getIDsFromEntities(
       inventaireFormValue.observateursAssocies
@@ -322,9 +321,9 @@ export class InventaireFormService {
   };
 
   public getInventaireFormObject = (form: FormGroup): InventaireFormObject => {
-    const { ...inventaireAttributes } = this.getInventaireFromForm(form);
-
     const inventaireFormValue: InventaireFormValue = form.value;
+
+    const { ...inventaireAttributes } = this.getInventaireFromForm(inventaireFormValue);
 
     return {
       ...inventaireAttributes,
