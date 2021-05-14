@@ -322,6 +322,15 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.lieuditMapRequested$.next(!this.lieuditMapRequested$.value);
       });
 
+    // When the inventaire becomes disabled, hide the map
+    this.creationModeService.getStatus$()
+      .pipe(
+        map((status) => status.isInventaireEnabled),
+        filter(isInventaireEnabled => !isInventaireEnabled),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => this.lieuditMapRequested$.next(false));
+
     // The map can be displayed IF AND ONLY IF it is "requested" (i.e the user wants to display it)
     // and the inventaire is active
     this.isLieuditMapDisplayed$ = combineLatest([this.lieuditMapRequested$, this.creationModeService.getStatus$()])
@@ -383,8 +392,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
    * Called when clicking on "Enregistrer la fiche inventaire" button
    */
   private onSaveInventaireButtonClicked = (): void => {
-    // Hide the map
-    this.lieuditMapRequested$.next(false);
     this.creationPageService.updateInventaire(this.inventaireForm);
   };
 
