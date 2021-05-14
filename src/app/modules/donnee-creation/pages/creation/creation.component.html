@@ -230,12 +230,21 @@
         <ng-container *ngIf="!(isLieuditMapDisplayed$ | async)">
           <h2>
             Fiche espèce
+
             <span
               *ngIf="getCurrentDonneeIndex$() | async"
-              matTooltip="ID = {{ getDisplayedDonneeId$() | async }}"
-              matTooltipClass="default-tooltip"
             >
               n°{{ getCurrentDonneeIndex$() | async }}
+            </span>
+
+            <span *ngIf="!(getCurrentDonneeIndex$() | async)"
+                 class="tag-new">
+                 NOUVEAU
+            </span>
+
+            <span *ngIf="getCurrentDonneeIndex$() | async"
+                  class="tag-id">
+                  ID {{ getDisplayedDonneeId$() | async }}
             </span>
           </h2>
   

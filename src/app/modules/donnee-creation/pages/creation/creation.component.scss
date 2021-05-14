@@ -76,6 +76,23 @@ mat-card.mat-card-override {
       flex-wrap: wrap;
     }
   }
+
+  .tag-new,
+  .tag-id {
+    border-radius: 5px;
+    margin-left: 8px;
+    padding: 0 5px 2px 5px;
+  }
+
+  .tag-new {
+    background-color: variables.$accent-light-color;
+    color: variables.$accent-color;
+  }
+
+  .tag-id {
+    background-color: variables.$main-light-color;
+    color: variables.$main-color;
+  }
 }
 
 .comportements-container > input-code-libelle:not(:last-child),
