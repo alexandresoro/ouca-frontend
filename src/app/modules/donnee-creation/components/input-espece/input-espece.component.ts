@@ -7,10 +7,11 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { takeUntil, withLatestFrom } from "rxjs/operators";
 import { Classe } from 'src/app/model/types/classe.object';
 import { Espece } from 'src/app/model/types/espece.model';
 import { UIEspece } from "src/app/models/espece.model";
+import { distinctUntilKeyChangedLoose } from 'src/app/modules/shared/rx-operators';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
@@ -74,21 +75,6 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
       ? this.controlGroup.get("classes")
       : this.controlGroup.get("classe");
 
-    classeControl.valueChanges
-      .pipe(
-        distinctUntilChanged(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(() => {
-        // When the value of the classe changes, clear the selected espece
-        // However, do not do that when the control itself is disabled
-        // This can happen for example when 
-        // wanting to edit back the inventaire after an espece has been set
-        if (!classeControl.disabled) {
-          this.resetSelectedEspece();
-        }
-      });
-
     if (
       this.controlGroup.controls.espece &&
       this.controlGroup.controls.classe
@@ -144,6 +130,30 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
         }
       }
     ).pipe(takeUntil(this.destroy$));
+
+    // When the classe changes, we reset the espece accordingly
+    classeControl.valueChanges
+      .pipe(
+        distinctUntilKeyChangedLoose("id"),
+        withLatestFrom(this.filteredEspeces$),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([valueClasse, filteredEspeces]) => {
+
+        // No need to clear the espece if it belongs to the classe
+        const isCurrentEspeceBelongingToCurrentClasse = !!filteredEspeces?.find((espece) => {
+          return espece?.classe?.id === valueClasse?.id;
+        });
+
+        // When the value of the classe changes, clear the selected espece
+        // However, do not do that when the control itself is disabled
+        // This can happen for example when 
+        // wanting to edit back the inventaire after an espece has been set
+        if (!classeControl.disabled && !isCurrentEspeceBelongingToCurrentClasse) {
+          this.resetSelectedEspece();
+        }
+      });
+
   }
 
   public ngOnDestroy(): void {

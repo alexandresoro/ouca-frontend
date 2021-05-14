@@ -123,7 +123,7 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
         // then we clear the field => filteredValues will become empty
         // In that case, the option is still "selected" but is not valid anymore
 
-        const isActivatedOptionValid = !!filteredValues.find((filteredValue) => filteredValue.id === optionActivated?.id);
+        const isActivatedOptionValid = !!filteredValues?.find((filteredValue) => filteredValue.id === optionActivated?.id);
         if (isActivatedOptionValid && optionActivated !== this.control.value) {
           this.control.setValue(optionActivated);
         } if (this.control.invalid) {
