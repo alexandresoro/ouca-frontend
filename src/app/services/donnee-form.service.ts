@@ -233,21 +233,21 @@ export class DonneeFormService {
     const donneeFormValue: DonneeFormValue = form.value;
 
     const espece: Espece = buildEspeceFromUIEspece(
-      donneeFormValue.especeGroup.espece
+      donneeFormValue.especeGroup?.espece
     );
 
     const donnee: Donnee = {
       id: donneeFormValue.id,
       inventaireId: null,
       especeId: espece?.id ?? null,
-      nombre: donneeFormValue.nombreGroup.nombre,
+      nombre: donneeFormValue?.nombreGroup?.nombre ?? null,
       estimationNombreId:
-        donneeFormValue.nombreGroup.estimationNombre?.id ?? null,
+        donneeFormValue?.nombreGroup?.estimationNombre?.id ?? null,
       sexeId: donneeFormValue.sexe?.id ?? null,
       ageId: donneeFormValue.age?.id ?? null,
-      distance: donneeFormValue.distanceGroup.distance,
+      distance: donneeFormValue?.distanceGroup?.distance ?? null,
       estimationDistanceId:
-        donneeFormValue.distanceGroup.estimationDistance?.id ?? null,
+        donneeFormValue?.distanceGroup?.estimationDistance?.id ?? null,
       regroupement: donneeFormValue.regroupement,
       comportementsIds: this.getComportements(donneeFormValue),
       milieuxIds: this.getMilieux(donneeFormValue),
@@ -263,14 +263,12 @@ export class DonneeFormService {
     form: FormGroup,
     inventaireFormObject: InventaireFormObject
   ): DonneeFormObject => {
-    const { ...donneeAttributes } = this.getDonneeFromForm(form);
-
     const donneeFormValue: DonneeFormValue = form.value;
 
     return {
-      ...donneeAttributes,
+      ...this.getDonneeFromForm(form),
       inventaire: inventaireFormObject,
-      classe: donneeFormValue.especeGroup.classe
+      classe: donneeFormValue.especeGroup?.classe ?? null
     };
   };
 
@@ -278,27 +276,27 @@ export class DonneeFormService {
     const comportementsIds: number[] = [];
     this.addComportement(
       comportementsIds,
-      donneeFormValue.comportementsGroup.comportement1
+      donneeFormValue.comportementsGroup?.comportement1
     );
     this.addComportement(
       comportementsIds,
-      donneeFormValue.comportementsGroup.comportement2
+      donneeFormValue.comportementsGroup?.comportement2
     );
     this.addComportement(
       comportementsIds,
-      donneeFormValue.comportementsGroup.comportement3
+      donneeFormValue.comportementsGroup?.comportement3
     );
     this.addComportement(
       comportementsIds,
-      donneeFormValue.comportementsGroup.comportement4
+      donneeFormValue.comportementsGroup?.comportement4
     );
     this.addComportement(
       comportementsIds,
-      donneeFormValue.comportementsGroup.comportement5
+      donneeFormValue.comportementsGroup?.comportement5
     );
     this.addComportement(
       comportementsIds,
-      donneeFormValue.comportementsGroup.comportement6
+      donneeFormValue.comportementsGroup?.comportement6
     );
     return comportementsIds;
   };
@@ -329,7 +327,7 @@ export class DonneeFormService {
     comportementsIds: number[],
     comportement: Comportement
   ): void => {
-    if (!!comportement && !!comportement.id) {
+    if (comportement?.id) {
       this.addId(comportementsIds, comportement.id);
     }
   };
@@ -374,10 +372,10 @@ export class DonneeFormService {
 
   private getMilieux = (donneeFormValue: DonneeFormValue): number[] => {
     const milieuxIds: number[] = [];
-    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup.milieu1);
-    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup.milieu2);
-    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup.milieu3);
-    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup.milieu4);
+    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup?.milieu1);
+    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup?.milieu2);
+    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup?.milieu3);
+    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup?.milieu4);
     return milieuxIds;
   };
 
@@ -400,7 +398,7 @@ export class DonneeFormService {
    * @param milieu milieu to add in the list
    */
   private addMilieu = (milieuxIds: number[], milieu: Milieu): void => {
-    if (!!milieu && !!milieu.id) {
+    if (milieu?.id) {
       this.addId(milieuxIds, milieu.id);
     }
   };
