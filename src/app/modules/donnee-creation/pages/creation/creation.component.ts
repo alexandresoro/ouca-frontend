@@ -24,8 +24,6 @@ import {
   filter,
   first,
   map,
-  scan,
-
   takeUntil,
   tap,
   withLatestFrom
@@ -105,11 +103,11 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     boolean
   >(false);
 
-  public isLieuditMapClicked$ = new Subject();
+  public lieuditMapClicked$ = new Subject();
 
-  public isLieuditMapRequested$ = this.isLieuditMapClicked$.pipe(scan((state) => !state, false));
+  public lieuditMapRequested$ = new BehaviorSubject<boolean>(false);
 
-  public isLieuditMapDisplayed$ = new Observable<boolean>();
+  public isLieuditMapDisplayed$: Observable<boolean>;
 
 
   constructor(
@@ -315,10 +313,21 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isInitializationCompleted$.next(true);
       });
 
-    this.isLieuditMapDisplayed$ = combineLatest([this.isLieuditMapRequested$, this.creationModeService.getStatus$()])
+    // Toggle the map display when clicked
+    this.lieuditMapClicked$
       .pipe(
-        takeUntil(this.destroy$),
-        map(([isLieuditMapRequested, status]) => isLieuditMapRequested && status.isInventaireEnabled && !status.isDonneeEnabled)
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.lieuditMapRequested$.next(!this.lieuditMapRequested$.value);
+      });
+
+    // The map can be displayed IF AND ONLY IF it is "requested" (i.e the user wants to display it)
+    // and the inventaire is active
+    this.isLieuditMapDisplayed$ = combineLatest([this.lieuditMapRequested$, this.creationModeService.getStatus$()])
+      .pipe(
+        map(([isLieuditMapRequested, status]) => isLieuditMapRequested && status.isInventaireEnabled),
+        takeUntil(this.destroy$)
       );
   }
 
@@ -374,6 +383,8 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
    * Called when clicking on "Enregistrer la fiche inventaire" button
    */
   private onSaveInventaireButtonClicked = (): void => {
+    // Hide the map
+    this.lieuditMapRequested$.next(false);
     this.creationPageService.updateInventaire(this.inventaireForm);
   };
 
@@ -628,7 +639,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   public toggleSearchInMap = (): void => {
-    this.isLieuditMapClicked$.next();
+    this.lieuditMapClicked$.next();
   }
 
 }
