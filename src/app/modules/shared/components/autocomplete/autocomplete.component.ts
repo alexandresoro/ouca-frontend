@@ -126,7 +126,7 @@ export class AutocompleteComponent<T extends EntiteSimple> implements OnInit, Af
         const isActivatedOptionValid = !!filteredValues.find((filteredValue) => filteredValue.id === optionActivated?.id);
         if (isActivatedOptionValid && optionActivated !== this.control.value) {
           this.control.setValue(optionActivated);
-        } if (!this.control.valid) {
+        } if (this.control.invalid) {
           this.control.setValue(null);
         }
       });
