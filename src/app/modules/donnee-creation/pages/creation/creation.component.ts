@@ -154,7 +154,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     fromEvent(document, "keyup")
       .pipe(
-        takeUntil(this.destroy$),
         withLatestFrom(this.isModalOpened$),
         filter(([event, isModalOpened]) => {
           return (
@@ -162,7 +161,8 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
             document.activeElement.tagName.toLowerCase() !== "textarea" &&
             !isModalOpened
           );
-        })
+        }),
+        takeUntil(this.destroy$),
       )
       .subscribe(() => {
         this.onSaveButtonClicked();
@@ -200,13 +200,14 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     combineLatest(
-      this.entitiesStoreService.getInventaireEntities$(),
-      this.entitiesStoreService.getDepartements$(),
-      this.donneeService.getCurrentDonnee$().pipe(
-        distinctUntilChanged(),
-        map((donnee) => donnee?.inventaire)
-      ),
-      this.appConfiguration$
+      [
+        this.entitiesStoreService.getInventaireEntities$(),
+        this.entitiesStoreService.getDepartements$(),
+        this.donneeService.getCurrentDonnee$().pipe(
+          map((donnee) => donnee?.inventaire)
+        ),
+        this.appConfiguration$
+      ]
     )
       .pipe(takeUntil(this.destroy$))
       .subscribe(([pageModel, departements, inventaire, appConfiguration]) => {
@@ -220,9 +221,11 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     combineLatest(
-      this.entitiesStoreService.getDonneeEntities$(),
-      this.donneeService.getCurrentDonnee$().pipe(distinctUntilChanged()),
-      this.appConfiguration$
+      [
+        this.entitiesStoreService.getDonneeEntities$(),
+        this.donneeService.getCurrentDonnee$(),
+        this.appConfiguration$
+      ]
     )
       .pipe(takeUntil(this.destroy$))
       .subscribe(([pageModel, donnee, appConfiguration]) => {
