@@ -58,30 +58,24 @@ export class InputMilieuxComponent implements OnInit, OnDestroy {
     // Other milieux should be active only if the previous milieu is active and has a valid value
     for (let indexMilieu = 2; indexMilieu <= 4; indexMilieu++) {
       combineLatest(
-        this.controlGroup.controls["milieu" + (indexMilieu - 1)]
-          .statusChanges as Observable<string>,
-        this.controlGroup.controls["milieu" + (indexMilieu - 1)]
-          .valueChanges as Observable<Milieu>,
-        (statusMilieuInPreviousElt, selectedMilieuInPreviousElt) => {
-          return {
-            statusMilieuInPreviousElt,
-            selectedMilieuInPreviousElt
-          };
-        }
+        [
+          this.controlGroup.controls[`milieu${indexMilieu - 1}`].statusChanges,
+          this.controlGroup.controls[`milieu${indexMilieu - 1}`].valueChanges
+        ] as [Observable<string>, Observable<Milieu>],
       )
         .pipe(
           takeUntil(this.destroy$)
         )
-        .subscribe(status => {
+        .subscribe(([statusMilieuInPreviousElt, selectedMilieuInPreviousElt]) => {
           if (
-            !!status.selectedMilieuInPreviousElt &&
-            status.statusMilieuInPreviousElt === "VALID"
+            !!selectedMilieuInPreviousElt &&
+            statusMilieuInPreviousElt !== "DISABLED"
           ) {
-            this.controlGroup.controls["milieu" + indexMilieu].enable({
+            this.controlGroup.controls[`milieu${indexMilieu}`].enable({
               onlySelf: true
             });
           } else {
-            this.controlGroup.controls["milieu" + indexMilieu].disable({
+            this.controlGroup.controls[`milieu${indexMilieu}`].disable({
               onlySelf: true
             });
           }

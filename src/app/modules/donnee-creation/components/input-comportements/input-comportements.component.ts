@@ -62,39 +62,30 @@ export class InputComportementsComponent implements OnInit, OnDestroy {
       indexComportement++
     ) {
       combineLatest(
-        this.controlGroup.controls["comportement" + (indexComportement - 1)]
-          .statusChanges as Observable<string>,
-        this.controlGroup.controls["comportement" + (indexComportement - 1)]
-          .valueChanges as Observable<Comportement>,
-        (
-          statusComportementInPreviousElt,
-          selectedComportementInPreviousElt
-        ) => {
-          return {
-            statusComportementInPreviousElt,
-            selectedComportementInPreviousElt
-          };
-        }
+        [
+          this.controlGroup.controls[`comportement${indexComportement - 1}`].statusChanges,
+          this.controlGroup.controls[`comportement${indexComportement - 1}`].valueChanges
+        ] as [Observable<string>, Observable<Comportement>]
       )
         .pipe(
           takeUntil(this.destroy$)
         )
-        .subscribe(status => {
+        .subscribe(([statusComportementInPreviousElt, selectedComportementInPreviousElt]) => {
           if (
-            !!status.selectedComportementInPreviousElt &&
-            status.statusComportementInPreviousElt === "VALID"
+            !!selectedComportementInPreviousElt &&
+            statusComportementInPreviousElt !== "DISABLED"
           ) {
-            this.controlGroup.controls["comportement" + indexComportement].enable(
+            this.controlGroup.controls[`comportement${indexComportement}`].enable(
               {
                 onlySelf: true
               }
             );
           } else {
-            this.controlGroup.controls[
-              "comportement" + indexComportement
-            ].disable({
-              onlySelf: true
-            });
+            this.controlGroup.controls[`comportement${indexComportement}`].disable(
+              {
+                onlySelf: true
+              }
+            );
           }
         });
     }
