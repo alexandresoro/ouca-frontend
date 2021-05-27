@@ -1,14 +1,14 @@
-@use "~@angular/material/theming" as mat;
+@use '~@angular/material' as mat;
 
-$main-color: mat.mat-color(mat.$mat-cyan, 800);
-$main-light-color: mat.mat-color(mat.$mat-cyan, 50);
-$accent-color: mat.mat-color(mat.$mat-pink, 400);
-$accent-light-color: mat.mat-color(mat.$mat-pink, 50);
-$light-grey-color: mat.mat-color(mat.$mat-grey, 100);
-$dark-grey-color: mat.mat-color(mat.$mat-grey, 800);
-$light-orange-color: mat.mat-color(mat.$mat-deep-orange, 50);
-$light-purple-color: mat.mat-color(mat.$mat-deep-purple, 50);
+$main-color: mat.get-color-from-palette(mat.$cyan-palette, 800);
+$main-light-color: mat.get-color-from-palette(mat.$cyan-palette, 50);
+$accent-color: mat.get-color-from-palette(mat.$pink-palette, 400);
+$accent-light-color: mat.get-color-from-palette(mat.$pink-palette, 50);
+$light-grey-color: mat.get-color-from-palette(mat.$grey-palette, 100);
+$dark-grey-color: mat.get-color-from-palette(mat.$grey-palette, 800);
+$light-orange-color: mat.get-color-from-palette(mat.$deep-orange-palette, 50);
+$light-purple-color: mat.get-color-from-palette(mat.$deep-purple-palette, 50);
 
-$background-color: mat.mat-color(mat.$mat-grey, 50);
+$background-color: mat.get-color-from-palette(mat.$grey-palette, 50);
 
 $page-padding: 50px;
