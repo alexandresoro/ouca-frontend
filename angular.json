@@ -72,21 +72,26 @@
                   "maximumError": "10kb"
                 }
               ]
-            }
-          }
+            },
+            "development": {}
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "basenaturaliste:build",
             "proxyConfig": "src/proxy.conf.json",
             "port": 3000
           },
           "configurations": {
             "production": {
               "browserTarget": "basenaturaliste:build:production"
+            },
+            "development": {
+              "browserTarget": "basenaturaliste:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -127,14 +132,17 @@
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "basenaturaliste:serve"
+            "protractorConfig": "e2e/protractor.conf.js"
           },
           "configurations": {
             "production": {
               "devServerTarget": "basenaturaliste:serve:production"
+            },
+            "development": {
+              "devServerTarget": "basenaturaliste:serve:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         }
       }
     }

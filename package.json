@@ -13,7 +13,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build:prod": "ng build --prod",
+    "build": "ng build",
     "lint": "eslint 'src/**/*.ts'"
   },
   "dependencies": {

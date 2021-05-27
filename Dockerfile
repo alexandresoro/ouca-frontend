@@ -11,7 +11,7 @@ RUN git submodule init
 RUN git submodule update
 
 RUN npm ci
-RUN npm run build:prod
+RUN npm run build
 
 # 2. Build the webserver image along with the built project
 FROM caddy

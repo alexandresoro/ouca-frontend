@@ -47,7 +47,7 @@ The backend for _Où ça ?_ application which is called from this frontend:
 1. Build the project:
 
 ```
-ng build --prod
+ng build
 ```
 
 This will generate the application files in the _dist/_ folder.
