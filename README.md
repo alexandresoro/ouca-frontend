@@ -47,7 +47,7 @@ The backend for _Où ça ?_ application which is called from this frontend:
 1. Build the project:
 
 ```
-yarn build:aot
+ng build --prod
 ```
 
 This will generate the application files in the _dist/_ folder.

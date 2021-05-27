@@ -4,9 +4,8 @@
   },
   "html.format.wrapAttributes": "force",
   "html.format.wrapLineLength": 100,
-  "npm.packageManager": "yarn",
   "eslint.validate": ["typescript", "javascript"],
-  "eslint.packageManager": "yarn",
+  "eslint.packageManager": "npm",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.organizeImports": true

@@ -10,8 +10,8 @@ COPY ./ /app/frontend/
 RUN git submodule init
 RUN git submodule update
 
-RUN yarn install --immutable
-RUN yarn build:prod
+RUN npm ci
+RUN npm run build:prod
 
 # 2. Build the webserver image along with the built project
 FROM caddy
