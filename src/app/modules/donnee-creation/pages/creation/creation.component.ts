@@ -131,6 +131,8 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private requestedDonneeId: number;
 
+  public observateurs$: Observable<Observateur[]>;
+
   public appConfiguration$: Observable<Settings>;
 
   public inventaireForm: FormGroup;
@@ -190,6 +192,8 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
         return data;
       })
     );
+
+    this.observateurs$ = queryResult$.pipe(map((data) => data?.observateurs));
 
     this.appConfiguration$ = queryResult$.pipe(map((data) => data?.settings));
 

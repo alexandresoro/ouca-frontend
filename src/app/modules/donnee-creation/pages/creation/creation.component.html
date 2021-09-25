@@ -122,6 +122,7 @@
               <div>
                 <input-observateur
                   [control]="$any(inventaireForm.controls['observateur'])"
+                  [observateurs]="observateurs$"
                 >
                 </input-observateur>
               </div>
@@ -130,6 +131,7 @@
               <div *ngIf="(appConfiguration$ | async)?.areAssociesDisplayed">
                 <input-observateurs-associes
                   [control]="$any(inventaireForm.controls['observateursAssocies'])"
+                  [observateurs]="observateurs$ | async"
                 >
                 </input-observateurs-associes>
               </div>

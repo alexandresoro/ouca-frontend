@@ -7,7 +7,7 @@
     name="input-associes"
     placeholder="Observateurs associés"
   >
-    <mat-option *ngFor="let observateur of observateurs$ | async" [value]="observateur">
+    <mat-option *ngFor="let observateur of observateurs" [value]="observateur">
       {{ observateur.libelle }}
     </mat-option>
   </mat-select>
