@@ -194,6 +194,7 @@
                 <!-- METEOS -->
                 <input-meteos
                   fxFlex="1 0 120px"
+                  [meteos]="meteos$ | async"
                   [control]="$any(inventaireForm.controls['meteos'])"
                 ></input-meteos>
               </div>

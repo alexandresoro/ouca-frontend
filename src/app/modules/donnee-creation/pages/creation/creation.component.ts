@@ -133,6 +133,8 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public observateurs$: Observable<Observateur[]>;
 
+  public meteos$: Observable<Meteo[]>;
+
   public appConfiguration$: Observable<Settings>;
 
   public inventaireForm: FormGroup;
@@ -194,6 +196,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.observateurs$ = queryResult$.pipe(map((data) => data?.observateurs));
+    this.meteos$ = queryResult$.pipe(map((data) => data?.meteos));
 
     this.appConfiguration$ = queryResult$.pipe(map((data) => data?.settings));
 
