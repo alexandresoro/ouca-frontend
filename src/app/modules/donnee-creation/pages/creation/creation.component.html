@@ -259,7 +259,7 @@
                 ></input-espece>
               </mat-card>
               <!-- END CARD CLASSE + CODE ESPECE + NOM FRANCAIS -->
-  
+              
               <!-- CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
               <mat-card class="mat-card-override">
                 <div fxLayout="row wrap" fxLayoutGap="10%">
@@ -272,13 +272,13 @@
                     formGroupName="nombreGroup"
                   >
                   </input-nombre>
-  
+
                   <!-- SEXE -->
                   <input-sexe
                     fxFlex="1 0 120px"
                     [control]="$any(donneeForm.controls['sexe'])"
                   ></input-sexe>
-  
+
                   <!-- AGE  -->
                   <input-age
                     fxFlex="1 0 120px"
@@ -293,7 +293,7 @@
                     Le nombre doit être un nombre entier compris entre 1 et 65535.
                   </mat-error>
                 </div>
-  
+
                 <!-- DISTANCE AND ESTIMATION DISTANCE -->
                 <div
                   *ngIf="
@@ -306,20 +306,20 @@
                   <!-- ESTIMATION DISTANCE -->
                   <input-distance
                     *ngIf="(appConfiguration$ | async)?.isDistanceDisplayed"
-                    [fxFlex]="getFxDistance$() | async"
+                    [fxFlex]="fxDistance$ | async"
                     fxLayout="row"
                     fxLayoutGap="20px"
                     [controlGroup]="$any(donneeForm.controls['distanceGroup'])"
                     formGroupName="distanceGroup"
                   >
                   </input-distance>
-  
+
                   <!-- REGROUPEMENT-->
                   <input-regroupement
                     *ngIf="(appConfiguration$ | async)?.isRegroupementDisplayed"
-                    [fxFlex]="getFxRegroupement$() | async"
+                    [fxFlex]="fxRegroupement$ | async"
                     [control]="$any(donneeForm.controls['regroupement'])"
-                  ></input-regroupement>
+                  ></input-regroupement>                 
   
                   <mat-error
                     *ngIf="isDistanceFieldInvalid()"
@@ -331,7 +331,7 @@
                 </div>
               </mat-card>
               <!-- END CARD NOMBRE + ESTIMATION DU NOMBRE + SEXE + AGE -->
-  
+
               <!-- CARD COMPORTEMENT x6 -->
               <mat-card class="mat-card-override">
                 <mat-card-content
@@ -357,7 +357,7 @@
                 </mat-card-content>
               </mat-card>
               <!-- END CARD MILIEU x4 -->
-  
+                                
               <!-- CARD COMMENTAIRE -->
               <mat-card class="mat-card-override">
                 <mat-card-content class="full-width-container">

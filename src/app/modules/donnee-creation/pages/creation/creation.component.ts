@@ -29,11 +29,8 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
-import { CoordinatesSystem, CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
 import { Commune, Departement, LieuDit, Meteo, Observateur, Settings } from "src/app/model/graphql";
 import { Donnee } from 'src/app/model/types/donnee.object';
-import { AppConfigurationGetService } from "src/app/services/app-configuration-get.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
 import { CreationModeService } from "src/app/services/creation-mode.service";
@@ -56,6 +53,7 @@ type CreationQueryResult = {
   lieuxDits: LieuDit[];
   meteos: Meteo[];
   observateurs: Observateur[];
+  settings: Settings;
 }
 
 const CREATION_QUERY = gql`
@@ -87,6 +85,36 @@ const CREATION_QUERY = gql`
       id
       libelle
     }
+    settings {
+      id
+      areAssociesDisplayed
+      isDistanceDisplayed
+      isMeteoDisplayed
+      isRegroupementDisplayed
+      defaultDepartement {
+        id
+        code
+      }
+      defaultObservateur {
+        id
+        libelle
+      }
+      coordinatesSystem
+      defaultEstimationNombre {
+        id
+        libelle
+        nonCompte
+      }
+      defaultSexe {
+        id
+        libelle
+      }
+      defaultAge {
+        id
+        libelle
+      }
+      defaultNombre
+    }
   }
 `;
 
@@ -110,8 +138,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private clearDonnee$: Subject<Donnee> = new Subject<Donnee>();
 
-  private coordinatesSystem$: Observable<CoordinatesSystemType>;
-
   public isInitializationCompleted$: BehaviorSubject<
     boolean
   > = new BehaviorSubject<boolean>(false);
@@ -126,10 +152,12 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public isLieuditMapDisplayed$: Observable<boolean>;
 
+  public fxDistance$: BehaviorSubject<string> = new BehaviorSubject("");
+
+  public fxRegroupement$: BehaviorSubject<string> = new BehaviorSubject("");
 
   constructor(
     private apollo: Apollo,
-    private appConfigurationGetService: AppConfigurationGetService,
     private creationModeService: CreationModeService,
     private creationPageService: CreationPageService,
     private creationCacheService: CreationCacheService,
@@ -142,11 +170,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router
   ) {
     this.requestedDonneeId = this.router.getCurrentNavigation()?.extras?.state?.id;
-
-    this.appConfiguration$ = this.appConfigurationGetService.watch().valueChanges.pipe(map(({ data }) => data?.settings));
-    this.coordinatesSystem$ = this.appConfiguration$.pipe(
-      map((configuration) => configuration.coordinatesSystem)
-    );
   }
 
   public ngOnInit(): void {
@@ -159,6 +182,15 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
         return data;
       })
     );
+
+    this.appConfiguration$ = queryResult$.pipe(map((data) => data?.settings));
+
+    this.appConfiguration$.pipe(
+      takeUntil(this.destroy$),
+    ).subscribe((configuration) => {
+      this.fxDistance$.next(configuration.isRegroupementDisplayed ? "auto" : "0 0 50%");
+      this.fxRegroupement$.next(configuration?.isDistanceDisplayed ? "1 0 220px" : "0 0 250px");
+    })
 
     // Create the inventaire form group
     this.inventaireForm = this.inventaireFormService.createForm();
@@ -205,8 +237,11 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     // Update the coordinates form controls depending on the application coordinates system
-    this.coordinatesSystem$
-      .pipe(takeUntil(this.destroy$))
+    this.appConfiguration$
+      .pipe(
+        takeUntil(this.destroy$),
+        map(settings => settings?.coordinatesSystem)
+      )
       .subscribe((coordinatesSystemType) => {
         this.coordinatesBuilderService.updateCoordinatesValidators(
           coordinatesSystemType,
@@ -572,12 +607,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.donneeService.getCurrentDonneeIndex$();
   };
 
-  public getCoordinatesSystem$ = (): Observable<CoordinatesSystem> => {
-    return this.coordinatesSystem$.pipe(
-      map((system) => COORDINATES_SYSTEMS_CONFIG[system])
-    );
-  };
-
   public isCurrentDonneeAnExistingOne$(): Observable<boolean> {
     return this.donneeService.isCurrentDonneeAnExistingOne$();
   }
@@ -649,23 +678,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     return (this.donneeForm.controls
       .nombreGroup as FormGroup).controls.nombre.hasError("forbiddenValue");
   };
-
-  public getFxDistance$ = (): Observable<string> => {
-    return this.appConfiguration$.pipe(
-      map((configuration) => {
-        return configuration.isRegroupementDisplayed ? "auto" : "0 0 50%";
-      })
-    );
-  };
-
-  public getFxRegroupement$ = (): Observable<string> => {
-    return this.appConfiguration$.pipe(
-      map((configuration) => {
-        return configuration.isDistanceDisplayed ? "1 0 220px" : "0 0 250px";
-      })
-    );
-  };
-
 
   public toggleSearchInMap = (): void => {
     this.lieuditMapClicked$.next();
