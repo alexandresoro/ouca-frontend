@@ -3,21 +3,9 @@ import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 
-const getGraphQlUrl = (): string => {
-  return (
-    window.location.protocol +
-    "//" +
-    window.location.hostname +
-    ":" +
-    window.location.port +
-    "/graphql/"
-  );
-};
-
-const uri = getGraphQlUrl();
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
   return {
-    link: httpLink.create({ uri }),
+    link: httpLink.create({ uri: '/graphql' }),
     cache: new InMemoryCache(),
     defaultOptions: {
       watchQuery: {
