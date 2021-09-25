@@ -26,7 +26,6 @@ export class BackendApiService {
   private UPDATE: string = "update";
   private SAVE: string = "save";
   private CLEAR: string = "clear";
-  private LAST: string = "last";
   private SEARCH: string = "search";
 
   constructor(public http: HttpClient) { }
@@ -117,10 +116,6 @@ export class BackendApiService {
     id: number
   ): Observable<DonneeWithNavigationData> {
     return this.httpGet(this.DONNEE + this.FIND_WITH_CONTEXT + "?id=" + id);
-  }
-
-  public getLastDonneeId(): Observable<number> {
-    return this.httpGet(this.DONNEE + this.LAST);
   }
 
   public getNextRegroupement(): Observable<number> {
