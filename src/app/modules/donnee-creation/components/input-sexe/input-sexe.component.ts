@@ -1,7 +1,23 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Sexe } from 'src/app/model/types/sexe.object';
+import { Apollo, gql } from "apollo-angular";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { Sexe } from "src/app/model/graphql";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+
+type InputSexesQueryResult = {
+  sexes: Sexe[],
+}
+
+const INPUT_SEXES_QUERY = gql`
+  query {
+    sexes {
+      id
+      libelle
+    }
+  }
+`;
 
 @Component({
   selector: "input-sexe",
@@ -11,7 +27,19 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
 export class InputSexeComponent {
   @Input() public control: FormControl;
 
-  @Input() public sexes: Sexe[];
+  public sexes$: Observable<Sexe[]>;
+
+  constructor(
+    private apollo: Apollo,
+  ) {
+    this.sexes$ = this.apollo.watchQuery<InputSexesQueryResult>({
+      query: INPUT_SEXES_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.sexes;
+      })
+    );
+  }
 
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {

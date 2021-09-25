@@ -1,10 +1,25 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { Apollo, gql } from "apollo-angular";
 import { combineLatest, Observable, of } from "rxjs";
 import { distinctUntilChanged, map } from "rxjs/operators";
-import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
+import { EstimationNombre } from "src/app/model/graphql";
 import { CreationModeService } from "src/app/services/creation-mode.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+
+type InputNombreQueryResult = {
+  estimationsNombre: EstimationNombre[],
+}
+
+const INPUT_NOMBRE_QUERY = gql`
+  query {
+    estimationsNombre {
+      id
+      libelle
+      nonCompte
+    }
+  }
+`;
 
 @Component({
   selector: "input-nombre",
@@ -12,15 +27,26 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputNombreComponent {
-  @Input() public estimationsNombre: EstimationNombre[];
-
   @Input() public controlGroup: FormGroup;
 
   @Input() public defaultNombre: number;
 
   @Input() public isMultipleSelectMode?: boolean;
 
-  constructor(private creationModeService: CreationModeService) { }
+  public estimationsNombre$: Observable<EstimationNombre[]>;
+
+  constructor(
+    private apollo: Apollo,
+    private creationModeService: CreationModeService
+  ) {
+    this.estimationsNombre$ = this.apollo.watchQuery<InputNombreQueryResult>({
+      query: INPUT_NOMBRE_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.estimationsNombre;
+      })
+    );
+  }
 
   public ngOnInit(): void {
     const estimationControl = this.isMultipleSelectMode

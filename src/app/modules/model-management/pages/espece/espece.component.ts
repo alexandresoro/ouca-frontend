@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
-import { UIEspece } from "src/app/models/espece.model";
+import { EspeceWithCounts } from "src/app/model/graphql";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -11,7 +10,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./espece.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EspeceComponent extends EntiteSimpleComponent<UIEspece> {
+export class EspeceComponent extends EntiteSimpleComponent<EspeceWithCounts> {
   constructor(
     dialog: MatDialog,
     entitiesStoreService: EntitiesStoreService,
@@ -21,15 +20,11 @@ export class EspeceComponent extends EntiteSimpleComponent<UIEspece> {
     super(dialog, entitiesStoreService, exportService, router);
   }
 
-  public getEntities$ = (): Observable<UIEspece[]> => {
-    return this.entitiesStoreService.getEspeces$();
-  };
-
   getEntityName(): string {
     return "espece";
   }
 
-  public getDeleteMessage(espece: UIEspece): string {
+  public getDeleteMessage(espece: EspeceWithCounts): string {
     return (
       "Êtes-vous certain de vouloir supprimer l'espèce " +
       espece.nomFrancais +

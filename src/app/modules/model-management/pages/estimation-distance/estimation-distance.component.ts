@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
 import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
@@ -22,10 +21,6 @@ EstimationDistance
   ) {
     super(dialog, entitiesStoreService, exportService, router);
   }
-
-  public getEntities$ = (): Observable<EstimationDistance[]> => {
-    return this.entitiesStoreService.getEstimationDistances$();
-  };
 
   getEntityName(): string {
     return "estimation-distance";

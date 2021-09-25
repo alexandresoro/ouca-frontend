@@ -6,17 +6,11 @@ import {
   Validators
 } from "@angular/forms";
 import { set } from "date-fns";
-import { buildLieuditFromUILieudit } from "../helpers/lieudit.helper";
 import { areCoordinatesCustomized, getCoordinates } from '../model/coordinates-system/coordinates-helper';
 import { CoordinatesSystemType } from '../model/coordinates-system/coordinates-system.object';
-import { AppConfiguration } from '../model/types/app-configuration.object';
+import { Commune, Departement, LieuDit, Meteo, Observateur, Settings } from "../model/graphql";
 import { Coordinates } from '../model/types/coordinates.object';
-import { Departement } from '../model/types/departement.object';
 import { Inventaire } from '../model/types/inventaire.object';
-import { Lieudit } from '../model/types/lieudit.model';
-import { Meteo } from '../model/types/meteo.object';
-import { Observateur } from '../model/types/observateur.object';
-import { UILieudit } from "../models/lieudit.model";
 import { DefaultInventaireOptions } from "../modules/donnee-creation/models/default-inventaire-options.model";
 import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";
 import { InventaireFormValue } from "../modules/donnee-creation/models/inventaire-form-value.model";
@@ -86,13 +80,14 @@ export class InventaireFormService {
   public updateForm = (
     form: FormGroup,
     entities: {
-      observateurs: Observateur[];
-      lieudits: UILieudit[];
-      meteos: Meteo[];
+      communes: Commune[]
+      departements: Departement[]
+      lieuxDits: LieuDit[]
+      meteos: Meteo[]
+      observateurs: Observateur[]
     },
-    departements: Departement[],
     inventaire: Inventaire | InventaireFormObject,
-    appConfiguration: AppConfiguration
+    appConfiguration: Settings
   ): void => {
     if (!entities) {
       return;
@@ -108,7 +103,7 @@ export class InventaireFormService {
       const defaultOptions = this.getDefaultOptions(
         {
           observateurs: entities.observateurs,
-          departements
+          departements: entities.departements
         },
         appConfiguration
       );
@@ -119,11 +114,7 @@ export class InventaireFormService {
       form.reset(defaultOptions);
     } else {
       const inventaireFormValue = this.getInventaireFormValue(
-        {
-          observateurs: entities.observateurs,
-          lieudits: entities.lieudits,
-          meteos: entities.meteos
-        },
+        entities,
         inventaire,
         appConfiguration.coordinatesSystem
       );
@@ -137,7 +128,7 @@ export class InventaireFormService {
       observateurs: Observateur[];
       departements: Departement[];
     },
-    appConfiguration: AppConfiguration
+    appConfiguration: Settings
   ): DefaultInventaireOptions => {
     const defaultObservateur: Observateur = ListHelper.findEntityInListByID(
       entities.observateurs,
@@ -170,9 +161,11 @@ export class InventaireFormService {
 
   private getInventaireFormValue = (
     entities: {
-      observateurs: Observateur[];
-      lieudits: UILieudit[];
-      meteos: Meteo[];
+      communes: Commune[]
+      departements: Departement[]
+      lieuxDits: LieuDit[]
+      meteos: Meteo[]
+      observateurs: Observateur[]
     },
     inventaire: Inventaire | InventaireFormObject,
     coordinatesSystemType: CoordinatesSystemType
@@ -188,14 +181,14 @@ export class InventaireFormService {
     );
 
     const lieudit = ListHelper.findEntityInListByID(
-      entities.lieudits,
+      entities.lieuxDits,
       inventaire.lieuditId
     );
 
-    const commune =
-      lieudit?.commune ?? (inventaire as InventaireFormObject).commune;
+    const lieuDitCommune = entities?.communes?.find(commune => commune.id === lieudit.communeId);
+    const commune = lieuDitCommune ?? (inventaire as InventaireFormObject).commune;
     const departement =
-      lieudit?.commune?.departement ??
+      entities?.departements?.find(departement => departement.id === commune.departementId) ??
       (inventaire as InventaireFormObject).departement;
 
     let altitude: number = null;
@@ -210,7 +203,13 @@ export class InventaireFormService {
         // Coordinates are not updated for the inventaire
         // We display the lieudit coordinates
         altitude = lieudit.altitude;
-        coordinates = getCoordinates(lieudit, coordinatesSystemType);
+        coordinates = getCoordinates({
+          coordinates: {
+            latitude: lieudit.latitude,
+            longitude: lieudit.longitude,
+            system: lieudit.coordinatesSystem
+          }
+        }, coordinatesSystemType);
       } else {
         // Coordinates are updated for the inventaire
         // We display the inventaire coordinates
@@ -267,9 +266,7 @@ export class InventaireFormService {
       inventaireFormValue.duree
     );
 
-    const lieudit: Lieudit = buildLieuditFromUILieudit(
-      inventaireFormValue.lieu.lieudit
-    );
+    const lieudit = inventaireFormValue.lieu.lieudit;
 
     const meteosIds: number[] = ListHelper.getIDsFromEntities(
       inventaireFormValue.meteos
@@ -284,7 +281,7 @@ export class InventaireFormService {
       date: date.toJSON(),
       heure,
       duree,
-      lieuditId: lieudit?.id ? lieudit.id : null,
+      lieuditId: lieudit?.id ?? null,
       temperature: inventaireFormValue.temperature,
       meteosIds
     };

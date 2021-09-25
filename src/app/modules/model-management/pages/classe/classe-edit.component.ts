@@ -1,10 +1,25 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
-import { Classe } from 'src/app/model/types/classe.object';
+import { map } from "rxjs/operators";
+import { Classe } from "src/app/model/graphql";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
+
+type ClassesQueryResult = {
+  classes: Classe[]
+}
+
+const CLASSES_QUERY = gql`
+  query {
+    classes {
+      id
+      libelle
+    }
+  }
+`;
 
 @Component({
   templateUrl: "../entite-simple/entity-edit.component.html",
@@ -13,7 +28,11 @@ import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/e
 export class ClasseEditComponent
   extends EntiteAvecLibelleEditAbstractComponent<Classe>
   implements OnInit {
+
+  private classes$: Observable<Classe[]>;
+
   constructor(
+    private apollo: Apollo,
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
     router: Router,
@@ -23,6 +42,13 @@ export class ClasseEditComponent
   }
 
   ngOnInit(): void {
+    this.classes$ = this.apollo.watchQuery<ClassesQueryResult>({
+      query: CLASSES_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.classes;
+      })
+    );
     this.initialize();
   }
 
@@ -31,7 +57,7 @@ export class ClasseEditComponent
   };
 
   public getEntities$(): Observable<Classe[]> {
-    return this.entitiesStoreService.getClasses$();
+    return this.classes$;
   }
 
   public getPageTitle = (): string => {

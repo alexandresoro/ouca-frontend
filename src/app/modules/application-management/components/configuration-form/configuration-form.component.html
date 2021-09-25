@@ -11,9 +11,8 @@
           id="input-observateur"
           placeholder="Observateur par défaut"
           formControlName="defaultObservateur"
-          [compareWith]="compareEntities"
         >
-          <mat-option *ngFor="let o of observateurs$ | async" [value]="o">
+          <mat-option *ngFor="let o of observateurs$ | async" [value]="o.id">
             {{ o.libelle }}
           </mat-option>
         </mat-select>
@@ -25,9 +24,8 @@
           id="input-departement"
           placeholder="Département par défaut"
           formControlName="defaultDepartement"
-          [compareWith]="compareEntities"
         >
-          <mat-option *ngFor="let d of departements$ | async" [value]="d">
+          <mat-option *ngFor="let d of departements$ | async" [value]="d.id">
             {{ d.code }}
           </mat-option>
         </mat-select>
@@ -39,9 +37,8 @@
           id="input-estimation-nombre"
           placeholder="Estimation du nombre par défaut"
           formControlName="defaultEstimationNombre"
-          [compareWith]="compareEntities"
         >
-          <mat-option *ngFor="let e of estimationsNombre$ | async" [value]="e">
+          <mat-option *ngFor="let e of estimationsNombre$ | async" [value]="e.id">
             {{ e.libelle }}
           </mat-option>
         </mat-select>
@@ -67,9 +64,8 @@
           id="input-sexe"
           placeholder="Sexe par défaut"
           formControlName="defaultSexe"
-          [compareWith]="compareEntities"
         >
-          <mat-option *ngFor="let s of sexes$ | async" [value]="s">
+          <mat-option *ngFor="let s of sexes$ | async" [value]="s.id">
             {{ s.libelle }}
           </mat-option>
         </mat-select>
@@ -81,9 +77,8 @@
           id="input-age"
           placeholder="Âge par défaut"
           formControlName="defaultAge"
-          [compareWith]="compareEntities"
         >
-          <mat-option *ngFor="let a of ages$ | async" [value]="a">
+          <mat-option *ngFor="let a of ages$ | async" [value]="a.id">
             {{ a.libelle }}
           </mat-option>
         </mat-select>

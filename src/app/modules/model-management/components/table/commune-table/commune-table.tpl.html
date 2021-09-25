@@ -1,10 +1,9 @@
-<table-topbar
-  [selectedId]="selectedObjectId"
-  (onClickEditObject)="editObject()"
-  (onClickDeleteObject)="deleteObject()"
-  (onFilterChange)="applyFilter($event)"
->
-</table-topbar>
+<div style="max-width: 500px;">
+  <table-filter-field
+    (onFilterChange)="applyFilter($event)"
+  >
+  </table-filter-field>
+</div>
 
 <div class="mat-elevation-z8">
   <table class="commune-table" mat-table [dataSource]="dataSource" matSort>
@@ -13,7 +12,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="departement">
         Département
       </th>
-      <td mat-cell *matCellDef="let row">{{ row.departement }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.departement.code }}</td>
     </ng-container>
 
     <!-- Code -->
@@ -33,7 +32,7 @@
     </ng-container>
 
     <!-- Nombre de lieux-dits -->
-    <ng-container matColumnDef="nbLieuxdits">
+    <ng-container matColumnDef="nbLieuxDits">
       <th
         mat-header-cell
         *matHeaderCellDef
@@ -43,7 +42,7 @@
         Nombre de lieux-dits
       </th>
       <td mat-cell *matCellDef="let row" [style.color]="row.color">
-        {{ row.nbLieuxdits }}
+        {{ row.nbLieuxDits }}
       </td>
     </ng-container>
 
@@ -57,16 +56,46 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell  *matHeaderCellDef class="actions">Actions</th>
+      <td mat-cell *matCellDef="let row" >
+        <button
+          mat-icon-button
+          aria-label="Éditer"
+          type="button"
+          color="primary"
+          (click)="editObject(row.id)"
+          class="action-button"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          aria-label="Supprimer"
+          type="button"
+          color="primary"
+          (click)="deleteObject(row)"
+          class="action-button"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
-      (click)="onRowClicked(row.id)"
-      [ngClass]="{
-        'selected-row': !!selectedObjectId && selectedObjectId == row.id
-      }"
     ></tr>
   </table>
+
+  <mat-card *ngIf="dataSource.isLoading$ | async" style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner 
+      color="primary" 
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
 
   <mat-paginator [pageSizeOptions]="[50, 100, 150]"></mat-paginator>
 </div>

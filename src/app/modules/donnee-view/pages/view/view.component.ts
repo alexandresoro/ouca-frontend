@@ -1,31 +1,90 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatTabGroup } from '@angular/material/tabs';
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { withLatestFrom } from "rxjs/operators";
+import { map, takeUntil, withLatestFrom } from "rxjs/operators";
 import { getDateFromString } from 'src/app/date-adapter/date-fns-adapter';
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
 import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Age } from 'src/app/model/types/age.object';
-import { Comportement } from 'src/app/model/types/comportement.object';
+import { Age, Comportement, CoordinatesSystemType, Espece, EstimationDistance, EstimationNombre, Meteo, Milieu, Observateur, Sexe } from "src/app/model/graphql";
 import { DonneesFilter } from 'src/app/model/types/donnees-filter.object';
-import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
-import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
 import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
-import { Meteo } from 'src/app/model/types/meteo.object';
-import { Milieu } from 'src/app/model/types/milieu.object';
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
-import { Observateur } from 'src/app/model/types/observateur.object';
-import { Sexe } from 'src/app/model/types/sexe.object';
-import { UIEspece } from "src/app/models/espece.model";
 import { interpretBrowserDateAsTimestampDate } from 'src/app/modules/shared/helpers/time.helper';
-import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { BackendApiService } from "src/app/services/backend-api.service";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { getContentTypeFromResponse, saveFile } from "../../../shared/helpers/file-downloader.helper";
-import { EspeceWithNbDonnees } from "../../models/espece-with-nb-donnees.model";
+import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/table-especes-with-nb-donnees.component";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
+
+type ViewQueryResult = {
+  ages: Age[],
+  comportements: Comportement[],
+  especes: Espece[],
+  estimationsNombre: EstimationNombre[],
+  estimationsDistance: EstimationDistance[],
+  meteos: Meteo[],
+  milieux: Milieu[],
+  observateurs: Observateur[]
+  sexes: Sexe[],
+  settings: {
+    coordinatesSystem: CoordinatesSystemType
+  }
+}
+
+const VIEW_QUERY = gql`
+  query {
+    ages {
+      id
+      libelle
+    }
+    comportements {
+      id
+      code
+      libelle
+      nicheur
+    }
+    especes {
+      id
+      code
+      nomFrancais
+      nomLatin
+      classeId
+    }
+    estimationsNombre {
+      id
+      libelle
+      nonCompte
+    }
+    estimationsDistance {
+      id
+      libelle
+    }
+    meteos {
+      id
+      libelle
+    }
+    milieux {
+      id
+      code
+      libelle
+    }
+    observateurs {
+      id
+      libelle
+    }
+    sexes {
+      id
+      libelle
+    }
+    settings {
+      coordinatesSystem
+    }
+  }
+`;
+
 @Component({
   styleUrls: ["./view.component.scss"],
   templateUrl: "./view.component.html",
@@ -33,6 +92,8 @@ import { SearchCriteriaService } from "../../services/search-criteria.service";
 })
 export class ViewComponent implements OnDestroy {
   private readonly destroy$ = new Subject();
+
+  private viewQuery$: Observable<ApolloQueryResult<ViewQueryResult>>;
 
   public coordinatesSystems: CoordinatesSystem[] = Object.values(
     COORDINATES_SYSTEMS_CONFIG
@@ -77,7 +138,7 @@ export class ViewComponent implements OnDestroy {
   });
 
   public observateurs$: Observable<Observateur[]>;
-  public especes$: Observable<UIEspece[]>;
+  public especes$: Observable<Espece[]>;
   public estimationsNombre$: Observable<EstimationNombre[]>;
   public estimationsDistance$: Observable<EstimationDistance[]>;
   public sexes$: Observable<Sexe[]>;
@@ -110,27 +171,49 @@ export class ViewComponent implements OnDestroy {
   private QUICK_SEARCH_TAB_INDEX = 0;
 
   constructor(
-    private appConfigurationService: AppConfigurationService,
+    private apollo: Apollo,
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService,
-    private entitiesStoreService: EntitiesStoreService,
     private searchCriteriaService: SearchCriteriaService
   ) {
-    this.observateurs$ = this.entitiesStoreService.getObservateurs$();
-    this.estimationsNombre$ = this.entitiesStoreService.getEstimationNombres$();
-    this.estimationsDistance$ = this.entitiesStoreService.getEstimationDistances$();
-    this.especes$ = this.entitiesStoreService.getEspeces$();
-    this.sexes$ = this.entitiesStoreService.getSexes$();
-    this.ages$ = this.entitiesStoreService.getAges$();
-    this.comportements$ = this.entitiesStoreService.getComportements$();
-    this.milieux$ = this.entitiesStoreService.getMilieux$();
-    this.meteos$ = this.entitiesStoreService.getMeteos$();
 
-    this.appConfigurationService
-      .getAppCoordinatesSystemType$()
-      .subscribe((system) => {
-        this.searchForm.controls.coordinatesSystemType.setValue(system);
-      });
+    this.viewQuery$ = this.apollo.watchQuery<ViewQueryResult>({
+      query: VIEW_QUERY
+    }).valueChanges.pipe(
+      takeUntil(this.destroy$)
+    );
+
+    this.observateurs$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.observateurs)
+    );
+    this.estimationsNombre$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.estimationsNombre)
+    );
+    this.estimationsDistance$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.estimationsDistance)
+    );
+    this.especes$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.especes)
+    );
+    this.sexes$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.sexes)
+    );
+    this.ages$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.ages)
+    );
+    this.comportements$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.comportements)
+    );
+    this.milieux$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.milieux)
+    );
+    this.meteos$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.meteos)
+    );
+
+    this.viewQuery$.subscribe(({ data }) => {
+      this.searchForm.controls.coordinatesSystemType.setValue(data?.settings?.coordinatesSystem);
+    });
   }
 
   public ngOnDestroy(): void {
@@ -336,7 +419,9 @@ export class ViewComponent implements OnDestroy {
     } else {
       this.backendApiService
         .getDonneesByCustomizedFilters(filters)
-        .pipe(withLatestFrom(this.especes$))
+        .pipe(
+          withLatestFrom(this.especes$),
+        )
         .subscribe(([results, especes]) => {
           this.displayWaitPanel$.next(false);
           this.donneesToDisplay = results;
@@ -351,7 +436,7 @@ export class ViewComponent implements OnDestroy {
    */
   private setEspecesWithNbDonnees = (
     donnees: FlatDonnee[],
-    especes: UIEspece[]
+    especes: Espece[]
   ): void => {
 
 
@@ -362,15 +447,12 @@ export class ViewComponent implements OnDestroy {
     }, {}) ?? {};
 
     this.especesWithNbDonnees = Object.entries(nbDonneesByEspeceMap)?.map(([key, value]) => {
-      const espece: UIEspece = especes?.find((espece) => {
+      const espece = especes?.find((espece) => {
         return espece.code === key;
       });
 
       return {
-        classe: espece.classe.libelle,
-        code: key,
-        nomFrancais: espece.nomFrancais,
-        nomLatin: espece.nomLatin,
+        ...espece,
         nbDonnees: value
       };
     }) ?? [];

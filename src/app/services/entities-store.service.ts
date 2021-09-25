@@ -1,24 +1,18 @@
 import { Injectable } from "@angular/core";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
+import { ComportementWithCounts } from "../model/graphql";
 import { Age } from '../model/types/age.object';
 import { Classe } from '../model/types/classe.object';
-import { Commune } from '../model/types/commune.model';
 import { Comportement } from '../model/types/comportement.object';
-import { Departement } from '../model/types/departement.object';
 import { EntiteSimple } from '../model/types/entite-simple.object';
 import { Espece } from '../model/types/espece.model';
 import { EstimationDistance } from '../model/types/estimation-distance.object';
 import { EstimationNombre } from '../model/types/estimation-nombre.object';
-import { Lieudit } from '../model/types/lieudit.model';
-import { Meteo } from '../model/types/meteo.object';
 import { Milieu } from '../model/types/milieu.object';
-import { Observateur } from '../model/types/observateur.object';
 import { PostResponse } from '../model/types/post-response.object';
 import { Sexe } from '../model/types/sexe.object';
-import { UICommune } from "../models/commune.model";
 import { UIEspece } from "../models/espece.model";
-import { UILieudit } from "../models/lieudit.model";
 import { ENTITIES_PROPERTIES } from "../modules/model-management/models/entities-properties.model";
 import { has } from '../modules/shared/helpers/utils';
 import { BackendApiService } from "./backend-api.service";
@@ -29,25 +23,6 @@ import { StatusMessageService } from "./status-message.service";
   providedIn: "root"
 })
 export class EntitiesStoreService {
-  private observateurs$: ReplaySubject<Observateur[]> = new ReplaySubject<
-    Observateur[]
-  >(1);
-
-  private lieuxdits$: Observable<UILieudit[]>;
-
-  private lieuxditsFlat$: ReplaySubject<Lieudit[]> = new ReplaySubject<
-    Lieudit[]
-  >(1);
-
-  private communes$: Observable<UICommune[]>;
-
-  private communesFlat$: ReplaySubject<Commune[]> = new ReplaySubject<
-    Commune[]
-  >(1);
-
-  private departements$: ReplaySubject<Departement[]> = new ReplaySubject<
-    Departement[]
-  >(1);
 
   private classes$: ReplaySubject<Classe[]> = new ReplaySubject<Classe[]>(1);
 
@@ -69,21 +44,11 @@ export class EntitiesStoreService {
     EstimationDistance[]
   > = new ReplaySubject<EstimationDistance[]>(1);
 
-  private comportements$: ReplaySubject<Comportement[]> = new ReplaySubject<
-    Comportement[]
+  private comportements$: ReplaySubject<ComportementWithCounts[]> = new ReplaySubject<
+    ComportementWithCounts[]
   >(1);
 
   private milieux$: ReplaySubject<Milieu[]> = new ReplaySubject<Milieu[]>(1);
-
-  private meteos$: ReplaySubject<Meteo[]> = new ReplaySubject<Meteo[]>(1);
-
-  private inventaireEntities$: Observable<{
-    observateurs: Observateur[];
-    departements: Departement[];
-    lieudits: UILieudit[];
-    communes: UICommune[];
-    meteos: Meteo[];
-  }>;
 
   private donneeEntities$: Observable<{
     classes: Classe[];
@@ -104,53 +69,6 @@ export class EntitiesStoreService {
   ) { }
 
   public initializeEntitiesStore = (): void => {
-    this.backendWsService
-      .getUpdateMessageContent$()
-      .pipe(
-        filter((updateContent) => has(updateContent, "observateurs")),
-        map((updateContent) => {
-          return updateContent.observateurs;
-        })
-      )
-      .subscribe((observateurs) => {
-        this.observateurs$.next(observateurs);
-      });
-
-    this.backendWsService
-      .getUpdateMessageContent$()
-      .pipe(
-        filter((updateContent) => has(updateContent, "lieuxdits")),
-        map((updateContent) => {
-          return updateContent.lieuxdits;
-        })
-      )
-      .subscribe((lieuxdits) => {
-        this.lieuxditsFlat$.next(lieuxdits);
-      });
-
-    this.backendWsService
-      .getUpdateMessageContent$()
-      .pipe(
-        filter((updateContent) => has(updateContent, "communes")),
-        map((updateContent) => {
-          return updateContent.communes;
-        })
-      )
-      .subscribe((communes) => {
-        this.communesFlat$.next(communes);
-      });
-
-    this.backendWsService
-      .getUpdateMessageContent$()
-      .pipe(
-        filter((updateContent) => has(updateContent, "departements")),
-        map((updateContent) => {
-          return updateContent.departements;
-        })
-      )
-      .subscribe((departements) => {
-        this.departements$.next(departements);
-      });
 
     this.backendWsService
       .getUpdateMessageContent$()
@@ -248,46 +166,6 @@ export class EntitiesStoreService {
         this.milieux$.next(milieux);
       });
 
-    this.backendWsService
-      .getUpdateMessageContent$()
-      .pipe(
-        filter((updateContent) => has(updateContent, "meteos")),
-        map((updateContent) => {
-          return updateContent.meteos;
-        })
-      )
-      .subscribe((meteos) => {
-        this.meteos$.next(meteos);
-      });
-
-    this.communes$ = combineLatest(this.communesFlat$, this.departements$).pipe(
-      map(([communes, departements]) => {
-        return communes?.map((commune) => {
-          const matchingDepartement = departements?.find((departement) => {
-            return commune.departementId === departement.id;
-          });
-          return {
-            ...commune,
-            departement: matchingDepartement
-          };
-        }) ?? [];
-      })
-    );
-
-    this.lieuxdits$ = combineLatest(this.lieuxditsFlat$, this.communes$).pipe(
-      map(([lieuxdits, communes]) => {
-        return lieuxdits?.map((lieudit) => {
-          const matchingCommune = communes?.find((commune) => {
-            return lieudit.communeId === commune.id;
-          });
-          return {
-            ...lieudit,
-            commune: matchingCommune
-          };
-        }) ?? [];
-      })
-    );
-
     this.especes$ = combineLatest(this.especesFlat$, this.classes$).pipe(
       map(([especes, classes]) => {
         return especes?.map((espece) => {
@@ -299,24 +177,6 @@ export class EntitiesStoreService {
             classe: matchingClasse
           };
         }) ?? [];
-      })
-    );
-
-    this.inventaireEntities$ = combineLatest(
-      this.observateurs$,
-      this.departements$,
-      this.lieuxdits$,
-      this.communes$,
-      this.meteos$
-    ).pipe(
-      map(([observateurs, departements, lieudits, communes, meteos]) => {
-        return {
-          observateurs,
-          departements,
-          lieudits,
-          communes,
-          meteos
-        };
       })
     );
 
@@ -354,66 +214,6 @@ export class EntitiesStoreService {
         }
       )
     );
-  };
-
-  public getObservateurs$ = (): Observable<Observateur[]> => {
-    return this.observateurs$.asObservable();
-  };
-
-  public getLieuxdits$ = (): Observable<UILieudit[]> => {
-    return this.lieuxdits$;
-  };
-
-  public getCommunes$ = (): Observable<UICommune[]> => {
-    return this.communes$;
-  };
-
-  public getDepartements$ = (): Observable<Departement[]> => {
-    return this.departements$.asObservable();
-  };
-
-  public getClasses$ = (): Observable<Classe[]> => {
-    return this.classes$.asObservable();
-  };
-
-  public getEspeces$ = (): Observable<UIEspece[]> => {
-    return this.especes$;
-  };
-
-  public getSexes$ = (): Observable<Sexe[]> => {
-    return this.sexes$.asObservable();
-  };
-
-  public getAges$ = (): Observable<Age[]> => {
-    return this.ages$.asObservable();
-  };
-
-  public getEstimationNombres$ = (): Observable<EstimationNombre[]> => {
-    return this.estimationNombres$.asObservable();
-  };
-
-  public getEstimationDistances$ = (): Observable<EstimationDistance[]> => {
-    return this.estimationDistances$.asObservable();
-  };
-
-  public getComportements$ = (): Observable<Comportement[]> => {
-    return this.comportements$.asObservable();
-  };
-
-  public getMilieux$ = (): Observable<Milieu[]> => {
-    return this.milieux$.asObservable();
-  };
-
-  public getMeteos$ = (): Observable<Meteo[]> => {
-    return this.meteos$.asObservable();
-  };
-
-  public getInventaireEntities$ = (): Observable<{
-    observateurs: Observateur[];
-    lieudits: UILieudit[];
-    meteos: Meteo[];
-  }> => {
-    return this.inventaireEntities$;
   };
 
   public getDonneeEntities$ = (): Observable<{

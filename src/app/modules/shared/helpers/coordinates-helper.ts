@@ -1,18 +1,18 @@
-import { Lieudit } from 'src/app/model/types/lieudit.model';
-import { UILieudit } from 'src/app/models/lieudit.model';
+import { Commune, LieuDit } from 'src/app/model/graphql';
 
-export const getLieuxDitsCoordinates = (lieudit: Lieudit | UILieudit): [number, number] => {
-  return [lieudit.coordinates.latitude, lieudit.coordinates.longitude];
+export const getLieuxDitsCoordinates = (lieudit: LieuDit): [number, number] => {
+  return [lieudit.latitude, lieudit.longitude];
 }
 
-export const getAllLieuxDitsCoordinatesOfDepartement = (lieudits: UILieudit[], departementId: number): [number, number][] => {
+export const getAllLieuxDitsCoordinatesOfDepartement = (lieudits: LieuDit[], communes: Commune[], departementId: number): [number, number][] => {
+  const communesIdOfDepartment = communes?.filter(commune => commune.departementId === departementId)?.map(commune => commune.id) ?? [];
   return lieudits?.filter((lieudit) => {
-    return lieudit?.commune?.departement?.id === departementId;
+    return communesIdOfDepartment.includes(lieudit?.communeId);
   }).map(getLieuxDitsCoordinates) ?? [];
 }
 
-export const getAllLieuxDitsCoordinatesOfCommune = (lieudits: UILieudit[], communeId: number): [number, number][] => {
+export const getAllLieuxDitsCoordinatesOfCommune = (lieudits: LieuDit[], communeId: number): [number, number][] => {
   return lieudits?.filter((lieudit) => {
-    return lieudit?.commune?.id === communeId;
+    return lieudit?.communeId === communeId;
   }).map(getLieuxDitsCoordinates) ?? [];
 }

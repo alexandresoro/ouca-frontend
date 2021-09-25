@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { Sexe } from 'src/app/model/types/sexe.object';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { EntitesAvecLibelleOrderBy, SexeWithCounts } from "src/app/model/graphql";
+import { SexesGetService } from "src/app/services/sexes-get.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
+import { SexesDataSource } from "./SexesDataSource";
 
 @Component({
   selector: "sexe-table",
@@ -13,16 +13,22 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
     "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SexeTableComponent extends EntiteAvecLibelleTableComponent<Sexe> {
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+export class SexeTableComponent extends EntiteAvecLibelleTableComponent<SexeWithCounts, SexesDataSource> {
+  constructor(private sexesGetService: SexesGetService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): SexesDataSource {
+    return new SexesDataSource(this.sexesGetService);
   }
 
-  public getEntities$ = (): Observable<Sexe[]> => {
-    return this.entitiesStoreService.getSexes$();
-  };
+  loadEntities = (): void => {
+    this.dataSource.loadSexes(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as EntitesAvecLibelleOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value
+    );
+  }
 }

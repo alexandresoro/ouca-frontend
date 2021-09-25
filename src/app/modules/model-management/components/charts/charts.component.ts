@@ -1,9 +1,26 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import { combineLatest, Observable } from "rxjs";
-import { UIEspece } from "src/app/models/espece.model";
+import { map } from "rxjs/operators";
+import { Espece } from "src/app/model/graphql";
 import { BackendApiService } from "src/app/services/backend-api.service";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+
+type ChartsQueryResult = {
+  especes: Espece[],
+}
+
+const CHARTS_QUERY = gql`
+  query {
+    especes {
+      id
+      code
+      nomFrancais
+      nomLatin
+      classeId
+    }
+  }
+`;
 
 @Component({
   selector: "charts",
@@ -11,9 +28,9 @@ import { EntitiesStoreService } from "src/app/services/entities-store.service";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartsComponent implements OnInit {
-  public especes$: Observable<UIEspece[]>;
+  public especes$: Observable<Espece[]>;
 
-  public currentEspece$: Observable<UIEspece>;
+  public currentEspece$: Observable<Espece>;
 
   public specimensBySexe: { name: string; value: number }[];
 
@@ -36,11 +53,17 @@ export class ChartsComponent implements OnInit {
   };
 
   constructor(
+    private apollo: Apollo,
     private backendApiService: BackendApiService,
-    private entitiesStoreService: EntitiesStoreService,
     private route: ActivatedRoute
   ) {
-    this.especes$ = this.entitiesStoreService.getEspeces$();
+    this.especes$ = this.apollo.watchQuery<ChartsQueryResult>({
+      query: CHARTS_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.especes;
+      })
+    );
   }
 
   ngOnInit(): void {

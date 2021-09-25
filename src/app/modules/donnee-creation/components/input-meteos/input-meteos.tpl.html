@@ -7,7 +7,7 @@
     [formControl]="control"
     multiple
   >
-    <mat-option *ngFor="let meteo of meteos" [value]="meteo">
+    <mat-option *ngFor="let meteo of meteos$ | async" [value]="meteo">
       {{ meteo.libelle }}
     </mat-option>
   </mat-select>

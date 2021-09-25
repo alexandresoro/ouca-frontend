@@ -18,7 +18,7 @@
   *ngIf="!isMultipleSelectMode"
   fxFlex="1 0 100px"
   [type]="'Estimation du nombre'"
-  [values]="estimationsNombre"
+  [valuesObs]="estimationsNombre$"
   [control]="$any(controlGroup.controls['estimationNombre'])"
   [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayEstimationNombreFormat"
@@ -31,6 +31,6 @@
   [attributesToDisplay]="['libelle']"
   [control]="$any(controlGroup.controls['estimationsNombre'])"
   [id]="'estimations-nombre'"
-  [options]="estimationsNombre"
+  [options]="estimationsNombre$ | async"
   [placeholder]="'Estimations du nombre'"
 ></multiple-select>

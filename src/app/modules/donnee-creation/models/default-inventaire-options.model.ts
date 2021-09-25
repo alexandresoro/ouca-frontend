@@ -1,7 +1,4 @@
-import { CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Departement } from 'src/app/model/types/departement.object';
-import { Meteo } from 'src/app/model/types/meteo.object';
-import { Observateur } from 'src/app/model/types/observateur.object';
+import { CoordinatesSystemType, Departement, Meteo, Observateur } from "src/app/model/graphql";
 
 export interface DefaultInventaireOptions {
   observateur: Observateur;

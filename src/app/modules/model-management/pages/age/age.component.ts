@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
-import { Age } from 'src/app/model/types/age.object';
+import { AgeWithCounts } from "src/app/model/graphql";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -11,7 +10,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./age.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgeComponent extends EntiteSimpleComponent<Age> {
+export class AgeComponent extends EntiteSimpleComponent<AgeWithCounts> {
   constructor(
     dialog: MatDialog,
     entitiesStoreService: EntitiesStoreService,
@@ -21,15 +20,11 @@ export class AgeComponent extends EntiteSimpleComponent<Age> {
     super(dialog, entitiesStoreService, exportService, router);
   }
 
-  public getEntities$ = (): Observable<Age[]> => {
-    return this.entitiesStoreService.getAges$();
-  };
-
   public getEntityName(): string {
     return "age";
   }
 
-  public getDeleteMessage(age: Age): string {
+  public getDeleteMessage(age: AgeWithCounts): string {
     return (
       "Êtes-vous certain de vouloir supprimer l'âge " +
       age.libelle +

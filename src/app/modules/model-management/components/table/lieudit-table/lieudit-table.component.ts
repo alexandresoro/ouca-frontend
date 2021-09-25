@@ -1,25 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
-import { combineLatest, Observable, Subject } from "rxjs";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { takeUntil } from "rxjs/operators";
-import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
-import { CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Coordinates } from 'src/app/model/types/coordinates.object';
-import { UILieudit } from "src/app/models/lieudit.model";
-import { AppConfigurationService } from "src/app/services/app-configuration.service";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
-import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
-
-interface LieuditRow {
-  id: number;
-  departement: string;
-  codeCommune: number;
-  nomCommune: string;
-  nom: string;
-  altitude: number;
-  longitude: number | string;
-  latitude: number | string;
-  nbDonnees: number;
-}
+import { CoordinatesSystemType, LieuxDitsOrderBy } from "src/app/model/graphql";
+import { AppConfigurationGetService } from "src/app/services/app-configuration-get.service";
+import { LieuxDitsGetService } from "src/app/services/lieux-dits-get.service";
+import { EntiteTableComponent } from "../entite-table/entite-table.component";
+import { LieuDitRow, LieuxDitsDataSource } from "./LieuxDitsDataSource";
 
 @Component({
   selector: "lieudit-table",
@@ -27,9 +12,7 @@ interface LieuditRow {
   templateUrl: "./lieudit-table.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LieuditTableComponent extends EntiteSimpleTableComponent<UILieudit>
-  implements OnDestroy {
-  private readonly destroy$ = new Subject();
+export class LieuditTableComponent extends EntiteTableComponent<LieuDitRow, LieuxDitsDataSource> {
 
   public displayedColumns: string[] = [
     "departement",
@@ -39,77 +22,41 @@ export class LieuditTableComponent extends EntiteSimpleTableComponent<UILieudit>
     "latitude",
     "longitude",
     "altitude",
-    "nbDonnees"
+    "nbDonnees",
+    "actions"
   ];
 
+  private coordinatesSystem: CoordinatesSystemType;
+
   constructor(
-    private appConfigurationService: AppConfigurationService,
-    private entitiesStoreService: EntitiesStoreService
+    private appConfigurationGetService: AppConfigurationGetService,
+    private lieuxDitsGetService: LieuxDitsGetService,
   ) {
     super();
+    this.coordinatesSystem = null;
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): LieuxDitsDataSource {
+    return new LieuxDitsDataSource(this.lieuxDitsGetService);
+  }
 
-    combineLatest(
-      this.getEntities$(),
-      this.appConfigurationService.getAppCoordinatesSystemType$(),
-      (lieuxdits, coordinatesSystemType) => {
-        return this.buildLieuxditsRows(lieuxdits, coordinatesSystemType);
-      }
-    )
+  protected customOnInit = (): void => {
+    this.appConfigurationGetService.watch().valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((lieuxditsRows) => {
-        this.dataSource.data = lieuxditsRows;
+      .subscribe(({ data }) => {
+        this.coordinatesSystem = data?.settings?.coordinatesSystem;
+        this.loadEntities();
       });
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  public getEntities$ = (): Observable<UILieudit[]> => {
-    return this.entitiesStoreService.getLieuxdits$();
-  };
-
-  public getDataSource(): [] {
-    return [];
-  }
-
-  private buildLieuxditsRows = (
-    lieuxdits: UILieudit[],
-    coordinatesSystemType: CoordinatesSystemType
-  ): LieuditRow[] => {
-    const rows: LieuditRow[] = [];
-    lieuxdits?.forEach((lieudit) => {
-      rows.push(this.buildRowFromLieudit(lieudit, coordinatesSystemType));
-    });
-    return rows;
-  };
-
-  private buildRowFromLieudit(
-    lieudit: UILieudit,
-    coordinatesSystemType: CoordinatesSystemType
-  ): LieuditRow {
-    const coordinates: Coordinates = getCoordinates(
-      lieudit,
-      coordinatesSystemType
+  loadEntities = (): void => {
+    this.dataSource.loadLieuxDits(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as LieuxDitsOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value,
+      this.coordinatesSystem
     );
-
-    return {
-      id: lieudit.id,
-      departement: lieudit.commune.departement.code,
-      codeCommune: lieudit.commune.code,
-      nomCommune: lieudit.commune.nom,
-      nom: lieudit.nom,
-      altitude: lieudit.altitude,
-      longitude: coordinates.areInvalid
-        ? "Non supporté"
-        : coordinates.longitude,
-      latitude: coordinates.areInvalid ? "Non supporté" : coordinates.latitude,
-      nbDonnees: lieudit.nbDonnees
-    };
   }
 }

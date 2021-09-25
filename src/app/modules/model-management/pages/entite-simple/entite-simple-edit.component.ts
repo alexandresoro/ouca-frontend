@@ -29,6 +29,7 @@ export abstract class EntiteSimpleEditAbstractComponent<
         switchMap(([params, data]) => {
           const isEditingMode: boolean = data.isEditingMode;
           const id = Number(params.get("id"));
+          // TODO could we improve this by only fetching the correct id now via GQL ?
           return this.getEntities$().pipe(
             map((entities) => {
               const entityMatching = entities?.find((entity) => {

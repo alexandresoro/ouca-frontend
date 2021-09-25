@@ -3,7 +3,7 @@
   *ngIf="!isMultipleSelectMode"
   fxFlex="1 0 100px"
   [type]="'Estimation de la distance'"
-  [values]="estimationsDistance"
+  [valuesObs]="estimationsDistance$"
   [control]="$any(controlGroup.controls['estimationDistance'])"
   [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayEstimationDistanceFormat"
@@ -16,7 +16,7 @@
   [attributesToDisplay]="['libelle']"
   [control]="$any(controlGroup.controls['estimationsDistance'])"
   [id]="'estimations-distance'"
-  [options]="estimationsDistance"
+  [options]="estimationsDistance$ | async"
   [placeholder]="'Estimations de la distance'"
 ></multiple-select>
 

@@ -1,0 +1,8 @@
+<mat-form-field>
+  <input
+    matInput
+    #filterInput
+    (keyup)="applyFilter($any($event.target).value)"
+    placeholder="Filtre"
+  />
+</mat-form-field>

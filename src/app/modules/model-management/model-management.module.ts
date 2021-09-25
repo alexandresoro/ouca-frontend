@@ -10,6 +10,7 @@ import { EntitySubFormComponent } from "./components/form/entite-simple-form/ent
 import { EntitySubFormDirective } from "./components/form/entite-simple-form/entity-sub-form.directive";
 import { EspeceFormComponent } from "./components/form/espece-form/espece-form.component";
 import { EstimationNombreFormComponent } from "./components/form/estimation-nombre-form/estimation-nombre-form.component";
+import { TableFilterFieldComponent } from "./components/table-filter-field/table-filter-field.component";
 import { TableTopbarComponent } from "./components/table-topbar/table-topbar.component";
 import { AgeTableComponent } from "./components/table/age-table/age-table.component";
 import { ClasseTableComponent } from "./components/table/classe-table/classe-table.component";
@@ -105,6 +106,7 @@ import { SexeComponent } from "./pages/sexe/sexe.component";
     SexeComponent,
     SexeEditComponent,
     SexeTableComponent,
+    TableFilterFieldComponent,
     TableTopbarComponent,
     TopButtonsComponent
   ],

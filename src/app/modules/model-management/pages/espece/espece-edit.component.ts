@@ -13,26 +13,46 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Classe } from 'src/app/model/types/classe.object';
-import { Espece } from 'src/app/model/types/espece.model';
-import { UIEspece } from "src/app/models/espece.model";
+import { map, takeUntil } from "rxjs/operators";
+import { Espece } from "src/app/model/graphql";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EspeceFormComponent } from "../../components/form/espece-form/espece-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
+
+type EspecesQueryResult = {
+  especes: Espece[]
+}
+
+const ESPECES_QUERY = gql`
+  query {
+    especes {
+      id
+      code
+      nomFrancais
+      nomLatin
+      classeId
+    }
+  }
+`;
 
 @Component({
   templateUrl: "../entite-simple/entity-edit.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EspeceEditComponent
-  extends EntiteSimpleEditAbstractComponent<UIEspece>
+  extends EntiteSimpleEditAbstractComponent<Espece>
   implements OnInit, OnDestroy {
+
+  private especes$: Observable<Espece[]>;
+
+
   private readonly destroy$ = new Subject();
 
   constructor(
+    private apollo: Apollo,
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
     router: Router,
@@ -42,6 +62,13 @@ export class EspeceEditComponent
   }
 
   ngOnInit(): void {
+    this.especes$ = this.apollo.watchQuery<EspecesQueryResult>({
+      query: ESPECES_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.especes;
+      })
+    );
     this.initialize();
   }
 
@@ -63,25 +90,11 @@ export class EspeceEditComponent
   public createForm(): FormGroup {
     return new FormGroup({
       id: new FormControl("", []),
-      classe: new FormControl("", [Validators.required]),
+      classeId: new FormControl("", [Validators.required]),
       code: new FormControl("", [Validators.required]),
       nomFrancais: new FormControl("", [Validators.required]),
       nomLatin: new FormControl("", [Validators.required])
     });
-  }
-
-  protected getEntityFromFormValue(formValue: {
-    id: number;
-    classe: Classe;
-    code: string;
-    nomFrancais: string;
-    nomLatin: string;
-  }): Espece {
-    const { classe, ...especeAttributes } = formValue;
-    return {
-      ...especeAttributes,
-      classeId: classe.id
-    };
   }
 
   public getFormType(): typeof EspeceFormComponent {
@@ -92,13 +105,13 @@ export class EspeceEditComponent
     return "espece";
   };
 
-  public getEntities$(): Observable<UIEspece[]> {
-    return this.entitiesStoreService.getEspeces$();
+  public getEntities$(): Observable<Espece[]> {
+    return this.especes$;
   }
 
   private updateEspeceValidators = (
     form: FormGroup,
-    especes: UIEspece[]
+    especes: Espece[]
   ): void => {
     form.setValidators([
       this.codeValidator(especes),
@@ -108,12 +121,12 @@ export class EspeceEditComponent
     form.updateValueAndValidity();
   };
 
-  private codeValidator = (especes: UIEspece[]): ValidatorFn => {
+  private codeValidator = (especes: Espece[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const code: string = form.controls.code.value;
       const currentEspeceId: number = form.controls.id.value;
 
-      const matchingEspece: UIEspece = ListHelper.findEntityInListByStringAttribute(
+      const matchingEspece = ListHelper.findEntityInListByStringAttribute(
         especes,
         "code",
         code
@@ -132,12 +145,12 @@ export class EspeceEditComponent
     };
   };
 
-  private nomFrancaisValidator = (especes: UIEspece[]): ValidatorFn => {
+  private nomFrancaisValidator = (especes: Espece[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const nomFrancais = form.controls.nomFrancais.value;
       const id = form.controls.id.value;
 
-      const matchingEspece: UIEspece = ListHelper.findEntityInListByStringAttribute(
+      const matchingEspece = ListHelper.findEntityInListByStringAttribute(
         especes,
         "nomFrancais",
         nomFrancais
@@ -156,12 +169,12 @@ export class EspeceEditComponent
     };
   };
 
-  private nomLatinValidator = (especes: UIEspece[]): ValidatorFn => {
+  private nomLatinValidator = (especes: Espece[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const nomLatin: string = form.controls.nomLatin.value;
       const currentEspeceId: number = form.controls.id.value;
 
-      const matchingEspece: UIEspece = ListHelper.findEntityInListByStringAttribute(
+      const matchingEspece = ListHelper.findEntityInListByStringAttribute(
         especes,
         "nomLatin",
         nomLatin

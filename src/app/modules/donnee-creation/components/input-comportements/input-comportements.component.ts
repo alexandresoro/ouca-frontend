@@ -6,10 +6,25 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { Apollo, gql } from "apollo-angular";
 import { combineLatest, Observable, Subject } from "rxjs";
-import { takeUntil } from 'rxjs/operators';
-import { Comportement } from 'src/app/model/types/comportement.object';
+import { map, takeUntil } from 'rxjs/operators';
+import { Comportement } from "src/app/model/graphql";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+
+type InputComportementsQueryResult = {
+  comportements: Comportement[],
+}
+
+const INPUT_COMPORTEMENTS_QUERY = gql`
+  query {
+    comportements {
+      id
+      code
+      libelle
+    }
+  }
+`;
 
 @Component({
   selector: "input-comportements",
@@ -17,13 +32,25 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputComportementsComponent implements OnInit, OnDestroy {
-  @Input() public comportements: Comportement[];
-
   @Input() public donneeForm: FormGroup;
 
   @Input() public controlGroup: FormGroup;
 
+  public comportements$: Observable<Comportement[]>;
+
   private readonly destroy$ = new Subject();
+
+  constructor(
+    private apollo: Apollo,
+  ) {
+    this.comportements$ = this.apollo.watchQuery<InputComportementsQueryResult>({
+      query: INPUT_COMPORTEMENTS_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.comportements;
+      })
+    );
+  }
 
   public autocompleteAttributes: AutocompleteAttribute[] = [
     {

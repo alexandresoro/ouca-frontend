@@ -1,30 +1,106 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
 import deburr from 'lodash.deburr';
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { map, startWith, withLatestFrom } from "rxjs/operators";
+import { map, startWith, takeUntil, withLatestFrom } from "rxjs/operators";
 import { isADate } from "src/app/date-adapter/date-fns-adapter";
-import { Age } from 'src/app/model/types/age.object';
-import { Classe } from 'src/app/model/types/classe.object';
-import { Comportement } from 'src/app/model/types/comportement.object';
-import { Departement } from 'src/app/model/types/departement.object';
+import { Age, Classe, Commune, Comportement, Departement, Espece, EstimationDistance, EstimationNombre, LieuDit, Meteo, Milieu, Observateur, Sexe } from "src/app/model/graphql";
 import { EntiteAvecLibelleEtCode } from 'src/app/model/types/entite-avec-libelle-et-code.object';
 import { EntiteAvecLibelle } from 'src/app/model/types/entite-avec-libelle.object';
-import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
-import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
-import { Meteo } from 'src/app/model/types/meteo.object';
-import { Milieu } from 'src/app/model/types/milieu.object';
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
-import { Observateur } from 'src/app/model/types/observateur.object';
-import { Sexe } from 'src/app/model/types/sexe.object';
-import { UICommune } from "src/app/models/commune.model";
-import { UIEspece } from "src/app/models/espece.model";
-import { UILieudit } from "src/app/models/lieudit.model";
 import { TimeHelper } from "src/app/modules/shared/helpers/time.helper";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { SearchCriterion } from "../../models/search-criterion.model";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
+
+type LieuDitSimple = Pick<LieuDit, 'id' | 'nom' | 'communeId'>;
+
+type SearchQueryResult = {
+  ages: Age[],
+  classes: Classe[],
+  communes: Commune[],
+  comportements: Comportement[],
+  departements: Departement[],
+  especes: Espece[],
+  lieuxDits: LieuDitSimple[],
+  estimationsNombre: EstimationNombre[],
+  estimationsDistance: EstimationDistance[],
+  meteos: Meteo[],
+  milieux: Milieu[],
+  observateurs: Observateur[]
+  sexes: Sexe[],
+}
+
+const SEARCH_QUERY = gql`
+  query {
+    ages {
+      id
+      libelle
+    }
+    classes {
+      id
+      libelle
+    }
+    communes {
+      id
+      code
+      departementId
+      nom
+    }
+    comportements {
+      id
+      code
+      libelle
+      nicheur
+    }
+    departements {
+      id
+      code
+    }
+    especes {
+      id
+      code
+      nomFrancais
+      nomLatin
+      classeId
+    }
+    estimationsNombre {
+      id
+      libelle
+      nonCompte
+    }
+    estimationsDistance {
+      id
+      libelle
+    }
+    lieuxDits {
+      id
+      nom
+      communeId
+    }
+    meteos {
+      id
+      libelle
+    }
+    milieux {
+      id
+      code
+      libelle
+    }
+    observateurs {
+      id
+      libelle
+    }
+    sexes {
+      id
+      libelle
+    }
+  }
+`;
+
+
 @Component({
   selector: "search",
   styleUrls: ["./search.component.scss"],
@@ -40,11 +116,11 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
 
   public filteredObservateurs$: Observable<Observateur[]>;
   public filteredDepartements$: Observable<Departement[]>;
-  public filteredCommunes$: Observable<UICommune[]>;
-  public filteredLieuxDits$: Observable<UILieudit[]>;
+  public filteredCommunes$: Observable<Commune[]>;
+  public filteredLieuxDits$: Observable<LieuDitSimple[]>;
   public filteredMeteos$: Observable<Meteo[]>;
   public filteredClasses$: Observable<Classe[]>;
-  public filteredEspeces$: Observable<UIEspece[]>;
+  public filteredEspeces$: Observable<Espece[]>;
   public filteredSexes$: Observable<Sexe[]>;
   public filteredAges$: Observable<Age[]>;
   public filteredEstimationsNombre$: Observable<EstimationNombre[]>;
@@ -58,7 +134,7 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
 
   private observateurs$: Observable<Observateur[]>;
   private classes$: Observable<Classe[]>;
-  private especes$: Observable<UIEspece[]>;
+  private especes$: Observable<Espece[]>;
   private estimationsNombre$: Observable<EstimationNombre[]>;
   private estimationsDistance$: Observable<EstimationDistance[]>;
   private sexes$: Observable<Sexe[]>;
@@ -67,8 +143,11 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   private milieux$: Observable<Milieu[]>;
   private meteos$: Observable<Meteo[]>;
   private departements$: Observable<Departement[]>;
-  private communes$: Observable<UICommune[]>;
-  private lieuxDits$: Observable<UILieudit[]>;
+  private departementsSubj$: BehaviorSubject<Departement[]> = new BehaviorSubject<Departement[]>([]);
+  private communes$: Observable<Commune[]>;
+
+  private communesSubj$: BehaviorSubject<Commune[]> = new BehaviorSubject<Commune[]>([]);
+  private lieuxDits$: Observable<LieuDitSimple[]>;
   private nicheursStatuses: Nicheur[] = Object.values(NICHEUR_VALUES);
 
   private CHARACTERS_TO_IGNORE = /(\s|\'|\-|\,)/g;
@@ -82,8 +161,10 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
 
   private readonly destroy$ = new Subject();
 
+  private searchQuery$: Observable<ApolloQueryResult<SearchQueryResult>>;
+
   constructor(
-    private entitiesStoreService: EntitiesStoreService,
+    private apollo: Apollo,
     private searchCriteriaService: SearchCriteriaService
   ) {
     this.init();
@@ -103,21 +184,62 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   }
 
   private init = (): void => {
+
+    this.searchQuery$ = this.apollo.watchQuery<SearchQueryResult>({
+      query: SEARCH_QUERY
+    }).valueChanges.pipe(
+      takeUntil(this.destroy$)
+    );
+
     this.searchCriteria$ = this.searchCriteriaService.getCurrentSearchCriteria$();
 
-    this.observateurs$ = this.entitiesStoreService.getObservateurs$();
-    this.estimationsNombre$ = this.entitiesStoreService.getEstimationNombres$();
-    this.estimationsDistance$ = this.entitiesStoreService.getEstimationDistances$();
-    this.classes$ = this.entitiesStoreService.getClasses$();
-    this.especes$ = this.entitiesStoreService.getEspeces$();
-    this.sexes$ = this.entitiesStoreService.getSexes$();
-    this.ages$ = this.entitiesStoreService.getAges$();
-    this.comportements$ = this.entitiesStoreService.getComportements$();
-    this.milieux$ = this.entitiesStoreService.getMilieux$();
-    this.meteos$ = this.entitiesStoreService.getMeteos$();
-    this.lieuxDits$ = this.entitiesStoreService.getLieuxdits$();
-    this.departements$ = this.entitiesStoreService.getDepartements$();
-    this.communes$ = this.entitiesStoreService.getCommunes$();
+    this.observateurs$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.observateurs)
+    );
+    this.estimationsNombre$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.estimationsNombre)
+    );
+    this.estimationsDistance$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.estimationsDistance)
+    );
+    this.classes$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.classes)
+    );
+    this.especes$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.especes)
+    );
+    this.sexes$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.sexes)
+    );
+    this.ages$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.ages)
+    );
+    this.comportements$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.comportements)
+    );
+    this.milieux$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.milieux)
+    );
+    this.meteos$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.meteos)
+    );
+    this.lieuxDits$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.lieuxDits)
+    );
+    this.departements$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.departements)
+    );
+    this.communes$ = this.searchQuery$.pipe(
+      map(({ data }) => data?.communes)
+    );
+
+    this.departements$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(this.departementsSubj$);
+
+    this.communes$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(this.communesSubj$);
 
     this.userInputChange$ = combineLatest(
       this.searchCtrl.valueChanges.pipe(startWith(null)),
@@ -297,10 +419,10 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   };
 
   private filterCommunes = (
-    allCommunes: UICommune[],
+    allCommunes: Commune[],
     listSize: number,
     filterValue: any
-  ): UICommune[] => {
+  ): Commune[] => {
     if (filterValue && !filterValue.type) {
       const valueToFind = this.transformValue(filterValue);
 
@@ -315,10 +437,10 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   };
 
   private filterLieuxDits = (
-    allLieuxDits: UILieudit[],
+    allLieuxDits: LieuDitSimple[],
     listSize: number,
     filterValue: any
-  ): UILieudit[] => {
+  ): LieuDitSimple[] => {
     if (filterValue && !filterValue.type) {
       const valueToFind = this.transformValue(filterValue);
 
@@ -333,10 +455,10 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   };
 
   private filterEspeces = (
-    allEspeces: UIEspece[],
+    allEspeces: Espece[],
     listSize: number,
     filterValue: any
-  ): UIEspece[] => {
+  ): Espece[] => {
     if (filterValue && !filterValue.type) {
       const valueToFind = this.transformValue(filterValue);
       return allEspeces
@@ -432,23 +554,17 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
     return "Département : " + departement.code;
   };
 
-  public getDisplayedCommune = (commune: UICommune): string => {
-    return "Commune : " + commune.nom + " (" + commune.departement.code + ")";
+  public getDisplayedCommune = (commune: Commune): string => {
+    const departementCode = this.departementsSubj$.value?.find(departement => departement.id === commune.departementId)?.code;
+    return `Commune : ${commune.nom} (${departementCode})`;
   };
 
-  public getDisplayedLieuDit = (lieuDit: UILieudit): string => {
-    return (
-      "Lieu-dit : " +
-      lieuDit.nom +
-      " à " +
-      lieuDit.commune.nom +
-      " (" +
-      lieuDit.commune.departement.code +
-      ")"
-    );
+  public getDisplayedLieuDit = (lieuDit: LieuDitSimple): string => {
+    const commune = this.communesSubj$.value?.find(commune => commune.id === lieuDit.communeId);
+    return `Lieu-dit : ${lieuDit.nom} à ${this.getDisplayedCommune(commune)}`;
   };
 
-  public getDisplayedEspece = (espece: UIEspece): string => {
+  public getDisplayedEspece = (espece: Espece): string => {
     return "Espèce : " + espece.nomFrancais + " (" + espece.code + ")";
   };
 

@@ -13,13 +13,27 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Departement } from 'src/app/model/types/departement.object';
+import { map, takeUntil } from "rxjs/operators";
+import { Departement } from "src/app/model/graphql";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
+
+type DepartementsQueryResult = {
+  departements: Departement[]
+}
+
+const DEPARTEMENTS_QUERY = gql`
+  query {
+    departements {
+      id
+      code
+    }
+  }
+`;
 
 @Component({
   templateUrl: "../entite-simple/entity-edit.component.html",
@@ -28,9 +42,13 @@ import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simpl
 export class DepartementEditComponent
   extends EntiteSimpleEditAbstractComponent<Departement>
   implements OnInit, OnDestroy {
+
+  private departements$: Observable<Departement[]>;
+
   private readonly destroy$ = new Subject();
 
   constructor(
+    private apollo: Apollo,
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
     router: Router,
@@ -40,6 +58,13 @@ export class DepartementEditComponent
   }
 
   ngOnInit(): void {
+    this.departements$ = this.apollo.watchQuery<DepartementsQueryResult>({
+      query: DEPARTEMENTS_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.departements;
+      })
+    );
     this.initialize();
   }
 
@@ -74,7 +99,7 @@ export class DepartementEditComponent
   };
 
   public getEntities$(): Observable<Departement[]> {
-    return this.entitiesStoreService.getDepartements$();
+    return this.departements$;
   }
 
   private updateDepartementValidators = (

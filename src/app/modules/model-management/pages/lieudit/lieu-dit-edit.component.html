@@ -32,7 +32,7 @@
           >
             <mat-option
               *ngFor="let departement of departements$ | async"
-              [value]="departement"
+              [value]="departement.id"
             >
               {{ departement.code }}
             </mat-option>

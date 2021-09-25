@@ -2,7 +2,6 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
-import { AppConfiguration } from '../model/types/app-configuration.object';
 import { DonneeWithNavigationData } from '../model/types/donnee-with-navigation-data.object';
 import { Donnee } from '../model/types/donnee.object';
 import { DonneesFilter } from '../model/types/donnees-filter.object';
@@ -15,8 +14,6 @@ import { PostResponse } from '../model/types/post-response.object';
   providedIn: "root"
 })
 export class BackendApiService {
-  private ALL: string = "all";
-  private CONFIGURATION: string = "configuration/";
   private DATABASE: string = "database/";
   private DELETE: string = "delete";
   private DONNEE: string = "donnee/";
@@ -24,7 +21,6 @@ export class BackendApiService {
   private FIND: string = "find";
   private FIND_WITH_CONTEXT: string = "find_with_context";
 
-  private IMPORT: string = "import";
   private INVENTAIRE: string = "inventaire/";
   private NEXT_REGROUPEMENT: string = "next_regroupement";
   private UPDATE: string = "update";
@@ -32,8 +28,6 @@ export class BackendApiService {
   private CLEAR: string = "clear";
   private LAST: string = "last";
   private SEARCH: string = "search";
-
-  private readonly FILE_TO_IMPORT_NAME: string = "fileToImport";
 
   constructor(public http: HttpClient) { }
 
@@ -98,27 +92,6 @@ export class BackendApiService {
       tap(() => {
         console.log("HTTP POST", requestPath, objectToPost);
       })
-    );
-  }
-
-  public saveAppConfiguration = (
-    appConfigurationToSave: AppConfiguration
-  ): Observable<boolean> => {
-    return this.httpPost(
-      this.CONFIGURATION + this.UPDATE,
-      appConfigurationToSave
-    );
-  };
-
-  public importData(
-    entityName: string,
-    file: File
-  ): Observable<HttpResponse<any>> {
-    const formData: FormData = new FormData();
-    formData.append(this.FILE_TO_IMPORT_NAME, file, file.name);
-    return this.httpPostObserveResponse(
-      entityName + "/" + this.IMPORT,
-      formData
     );
   }
 

@@ -1,16 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { UICommune } from "src/app/models/commune.model";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
-import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
-interface CommunetRow {
-  id: number;
-  departement: string;
-  code: number;
-  nom: string;
-  nbLieuxdits: number;
-  nbDonnees: number;
-}
+import { CommunesOrderBy, CommuneWithCounts } from "src/app/model/graphql";
+import { CommunesGetService } from "src/app/services/communes-get.service";
+import { EntiteTableComponent } from "../entite-table/entite-table.component";
+import { CommunesDataSource } from "./CommunesDataSource";
 
 @Component({
   selector: "commune-table",
@@ -18,45 +10,31 @@ interface CommunetRow {
   templateUrl: "./commune-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CommuneTableComponent extends EntiteSimpleTableComponent<
-UICommune
-> {
+export class CommuneTableComponent extends EntiteTableComponent<CommuneWithCounts, CommunesDataSource> {
   public displayedColumns: string[] = [
     "departement",
     "code",
     "nom",
-    "nbLieuxdits",
-    "nbDonnees"
+    "nbLieuxDits",
+    "nbDonnees",
+    "actions"
   ];
 
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+  constructor(private communesGetService: CommunesGetService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): CommunesDataSource {
+    return new CommunesDataSource(this.communesGetService);
   }
 
-  protected getEntities$ = (): Observable<UICommune[]> => {
-    return this.entitiesStoreService.getCommunes$();
-  };
-
-  protected getDataSource(communes: UICommune[]): CommunetRow[] {
-    const rows: CommunetRow[] = [];
-    communes?.forEach((commune: UICommune) => {
-      rows.push(this.buildRowFromLieudit(commune));
-    });
-    return rows;
-  }
-
-  private buildRowFromLieudit(commune: UICommune): CommunetRow {
-    return {
-      id: commune.id,
-      departement: commune.departement.code,
-      code: commune.code,
-      nom: commune.nom,
-      nbLieuxdits: commune.nbLieuxdits,
-      nbDonnees: commune.nbDonnees
-    };
+  loadEntities = (): void => {
+    this.dataSource.loadCommunes(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as CommunesOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value
+    );
   }
 }

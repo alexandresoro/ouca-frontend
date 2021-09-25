@@ -18,7 +18,6 @@
 
   <configuration-form
     *ngIf="isCurrentlyEditing$ | async"
-    [appConfiguration]="appConfiguration$ | async"
     (confirm)="saveAppConfiguration($event)"
     (back)="switchToViewAllMode()"
   ></configuration-form>

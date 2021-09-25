@@ -2,12 +2,29 @@ import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
-import { Comportement } from 'src/app/model/types/comportement.object';
+import { map } from "rxjs/operators";
+import { Comportement } from "src/app/model/graphql";
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEtCodeEditAbstractComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code-edit.component";
+
+type ComportementsQueryResult = {
+  comportements: Comportement[]
+}
+
+const COMPORTEMENTS_QUERY = gql`
+  query {
+    comportements {
+      id
+      code
+      libelle
+      nicheur
+    }
+  }
+`;
 
 @Component({
   templateUrl: "./comportement-edit.component.html",
@@ -24,9 +41,12 @@ export class ComportementEditComponent
     "alreadyExistingLibelle"
   );
 
+  private comportements$: Observable<Comportement[]>;
+
   public nicheurValues: Nicheur[] = Object.values(NICHEUR_VALUES);
 
   constructor(
+    private apollo: Apollo,
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
     router: Router,
@@ -36,6 +56,13 @@ export class ComportementEditComponent
   }
 
   ngOnInit(): void {
+    this.comportements$ = this.apollo.watchQuery<ComportementsQueryResult>({
+      query: COMPORTEMENTS_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.comportements;
+      })
+    );
     this.initialize();
   }
 
@@ -44,7 +71,7 @@ export class ComportementEditComponent
   };
 
   public getEntities$(): Observable<Comportement[]> {
-    return this.entitiesStoreService.getComportements$();
+    return this.comportements$;
   }
 
   public createForm(): FormGroup {

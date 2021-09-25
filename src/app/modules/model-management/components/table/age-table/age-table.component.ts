@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { Age } from 'src/app/model/types/age.object';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { AgeWithCounts, EntitesAvecLibelleOrderBy } from "src/app/model/graphql";
+import { AgesPaginatedService } from "src/app/services/ages-paginated.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
+import { AgesDataSource } from "./AgesDataSource";
 
 @Component({
   selector: "age-table",
@@ -13,16 +13,23 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
     "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgeTableComponent extends EntiteAvecLibelleTableComponent<Age> {
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+export class AgeTableComponent extends EntiteAvecLibelleTableComponent<AgeWithCounts, AgesDataSource> {
+
+  constructor(private agesPaginatedService: AgesPaginatedService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): AgesDataSource {
+    return new AgesDataSource(this.agesPaginatedService);
   }
 
-  public getEntities$ = (): Observable<Age[]> => {
-    return this.entitiesStoreService.getAges$();
-  };
+  loadEntities = (): void => {
+    this.dataSource.loadAges(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as EntitesAvecLibelleOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value
+    );
+  }
 }

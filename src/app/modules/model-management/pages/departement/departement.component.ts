@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
-import { Departement } from 'src/app/model/types/departement.object';
+import { DepartementWithCounts } from "src/app/model/graphql";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -11,7 +10,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./departement.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DepartementComponent extends EntiteSimpleComponent<Departement> {
+export class DepartementComponent extends EntiteSimpleComponent<DepartementWithCounts> {
   constructor(
     dialog: MatDialog,
     entitiesStoreService: EntitiesStoreService,
@@ -21,15 +20,11 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
     super(dialog, entitiesStoreService, exportService, router);
   }
 
-  public getEntities$ = (): Observable<Departement[]> => {
-    return this.entitiesStoreService.getDepartements$();
-  };
-
   public getEntityName(): string {
     return "departement";
   }
 
-  public getDeleteMessage(departement: Departement): string {
+  public getDeleteMessage(departement: DepartementWithCounts): string {
     return (
       "Êtes-vous certain de vouloir supprimer le département " +
       departement.code +
@@ -37,7 +32,7 @@ export class DepartementComponent extends EntiteSimpleComponent<Departement> {
       "Toutes les communes (" +
       departement.nbCommunes +
       "), tous les lieux-dits (" +
-      departement.nbLieuxdits +
+      departement.nbLieuxDits +
       ") et toutes les données (" +
       departement.nbDonnees +
       ") avec ce département seront supprimés."

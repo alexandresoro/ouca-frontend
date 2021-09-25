@@ -1,15 +1,43 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Apollo, gql } from 'apollo-angular';
 import L from 'leaflet';
 import 'leaflet.control.opacity';
 import 'leaflet.markercluster';
 import { combineLatest, Subject } from 'rxjs';
-import { distinctUntilChanged, takeUntil, withLatestFrom } from 'rxjs/operators';
-import { UILieudit } from 'src/app/models/lieudit.model';
+import { distinctUntilChanged, map, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { Commune, Departement, LieuDit } from 'src/app/model/graphql';
 import { baseMaps, markerDefault, markerGreen, markerRed, markerYellow, overlays } from 'src/app/modules/shared/objects/map-objects';
 import { CreationMapService } from 'src/app/services/creation-map.service';
-import { EntitiesStoreService } from 'src/app/services/entities-store.service';
 
 L.Marker.prototype.options.icon = markerDefault;
+
+type CreationMapQueryResult = {
+  lieuxDits: Pick<LieuDit, 'id' | 'nom' | 'latitude' | 'longitude' | 'communeId'>[],
+  communes: Commune[],
+  departements: Departement[],
+}
+
+const CREATION_MAP_QUERY = gql`
+  query {
+    lieuxDits {
+      id
+      nom
+      longitude
+      latitude
+      communeId
+    }
+    communes {
+      id
+      code
+      departementId
+      nom
+    }
+    departements {
+      id
+      code
+    }
+  }
+`;
 
 @Component({
   selector: "creation-map",
@@ -50,7 +78,7 @@ export class CreationMapComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private entitiesStoreService: EntitiesStoreService,
+    private apollo: Apollo,
     private creationMapService: CreationMapService
   ) {
     this.customMarkerPopupContent.append(this.customMarkerDeleteLink, " le point personnalisé");
@@ -64,6 +92,10 @@ export class CreationMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    const queryResult$ = this.apollo.watchQuery<CreationMapQueryResult>({
+      query: CREATION_MAP_QUERY
+    }).valueChanges;
 
     // Create the map
     this.map = L.map('map', {
@@ -92,9 +124,12 @@ export class CreationMapComponent implements OnInit, OnDestroy {
     this.customPositionMarker.on("dragend", () => this.customMarkerPosition$.next(this.customPositionMarker.getLatLng()));
 
     // Retrieve the list of existing lieux dits
-    this.entitiesStoreService.getLieuxdits$()
+    queryResult$
       .pipe(
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
+        map(({ data }) => {
+          return data;
+        })
       )
       .subscribe(this.onUpdatedLieuxDits);
 
@@ -207,20 +242,23 @@ export class CreationMapComponent implements OnInit, OnDestroy {
     this.customMarkerPosition$.next(this.customPositionMarker.getLatLng());
   }
 
-  private onUpdatedLieuxDits = (lieuxdits: UILieudit[]) => {
-    const markers = lieuxdits.map((lieudit) => {
-      const tooltipText = `${lieudit.nom} -  ${lieudit.commune.nom.toUpperCase()} (${lieudit.commune.departement.code})`;
-      const marker = L.marker([lieudit.coordinates.latitude, lieudit.coordinates.longitude]).bindTooltip(tooltipText);
+  private onUpdatedLieuxDits = (data: CreationMapQueryResult) => {
+    const { lieuxDits, communes, departements } = data;
+    const markers = lieuxDits.map((lieuDit) => {
+      const commune = communes?.find(commune => commune.id === lieuDit.communeId) ?? null;
+      const departement = departements?.find(departement => departement.id === commune?.id) ?? null;
+      const tooltipText = `${lieuDit.nom} -  ${commune.nom.toUpperCase()} (${departement.code})`;
+      const marker = L.marker([lieuDit.latitude, lieuDit.longitude]).bindTooltip(tooltipText);
 
       // Handle click on a marker
-      marker.on('click', () => { this.onExistingLieuDitClick(lieudit.id) });
+      marker.on('click', () => { this.onExistingLieuDitClick(lieuDit.id) });
 
       // Handle right click on a marker
       marker.on("contextmenu", () => {
-        this.createCustomMarker(marker, lieudit.id);
+        this.createCustomMarker(marker, lieuDit.id);
       });
 
-      this.markersPerLieuDit[lieudit.id] = marker;
+      this.markersPerLieuDit[lieuDit.id] = marker;
       return marker;
     });
 

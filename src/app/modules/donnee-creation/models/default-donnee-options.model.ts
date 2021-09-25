@@ -1,6 +1,4 @@
-import { Age } from 'src/app/model/types/age.object';
-import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
-import { Sexe } from 'src/app/model/types/sexe.object';
+import { Age, EstimationNombre, Sexe } from "src/app/model/graphql";
 
 export interface DefaultDonneeOptions {
   age: Age;

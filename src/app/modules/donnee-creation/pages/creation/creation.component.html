@@ -122,7 +122,6 @@
               <div>
                 <input-observateur
                   [control]="$any(inventaireForm.controls['observateur'])"
-                  [observateurs]="observateurs$"
                 >
                 </input-observateur>
               </div>
@@ -131,7 +130,6 @@
               <div *ngIf="(appConfiguration$ | async)?.areAssociesDisplayed">
                 <input-observateurs-associes
                   [control]="$any(inventaireForm.controls['observateursAssocies'])"
-                  [observateurs]="observateurs$ | async"
                 >
                 </input-observateurs-associes>
               </div>
@@ -194,7 +192,6 @@
                 <!-- METEOS -->
                 <input-meteos
                   fxFlex="1 0 120px"
-                  [meteos]="meteos$ | async"
                   [control]="$any(inventaireForm.controls['meteos'])"
                 ></input-meteos>
               </div>
@@ -272,7 +269,6 @@
                     fxLayoutGap="20px"
                     [controlGroup]="$any(donneeForm.controls['nombreGroup'])"
                     [defaultNombre]="(appConfiguration$ | async)?.defaultNombre"
-                    [estimationsNombre]="estimationsNombre$ | async"
                     formGroupName="nombreGroup"
                   >
                   </input-nombre>
@@ -281,14 +277,12 @@
                   <input-sexe
                     fxFlex="1 0 120px"
                     [control]="$any(donneeForm.controls['sexe'])"
-                    [sexes]="sexes$ | async"
                   ></input-sexe>
   
                   <!-- AGE  -->
                   <input-age
                     fxFlex="1 0 120px"
                     [control]="$any(donneeForm.controls['age'])"
-                    [ages]="ages$ | async"
                   ></input-age>
                 </div>
                 <div>
@@ -316,7 +310,6 @@
                     fxLayout="row"
                     fxLayoutGap="20px"
                     [controlGroup]="$any(donneeForm.controls['distanceGroup'])"
-                    [estimationsDistance]="estimationsDistance$ | async"
                     formGroupName="distanceGroup"
                   >
                   </input-distance>
@@ -348,7 +341,6 @@
                     formGroupName="comportementsGroup"
                     [donneeForm]="donneeForm"
                     [controlGroup]="$any(donneeForm.controls['comportementsGroup'])"
-                    [comportements]="comportements$ | async"
                   ></input-comportements>
                 </mat-card-content>
               </mat-card>
@@ -361,7 +353,6 @@
                     formGroupName="milieuxGroup"
                     [donneeForm]="donneeForm"
                     [controlGroup]="$any(donneeForm.controls['milieuxGroup'])"
-                    [milieux]="milieux$ | async"
                   ></input-milieux>
                 </mat-card-content>
               </mat-card>

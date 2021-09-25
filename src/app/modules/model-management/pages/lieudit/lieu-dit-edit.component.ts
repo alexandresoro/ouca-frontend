@@ -13,6 +13,7 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import deburr from 'lodash.deburr';
 import {
   BehaviorSubject,
@@ -21,20 +22,54 @@ import {
   Observable,
   Subject
 } from "rxjs";
-import { filter, map, takeUntil } from "rxjs/operators";
+import { filter, map, takeUntil, withLatestFrom } from "rxjs/operators";
 import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
+import { COORDINATES_SYSTEMS_CONFIG } from "src/app/model/coordinates-system/coordinates-system-list.object";
 import { CoordinatesSystem, CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Departement } from 'src/app/model/types/departement.object';
-import { Lieudit } from 'src/app/model/types/lieudit.model';
-import { UICommune } from "src/app/models/commune.model";
-import { UILieudit } from "src/app/models/lieudit.model";
+import { Commune, Departement, LieuDit } from "src/app/model/graphql";
+import { Lieudit } from "src/app/model/types/lieudit.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { has } from 'src/app/modules/shared/helpers/utils';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
-import { AppConfigurationService } from "src/app/services/app-configuration.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
+
+type LieuxDitsQueryResult = {
+  lieuxDits: LieuDit[],
+  communes: Commune[],
+  departements: Departement[],
+  settings: {
+    coordinatesSystem: CoordinatesSystemType
+  }
+}
+
+const LIEUX_DITS_QUERY = gql`
+  query {
+    lieuxDits {
+      id
+      nom
+      altitude
+      longitude
+      latitude
+      coordinatesSystem
+      communeId
+    }
+    communes {
+      id
+      code
+      departementId
+      nom
+    }
+    departements {
+      id
+      code
+    }
+    settings {
+      coordinatesSystem
+    }
+  }
+`;
 
 @Component({
   styleUrls: ["./lieu-dit-edit.component.scss"],
@@ -42,21 +77,25 @@ import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simpl
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LieuDitEditComponent
-  extends EntiteSimpleEditAbstractComponent<UILieudit>
+  extends EntiteSimpleEditAbstractComponent<LieuDit>
   implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
+  private lieuxDits$: Observable<LieuDit[]>;
+
   public departements$: Observable<Departement[]>;
 
-  private communes$: Observable<UICommune[]>;
+  private communes$: Observable<Commune[]>;
 
-  public filteredCommunes$: BehaviorSubject<UICommune[]> = new BehaviorSubject<
-    UICommune[]
+  private communesSubj$: BehaviorSubject<Commune[]> = new BehaviorSubject<Commune[]>([]);
+
+  public filteredCommunes$: BehaviorSubject<Commune[]> = new BehaviorSubject<
+    Commune[]
   >(null);
 
-  public coordinatesSystem$: BehaviorSubject<
-    CoordinatesSystem
-  > = new BehaviorSubject(null);
+  public coordinatesSystem$: Observable<CoordinatesSystem>;
+
+  public coordinatesSystemSubj$: BehaviorSubject<CoordinatesSystem> = new BehaviorSubject<CoordinatesSystem>(null);
 
   public areCoordinatesTransformed$: BehaviorSubject<
     boolean
@@ -71,7 +110,7 @@ export class LieuDitEditComponent
   );
 
   constructor(
-    private appConfigurationService: AppConfigurationService,
+    private apollo: Apollo,
     private coordinatesBuilderService: CoordinatesBuilderService,
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
@@ -79,16 +118,45 @@ export class LieuDitEditComponent
     location: Location
   ) {
     super(entitiesStoreService, router, route, location);
-    this.departements$ = this.entitiesStoreService.getDepartements$();
-    this.communes$ = this.entitiesStoreService.getCommunes$();
-    this.appConfigurationService
-      .getAppCoordinatesSystem$()
-      .subscribe((system) => {
-        this.coordinatesSystem$.next(system);
-      });
   }
 
   ngOnInit(): void {
+    const queryResult$ = this.apollo.watchQuery<LieuxDitsQueryResult>({
+      query: LIEUX_DITS_QUERY
+    }).valueChanges;
+
+    this.lieuxDits$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.lieuxDits;
+      })
+    );
+
+    this.communes$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.communes;
+      })
+    );
+
+    this.departements$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.departements;
+      })
+    );
+
+    this.coordinatesSystem$ = queryResult$.pipe(
+      map(({ data }) => {
+        return COORDINATES_SYSTEMS_CONFIG[data?.settings?.coordinatesSystem];
+      })
+    );
+
+    this.communes$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(this.communesSubj$);
+
+    this.coordinatesSystem$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(this.coordinatesSystemSubj$);
+
     this.initialize();
   }
 
@@ -111,10 +179,17 @@ export class LieuDitEditComponent
     const nomCommuneControl = this.getForm().controls.nomCommune;
 
     const departmentChange$ = merge(
-      departementControl.valueChanges as Observable<Departement>,
+      departementControl.valueChanges as Observable<number>,
       this.getEntityToDisplay$().pipe(
-        filter((lieudit) => !!lieudit?.commune?.departement),
-        map((lieudit) => lieudit.commune.departement)
+        withLatestFrom(this.communes$),
+        filter(([lieuDit, communes]) => {
+          const departementId = communes?.find(commune => commune.id === lieuDit.id)?.departementId;
+          return !!lieuDit.communeId && !!departementId;
+        }),
+        map(([lieuDit, communes]) => {
+          const departementId = communes?.find(commune => commune.id === lieuDit.id)?.departementId;
+          return departementId;
+        })
       )
     );
 
@@ -122,13 +197,13 @@ export class LieuDitEditComponent
     combineLatest(
       departmentChange$,
       this.communes$,
-      (selectedDepartement: Departement, communes) => {
-        if (!communes || !communes.length || !selectedDepartement) {
+      (selectedDepartement, communes) => {
+        if (!communes || !communes.length || selectedDepartement == null) {
           return [];
         }
 
         return communes.filter((commune) => {
-          return commune.departement.id === selectedDepartement.id;
+          return commune.departementId === selectedDepartement;
         });
       }
     )
@@ -157,8 +232,18 @@ export class LieuDitEditComponent
           this.getForm().addControl("latitude", new FormControl());
         }
 
-        if (lieuDit?.coordinates) {
-          const coordinates = getCoordinates(lieuDit, coordinatesSystem.code);
+        if (has(lieuDit, "longitude")) {
+
+          const coordinates = getCoordinates(
+            {
+              coordinates: {
+                system: lieuDit.coordinatesSystem,
+                latitude: lieuDit.latitude,
+                longitude: lieuDit.longitude
+              }
+            },
+            coordinatesSystem.code
+          );
 
           if (coordinates.areInvalid) {
             this.getForm().removeControl("longitude");
@@ -199,10 +284,10 @@ export class LieuDitEditComponent
   }
 
   protected getFormValue(
-    lieuDit: UILieudit
+    lieuDit: LieuDit
   ): {
     id: number;
-    departement: Departement;
+    departement: number;
     communeId: number;
     nomCommune: number;
     nom: string;
@@ -210,21 +295,21 @@ export class LieuDitEditComponent
     longitude: number;
     latitude: number;
   } {
+    const departementId = this.communesSubj$.value?.find(commune => commune.id === lieuDit.communeId)?.departementId;
     return {
       id: lieuDit.id,
-      departement: lieuDit.commune.departement,
-      communeId: lieuDit.commune.id,
-      nomCommune: lieuDit.commune.id,
+      departement: departementId,
+      communeId: lieuDit.communeId,
+      nomCommune: lieuDit.communeId,
       nom: lieuDit.nom,
       altitude: lieuDit.altitude,
-      longitude: lieuDit.coordinates.longitude,
-      latitude: lieuDit.coordinates.latitude
+      longitude: lieuDit.longitude,
+      latitude: lieuDit.latitude
     };
   }
 
   getEntityFromFormValue(formValue: {
     id: number;
-    departement: Departement;
     nomCommune: number;
     communeId: number;
     nom: string;
@@ -244,7 +329,7 @@ export class LieuDitEditComponent
       lieuDit.coordinates = {
         longitude: formValue.longitude,
         latitude: formValue.latitude,
-        system: this.coordinatesSystem$.value.code
+        system: this.coordinatesSystemSubj$.value?.code
       };
     }
 
@@ -259,31 +344,31 @@ export class LieuDitEditComponent
     return "lieudit";
   };
 
-  public getEntities$(): Observable<UILieudit[]> {
-    return this.entitiesStoreService.getLieuxdits$();
+  public getEntities$(): Observable<LieuDit[]> {
+    return this.lieuxDits$;
   }
 
   private updateLieuDitValidators = (
     form: FormGroup,
-    lieuxDits: UILieudit[]
+    lieuxDits: LieuDit[]
   ): void => {
     form.setValidators([this.nomValidator(lieuxDits)]);
     form.updateValueAndValidity();
   };
 
-  private nomValidator = (lieuxDits: UILieudit[]): ValidatorFn => {
+  private nomValidator = (lieuxDits: LieuDit[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const nom: string = form.controls.nom.value;
       const communeId: number = form.controls.communeId.value;
       const currentLieuDitId: number = form.controls.id.value;
 
-      const matchingLieuDit: UILieudit =
+      const matchingLieuDit =
         nom && communeId
           ? lieuxDits?.find((lieuDit) => {
             return (
               deburr(lieuDit.nom.trim().toLowerCase()) ===
               deburr(nom.trim().toLowerCase()) &&
-              lieuDit.commune.id === communeId
+              lieuDit.communeId === communeId
             );
           })
           : null;

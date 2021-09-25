@@ -1,16 +1,16 @@
 <!-- Classe -->
 <mat-form-field>
   <mat-select
-    [formControl]="$any(entityForm.controls['classe'])"
+    [formControl]="$any(entityForm.controls['classeId'])"
     id="input-classe"
     name="classe"
     placeholder="Classe de l'espèce"
   >
-    <mat-option *ngFor="let classe of classes$ | async" [value]="classe">
+    <mat-option *ngFor="let classe of classes$ | async" [value]="classe.id">
       {{ classe.libelle }}
     </mat-option>
   </mat-select>
-  <mat-error *ngIf="entityForm.controls['classe'].hasError('required')">
+  <mat-error *ngIf="entityForm.controls['classeId'].hasError('required')">
     Le champ "Classe de l'espèce" ne peut pas être vide.
   </mat-error>
 </mat-form-field>

@@ -6,10 +6,10 @@ import {
 } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { map, takeUntil } from "rxjs/operators";
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
-import { AppConfiguration } from 'src/app/model/types/app-configuration.object';
-import { AppConfigurationService } from "src/app/services/app-configuration.service";
+import { Settings } from "src/app/model/graphql";
+import { AppConfigurationGetService } from "src/app/services/app-configuration-get.service";
 
 export enum ConfigurationParameterID {
   DEFAULT_OBSERVATEUR,
@@ -44,7 +44,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     boolean
   >(false);
 
-  public appConfiguration$: Observable<AppConfiguration>;
+  public appConfiguration$: Observable<Settings>;
 
   private readonly configurationParametersToDisplay: ConfigurationParameter[] = [
     {
@@ -108,8 +108,8 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
 
   public dataSource: MatTableDataSource<ConfigurationParameter>;
 
-  constructor(private appConfigurationService: AppConfigurationService) {
-    this.appConfiguration$ = this.appConfigurationService.getConfiguration$();
+  constructor(private appConfigurationGetService: AppConfigurationGetService) {
+    this.appConfiguration$ = this.appConfigurationGetService.watch().valueChanges.pipe(map(({ data }) => data?.settings));
   }
 
   public ngOnInit(): void {
@@ -131,7 +131,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  public buildDataSource = (appConfiguration: AppConfiguration): void => {
+  public buildDataSource = (appConfiguration: Settings): void => {
     const newConfiguration = this.configurationParametersToDisplay?.map(
       (parameter) => {
         let value = "";

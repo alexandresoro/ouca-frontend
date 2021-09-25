@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
-import { Meteo } from 'src/app/model/types/meteo.object';
+import { MeteoWithCounts } from "src/app/model/graphql";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -11,7 +10,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./meteo.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeteoComponent extends EntiteSimpleComponent<Meteo> {
+export class MeteoComponent extends EntiteSimpleComponent<MeteoWithCounts> {
   constructor(
     dialog: MatDialog,
     entitiesStoreService: EntitiesStoreService,
@@ -21,15 +20,11 @@ export class MeteoComponent extends EntiteSimpleComponent<Meteo> {
     super(dialog, entitiesStoreService, exportService, router);
   }
 
-  public getEntities$ = (): Observable<Meteo[]> => {
-    return this.entitiesStoreService.getMeteos$();
-  };
-
   getEntityName(): string {
     return "meteo";
   }
 
-  public getDeleteMessage(meteo: Meteo): string {
+  public getDeleteMessage(meteo: MeteoWithCounts): string {
     return (
       "Êtes-vous certain de vouloir supprimer la météo " +
       meteo.libelle +

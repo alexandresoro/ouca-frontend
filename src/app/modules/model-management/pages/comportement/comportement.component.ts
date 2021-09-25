@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
-import { Comportement } from 'src/app/model/types/comportement.object';
+import { ComportementWithCounts } from "src/app/model/graphql";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -10,7 +9,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./comportement.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComportementComponent extends EntiteSimpleComponent<Comportement> {
+export class ComportementComponent extends EntiteSimpleComponent<ComportementWithCounts> {
   constructor(
     dialog: MatDialog,
     entitiesStoreService: EntitiesStoreService,
@@ -20,15 +19,11 @@ export class ComportementComponent extends EntiteSimpleComponent<Comportement> {
     super(dialog, entitiesStoreService, exportService, router);
   }
 
-  public getEntities$ = (): Observable<Comportement[]> => {
-    return this.entitiesStoreService.getComportements$();
-  };
-
   getEntityName(): string {
     return "comportement";
   }
 
-  public getDeleteMessage(comportement: Comportement): string {
+  public getDeleteMessage(comportement: ComportementWithCounts): string {
     return (
       "Êtes-vous certain de vouloir supprimer le comportement " +
       comportement.libelle +

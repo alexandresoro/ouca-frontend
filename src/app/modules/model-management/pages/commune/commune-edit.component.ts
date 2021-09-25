@@ -13,25 +13,44 @@ import {
   Validators
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import deburr from 'lodash.deburr';
 import { Observable, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { UICommune } from "src/app/models/commune.model";
+import { map, takeUntil } from "rxjs/operators";
+import { Commune } from "src/app/model/graphql";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
+
+type CommunesQueryResult = {
+  communes: Commune[]
+}
+
+const COMMUNES_QUERY = gql`
+  query {
+    communes {
+      id
+      code
+      departementId
+      nom
+    }
+  }
+`;
 
 @Component({
   templateUrl: "../entite-simple/entity-edit.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommuneEditComponent
-  extends EntiteSimpleEditAbstractComponent<UICommune>
+  extends EntiteSimpleEditAbstractComponent<Commune>
   implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
+  private communes$: Observable<Commune[]>;
+
   constructor(
+    private apollo: Apollo,
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
     router: Router,
@@ -41,6 +60,13 @@ export class CommuneEditComponent
   }
 
   ngOnInit(): void {
+    this.communes$ = this.apollo.watchQuery<CommunesQueryResult>({
+      query: COMMUNES_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.communes;
+      })
+    );
     this.initialize();
   }
 
@@ -72,19 +98,14 @@ export class CommuneEditComponent
   }
 
   protected getFormValue(
-    commune: UICommune
+    commune: Commune
   ): {
     id: number;
     departementId: number;
     code: number;
     nom: string;
   } {
-    return {
-      id: commune.id,
-      departementId: commune.departement.id,
-      code: commune.code,
-      nom: commune.nom
-    };
+    return commune;
   }
 
   public getFormType(): typeof CommuneFormComponent {
@@ -95,13 +116,13 @@ export class CommuneEditComponent
     return "commune";
   };
 
-  public getEntities$(): Observable<UICommune[]> {
-    return this.entitiesStoreService.getCommunes$();
+  public getEntities$(): Observable<Commune[]> {
+    return this.communes$;
   }
 
   private updateCommuneValidators = (
     form: FormGroup,
-    communes: UICommune[]
+    communes: Commune[]
   ): void => {
     form.setValidators([
       this.codeValidator(communes),
@@ -110,7 +131,7 @@ export class CommuneEditComponent
     form.updateValueAndValidity();
   };
 
-  private codeValidator = (communes: UICommune[]): ValidatorFn => {
+  private codeValidator = (communes: Commune[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const code: number = form.controls.code.value;
       const departementId: number = form.controls.departementId.value;
@@ -118,7 +139,7 @@ export class CommuneEditComponent
 
       const matchingCommune = communes?.find((commune) => {
         return (
-          commune.code === code && commune.departement.id === departementId
+          commune.code === code && commune.departementId === departementId
         );
       });
 
@@ -138,18 +159,18 @@ export class CommuneEditComponent
     return FormValidatorHelper.isAnIntegerValidator(0, 65535);
   };
 
-  private nomValidator = (communes: UICommune[]): ValidatorFn => {
+  private nomValidator = (communes: Commune[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const nom: string = form.controls.nom.value;
       const departementId: number = form.controls.departementId.value;
       const currentCommuneId: number = form.controls.id.value;
 
-      const matchingCommune: UICommune = nom
+      const matchingCommune = nom
         ? communes?.find((commune) => {
           return (
             deburr(commune.nom.trim().toLowerCase()) ===
             deburr(nom.trim().toLowerCase()) &&
-            commune.departement.id === departementId
+            commune.departementId === departementId
           );
         })
         : null;

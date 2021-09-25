@@ -16,6 +16,7 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
+import { Apollo, gql } from "apollo-angular";
 import L from 'leaflet';
 import {
   BehaviorSubject,
@@ -29,27 +30,56 @@ import {
 } from "rxjs";
 import { delay, distinctUntilChanged, filter, map, switchMap, takeUntil, withLatestFrom } from "rxjs/operators";
 import { areSameCoordinates, getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
-import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
 import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
+import { Commune, CoordinatesSystemType, Departement, LieuDit } from "src/app/model/graphql";
 import { findCommuneById } from 'src/app/model/helpers/commune.helper';
 import { findDepartementById } from 'src/app/model/helpers/departement.helper';
-import { Commune } from 'src/app/model/types/commune.model';
 import { Coordinates } from 'src/app/model/types/coordinates.object';
-import { Departement } from 'src/app/model/types/departement.object';
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
-import { Lieudit } from 'src/app/model/types/lieudit.model';
-import { UICommune } from "src/app/models/commune.model";
-import { UILieudit } from "src/app/models/lieudit.model";
 import { getAllLieuxDitsCoordinatesOfCommune, getAllLieuxDitsCoordinatesOfDepartement } from 'src/app/modules/shared/helpers/coordinates-helper';
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { distinctUntilKeyChangedLoose } from 'src/app/modules/shared/rx-operators';
-import { AppConfigurationService } from 'src/app/services/app-configuration.service';
 import { CoordinatesService } from "src/app/services/coordinates.service";
 import { CreationMapService } from 'src/app/services/creation-map.service';
 import { CreationModeService } from 'src/app/services/creation-mode.service';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { IgnAlticodageService } from 'src/app/services/ign-alticodage.service';
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+
+type InputLieuxDitsQueryResult = {
+  lieuxDits: LieuDit[],
+  communes: Commune[],
+  departements: Departement[],
+  settings: {
+    coordinatesSystem: CoordinatesSystemType
+  }
+}
+
+const INPUT_LIEUX_DITS_QUERY = gql`
+  query {
+    lieuxDits {
+      id
+      nom
+      altitude
+      longitude
+      latitude
+      coordinatesSystem
+      communeId
+    }
+    communes {
+      id
+      code
+      departementId
+      nom
+    }
+    departements {
+      id
+      code
+    }
+    settings {
+      coordinatesSystem
+    }
+  }
+`;
 
 @Component({
   selector: "input-lieudit",
@@ -78,13 +108,13 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
 
   public departements$: Observable<Departement[]>;
 
-  public allCommunes$: Observable<UICommune[]>;
+  public allCommunes$: Observable<Commune[]>;
 
-  public allLieuxDits$: Observable<UILieudit[]>;
+  public allLieuxDits$: Observable<LieuDit[]>;
 
-  public filteredLieuxdits$: Observable<UILieudit[]>;
+  public filteredLieuxdits$: Observable<LieuDit[]>;
 
-  public filteredCommunes$: Observable<UICommune[]>;
+  public filteredCommunes$: Observable<Commune[]>;
 
   public areCoordinatesCustomized$: BehaviorSubject<
     boolean
@@ -142,16 +172,40 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     }));
 
   constructor(
+    private apollo: Apollo,
     private coordinatesService: CoordinatesService,
-    private entitiesStoreService: EntitiesStoreService,
-    private appConfigurationService: AppConfigurationService,
     private creationModeService: CreationModeService,
     private creationMapService: CreationMapService,
     private ignAlticodageService: IgnAlticodageService
   ) {
-    this.departements$ = this.entitiesStoreService.getDepartements$();
-    this.allCommunes$ = this.entitiesStoreService.getCommunes$();
-    this.allLieuxDits$ = this.entitiesStoreService.getLieuxdits$();
+    const queryResult$ = this.apollo.watchQuery<InputLieuxDitsQueryResult>({
+      query: INPUT_LIEUX_DITS_QUERY
+    }).valueChanges;
+
+    this.allLieuxDits$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.lieuxDits;
+      })
+    );
+
+    this.allCommunes$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.communes;
+      })
+    );
+
+    this.departements$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.departements;
+      })
+    );
+
+    this.isCurrentSystemGps$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.settings?.coordinatesSystem === CoordinatesSystemType.Gps;
+      })
+    );
+
   }
 
   public ngOnInit(): void {
@@ -198,8 +252,8 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
 
     communeControl.valueChanges
       .pipe(distinctUntilChanged())
-      .subscribe((newValue: UICommune) => {
-        const currentValue: UICommune = communeControl.value;
+      .subscribe((newValue: Commune) => {
+        const currentValue: Commune = communeControl.value;
         // Reset except if the selection remains a commune with the same id
         if (
           !currentValue?.id ||
@@ -213,8 +267,6 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     this.filteredCommunes$ = this.getCommunesToDisplay$(departementControl);
 
     this.filteredLieuxdits$ = this.getLieuxditsToDisplay$(communeControl);
-
-    this.isCurrentSystemGps$ = this.appConfigurationService.getAppCoordinatesSystem$().pipe(map(systemType => systemType === COORDINATES_SYSTEMS_CONFIG.gps));
 
     this.isSearchInMapButtonDisabled$ = this.creationModeService.getIsInventaireEnabled$().pipe((map(isInventaireEnabled => !isInventaireEnabled)));
 
@@ -257,13 +309,13 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
           takeUntil(this.destroy$)
         )
         .subscribe(([lieuDitFromUI, lieuxdits, communes, departements]) => {
-          if (lieuDitFromUI && lieuDitFromUI !== (lieuditControl.value as UILieudit)?.id) {
+          if (lieuDitFromUI && lieuDitFromUI !== (lieuditControl.value as LieuDit)?.id) {
             const lieuDitToSet = lieuxdits.find((lieudit) => {
               return lieudit.id === lieuDitFromUI;
             });
 
-            const communeToSet = findCommuneById(communes, lieuDitToSet.commune?.id);
-            const departementToSet = findDepartementById(departements, communeToSet?.departement?.id);
+            const communeToSet = findCommuneById(communes, lieuDitToSet.communeId);
+            const departementToSet = findDepartementById(departements, communeToSet?.departementId);
 
             departementControl.markAsPristine();
             departementControl.setValue(departementToSet);
@@ -352,14 +404,14 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       // Focus should be on the departement if no commune is selected
       this.focusOnDepartementEvent$
         .pipe(
-          withLatestFrom(this.allLieuxDits$),
+          withLatestFrom(this.allLieuxDits$, this.allCommunes$),
           takeUntil(this.destroy$)
         )
-        .subscribe(([departementId, allLieuxDits]) => {
+        .subscribe(([departementId, allLieuxDits, communes]) => {
           if (departementId) {
             const currentCommuneId = this.controlGroup.controls?.commune?.value?.id;
             if (!currentCommuneId) {
-              this.creationMapService.setCoordinatesToFocus(getAllLieuxDitsCoordinatesOfDepartement(allLieuxDits, departementId));
+              this.creationMapService.setCoordinatesToFocus(getAllLieuxDitsCoordinatesOfDepartement(allLieuxDits, communes, departementId));
             }
           }
         });
@@ -413,9 +465,9 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     this.focusOnCommuneEvent$.next(commune?.id);
   }
 
-  private focusOnLieuDit = (lieuDit: Lieudit | UILieudit): void => {
+  private focusOnLieuDit = (lieuDit: LieuDit): void => {
     lieuDit?.id && this.creationMapService.setFocusedLieuDitId(lieuDit?.id);
-    lieuDit?.coordinates && this.creationMapService.setCoordinatesToFocus([[lieuDit.coordinates.latitude, lieuDit.coordinates.longitude]]);
+    lieuDit && this.creationMapService.setCoordinatesToFocus([[lieuDit.latitude, lieuDit.longitude]]);
   }
 
   public onLieuDitControlFocused = (): void => {
@@ -423,7 +475,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     this.focusOnLieuDit(currentLieuDitId);
   }
 
-  public onLieuDitActivated = (lieuDit: Lieudit | UILieudit): void => {
+  public onLieuDitActivated = (lieuDit: LieuDit): void => {
     this.focusOnLieuDit(lieuDit);
   }
   public getCoordinatesInputStep = (coordinatesSystem: CoordinatesSystem): number => {
@@ -432,7 +484,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
 
   private getCommunesToDisplay$ = (
     departementControl: AbstractControl
-  ): Observable<UICommune[]> => {
+  ): Observable<Commune[]> => {
     return combineLatest(
       merge(departementControl.valueChanges, this.departementDefault$),
       this.allCommunes$,
@@ -440,11 +492,11 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
         if (communes && selection) {
           if (this.isMultipleSelectMode) {
             return communes.filter((commune) => {
-              return (selection as number[]).includes(commune?.departement.id);
+              return (selection as number[]).includes(commune?.departementId);
             });
           } else {
             return communes.filter((commune) => {
-              return commune.departement?.id === (selection as Departement).id;
+              return commune.departementId === (selection as Departement).id;
             });
           }
         } else {
@@ -456,7 +508,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
 
   private getLieuxditsToDisplay$ = (
     communeControl: AbstractControl
-  ): Observable<UILieudit[]> => {
+  ): Observable<LieuDit[]> => {
     return combineLatest(
       merge(communeControl.valueChanges, this.communeDefault$),
       this.allLieuxDits$,
@@ -464,11 +516,11 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
         if (lieuxdits && selection) {
           if (this.isMultipleSelectMode) {
             return lieuxdits.filter((lieudit) => {
-              return (selection as number[]).includes(lieudit.commune.id);
+              return (selection as number[]).includes(lieudit.communeId);
             });
           } else {
             return lieuxdits.filter((lieudit) => {
-              return lieudit.commune?.id === (selection as Commune).id;
+              return lieudit.communeId === (selection as Commune).id;
             });
           }
         } else {
@@ -478,7 +530,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     ).pipe(takeUntil(this.destroy$));
   };
 
-  private getCoordinatesOfLieuDit = ([selectedLieudit, coordinatesSystem]: [Lieudit, CoordinatesSystem]): {
+  private getCoordinatesOfLieuDit = ([selectedLieudit, coordinatesSystem]: [LieuDit, CoordinatesSystem]): {
     altitude: number;
     longitude: number;
     latitude: number;
@@ -487,7 +539,13 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   } => {
     if (selectedLieudit?.id && coordinatesSystem?.code) {
       const coordinates = getCoordinates(
-        selectedLieudit,
+        {
+          coordinates: {
+            latitude: selectedLieudit?.latitude,
+            longitude: selectedLieudit?.longitude,
+            system: selectedLieudit?.coordinatesSystem
+          }
+        },
         coordinatesSystem.code
       );
 
@@ -520,7 +578,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   }> => {
     return combineLatest(
       [
-        (lieuditControl.valueChanges as Observable<Lieudit>)
+        (lieuditControl.valueChanges as Observable<LieuDit>)
           .pipe(
             distinctUntilKeyChangedLoose("id") // Do not emit anything if this is exactly the same lieu dit
           ),
@@ -633,7 +691,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     return departement ? departement.code : null;
   };
 
-  public displayLieuDitFormat = (lieudit: Lieudit): string => {
+  public displayLieuDitFormat = (lieudit: LieuDit): string => {
     return lieudit ? lieudit.nom : null;
   };
 

@@ -6,10 +6,25 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { Apollo, gql } from "apollo-angular";
 import { combineLatest, Observable, Subject } from "rxjs";
-import { takeUntil } from 'rxjs/operators';
-import { Milieu } from 'src/app/model/types/milieu.object';
+import { map, takeUntil } from 'rxjs/operators';
+import { Milieu } from "src/app/model/graphql";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+
+type InputMilieuxQueryResult = {
+  milieux: Milieu[],
+}
+
+const INPUT_MILIEUX_QUERY = gql`
+  query {
+    milieux {
+      id
+      code
+      libelle
+    }
+  }
+`;
 
 @Component({
   selector: "input-milieux",
@@ -17,11 +32,11 @@ import { AutocompleteAttribute } from "../../../shared/components/autocomplete/a
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputMilieuxComponent implements OnInit, OnDestroy {
-  @Input() public milieux: Milieu[];
-
   @Input() public donneeForm: FormGroup;
 
   @Input() public controlGroup: FormGroup;
+
+  public milieux$: Observable<Milieu[]>;
 
   private readonly destroy$ = new Subject();
 
@@ -38,6 +53,18 @@ export class InputMilieuxComponent implements OnInit, OnDestroy {
       startWithMode: false
     }
   ];
+
+  constructor(
+    private apollo: Apollo,
+  ) {
+    this.milieux$ = this.apollo.watchQuery<InputMilieuxQueryResult>({
+      query: INPUT_MILIEUX_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.milieux;
+      })
+    );
+  }
 
   ngOnInit(): void {
     // First milieu should be enabled if and only if the donnee form is enabled

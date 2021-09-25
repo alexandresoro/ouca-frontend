@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { Meteo } from 'src/app/model/types/meteo.object';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { EntitesAvecLibelleOrderBy, MeteoWithCounts } from "src/app/model/graphql";
+import { MeteosGetService } from "src/app/services/meteos-get.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
+import { MeteosDataSource } from "./MeteosDataSource";
 
 @Component({
   selector: "meteo-table",
@@ -13,18 +13,22 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
     "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeteoTableComponent extends EntiteAvecLibelleTableComponent<
-Meteo
-> {
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+export class MeteoTableComponent extends EntiteAvecLibelleTableComponent<MeteoWithCounts, MeteosDataSource> {
+  constructor(private meteosGetService: MeteosGetService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): MeteosDataSource {
+    return new MeteosDataSource(this.meteosGetService);
   }
 
-  public getEntities$ = (): Observable<Meteo[]> => {
-    return this.entitiesStoreService.getMeteos$();
-  };
+  loadEntities = (): void => {
+    this.dataSource.loadMeteos(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as EntitesAvecLibelleOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value
+    );
+  }
 }

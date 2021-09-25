@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
 import { Classe } from 'src/app/model/types/classe.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
@@ -20,10 +19,6 @@ export class ClasseComponent extends EntiteSimpleComponent<Classe> {
   ) {
     super(dialog, entitiesStoreService, exportService, router);
   }
-
-  public getEntities$ = (): Observable<Classe[]> => {
-    return this.entitiesStoreService.getClasses$();
-  };
 
   public getEntityName(): string {
     return "classe";

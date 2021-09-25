@@ -1,11 +1,25 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
-import { Observateur } from 'src/app/model/types/observateur.object';
-import { Sexe } from 'src/app/model/types/sexe.object';
+import { map } from "rxjs/operators";
+import { Sexe } from "src/app/model/graphql";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
+
+type SexesQueryResult = {
+  sexes: Sexe[]
+}
+
+const SEXES_QUERY = gql`
+  query {
+    sexes {
+      id
+      libelle
+    }
+  }
+`;
 
 @Component({
   templateUrl: "../entite-simple/entity-edit.component.html",
@@ -14,7 +28,11 @@ import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/e
 export class SexeEditComponent
   extends EntiteAvecLibelleEditAbstractComponent<Sexe>
   implements OnInit {
+
+  private sexes$: Observable<Sexe[]>;
+
   constructor(
+    private apollo: Apollo,
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
     router: Router,
@@ -24,6 +42,13 @@ export class SexeEditComponent
   }
 
   ngOnInit(): void {
+    this.sexes$ = this.apollo.watchQuery<SexesQueryResult>({
+      query: SEXES_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.sexes;
+      })
+    );
     this.initialize();
   }
 
@@ -31,8 +56,8 @@ export class SexeEditComponent
     return "sexe";
   };
 
-  public getEntities$(): Observable<Observateur[]> {
-    return this.entitiesStoreService.getSexes$();
+  public getEntities$(): Observable<Sexe[]> {
+    return this.sexes$;
   }
 
   public getPageTitle = (): string => {

@@ -11,6 +11,7 @@ import {
 import { FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import {
   BehaviorSubject,
   combineLatest,
@@ -30,17 +31,9 @@ import {
 } from "rxjs/operators";
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
 import { CoordinatesSystem, CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Age } from 'src/app/model/types/age.object';
-import { AppConfiguration } from 'src/app/model/types/app-configuration.object';
-import { Comportement } from 'src/app/model/types/comportement.object';
+import { Commune, Departement, LieuDit, Meteo, Observateur, Settings } from "src/app/model/graphql";
 import { Donnee } from 'src/app/model/types/donnee.object';
-import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
-import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
-import { Meteo } from 'src/app/model/types/meteo.object';
-import { Milieu } from 'src/app/model/types/milieu.object';
-import { Observateur } from 'src/app/model/types/observateur.object';
-import { Sexe } from 'src/app/model/types/sexe.object';
-import { AppConfigurationService } from "src/app/services/app-configuration.service";
+import { AppConfigurationGetService } from "src/app/services/app-configuration-get.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
 import { CreationModeService } from "src/app/services/creation-mode.service";
@@ -57,6 +50,46 @@ import {
   getUpdateInventaireDialogData
 } from "../../helpers/creation-dialog.helper";
 
+type CreationQueryResult = {
+  communes: Commune[];
+  departements: Departement[],
+  lieuxDits: LieuDit[];
+  meteos: Meteo[];
+  observateurs: Observateur[];
+}
+
+const CREATION_QUERY = gql`
+  query {
+    communes {
+      id
+      code
+      nom
+      departementId
+    }
+    departements {
+      id
+      code
+    }
+    lieuxDits {
+      id
+      nom
+      altitude
+      longitude
+      latitude
+      coordinatesSystem
+      communeId
+    }
+    meteos {
+      id
+      libelle
+    }
+    observateurs {
+      id
+      libelle
+    }
+  }
+`;
+
 @Component({
   styleUrls: ["./creation.component.scss"],
   templateUrl: "./creation.component.html",
@@ -69,23 +102,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private requestedDonneeId: number;
 
-  public appConfiguration$: Observable<AppConfiguration>;
-
-  public observateurs$: Observable<Observateur[]>;
-
-  public estimationsNombre$: Observable<EstimationNombre[]>;
-
-  public estimationsDistance$: Observable<EstimationDistance[]>;
-
-  public sexes$: Observable<Sexe[]>;
-
-  public ages$: Observable<Age[]>;
-
-  public comportements$: Observable<Comportement[]>;
-
-  public milieux$: Observable<Milieu[]>;
-
-  public meteos$: Observable<Meteo[]>;
+  public appConfiguration$: Observable<Settings>;
 
   public inventaireForm: FormGroup;
 
@@ -111,7 +128,8 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   constructor(
-    private appConfigurationService: AppConfigurationService,
+    private apollo: Apollo,
+    private appConfigurationGetService: AppConfigurationGetService,
     private creationModeService: CreationModeService,
     private creationPageService: CreationPageService,
     private creationCacheService: CreationCacheService,
@@ -125,22 +143,23 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.requestedDonneeId = this.router.getCurrentNavigation()?.extras?.state?.id;
 
-    this.appConfiguration$ = this.appConfigurationService.getConfiguration$();
+    this.appConfiguration$ = this.appConfigurationGetService.watch().valueChanges.pipe(map(({ data }) => data?.settings));
     this.coordinatesSystem$ = this.appConfiguration$.pipe(
       map((configuration) => configuration.coordinatesSystem)
     );
-
-    this.observateurs$ = this.entitiesStoreService.getObservateurs$();
-    this.estimationsNombre$ = this.entitiesStoreService.getEstimationNombres$();
-    this.estimationsDistance$ = this.entitiesStoreService.getEstimationDistances$();
-    this.sexes$ = this.entitiesStoreService.getSexes$();
-    this.ages$ = this.entitiesStoreService.getAges$();
-    this.comportements$ = this.entitiesStoreService.getComportements$();
-    this.milieux$ = this.entitiesStoreService.getMilieux$();
-    this.meteos$ = this.entitiesStoreService.getMeteos$();
   }
 
   public ngOnInit(): void {
+
+    const queryResult$ = this.apollo.watchQuery<CreationQueryResult>({
+      query: CREATION_QUERY
+    }).valueChanges.pipe(
+      takeUntil(this.destroy$),
+      map(({ data }) => {
+        return data;
+      })
+    );
+
     // Create the inventaire form group
     this.inventaireForm = this.inventaireFormService.createForm();
     this.donneeForm = this.donneeFormService.createForm();
@@ -186,8 +205,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     // Update the coordinates form controls depending on the application coordinates system
-    this.appConfigurationService
-      .getAppCoordinatesSystemType$()
+    this.coordinatesSystem$
       .pipe(takeUntil(this.destroy$))
       .subscribe((coordinatesSystemType) => {
         this.coordinatesBuilderService.updateCoordinatesValidators(
@@ -199,8 +217,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     combineLatest(
       [
-        this.entitiesStoreService.getInventaireEntities$(),
-        this.entitiesStoreService.getDepartements$(),
+        queryResult$,
         this.donneeService.getCurrentDonnee$().pipe(
           map((donnee) => donnee?.inventaire)
         ),
@@ -208,11 +225,10 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       ]
     )
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([pageModel, departements, inventaire, appConfiguration]) => {
+      .subscribe(([queryResult, inventaire, appConfiguration]) => {
         this.inventaireFormService.updateForm(
           this.inventaireForm,
-          pageModel,
-          departements,
+          queryResult,
           inventaire,
           appConfiguration
         );
@@ -284,7 +300,10 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Enable the inventaire form as soon as we have received the minimal info
     forkJoin(
-      this.entitiesStoreService.getInventaireEntities$().pipe(first()),
+      queryResult$.pipe(
+        filter(data => !!data),
+        first()
+      ),
       isInitialDonneeDonneeActive$
     )
       .pipe(takeUntil(this.destroy$))
@@ -304,7 +323,10 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Set the initialization as completed once we received everything we need
     forkJoin(
-      this.entitiesStoreService.getInventaireEntities$().pipe(first()),
+      queryResult$.pipe(
+        filter(data => !!data),
+        first()
+      ),
       this.entitiesStoreService.getDonneeEntities$().pipe(first()),
       isInitialDonneeDonneeActive$
     )

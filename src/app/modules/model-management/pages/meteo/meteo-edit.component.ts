@@ -1,10 +1,25 @@
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
-import { Meteo } from 'src/app/model/types/meteo.object';
+import { map } from "rxjs/operators";
+import { Meteo } from "src/app/model/graphql";
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
+
+type MeteosQueryResult = {
+  meteos: Meteo[]
+}
+
+const METEOS_QUERY = gql`
+  query {
+    meteos {
+      id
+      libelle
+    }
+  }
+`;
 
 @Component({
   templateUrl: "../entite-simple/entity-edit.component.html",
@@ -13,7 +28,11 @@ import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/e
 export class MeteoEditComponent
   extends EntiteAvecLibelleEditAbstractComponent<Meteo>
   implements OnInit {
+
+  private meteos$: Observable<Meteo[]>;
+
   constructor(
+    private apollo: Apollo,
     entitiesStoreService: EntitiesStoreService,
     route: ActivatedRoute,
     router: Router,
@@ -23,6 +42,13 @@ export class MeteoEditComponent
   }
 
   ngOnInit(): void {
+    this.meteos$ = this.apollo.watchQuery<MeteosQueryResult>({
+      query: METEOS_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.meteos;
+      })
+    );
     this.initialize();
   }
 
@@ -31,7 +57,7 @@ export class MeteoEditComponent
   };
 
   public getEntities$(): Observable<Meteo[]> {
-    return this.entitiesStoreService.getMeteos$();
+    return this.meteos$;
   }
 
   public getPageTitle = (): string => {

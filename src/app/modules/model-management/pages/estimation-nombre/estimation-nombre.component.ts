@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
 import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
 import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { ExportService } from "src/app/services/export.service";
@@ -22,10 +21,6 @@ EstimationNombre
   ) {
     super(dialog, entitiesStoreService, exportService, router);
   }
-
-  public getEntities$ = (): Observable<EstimationNombre[]> => {
-    return this.entitiesStoreService.getEstimationNombres$();
-  };
 
   getEntityName(): string {
     return "estimation-nombre";

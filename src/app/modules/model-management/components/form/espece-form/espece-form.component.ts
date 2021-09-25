@@ -1,17 +1,34 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { Classe } from 'src/app/model/types/classe.object';
+import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
+import { Apollo, gql } from "apollo-angular";
+import { Observable, Subject } from "rxjs";
+import { map, takeUntil } from "rxjs/operators";
+import { Classe } from "src/app/model/graphql";
 import { Espece } from 'src/app/model/types/espece.model';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
+
+type EspeceFormQueryResult = {
+  classes: Classe[]
+}
+
+const ESPECE_FORM_QUERY = gql`
+  query {
+    classes {
+      id
+      libelle
+    }
+  }
+`;
 
 @Component({
   selector: "espece-form",
   templateUrl: "./espece-form.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EspeceFormComponent extends EntitySubFormComponent<Espece> {
+export class EspeceFormComponent extends EntitySubFormComponent<Espece> implements OnDestroy {
+
+  private readonly destroy$ = new Subject();
+
   public classes$: Observable<Classe[]>;
 
   public especeCodeErrorStateMatcher = new CrossFieldErrorMatcher(
@@ -26,8 +43,19 @@ export class EspeceFormComponent extends EntitySubFormComponent<Espece> {
     "alreadyExistingNomLatin"
   );
 
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+  constructor(private apollo: Apollo) {
     super();
-    this.classes$ = this.entitiesStoreService.getClasses$();
+    this.classes$ = this.apollo.watchQuery<EspeceFormQueryResult>({
+      query: ESPECE_FORM_QUERY
+    }).valueChanges.pipe(
+      takeUntil(this.destroy$),
+      map(({ data }) => data?.classes)
+    );
   }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 }

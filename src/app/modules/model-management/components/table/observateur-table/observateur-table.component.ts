@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { Observateur } from 'src/app/model/types/observateur.object';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { EntitesAvecLibelleOrderBy, ObservateurWithCounts } from "src/app/model/graphql";
+import { ObservateursPaginatedService } from "src/app/services/observateurs-paginated.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
+import { ObservateursDataSource } from "./ObservateursDataSource";
 
 @Component({
   selector: "observateur-table",
@@ -13,18 +13,22 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
     "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ObservateurTableComponent extends EntiteAvecLibelleTableComponent<
-Observateur
-> {
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+export class ObservateurTableComponent extends EntiteAvecLibelleTableComponent<ObservateurWithCounts, ObservateursDataSource> {
+  constructor(private observateursPaginatedService: ObservateursPaginatedService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): ObservateursDataSource {
+    return new ObservateursDataSource(this.observateursPaginatedService);
   }
 
-  public getEntities$ = (): Observable<Observateur[]> => {
-    return this.entitiesStoreService.getObservateurs$();
-  };
+  loadEntities = (): void => {
+    this.dataSource.loadObservateurs(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as EntitesAvecLibelleOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value
+    );
+  }
 }

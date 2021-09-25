@@ -2,24 +2,55 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
   Output
 } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
+import { map, takeUntil } from "rxjs/operators";
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
 import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Age } from 'src/app/model/types/age.object';
-import { AppConfiguration } from 'src/app/model/types/app-configuration.object';
-import { Departement } from 'src/app/model/types/departement.object';
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
-import { EstimationNombre } from 'src/app/model/types/estimation-nombre.object';
-import { Observateur } from 'src/app/model/types/observateur.object';
-import { Sexe } from 'src/app/model/types/sexe.object';
-import { AppConfigurationService } from "src/app/services/app-configuration.service";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { Age, Departement, EstimationNombre, InputSettings, Observateur, Sexe } from "src/app/model/graphql";
+import { AppConfigurationGetService } from "src/app/services/app-configuration-get.service";
+import { AppConfigurationUpdateService } from "src/app/services/app-configuration-update.service";
+import { StatusMessageService } from "src/app/services/status-message.service";
+
+type ConfigurationFormQueryResult = {
+  ages: Age[],
+  observateurs: Observateur[],
+  departements: Departement[],
+  estimationsNombre: EstimationNombre[],
+  sexes: Sexe[]
+}
+
+const CONFIGURATION_FORM_QUERY = gql`
+  query {
+    ages {
+      id
+      libelle
+    }
+    departements {
+      id
+      code
+    }
+    estimationsNombre {
+      id
+      libelle
+      nonCompte
+    }
+    observateurs {
+      id
+      libelle
+    }
+    sexes {
+      id
+      libelle
+    }
+  }
+`;
 
 @Component({
   selector: "configuration-form",
@@ -28,13 +59,14 @@ import { EntitiesStoreService } from "src/app/services/entities-store.service";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfigurationFormComponent implements OnInit, OnDestroy {
-  @Input() public appConfiguration: AppConfiguration;
 
   @Output() public confirm: EventEmitter<boolean> = new EventEmitter();
 
   @Output() public back: EventEmitter<boolean> = new EventEmitter();
 
   private readonly destroy$ = new Subject();
+
+  private configurationFormQuery$: Observable<ApolloQueryResult<ConfigurationFormQueryResult>>;
 
   public form: FormGroup;
 
@@ -49,15 +81,34 @@ export class ConfigurationFormComponent implements OnInit, OnDestroy {
   public ages$: Observable<Age[]>;
 
   constructor(
-    private entitiesStoreService: EntitiesStoreService,
-    private appConfigurationService: AppConfigurationService,
+    private statusMessageService: StatusMessageService,
+    private appConfigurationGetService: AppConfigurationGetService,
+    private appConfigurationUpdateService: AppConfigurationUpdateService,
+    private apollo: Apollo,
     private formBuilder: FormBuilder
   ) {
-    this.observateurs$ = this.entitiesStoreService.getObservateurs$();
-    this.departements$ = this.entitiesStoreService.getDepartements$();
-    this.estimationsNombre$ = this.entitiesStoreService.getEstimationNombres$();
-    this.sexes$ = this.entitiesStoreService.getSexes$();
-    this.ages$ = this.entitiesStoreService.getAges$();
+
+    this.configurationFormQuery$ = this.apollo.watchQuery<ConfigurationFormQueryResult>({
+      query: CONFIGURATION_FORM_QUERY
+    }).valueChanges.pipe(
+      takeUntil(this.destroy$)
+    );
+
+    this.observateurs$ = this.configurationFormQuery$.pipe(
+      map(({ data }) => data?.observateurs)
+    );
+    this.departements$ = this.configurationFormQuery$.pipe(
+      map(({ data }) => data?.departements)
+    );
+    this.estimationsNombre$ = this.configurationFormQuery$.pipe(
+      map(({ data }) => data?.estimationsNombre)
+    );
+    this.sexes$ = this.configurationFormQuery$.pipe(
+      map(({ data }) => data?.sexes)
+    );
+    this.ages$ = this.configurationFormQuery$.pipe(
+      map(({ data }) => data?.ages)
+    );
 
     this.form = this.formBuilder.group({
       id: "",
@@ -76,7 +127,19 @@ export class ConfigurationFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.form.reset(this.appConfiguration);
+    this.appConfigurationGetService.fetch().subscribe(({ data }) => {
+
+      const { defaultObservateur, defaultDepartement, defaultEstimationNombre, defaultAge, defaultSexe } = data?.settings;
+
+      this.form.reset({
+        ...data?.settings,
+        defaultObservateur: defaultObservateur.id,
+        defaultDepartement: defaultDepartement.id,
+        defaultEstimationNombre: defaultEstimationNombre.id,
+        defaultAge: defaultAge.id,
+        defaultSexe: defaultSexe.id
+      })
+    })
   }
 
   public ngOnDestroy(): void {
@@ -89,18 +152,24 @@ export class ConfigurationFormComponent implements OnInit, OnDestroy {
   );
 
   public save(): void {
-    this.appConfigurationService
-      .saveAppConfiguration(this.form.value)
-      .subscribe((isSuccessful) => {
-        this.confirm.emit(isSuccessful);
-      });
+    this.appConfigurationUpdateService.mutate(
+      { inputSettings: this.form.value as InputSettings }
+    ).subscribe(({ data }) => {
+      if (data?.updateSettings) {
+        this.statusMessageService.showSuccessMessage(
+          "La configuration de l'application a été mise à jour."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde de la configuration."
+        );
+      }
+      this.confirm.emit(!!data?.updateSettings);
+    });
   }
 
   public cancel(): void {
     this.back.emit();
   }
 
-  public compareEntities(e1: EntiteSimple, e2: EntiteSimple): boolean {
-    return e1 && e2 ? e1.id === e2.id : e1 === e2;
-  }
 }

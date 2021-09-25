@@ -6,8 +6,8 @@ import {
   Validators
 } from "@angular/forms";
 import { buildEspeceFromUIEspece } from "../helpers/espece.helper";
+import { Settings } from "../model/graphql";
 import { Age } from '../model/types/age.object';
-import { AppConfiguration } from '../model/types/app-configuration.object';
 import { Classe } from '../model/types/classe.object';
 import { Comportement } from '../model/types/comportement.object';
 import { Donnee } from '../model/types/donnee.object';
@@ -93,7 +93,7 @@ export class DonneeFormService {
       comportements: Comportement[];
       milieux: Milieu[];
     },
-    appConfiguration: AppConfiguration,
+    appConfiguration: Settings,
     donnee: Donnee | DonneeFormObject
   ): void => {
     if (!entities) {
@@ -190,7 +190,7 @@ export class DonneeFormService {
       sexes: Sexe[];
       estimationsNombre: EstimationNombre[];
     },
-    appConfiguration: AppConfiguration
+    appConfiguration: Settings
   ): DefaultDonneeOptions => {
     const defaultAge: Age = ListHelper.findEntityInListByID(
       entities.ages,

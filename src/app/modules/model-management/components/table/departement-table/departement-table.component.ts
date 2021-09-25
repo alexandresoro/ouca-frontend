@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { Departement } from 'src/app/model/types/departement.object';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
-import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
+import { DepartementsOrderBy, DepartementWithCounts } from "src/app/model/graphql";
+import { DepartementsGetService } from "src/app/services/departements-get.service";
+import { EntiteTableComponent } from "../entite-table/entite-table.component";
+import { DepartementsDataSource } from "./DepartementsDataSource";
 
 @Component({
   selector: "departement-table",
@@ -10,25 +10,30 @@ import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple
   templateUrl: "./departement-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DepartementTableComponent extends EntiteSimpleTableComponent<
-Departement
-> {
+export class DepartementTableComponent extends EntiteTableComponent<DepartementWithCounts, DepartementsDataSource> {
   public displayedColumns: string[] = [
     "code",
     "nbCommunes",
-    "nbLieuxdits",
-    "nbDonnees"
+    "nbLieuxDits",
+    "nbDonnees",
+    "actions"
   ];
 
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+  constructor(private departementsGetService: DepartementsGetService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): DepartementsDataSource {
+    return new DepartementsDataSource(this.departementsGetService);
   }
 
-  public getEntities$ = (): Observable<Departement[]> => {
-    return this.entitiesStoreService.getDepartements$();
-  };
+  loadEntities = (): void => {
+    this.dataSource.loadDepartements(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as DepartementsOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value
+    );
+  }
 }

@@ -1,17 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { UIEspece } from "src/app/models/espece.model";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
-import { EntiteSimpleTableComponent } from "../entite-simple-table/entite-simple-table.component";
-
-interface EspeceRow {
-  id: number;
-  classe: string;
-  code: string;
-  nomFrancais: string;
-  nomLatin: string;
-  nbDonnees: number;
-}
+import { EspecesOrderBy, EspeceWithCounts } from "src/app/model/graphql";
+import { EspecesGetService } from "src/app/services/especes-get.service";
+import { EntiteTableComponent } from "../entite-table/entite-table.component";
+import { EspecesDataSource } from "./EspecesDataSource";
 
 @Component({
   selector: "espece-table",
@@ -19,43 +10,33 @@ interface EspeceRow {
   templateUrl: "./espece-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EspeceTableComponent extends EntiteSimpleTableComponent<UIEspece> {
-  public displayedColumns: string[] = [
-    "classe",
+export class EspeceTableComponent extends EntiteTableComponent<EspeceWithCounts, EspecesDataSource> {
+
+  public displayedColumns: (EspecesOrderBy | "actions")[] = [
+    "nomClasse",
     "code",
     "nomFrancais",
     "nomLatin",
-    "nbDonnees"
+    "nbDonnees",
+    "actions"
   ];
 
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+  constructor(private especesGetService: EspecesGetService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): EspecesDataSource {
+    return new EspecesDataSource(this.especesGetService);
   }
 
-  public getEntities$ = (): Observable<UIEspece[]> => {
-    return this.entitiesStoreService.getEspeces$();
-  };
-
-  protected getDataSource(especes: UIEspece[]): EspeceRow[] {
-    const rows: EspeceRow[] = [];
-    especes?.forEach((espece: UIEspece) => {
-      rows.push(this.buildRowFromEspece(espece));
-    });
-    return rows;
+  loadEntities = (): void => {
+    this.dataSource.loadEspeces(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as EspecesOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value
+    );
   }
 
-  private buildRowFromEspece(espece: UIEspece): EspeceRow {
-    return {
-      id: espece.id,
-      classe: espece.classe.libelle,
-      code: espece.code,
-      nomFrancais: espece.nomFrancais,
-      nomLatin: espece.nomLatin,
-      nbDonnees: espece.nbDonnees
-    };
-  }
 }

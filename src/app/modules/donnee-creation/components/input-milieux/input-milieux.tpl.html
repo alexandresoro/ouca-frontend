@@ -3,7 +3,7 @@
   [displayFn]="displayMilieuFormat"
   [control]="$any(controlGroup.controls['milieu1'])"
   [type]="'Milieu 1'"
-  [values]="milieux"
+  [valuesObs]="milieux$"
 >
 </autocomplete>
 <autocomplete
@@ -11,7 +11,7 @@
   [displayFn]="displayMilieuFormat"
   [control]="$any(controlGroup.controls['milieu2'])"
   [type]="'Milieu 2'"
-  [values]="milieux"
+  [valuesObs]="milieux$"
 >
 </autocomplete>
 <autocomplete
@@ -19,7 +19,7 @@
   [displayFn]="displayMilieuFormat"
   [control]="$any(controlGroup.controls['milieu3'])"
   [type]="'Milieu 3'"
-  [values]="milieux"
+  [valuesObs]="milieux$"
 >
 </autocomplete>
 <autocomplete
@@ -27,6 +27,6 @@
   [displayFn]="displayMilieuFormat"
   [control]="$any(controlGroup.controls['milieu4'])"
   [type]="'Milieu 4'"
-  [values]="milieux"
+  [valuesObs]="milieux$"
 >
 </autocomplete>

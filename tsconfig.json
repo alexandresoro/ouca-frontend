@@ -11,18 +11,27 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "typeRoots": ["node_modules/@types", "src/typings"],
+    "typeRoots": [
+      "node_modules/@types",
+      "src/typings"
+    ],
     "lib": [
       "es2018",
-      "dom"
+      "dom",
+      "esnext.asynciterable"
     ],
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules"],
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,

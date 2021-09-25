@@ -1,5 +1,5 @@
 export interface EspeceWithNbDonnees {
-  classe: string;
+  classeId: number;
   code: string;
   nomFrancais: string;
   nomLatin: string;

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { Classe } from 'src/app/model/types/classe.object';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
-import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
+import { ClassesOrderBy, ClasseWithCounts } from "src/app/model/graphql";
+import { ClassesGetService } from "src/app/services/classes-get.service";
+import { EntiteTableComponent } from "../entite-table/entite-table.component";
+import { ClassesDataSource } from "./ClassesDataSource";
 
 @Component({
   selector: "classe-table",
@@ -13,20 +13,30 @@ import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/en
   templateUrl: "./classe-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClasseTableComponent extends EntiteAvecLibelleTableComponent<
-Classe
-> {
-  public displayedColumns: string[] = ["libelle", "nbEspeces", "nbDonnees"];
+export class ClasseTableComponent extends EntiteTableComponent<ClasseWithCounts, ClassesDataSource> {
 
-  constructor(private entitiesStoreService: EntitiesStoreService) {
+  public displayedColumns: (ClassesOrderBy | string)[] = [
+    "libelle",
+    "nbEspeces",
+    "nbDonnees",
+    "actions"
+  ];
+
+  constructor(private classesGetService: ClassesGetService) {
     super();
   }
 
-  ngOnInit(): void {
-    this.initialize();
+  getNewDataSource(): ClassesDataSource {
+    return new ClassesDataSource(this.classesGetService);
   }
 
-  public getEntities$ = (): Observable<Classe[]> => {
-    return this.entitiesStoreService.getClasses$();
-  };
+  loadEntities = (): void => {
+    this.dataSource.loadClasses(
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      this.sort.active as ClassesOrderBy,
+      this.sort.direction,
+      this.filterComponent?.input.nativeElement.value
+    );
+  }
 }

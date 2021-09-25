@@ -3,7 +3,7 @@
   *ngIf="!isMultipleSelectMode"
   [attributesToFilter]="classeAutocompleteAttributes"
   type="Classe"
-  [values]="classes$ | async"
+  [valuesObs]="classes$"
   [control]="$any(controlGroup.controls['classe'])"
   [displayFn]="displayClasseFormat"
 >

@@ -6,14 +6,33 @@ import {
   OnInit
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { Apollo, gql } from "apollo-angular";
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { takeUntil, withLatestFrom } from "rxjs/operators";
-import { Classe } from 'src/app/model/types/classe.object';
-import { Espece } from 'src/app/model/types/espece.model';
-import { UIEspece } from "src/app/models/espece.model";
+import { map, takeUntil, withLatestFrom } from "rxjs/operators";
+import { Classe, Espece } from "src/app/model/graphql";
 import { distinctUntilKeyChangedLoose } from 'src/app/modules/shared/rx-operators';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+
+type InputEspecesQueryResult = {
+  classes: Classe[],
+  especes: Espece[],
+}
+
+const INPUT_ESPECES_QUERY = gql`
+  query {
+    classes {
+      id
+      libelle
+    }
+    especes {
+      id
+      code
+      nomFrancais
+      nomLatin
+      classeId
+    }
+  }
+`;
 
 @Component({
   selector: "input-espece",
@@ -29,8 +48,10 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
 
   public classes$: Observable<Classe[]>;
 
-  public filteredEspeces$: Observable<UIEspece[]> = new Observable<
-    UIEspece[]
+  private especes$: Observable<Espece[]>;
+
+  public filteredEspeces$: Observable<Espece[]> = new Observable<
+    Espece[]
   >();
 
   private selectedClasse$: BehaviorSubject<
@@ -66,8 +87,22 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(private entitiesStoreService: EntitiesStoreService) {
-    this.classes$ = this.entitiesStoreService.getClasses$();
+  constructor(private apollo: Apollo) {
+    const queryResult$ = this.apollo.watchQuery<InputEspecesQueryResult>({
+      query: INPUT_ESPECES_QUERY
+    }).valueChanges;
+
+    this.classes$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.classes;
+      })
+    );
+
+    this.especes$ = queryResult$.pipe(
+      map(({ data }) => {
+        return data?.especes;
+      })
+    );
   }
 
   public ngOnInit(): void {
@@ -100,14 +135,14 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
 
     this.filteredEspeces$ = combineLatest(
       this.selectedClasse$,
-      this.entitiesStoreService.getEspeces$(),
+      this.especes$,
       (selection, especes) => {
         if (especes) {
           if (selection) {
             if (this.isMultipleSelectMode) {
               if ((selection as number[]).length > 0) {
                 return especes.filter((espece) => {
-                  return (selection as number[]).includes(espece.classe.id);
+                  return (selection as number[]).includes(espece.classeId);
                 });
               } else {
                 return especes;
@@ -116,8 +151,7 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
               if ((selection as Classe).id) {
                 return especes.filter((espece) => {
                   return (
-                    espece.classe &&
-                    espece.classe.id === (selection as Classe).id
+                    espece?.classeId === (selection as Classe).id
                   );
                 });
               }
@@ -142,7 +176,7 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
 
         // No need to clear the espece if it belongs to the classe
         const isCurrentEspeceBelongingToCurrentClasse = !!filteredEspeces?.find((espece) => {
-          return espece?.classe?.id === valueClasse?.id;
+          return espece?.classeId === valueClasse?.id;
         });
 
         // When the value of the classe changes, clear the selected espece
