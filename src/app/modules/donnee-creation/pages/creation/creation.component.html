@@ -10,7 +10,7 @@
           matTooltip="Donnée précédente"
           matTooltipClass="default-tooltip"
           color="accent"
-          [disabled]="!(isPreviousDonneeBtnDisplayed$() | async)"
+          [disabled]="!(isPreviousDonneeBtnDisplayed$ | async)"
           (click)="onPreviousDonneeBtnClicked()"
         >
           <mat-icon>navigate_before</mat-icon>
@@ -22,7 +22,7 @@
           matTooltip="Donnée suivante"
           matTooltipClass="default-tooltip"
           color="accent"
-          [disabled]="!(isNextDonneeBtnDisplayed$() | async)"
+          [disabled]="!(isNextDonneeBtnDisplayed$ | async)"
           (click)="onNextDonneeBtnClicked()"
         >
           <mat-icon>navigate_next</mat-icon>

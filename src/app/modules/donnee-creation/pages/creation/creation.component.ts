@@ -23,8 +23,9 @@ import {
 import {
   distinctUntilChanged,
   filter,
-  first,
+
   map,
+  take,
   takeUntil,
   tap,
   withLatestFrom
@@ -138,9 +139,15 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private clearDonnee$: Subject<Donnee> = new Subject<Donnee>();
 
+  private isInitialDonneeDonneeActive$ = new BehaviorSubject<boolean>(null);
+
   public isInitializationCompleted$: BehaviorSubject<
     boolean
   > = new BehaviorSubject<boolean>(false);
+
+  public isPreviousDonneeBtnDisplayed$: Observable<boolean>;
+
+  public isNextDonneeBtnDisplayed$: Observable<boolean>;
 
   private isModalOpened$: BehaviorSubject<boolean> = new BehaviorSubject<
     boolean
@@ -178,6 +185,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       query: CREATION_QUERY
     }).valueChanges.pipe(
       takeUntil(this.destroy$),
+      filter(result => !!result.data),
       map(({ data }) => {
         return data;
       })
@@ -185,10 +193,8 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.appConfiguration$ = queryResult$.pipe(map((data) => data?.settings));
 
-    this.appConfiguration$.pipe(
-      takeUntil(this.destroy$),
-    ).subscribe((configuration) => {
-      this.fxDistance$.next(configuration.isRegroupementDisplayed ? "auto" : "0 0 50%");
+    this.appConfiguration$.subscribe((configuration) => {
+      this.fxDistance$.next(configuration?.isRegroupementDisplayed ? "auto" : "0 0 50%");
       this.fxRegroupement$.next(configuration?.isDistanceDisplayed ? "1 0 220px" : "0 0 250px");
     })
 
@@ -219,7 +225,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // If a specific id was requested, retrieve it
     let initialDonnee$: Observable<boolean>;
-    const isInitialDonneeDonneeActive$ = new BehaviorSubject<boolean>(null);
     if (this.requestedDonneeId) {
       initialDonnee$ = this.donneeService
         .getDonneeById(this.requestedDonneeId)
@@ -232,8 +237,8 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       initialDonnee$ = this.donneeService.initialize().pipe(map(() => false));
     }
     initialDonnee$.subscribe((isInitialDonneeDonneeActive) => {
-      isInitialDonneeDonneeActive$.next(isInitialDonneeDonneeActive);
-      isInitialDonneeDonneeActive$.complete();
+      this.isInitialDonneeDonneeActive$.next(isInitialDonneeDonneeActive);
+      this.isInitialDonneeDonneeActive$.complete();
     });
 
     // Update the coordinates form controls depending on the application coordinates system
@@ -253,19 +258,15 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     combineLatest(
       [
         queryResult$,
-        this.donneeService.getCurrentDonnee$().pipe(
-          map((donnee) => donnee?.inventaire)
-        ),
-        this.appConfiguration$
+        this.donneeService.getCurrentDonnee$()
       ]
     )
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([queryResult, inventaire, appConfiguration]) => {
+      .subscribe(([queryResult, donnee]) => {
         this.inventaireFormService.updateForm(
           this.inventaireForm,
           queryResult,
-          inventaire,
-          appConfiguration
+          donnee?.inventaire,
         );
       });
 
@@ -334,41 +335,66 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     // Enable the inventaire form as soon as we have received the minimal info
-    forkJoin(
-      queryResult$.pipe(
-        filter(data => !!data),
-        first()
-      ),
-      isInitialDonneeDonneeActive$
-    )
+    forkJoin([
+      queryResult$.pipe(take(1)),
+      this.isInitialDonneeDonneeActive$
+    ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.creationModeService.setInventaireEnabled(true);
       });
 
     // Enable the donnee form as soon as we have received the minimal info
-    forkJoin(
-      this.entitiesStoreService.getDonneeEntities$().pipe(first()),
-      isInitialDonneeDonneeActive$
-    )
+    forkJoin([
+      this.entitiesStoreService.getDonneeEntities$().pipe(take(1)),
+      this.isInitialDonneeDonneeActive$
+    ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([isDonneeReady, enableDonneeForm]) => {
         this.creationModeService.setDonneeEnabled(enableDonneeForm);
       });
 
     // Set the initialization as completed once we received everything we need
-    forkJoin(
-      queryResult$.pipe(
-        filter(data => !!data),
-        first()
-      ),
-      this.entitiesStoreService.getDonneeEntities$().pipe(first()),
-      isInitialDonneeDonneeActive$
-    )
-      .pipe(takeUntil(this.destroy$))
+    forkJoin([
+      queryResult$.pipe(take(1)),
+      this.entitiesStoreService.getDonneeEntities$().pipe(take(1)),
+      this.isInitialDonneeDonneeActive$
+    ])
+      .pipe(
+        takeUntil(this.destroy$),
+        map(() => true)
+      )
       .subscribe(() => {
+        // Cannot subscribe directly as we need to keep 
+        // the initialization state for the duration of the component
         this.isInitializationCompleted$.next(true);
       });
+
+    // Handle the state of the previous donnee button
+    this.isPreviousDonneeBtnDisplayed$ = combineLatest(
+      [
+        this.donneeService.getIsDonneeCallOngoing$(),
+        this.donneeService.hasPreviousDonnee$(),
+        this.isInitializationCompleted$
+      ]).pipe(
+        takeUntil(this.destroy$),
+        map(([ongoingCall, hasPreviousDonnee, isInitializationCompleted]) => {
+          return !ongoingCall && hasPreviousDonnee && isInitializationCompleted;
+        })
+      );
+
+    // Handle the state of the next donnee button
+    this.isNextDonneeBtnDisplayed$ = combineLatest(
+      [
+        this.donneeService.getIsDonneeCallOngoing$(),
+        this.donneeService.hasNextDonnee$(),
+        this.isInitializationCompleted$
+      ]).pipe(
+        takeUntil(this.destroy$),
+        map(([ongoingCall, hasNextDonnee, isInitializationCompleted]) => {
+          return !ongoingCall && hasNextDonnee && isInitializationCompleted;
+        })
+      );
 
     // Toggle the map display when clicked
     this.lieuditMapClicked$
@@ -609,28 +635,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public isCurrentDonneeAnExistingOne$(): Observable<boolean> {
     return this.donneeService.isCurrentDonneeAnExistingOne$();
-  }
-
-  public isPreviousDonneeBtnDisplayed$(): Observable<boolean> {
-    return combineLatest(
-      this.donneeService.getIsDonneeCallOngoing$(),
-      this.donneeService.hasPreviousDonnee$(),
-      this.isInitializationCompleted$,
-      (ongoingCall, hasPreviousDonnee, isInitializationCompleted) => {
-        return !ongoingCall && hasPreviousDonnee && isInitializationCompleted;
-      }
-    );
-  }
-
-  public isNextDonneeBtnDisplayed$(): Observable<boolean> {
-    return combineLatest(
-      this.donneeService.getIsDonneeCallOngoing$(),
-      this.donneeService.hasNextDonnee$(),
-      this.isInitializationCompleted$,
-      (ongoingCall, hasNextDonnee, isInitializationCompleted) => {
-        return !ongoingCall && hasNextDonnee && isInitializationCompleted;
-      }
-    );
   }
 
   public getSaveButtonTooltip = (): string => {

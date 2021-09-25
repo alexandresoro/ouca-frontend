@@ -85,9 +85,9 @@ export class InventaireFormService {
       lieuxDits: LieuDit[]
       meteos: Meteo[]
       observateurs: Observateur[]
+      settings: Settings
     },
-    inventaire: Inventaire | InventaireFormObject,
-    appConfiguration: Settings
+    inventaire: Inventaire | InventaireFormObject
   ): void => {
     if (!entities) {
       return;
@@ -96,7 +96,7 @@ export class InventaireFormService {
     console.log("Affichage de l'inventaire dans le formulaire.", inventaire);
 
     this.coordinatesService.setCoordinatesSystemType(
-      appConfiguration.coordinatesSystem
+      entities.settings.coordinatesSystem
     );
 
     if (!inventaire) {
@@ -105,7 +105,7 @@ export class InventaireFormService {
           observateurs: entities.observateurs,
           departements: entities.departements
         },
-        appConfiguration
+        entities.settings
       );
 
       this.coordinatesService.setAreCoordinatesInvalid(false);
@@ -116,7 +116,7 @@ export class InventaireFormService {
       const inventaireFormValue = this.getInventaireFormValue(
         entities,
         inventaire,
-        appConfiguration.coordinatesSystem
+        entities.settings.coordinatesSystem
       );
 
       form.reset(inventaireFormValue);
@@ -185,10 +185,10 @@ export class InventaireFormService {
       inventaire.lieuditId
     );
 
-    const lieuDitCommune = entities?.communes?.find(commune => commune.id === lieudit.communeId);
+    const lieuDitCommune = entities?.communes?.find(commune => commune.id === lieudit?.communeId);
     const commune = lieuDitCommune ?? (inventaire as InventaireFormObject).commune;
     const departement =
-      entities?.departements?.find(departement => departement.id === commune.departementId) ??
+      entities?.departements?.find(departement => departement.id === commune?.departementId) ??
       (inventaire as InventaireFormObject).departement;
 
     let altitude: number = null;
