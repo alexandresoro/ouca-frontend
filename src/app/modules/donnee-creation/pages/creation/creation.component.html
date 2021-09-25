@@ -172,6 +172,9 @@
             <mat-card class="mat-card-override">
               <input-lieudit
                 formGroupName="lieu"
+                [lieuxDits$]="lieuxDits$"
+                [communes$]="communes$"
+                [departements$]="departements$"
                 [controlGroup]="$any(inventaireForm.controls['lieu'])"
                 (searchInMapClick)="toggleSearchInMap()"
               >

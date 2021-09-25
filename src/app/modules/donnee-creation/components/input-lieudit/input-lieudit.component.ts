@@ -46,9 +46,6 @@ import { IgnAlticodageService } from 'src/app/services/ign-alticodage.service';
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 type InputLieuxDitsQueryResult = {
-  lieuxDits: LieuDit[],
-  communes: Commune[],
-  departements: Departement[],
   settings: {
     coordinatesSystem: CoordinatesSystemType
   }
@@ -56,25 +53,6 @@ type InputLieuxDitsQueryResult = {
 
 const INPUT_LIEUX_DITS_QUERY = gql`
   query {
-    lieuxDits {
-      id
-      nom
-      altitude
-      longitude
-      latitude
-      coordinatesSystem
-      communeId
-    }
-    communes {
-      id
-      code
-      departementId
-      nom
-    }
-    departements {
-      id
-      code
-    }
     settings {
       coordinatesSystem
     }
@@ -89,6 +67,12 @@ const INPUT_LIEUX_DITS_QUERY = gql`
 })
 export class InputLieuditComponent implements OnInit, OnDestroy {
   @Input() public controlGroup: FormGroup;
+
+  @Input() public lieuxDits$: Observable<LieuDit[]>;
+
+  @Input() public communes$: Observable<Commune[]>;
+
+  @Input() public departements$: Observable<Departement[]>;
 
   @Input() public hideCoordinates?: boolean = false;
 
@@ -105,12 +89,6 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   private communeDefault$: ReplaySubject<Departement> = new ReplaySubject<
     Departement
   >(1);
-
-  public departements$: Observable<Departement[]>;
-
-  public allCommunes$: Observable<Commune[]>;
-
-  public allLieuxDits$: Observable<LieuDit[]>;
 
   public filteredLieuxdits$: Observable<LieuDit[]>;
 
@@ -181,24 +159,6 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     const queryResult$ = this.apollo.watchQuery<InputLieuxDitsQueryResult>({
       query: INPUT_LIEUX_DITS_QUERY
     }).valueChanges;
-
-    this.allLieuxDits$ = queryResult$.pipe(
-      map(({ data }) => {
-        return data?.lieuxDits;
-      })
-    );
-
-    this.allCommunes$ = queryResult$.pipe(
-      map(({ data }) => {
-        return data?.communes;
-      })
-    );
-
-    this.departements$ = queryResult$.pipe(
-      map(({ data }) => {
-        return data?.departements;
-      })
-    );
 
     this.isCurrentSystemGps$ = queryResult$.pipe(
       map(({ data }) => {
@@ -302,8 +262,8 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       this.creationMapService.getLieuDitIdForControl$()
         .pipe(
           withLatestFrom(
-            this.allLieuxDits$,
-            this.allCommunes$,
+            this.lieuxDits$,
+            this.communes$,
             this.departements$
           ),
           takeUntil(this.destroy$)
@@ -389,7 +349,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       // Focus on the commune if no lieu dit is selected
       this.focusOnCommuneEvent$
         .pipe(
-          withLatestFrom(this.allLieuxDits$),
+          withLatestFrom(this.lieuxDits$),
           takeUntil(this.destroy$)
         )
         .subscribe(([communeId, allLieuxDits]) => {
@@ -404,7 +364,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       // Focus should be on the departement if no commune is selected
       this.focusOnDepartementEvent$
         .pipe(
-          withLatestFrom(this.allLieuxDits$, this.allCommunes$),
+          withLatestFrom(this.lieuxDits$, this.communes$),
           takeUntil(this.destroy$)
         )
         .subscribe(([departementId, allLieuxDits, communes]) => {
@@ -487,7 +447,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   ): Observable<Commune[]> => {
     return combineLatest(
       merge(departementControl.valueChanges, this.departementDefault$),
-      this.allCommunes$,
+      this.communes$,
       (selection: string | number[] | Departement, communes) => {
         if (communes && selection) {
           if (this.isMultipleSelectMode) {
@@ -511,7 +471,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   ): Observable<LieuDit[]> => {
     return combineLatest(
       merge(communeControl.valueChanges, this.communeDefault$),
-      this.allLieuxDits$,
+      this.lieuxDits$,
       (selection: string | number[] | Commune, lieuxdits) => {
         if (lieuxdits && selection) {
           if (this.isMultipleSelectMode) {

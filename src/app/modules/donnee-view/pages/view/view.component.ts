@@ -8,7 +8,7 @@ import { map, takeUntil, withLatestFrom } from "rxjs/operators";
 import { getDateFromString } from 'src/app/date-adapter/date-fns-adapter';
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
 import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Age, Comportement, CoordinatesSystemType, Espece, EstimationDistance, EstimationNombre, Meteo, Milieu, Observateur, Sexe } from "src/app/model/graphql";
+import { Age, Commune, Comportement, CoordinatesSystemType, Departement, Espece, EstimationDistance, EstimationNombre, LieuDit, Meteo, Milieu, Observateur, Sexe } from "src/app/model/graphql";
 import { DonneesFilter } from 'src/app/model/types/donnees-filter.object';
 import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
@@ -32,6 +32,9 @@ type ViewQueryResult = {
   settings: {
     coordinatesSystem: CoordinatesSystemType
   }
+  communes: Commune[]; // Note that these 3 are only required because they are inputs of input-lieudit which is shared with creation.
+  departements: Departement[], // And as creation needs them directly, it was provided as input of input-lieudit to avoid a second costly call
+  lieuxDits: LieuDit[];
 }
 
 const VIEW_QUERY = gql`
@@ -40,11 +43,21 @@ const VIEW_QUERY = gql`
       id
       libelle
     }
+    communes {
+      id
+      code
+      nom
+      departementId
+    }
     comportements {
       id
       code
       libelle
       nicheur
+    }
+    departements {
+      id
+      code
     }
     especes {
       id
@@ -61,6 +74,15 @@ const VIEW_QUERY = gql`
     estimationsDistance {
       id
       libelle
+    }
+    lieuxDits {
+      id
+      nom
+      altitude
+      longitude
+      latitude
+      coordinatesSystem
+      communeId
     }
     meteos {
       id
@@ -146,6 +168,13 @@ export class ViewComponent implements OnDestroy {
   public comportements$: Observable<Comportement[]>;
   public milieux$: Observable<Milieu[]>;
   public meteos$: Observable<Meteo[]>;
+
+  public lieuxDits$: Observable<LieuDit[]>;
+
+  public communes$: Observable<Commune[]>;
+
+  public departements$: Observable<Departement[]>;
+
   public nicheursStatuses: Nicheur[] = Object.values(NICHEUR_VALUES);
   public displayWaitPanel$: BehaviorSubject<boolean> = new BehaviorSubject<
     boolean
@@ -209,6 +238,16 @@ export class ViewComponent implements OnDestroy {
     );
     this.meteos$ = this.viewQuery$.pipe(
       map(({ data }) => data?.meteos)
+    );
+
+    this.lieuxDits$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.lieuxDits)
+    );
+    this.communes$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.communes)
+    );
+    this.departements$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.departements)
     );
 
     this.viewQuery$.subscribe(({ data }) => {

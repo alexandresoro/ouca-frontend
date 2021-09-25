@@ -91,6 +91,9 @@
               <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
               <input-lieudit
                 formGroupName="lieuditGroup"
+                [lieuxDits$]="lieuxDits$"
+                [communes$]="communes$"
+                [departements$]="departements$"
                 [controlGroup]="$any(searchForm.controls['lieuditGroup'])"
                 [hideCoordinates]="true"
                 [isMultipleSelectMode]="true"

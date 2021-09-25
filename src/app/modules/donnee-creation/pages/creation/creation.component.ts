@@ -133,6 +133,12 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public observateurs$: Observable<Observateur[]>;
 
+  public lieuxDits$: Observable<LieuDit[]>;
+
+  public communes$: Observable<Commune[]>;
+
+  public departements$: Observable<Departement[]>;
+
   public meteos$: Observable<Meteo[]>;
 
   public appConfiguration$: Observable<Settings>;
@@ -196,6 +202,9 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.observateurs$ = queryResult$.pipe(map((data) => data?.observateurs));
+    this.lieuxDits$ = queryResult$.pipe(map((data) => data?.lieuxDits));
+    this.communes$ = queryResult$.pipe(map((data) => data?.communes));
+    this.departements$ = queryResult$.pipe(map((data) => data?.departements));
     this.meteos$ = queryResult$.pipe(map((data) => data?.meteos));
 
     this.appConfiguration$ = queryResult$.pipe(map((data) => data?.settings));
