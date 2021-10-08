@@ -8,7 +8,7 @@ import { map } from "rxjs/operators";
 import { Comportement } from "src/app/model/graphql";
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { EntiteAvecLibelleEtCodeEditAbstractComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code-edit.component";
 
 type ComportementsQueryResult = {
@@ -47,12 +47,12 @@ export class ComportementEditComponent
 
   constructor(
     private apollo: Apollo,
-    entitiesStoreService: EntitiesStoreService,
+    backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(entitiesStoreService, router, route, location);
+    super(backendApiService, router, route, location);
   }
 
   ngOnInit(): void {

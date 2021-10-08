@@ -5,7 +5,7 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Sexe } from "src/app/model/graphql";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
 
 type SexesQueryResult = {
@@ -33,12 +33,12 @@ export class SexeEditComponent
 
   constructor(
     private apollo: Apollo,
-    entitiesStoreService: EntitiesStoreService,
+    backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(entitiesStoreService, router, route, location);
+    super(backendApiService, router, route, location);
   }
 
   ngOnInit(): void {

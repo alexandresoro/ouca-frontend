@@ -1,23 +1,18 @@
 import { Injectable } from "@angular/core";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
-import { filter, map, tap } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 import { ComportementWithCounts } from "../model/graphql";
 import { Age } from '../model/types/age.object';
 import { Classe } from '../model/types/classe.object';
 import { Comportement } from '../model/types/comportement.object';
-import { EntiteSimple } from '../model/types/entite-simple.object';
 import { Espece } from '../model/types/espece.model';
 import { EstimationDistance } from '../model/types/estimation-distance.object';
 import { EstimationNombre } from '../model/types/estimation-nombre.object';
 import { Milieu } from '../model/types/milieu.object';
-import { PostResponse } from '../model/types/post-response.object';
 import { Sexe } from '../model/types/sexe.object';
 import { UIEspece } from "../models/espece.model";
-import { ENTITIES_PROPERTIES } from "../modules/model-management/models/entities-properties.model";
 import { has } from '../modules/shared/helpers/utils';
-import { BackendApiService } from "./backend-api.service";
 import { BackendWsService } from "./backend-ws.service";
-import { StatusMessageService } from "./status-message.service";
 
 @Injectable({
   providedIn: "root"
@@ -62,10 +57,8 @@ export class EntitiesStoreService {
   }>;
 
   constructor(
-    private backendApiService: BackendApiService,
-    private backendWsService: BackendWsService,
+    private backendWsService: BackendWsService
 
-    private statusMessageService: StatusMessageService
   ) { }
 
   public initializeEntitiesStore = (): void => {
@@ -229,51 +222,4 @@ export class EntitiesStoreService {
     return this.donneeEntities$;
   };
 
-  public saveEntity = <E extends EntiteSimple>(
-    entity: E,
-    entityName: string
-  ): Observable<boolean> => {
-    return this.backendApiService.saveEntity(entityName, entity).pipe(
-      tap((response: PostResponse) => {
-        if (response.isSuccess) {
-          this.statusMessageService.showSuccessMessage(
-            ENTITIES_PROPERTIES[entityName].theEntityLabelUppercase +
-            " a été sauvegardé" +
-            (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
-            " avec succès."
-          );
-        } else {
-          this.statusMessageService.showErrorMessage(
-            "Une erreur est survenue pendant la sauvegarde.",
-            response.message
-          );
-        }
-      }),
-      map((response: PostResponse) => response.isSuccess)
-    );
-  };
-
-  public deleteEntity = (
-    id: number,
-    entityName: string
-  ): Observable<boolean> => {
-    return this.backendApiService.deleteEntity(entityName, id).pipe(
-      tap((response: PostResponse) => {
-        if (response.isSuccess) {
-          this.statusMessageService.showSuccessMessage(
-            ENTITIES_PROPERTIES[entityName].theEntityLabelUppercase +
-            " a été supprimé" +
-            (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
-            " avec succès."
-          );
-        } else {
-          this.statusMessageService.showErrorMessage(
-            "Une erreur est survenue pendant la suppression.",
-            response.message
-          );
-        }
-      }),
-      map((response: PostResponse) => response.isSuccess)
-    );
-  };
 }

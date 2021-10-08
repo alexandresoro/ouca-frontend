@@ -5,7 +5,7 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Milieu } from "src/app/model/graphql";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { EntiteAvecLibelleEtCodeEditAbstractComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code-edit.component";
 
 type MilieuxQueryResult = {
@@ -34,12 +34,12 @@ export class MilieuEditComponent
 
   constructor(
     private apollo: Apollo,
-    entitiesStoreService: EntitiesStoreService,
+    backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(entitiesStoreService, router, route, location);
+    super(backendApiService, router, route, location);
   }
 
   ngOnInit(): void {

@@ -18,7 +18,7 @@ import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
 import { Espece } from "src/app/model/graphql";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { EspeceFormComponent } from "../../components/form/espece-form/espece-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
@@ -53,12 +53,12 @@ export class EspeceEditComponent
 
   constructor(
     private apollo: Apollo,
-    entitiesStoreService: EntitiesStoreService,
+    backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(entitiesStoreService, router, route, location);
+    super(backendApiService, router, route, location);
   }
 
   ngOnInit(): void {

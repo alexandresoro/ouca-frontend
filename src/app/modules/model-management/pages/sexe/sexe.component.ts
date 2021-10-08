@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { SexeWithCounts } from "src/app/model/graphql";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
@@ -13,11 +13,11 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
 export class SexeComponent extends EntiteSimpleComponent<SexeWithCounts> {
   constructor(
     dialog: MatDialog,
-    entitiesStoreService: EntitiesStoreService,
+    backendApiService: BackendApiService,
     exportService: ExportService,
     router: Router
   ) {
-    super(dialog, entitiesStoreService, exportService, router);
+    super(dialog, backendApiService, exportService, router);
   }
 
   getEntityName(): string {

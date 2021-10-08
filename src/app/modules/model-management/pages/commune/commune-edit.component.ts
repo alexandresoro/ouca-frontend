@@ -19,7 +19,7 @@ import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
 import { Commune } from "src/app/model/graphql";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
@@ -51,12 +51,12 @@ export class CommuneEditComponent
 
   constructor(
     private apollo: Apollo,
-    entitiesStoreService: EntitiesStoreService,
+    backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(entitiesStoreService, router, route, location);
+    super(backendApiService, router, route, location);
   }
 
   ngOnInit(): void {

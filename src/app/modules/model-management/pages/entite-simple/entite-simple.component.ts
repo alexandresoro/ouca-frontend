@@ -3,13 +3,13 @@ import { Router } from "@angular/router";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { ConfirmationDialogData } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog.component";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { ExportService } from "src/app/services/export.service";
 
 export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
   constructor(
     private dialog: MatDialog,
-    protected entitiesStoreService: EntitiesStoreService,
+    protected backendApiService: BackendApiService,
     private exportService: ExportService,
     private router: Router
   ) { }
@@ -47,7 +47,7 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
 
     dialogRef.afterClosed().subscribe((shouldDeleteEntity) => {
       if (shouldDeleteEntity) {
-        this.entitiesStoreService
+        this.backendApiService
           .deleteEntity(entity.id, this.getEntityName())
           .subscribe();
       }

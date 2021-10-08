@@ -31,8 +31,8 @@ import { Lieudit } from "src/app/model/types/lieudit.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { has } from 'src/app/modules/shared/helpers/utils';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
+import { BackendApiService } from "src/app/services/backend-api.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
 type LieuxDitsQueryResult = {
@@ -112,12 +112,12 @@ export class LieuDitEditComponent
   constructor(
     private apollo: Apollo,
     private coordinatesBuilderService: CoordinatesBuilderService,
-    entitiesStoreService: EntitiesStoreService,
+    backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(entitiesStoreService, router, route, location);
+    super(backendApiService, router, route, location);
   }
 
   ngOnInit(): void {

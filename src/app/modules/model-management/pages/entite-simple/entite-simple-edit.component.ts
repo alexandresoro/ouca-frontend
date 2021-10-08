@@ -4,13 +4,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
+import { BackendApiService } from "src/app/services/backend-api.service";
 
 export abstract class EntiteSimpleEditAbstractComponent<
   T extends EntiteSimple
   > {
   constructor(
-    protected entitiesStoreService: EntitiesStoreService,
+    protected backendApiService: BackendApiService,
     protected router: Router,
     protected route: ActivatedRoute,
     protected location: Location
@@ -65,7 +65,7 @@ export abstract class EntiteSimpleEditAbstractComponent<
     const entityName = this.getEntityName();
     const entity: EntiteSimple = this.getEntityFromFormValue(formValue);
 
-    this.entitiesStoreService
+    this.backendApiService
       .saveEntity(entity, entityName)
       .subscribe((isSuccessful) => {
         if (isSuccessful) {
