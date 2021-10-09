@@ -1,9 +1,8 @@
 <!-- OBSERVATEUR -->
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+<autocomplete-v2
   [displayFn]="displayObservateurFormat"
   [control]="control"
   [type]="placeholder"
-  [valuesObs]="observateurs"
+  [values]="matchingObservateurs$"
 >
-</autocomplete>
+</autocomplete-v2>

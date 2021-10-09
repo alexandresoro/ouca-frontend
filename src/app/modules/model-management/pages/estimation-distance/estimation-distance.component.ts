@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
+import { EstimationDistanceWithCounts } from "src/app/model/graphql";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -11,7 +11,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EstimationDistanceComponent extends EntiteSimpleComponent<
-EstimationDistance
+EstimationDistanceWithCounts
 > {
   constructor(
     dialog: MatDialog,
@@ -26,7 +26,7 @@ EstimationDistance
     return "estimation-distance";
   }
 
-  public getDeleteMessage(estimation: EstimationDistance): string {
+  public getDeleteMessage(estimation: EstimationDistanceWithCounts): string {
     return (
       "Êtes-vous certain de vouloir supprimer l'estimation de la distance " +
       estimation.libelle +

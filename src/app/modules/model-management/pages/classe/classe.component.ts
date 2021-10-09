@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { Classe } from 'src/app/model/types/classe.object';
+import { ClasseWithCounts } from "src/app/model/graphql";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { ExportService } from "src/app/services/export.service";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -10,7 +10,7 @@ import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component"
   templateUrl: "./classe.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClasseComponent extends EntiteSimpleComponent<Classe> {
+export class ClasseComponent extends EntiteSimpleComponent<ClasseWithCounts> {
   constructor(
     dialog: MatDialog,
     backendApiService: BackendApiService,
@@ -24,7 +24,7 @@ export class ClasseComponent extends EntiteSimpleComponent<Classe> {
     return "classe";
   }
 
-  public getDeleteMessage(classe: Classe): string {
+  public getDeleteMessage(classe: ClasseWithCounts): string {
     return (
       "Êtes-vous certain de vouloir supprimer la classe " +
       classe.libelle +

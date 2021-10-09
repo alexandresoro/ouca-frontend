@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
+import { EstimationDistance } from "src/app/model/graphql";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 type InputDistanceQueryResult = {

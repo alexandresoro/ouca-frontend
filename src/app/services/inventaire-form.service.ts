@@ -5,7 +5,9 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
+import { Apollo, gql } from "apollo-angular";
 import { set } from "date-fns";
+import { map } from "rxjs/operators";
 import { areCoordinatesCustomized, getCoordinates } from '../model/coordinates-system/coordinates-helper';
 import { CoordinatesSystemType } from '../model/coordinates-system/coordinates-system.object';
 import { Commune, Departement, LieuDit, Meteo, Observateur, Settings } from "../model/graphql";
@@ -24,11 +26,43 @@ import {
 import { has } from '../modules/shared/helpers/utils';
 import { CoordinatesService } from "./coordinates.service";
 
+type FindInventaireDataQueryResult = {
+  observateur: Observateur | null
+  observateursAssocies: Observateur[],
+  meteos: Meteo[]
+}
+
+type FindInventaireDataQueryParams = {
+  observateurId: number
+  associesIds: number[],
+  meteosIds: number[]
+}
+
+const FIND_INVENTAIRE_DATA_QUERY = gql`
+query FindInventaireData($observateurId: Int!, $associesIds: [Int!]!, $meteosIds: [Int!]!) {
+  observateur(id: $observateurId) {
+    id
+    libelle
+  }
+  observateursAssocies: observateurList(ids: $associesIds) {
+    id
+    libelle
+  }
+  meteos: meteoList(ids: $meteosIds) {
+    id
+    libelle
+  }
+}
+`;
+
 @Injectable({
   providedIn: "root"
 })
 export class InventaireFormService {
-  constructor(private coordinatesService: CoordinatesService) { }
+  constructor(
+    private apollo: Apollo,
+    private coordinatesService: CoordinatesService
+  ) { }
 
   public createForm = (): FormGroup => {
     const form = new FormGroup({
@@ -77,18 +111,16 @@ export class InventaireFormService {
    * Fill the inventaire form with the values from an existing inventaire
    * @param inventaire Inventaire
    */
-  public updateForm = (
+  public updateForm = async (
     form: FormGroup,
     entities: {
       communes: Commune[]
       departements: Departement[]
       lieuxDits: LieuDit[]
-      meteos: Meteo[]
-      observateurs: Observateur[]
       settings: Settings
     },
     inventaire: Inventaire | InventaireFormObject
-  ): void => {
+  ): Promise<void> => {
     if (!entities) {
       return;
     }
@@ -100,21 +132,27 @@ export class InventaireFormService {
     );
 
     if (!inventaire) {
-      const defaultOptions = this.getDefaultOptions(
-        {
-          observateurs: entities.observateurs,
-          departements: entities.departements
-        },
-        entities.settings
-      );
+      const defaultOptions = this.getDefaultOptions(entities.settings);
 
       this.coordinatesService.setAreCoordinatesInvalid(false);
       this.coordinatesService.setAreCoordinatesTransformed(false);
 
       form.reset(defaultOptions);
     } else {
+      const findInventaireData = await this.apollo.query<FindInventaireDataQueryResult, FindInventaireDataQueryParams>({
+        query: FIND_INVENTAIRE_DATA_QUERY,
+        variables: {
+          observateurId: inventaire?.observateurId,
+          associesIds: inventaire?.associesIds,
+          meteosIds: inventaire?.meteosIds
+        }
+      }).pipe(
+        map(({ data }) => data)
+      ).toPromise();
+
       const inventaireFormValue = this.getInventaireFormValue(
         entities,
+        findInventaireData,
         inventaire,
         entities.settings.coordinatesSystem
       );
@@ -124,21 +162,8 @@ export class InventaireFormService {
   };
 
   private getDefaultOptions = (
-    entities: {
-      observateurs: Observateur[];
-      departements: Departement[];
-    },
     appConfiguration: Settings
   ): DefaultInventaireOptions => {
-    const defaultObservateur: Observateur = ListHelper.findEntityInListByID(
-      entities.observateurs,
-      appConfiguration.defaultObservateur?.id
-    );
-
-    const defaultDepartement: Departement = ListHelper.findEntityInListByID(
-      entities.departements,
-      appConfiguration.defaultDepartement?.id
-    );
 
     const today = set(new Date(), {
       hours: 0,
@@ -148,11 +173,11 @@ export class InventaireFormService {
     });
 
     return {
-      observateur: defaultObservateur,
+      observateur: appConfiguration?.defaultObservateur,
       observateursAssocies: [],
       date: today,
       lieu: {
-        departement: defaultDepartement,
+        departement: appConfiguration?.defaultDepartement,
         coordinatesSystem: appConfiguration.coordinatesSystem
       },
       meteos: []
@@ -164,21 +189,11 @@ export class InventaireFormService {
       communes: Commune[]
       departements: Departement[]
       lieuxDits: LieuDit[]
-      meteos: Meteo[]
-      observateurs: Observateur[]
     },
+    inventaireData: FindInventaireDataQueryResult,
     inventaire: Inventaire | InventaireFormObject,
     coordinatesSystemType: CoordinatesSystemType
   ): InventaireFormValue => {
-    const observateur = ListHelper.findEntityInListByID(
-      entities.observateurs,
-      inventaire.observateurId
-    );
-
-    const associes = ListHelper.getEntitiesFromIDs(
-      entities.observateurs,
-      inventaire.associesIds
-    );
 
     const lieudit = ListHelper.findEntityInListByID(
       entities.lieuxDits,
@@ -223,15 +238,9 @@ export class InventaireFormService {
     );
     this.coordinatesService.setAreCoordinatesInvalid(!!coordinates.areInvalid);
 
-    const meteos = ListHelper.getEntitiesFromIDs(
-      entities.meteos,
-      inventaire.meteosIds
-    );
-
     return {
+      ...inventaireData,
       id: inventaire.id,
-      observateur,
-      observateursAssocies: associes,
       date: interpretDateTimestampAsBrowserDate(inventaire.date),
       heure: inventaire.heure,
       duree: inventaire.duree,
@@ -244,7 +253,6 @@ export class InventaireFormService {
         latitude: coordinates.latitude
       },
       temperature: inventaire.temperature,
-      meteos
     };
   };
 

@@ -122,7 +122,6 @@
               <div>
                 <input-observateur
                   [control]="$any(inventaireForm.controls['observateur'])"
-                  [observateurs]="observateurs$"
                 >
                 </input-observateur>
               </div>
@@ -131,7 +130,6 @@
               <div *ngIf="(appConfiguration$ | async)?.areAssociesDisplayed">
                 <input-observateurs-associes
                   [control]="$any(inventaireForm.controls['observateursAssocies'])"
-                  [observateurs]="observateurs$ | async"
                 >
                 </input-observateurs-associes>
               </div>
@@ -197,7 +195,6 @@
                 <!-- METEOS -->
                 <input-meteos
                   fxFlex="1 0 120px"
-                  [meteos]="meteos$ | async"
                   [control]="$any(inventaireForm.controls['meteos'])"
                 ></input-meteos>
               </div>

@@ -15,10 +15,8 @@ import {
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import { ImportErrorMessage, ImportUpdateMessage } from '../model/import/import-update-message';
 import { WebsocketImportUpdateMessage } from '../model/websocket/websocket-import-update-message';
-import { HEARTBEAT, IMPORT, UPDATE } from '../model/websocket/websocket-message-type.model';
+import { HEARTBEAT, IMPORT } from '../model/websocket/websocket-message-type.model';
 import { WebsocketMessage } from '../model/websocket/websocket-message.model';
-import { WebsocketUpdateContent } from '../model/websocket/websocket-update-content.model';
-import { WebsocketUpdateMessage } from '../model/websocket/websocket-update-message';
 import { NetworkUnavailableDialogComponent } from "../modules/shared/components/network-unavailable-dialog/network-unavailable-dialog.component";
 
 @Injectable({
@@ -106,17 +104,6 @@ export class BackendWsService {
 
   private getMessage$ = (): Observable<WebsocketMessage> => {
     return this.websocket$.asObservable();
-  };
-
-  public getUpdateMessageContent$ = (): Observable<WebsocketUpdateContent> => {
-    return this.getMessage$().pipe(
-      filter((message) => {
-        return message.type === UPDATE;
-      }),
-      map((updateMessage) => {
-        return (updateMessage as WebsocketUpdateMessage).content;
-      })
-    );
   };
 
   public getImportMessageContent$ = (): Observable<ImportUpdateMessage | ImportErrorMessage> => {

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EntitesAvecLibelleOrderBy } from "src/app/model/graphql";
-import { EstimationDistance } from 'src/app/model/types/estimation-distance.object';
+import { EntitesAvecLibelleOrderBy, EstimationDistanceWithCounts } from "src/app/model/graphql";
 import { EstimationsDistanceGetService } from "src/app/services/estimations-distance-get.service";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
 import { EstimationsDistanceDataSource } from "./EstimationsDistanceDataSource";
@@ -14,7 +13,7 @@ import { EstimationsDistanceDataSource } from "./EstimationsDistanceDataSource";
     "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EstimationDistanceTableComponent extends EntiteAvecLibelleTableComponent<EstimationDistance, EstimationsDistanceDataSource> {
+export class EstimationDistanceTableComponent extends EntiteAvecLibelleTableComponent<EstimationDistanceWithCounts, EstimationsDistanceDataSource> {
   constructor(private estimationsDistanceGetService: EstimationsDistanceGetService) {
     super();
   }

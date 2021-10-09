@@ -5,19 +5,9 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { buildEspeceFromUIEspece } from "../helpers/espece.helper";
-import { Settings } from "../model/graphql";
-import { Age } from '../model/types/age.object';
-import { Classe } from '../model/types/classe.object';
-import { Comportement } from '../model/types/comportement.object';
+import { Age, Classe, Comportement, Espece, EstimationDistance, EstimationNombre, Milieu, Settings, Sexe } from "../model/graphql";
 import { Donnee } from '../model/types/donnee.object';
 import { EntiteAvecLibelleEtCode } from '../model/types/entite-avec-libelle-et-code.object';
-import { Espece } from '../model/types/espece.model';
-import { EstimationDistance } from '../model/types/estimation-distance.object';
-import { EstimationNombre } from '../model/types/estimation-nombre.object';
-import { Milieu } from '../model/types/milieu.object';
-import { Sexe } from '../model/types/sexe.object';
-import { UIEspece } from "../models/espece.model";
 import { DefaultDonneeOptions } from "../modules/donnee-creation/models/default-donnee-options.model";
 import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
@@ -85,15 +75,16 @@ export class DonneeFormService {
   public updateForm = (
     form: FormGroup,
     entities: {
-      especes: UIEspece[];
+      classes: Classe[]
+      especes: Espece[];
       ages: Age[];
       sexes: Sexe[];
       estimationsNombre: EstimationNombre[];
       estimationsDistance: EstimationDistance[];
       comportements: Comportement[];
-      milieux: Milieu[];
+      milieux: Milieu[]
+      settings: Settings
     },
-    appConfiguration: Settings,
     donnee: Donnee | DonneeFormObject
   ): void => {
     if (!entities) {
@@ -109,7 +100,7 @@ export class DonneeFormService {
           sexes: entities.sexes,
           estimationsNombre: entities.estimationsNombre
         },
-        appConfiguration
+        entities.settings
       );
       form.reset(defaultOptions);
     } else {
@@ -120,7 +111,8 @@ export class DonneeFormService {
 
   private getDonneeFormValue = (
     entities: {
-      especes: UIEspece[];
+      classes: Classe[]
+      especes: Espece[];
       ages: Age[];
       sexes: Sexe[];
       estimationsNombre: EstimationNombre[];
@@ -135,8 +127,10 @@ export class DonneeFormService {
       donnee.especeId
     );
 
-    const classe: Classe =
-      espece?.classe ?? (donnee as DonneeFormObject).classe;
+    const classe = ListHelper.findEntityInListByID(
+      entities.classes,
+      espece?.classeId
+    ) ?? (donnee as DonneeFormObject).classe;
 
     const estimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
       entities.estimationsNombre,
@@ -153,7 +147,7 @@ export class DonneeFormService {
       donnee.sexeId
     );
 
-    const age: EstimationDistance = ListHelper.findEntityInListByID(
+    const age: Age = ListHelper.findEntityInListByID(
       entities.ages,
       donnee.ageId
     );
@@ -232,14 +226,10 @@ export class DonneeFormService {
   public getDonneeFromForm = (form: FormGroup): Donnee => {
     const donneeFormValue: DonneeFormValue = form.value;
 
-    const espece: Espece = buildEspeceFromUIEspece(
-      donneeFormValue.especeGroup?.espece
-    );
-
     const donnee: Donnee = {
       id: donneeFormValue.id,
       inventaireId: null,
-      especeId: espece?.id ?? null,
+      especeId: donneeFormValue?.especeGroup?.espece?.id ?? null,
       nombre: donneeFormValue?.nombreGroup?.nombre ?? null,
       estimationNombreId:
         donneeFormValue?.nombreGroup?.estimationNombre?.id ?? null,

@@ -30,13 +30,12 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import { Commune, Departement, LieuDit, Meteo, Observateur, Settings } from "src/app/model/graphql";
+import { Age, Classe, Commune, Comportement, Departement, Espece, EstimationDistance, EstimationNombre, LieuDit, Milieu, Settings, Sexe } from "src/app/model/graphql";
 import { Donnee } from 'src/app/model/types/donnee.object';
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
 import { CreationModeService } from "src/app/services/creation-mode.service";
 import { DonneeFormService } from "src/app/services/donnee-form.service";
-import { EntitiesStoreService } from "src/app/services/entities-store.service";
 import { InventaireFormService } from "src/app/services/inventaire-form.service";
 import { CreationPageService } from "../../../../services/creation-page.service";
 import { DonneeService } from "../../../../services/donnee.service";
@@ -49,25 +48,61 @@ import {
 } from "../../helpers/creation-dialog.helper";
 
 type CreationQueryResult = {
-  communes: Commune[];
-  departements: Departement[],
-  lieuxDits: LieuDit[];
-  meteos: Meteo[];
-  observateurs: Observateur[];
-  settings: Settings;
+  ages: Age[]
+  classes: Classe[]
+  communes: Commune[]
+  comportements: Comportement[]
+  departements: Departement[]
+  especes: Espece[]
+  estimationsDistance: EstimationDistance[]
+  estimationsNombre: EstimationNombre[]
+  lieuxDits: LieuDit[]
+  milieux: Milieu[]
+  settings: Settings
+  sexes: Sexe[]
 }
 
 const CREATION_QUERY = gql`
   query {
+    ages {
+      id
+      libelle
+    }
+    classes {
+      id
+      libelle
+    }
     communes {
       id
       code
       nom
       departementId
     }
+    comportements {
+      id
+      code
+      libelle
+      nicheur
+    }
     departements {
       id
       code
+    }
+    especes {
+      id
+      code
+      nomFrancais
+      nomLatin
+      classeId
+    }
+    estimationsDistance {
+      id
+      libelle
+    }
+    estimationsNombre {
+      id
+      libelle
+      nonCompte
     }
     lieuxDits {
       id
@@ -78,11 +113,12 @@ const CREATION_QUERY = gql`
       coordinatesSystem
       communeId
     }
-    meteos {
+    milieux {
       id
+      code
       libelle
     }
-    observateurs {
+    sexes {
       id
       libelle
     }
@@ -131,15 +167,11 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private requestedDonneeId: number;
 
-  public observateurs$: Observable<Observateur[]>;
-
   public lieuxDits$: Observable<LieuDit[]>;
 
   public communes$: Observable<Commune[]>;
 
   public departements$: Observable<Departement[]>;
-
-  public meteos$: Observable<Meteo[]>;
 
   public appConfiguration$: Observable<Settings>;
 
@@ -178,7 +210,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     private creationModeService: CreationModeService,
     private creationPageService: CreationPageService,
     private creationCacheService: CreationCacheService,
-    private entitiesStoreService: EntitiesStoreService,
     private dialog: MatDialog,
     private donneeFormService: DonneeFormService,
     private coordinatesBuilderService: CoordinatesBuilderService,
@@ -201,11 +232,9 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
 
-    this.observateurs$ = queryResult$.pipe(map((data) => data?.observateurs));
     this.lieuxDits$ = queryResult$.pipe(map((data) => data?.lieuxDits));
     this.communes$ = queryResult$.pipe(map((data) => data?.communes));
     this.departements$ = queryResult$.pipe(map((data) => data?.departements));
-    this.meteos$ = queryResult$.pipe(map((data) => data?.meteos));
 
     this.appConfiguration$ = queryResult$.pipe(map((data) => data?.settings));
 
@@ -288,17 +317,15 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     combineLatest(
       [
-        this.entitiesStoreService.getDonneeEntities$(),
-        this.donneeService.getCurrentDonnee$(),
-        this.appConfiguration$
+        queryResult$,
+        this.donneeService.getCurrentDonnee$()
       ]
     )
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([pageModel, donnee, appConfiguration]) => {
+      .subscribe(([pageModel, donnee]) => {
         this.donneeFormService.updateForm(
           this.donneeForm,
           pageModel,
-          appConfiguration,
           donnee
         );
       });
@@ -307,15 +334,13 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         withLatestFrom(
-          this.entitiesStoreService.getDonneeEntities$(),
-          this.appConfiguration$
+          queryResult$
         )
       )
-      .subscribe(([clearDonnee, donneeEntities, appConfiguration]) => {
+      .subscribe(([clearDonnee, donneeEntities]) => {
         this.donneeFormService.updateForm(
           this.donneeForm,
           donneeEntities,
-          appConfiguration,
           null
         );
       });
@@ -362,7 +387,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Enable the donnee form as soon as we have received the minimal info
     forkJoin([
-      this.entitiesStoreService.getDonneeEntities$().pipe(take(1)),
+      queryResult$.pipe(take(1)),
       this.isInitialDonneeDonneeActive$
     ])
       .pipe(takeUntil(this.destroy$))
@@ -373,7 +398,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     // Set the initialization as completed once we received everything we need
     forkJoin([
       queryResult$.pipe(take(1)),
-      this.entitiesStoreService.getDonneeEntities$().pipe(take(1)),
       this.isInitialDonneeDonneeActive$
     ])
       .pipe(
