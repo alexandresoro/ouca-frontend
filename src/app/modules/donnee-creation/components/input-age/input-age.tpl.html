@@ -1,9 +1,8 @@
 <!-- AGE -->
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+<autocomplete-v2
   [displayFn]="displayAgeFormat"
   [control]="control"
   [type]="'Age'"
-  [valuesObs]="ages$"
+  [values]="matchingAges$"
 >
-</autocomplete>
+</autocomplete-v2>

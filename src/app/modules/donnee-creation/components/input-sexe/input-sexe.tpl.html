@@ -1,9 +1,8 @@
 <!-- SEXE -->
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+<autocomplete-v2
   [displayFn]="displaySexeFormat"
   [control]="control"
   [type]="'Sexe'"
-  [valuesObs]="sexes$"
+  [values]="matchingSexes$"
 >
-</autocomplete>
+</autocomplete-v2>

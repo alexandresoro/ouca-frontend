@@ -1,18 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Age } from "src/app/model/graphql";
-import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+import { Age, FindParams } from "src/app/model/graphql";
+import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 
-type InputAgesQueryResult = {
+type AgesQueryResult = {
   ages: Age[],
 }
 
 const INPUT_AGES_QUERY = gql`
-  query {
-    ages {
+  query Ages($params: FindParams) {
+    ages(params: $params) {
       id
       libelle
     }
@@ -24,32 +24,32 @@ const INPUT_AGES_QUERY = gql`
   templateUrl: "./input-age.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputAgeComponent {
+export class InputAgeComponent implements OnInit {
   @Input() public control: FormControl;
 
-  public ages$: Observable<Age[]>;
+  public matchingAges$: Observable<Age[]>;
 
   constructor(
     private apollo: Apollo,
   ) {
-    this.ages$ = this.apollo.watchQuery<InputAgesQueryResult>({
-      query: INPUT_AGES_QUERY
-    }).valueChanges.pipe(
-      map(({ data }) => {
-        return data?.ages;
-      })
-    );
   }
 
-  public autocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "libelle",
-      exactSearchMode: false,
-      startWithMode: true
-    }
-  ];
+  ngOnInit(): void {
+    this.matchingAges$ = autocompleteUpdaterObservable(this.control, (value: string) => {
+      return this.apollo.query<AgesQueryResult, { params: FindParams }>({
+        query: INPUT_AGES_QUERY,
+        variables: {
+          params: {
+            q: value
+          }
+        }
+      }).pipe(
+        map(({ data }) => data?.ages)
+      )
+    });
+  }
 
   public displayAgeFormat = (age: Age): string => {
-    return age ? age.libelle : null;
+    return age?.libelle ?? null;
   };
 }

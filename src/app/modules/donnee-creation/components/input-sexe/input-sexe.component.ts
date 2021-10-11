@@ -1,18 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Sexe } from "src/app/model/graphql";
-import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+import { FindParams, Sexe } from "src/app/model/graphql";
+import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 
-type InputSexesQueryResult = {
+type SexesQueryResult = {
   sexes: Sexe[],
 }
 
 const INPUT_SEXES_QUERY = gql`
-  query {
-    sexes {
+  query Sexes($params: FindParams) {
+    sexes(params: $params) {
       id
       libelle
     }
@@ -24,32 +24,32 @@ const INPUT_SEXES_QUERY = gql`
   templateUrl: "./input-sexe.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputSexeComponent {
+export class InputSexeComponent implements OnInit {
   @Input() public control: FormControl;
 
-  public sexes$: Observable<Sexe[]>;
+  public matchingSexes$: Observable<Sexe[]>;
 
   constructor(
     private apollo: Apollo,
   ) {
-    this.sexes$ = this.apollo.watchQuery<InputSexesQueryResult>({
-      query: INPUT_SEXES_QUERY
-    }).valueChanges.pipe(
-      map(({ data }) => {
-        return data?.sexes;
-      })
-    );
   }
 
-  public autocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "libelle",
-      exactSearchMode: false,
-      startWithMode: true
-    }
-  ];
+  ngOnInit(): void {
+    this.matchingSexes$ = autocompleteUpdaterObservable(this.control, (value: string) => {
+      return this.apollo.query<SexesQueryResult, { params: FindParams }>({
+        query: INPUT_SEXES_QUERY,
+        variables: {
+          params: {
+            q: value
+          }
+        }
+      }).pipe(
+        map(({ data }) => data?.sexes)
+      )
+    });
+  }
 
   public displaySexeFormat = (sexe: Sexe): string => {
-    return sexe ? sexe.libelle : null;
+    return sexe?.libelle ?? null;
   };
 }
