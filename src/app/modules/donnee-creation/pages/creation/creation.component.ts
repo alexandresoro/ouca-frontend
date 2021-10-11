@@ -30,7 +30,7 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import { Age, Classe, Commune, Comportement, Departement, Espece, LieuDit, Milieu, Settings, Sexe } from "src/app/model/graphql";
+import { Classe, Commune, Comportement, Departement, Espece, LieuDit, Milieu, Settings } from "src/app/model/graphql";
 import { Donnee } from 'src/app/model/types/donnee.object';
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
@@ -48,7 +48,6 @@ import {
 } from "../../helpers/creation-dialog.helper";
 
 type CreationQueryResult = {
-  ages: Age[]
   classes: Classe[]
   communes: Commune[]
   comportements: Comportement[]
@@ -57,15 +56,10 @@ type CreationQueryResult = {
   lieuxDits: LieuDit[]
   milieux: Milieu[]
   settings: Settings
-  sexes: Sexe[]
 }
 
 const CREATION_QUERY = gql`
-  query {
-    ages {
-      id
-      libelle
-    }
+  query CreationQuery {
     classes {
       id
       libelle
@@ -105,10 +99,6 @@ const CREATION_QUERY = gql`
     milieux {
       id
       code
-      libelle
-    }
-    sexes {
-      id
       libelle
     }
     settings {

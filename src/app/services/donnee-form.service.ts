@@ -18,17 +18,25 @@ import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.he
 import { ListHelper } from "../modules/shared/helpers/list-helper";
 
 type FindDonneeDataQueryResult = {
+  age: Age | null
   estimationDistance: EstimationDistance | null
   estimationNombre: EstimationNombre | null
+  sexe: Sexe | null
 }
 
 type FindDonneeDataQueryParams = {
-  estimationDistanceId: number,
+  ageId: number
+  estimationDistanceId: number
   estimationNombreId: number
+  sexeId: number
 }
 
 const FIND_DONNEE_DATA_QUERY = gql`
-query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!) {
+query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ageId: Int!, $sexeId: Int!) {
+  age(id: $ageId) {
+    id
+    libelle
+  }
   estimationDistance(id: $estimationDistanceId) {
     id
     libelle
@@ -37,6 +45,10 @@ query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!) {
     id
     libelle
     nonCompte
+  }
+  sexe(id: $sexeId) {
+    id
+    libelle
   }
 }
 `;
@@ -108,8 +120,6 @@ export class DonneeFormService {
     entities: {
       classes: Classe[]
       especes: Espece[];
-      ages: Age[];
-      sexes: Sexe[];
       comportements: Comportement[];
       milieux: Milieu[]
       settings: Settings
@@ -123,21 +133,17 @@ export class DonneeFormService {
     console.log("Affichage de la donnée dans le formulaire.", donnee);
 
     if (!donnee || (donnee as DonneeFormObject).isDonneeEmpty) {
-      const defaultOptions = this.getDefaultOptions(
-        {
-          ages: entities.ages,
-          sexes: entities.sexes,
-        },
-        entities.settings
-      );
+      const defaultOptions = this.getDefaultOptions(entities.settings);
       form.reset(defaultOptions);
     } else {
 
       const findDonneeData = await this.apollo.query<FindDonneeDataQueryResult, FindDonneeDataQueryParams>({
         query: FIND_DONNEE_DATA_QUERY,
         variables: {
+          ageId: donnee?.ageId ?? -1,
           estimationDistanceId: donnee?.estimationDistanceId ?? -1,
-          estimationNombreId: donnee?.estimationNombreId ?? -1
+          estimationNombreId: donnee?.estimationNombreId ?? -1,
+          sexeId: donnee?.sexeId ?? -1
         }
       }).pipe(
         map(({ data }) => data)
@@ -156,8 +162,6 @@ export class DonneeFormService {
     entities: {
       classes: Classe[]
       especes: Espece[];
-      ages: Age[];
-      sexes: Sexe[];
       comportements: Comportement[];
       milieux: Milieu[];
     },
@@ -174,24 +178,14 @@ export class DonneeFormService {
       espece?.classeId
     ) ?? (donnee as DonneeFormObject).classe;
 
-    const sexe: Sexe = ListHelper.findEntityInListByID(
-      entities.sexes,
-      donnee.sexeId
-    );
-
-    const age: Age = ListHelper.findEntityInListByID(
-      entities.ages,
-      donnee.ageId
-    );
-
     return {
       id: donnee.id,
       especeGroup: {
         classe,
         espece
       },
-      age,
-      sexe,
+      age: donneeData?.age,
+      sexe: donneeData?.sexe,
       nombreGroup: {
         nombre: donnee.nombre,
         estimationNombre: donneeData?.estimationNombre
@@ -211,21 +205,8 @@ export class DonneeFormService {
   };
 
   private getDefaultOptions = (
-    entities: {
-      ages: Age[];
-      sexes: Sexe[];
-    },
     appConfiguration: Settings
   ): DefaultDonneeOptions => {
-    const defaultAge: Age = ListHelper.findEntityInListByID(
-      entities.ages,
-      appConfiguration?.defaultAge?.id
-    );
-
-    const defaultSexe: Sexe = ListHelper.findEntityInListByID(
-      entities.sexes,
-      appConfiguration?.defaultSexe?.id
-    );
 
     const defaultEstimationNombre = appConfiguration?.defaultEstimationNombre;
 
@@ -243,8 +224,8 @@ export class DonneeFormService {
         nombre: defaultNombre,
         estimationNombre: defaultEstimationNombre
       },
-      sexe: defaultSexe,
-      age: defaultAge
+      sexe: appConfiguration?.defaultSexe,
+      age: appConfiguration?.defaultAge
     };
   };
 
