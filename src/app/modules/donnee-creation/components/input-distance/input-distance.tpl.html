@@ -1,24 +1,12 @@
 <!-- ESTIMATION DISTANCE -->
-<autocomplete
-  *ngIf="!isMultipleSelectMode"
+<autocomplete-v2
   fxFlex="1 0 100px"
   [type]="'Estimation de la distance'"
-  [valuesObs]="estimationsDistance$"
+  [values]="matchingEstimationsDistance$"
   [control]="$any(controlGroup.controls['estimationDistance'])"
-  [attributesToFilter]="autocompleteAttributes"
   [displayFn]="displayEstimationDistanceFormat"
 >
-</autocomplete>
-
-<multiple-select
-  *ngIf="isMultipleSelectMode"
-  fxFlex="1 0 100px"
-  [attributesToDisplay]="['libelle']"
-  [control]="$any(controlGroup.controls['estimationsDistance'])"
-  [id]="'estimations-distance'"
-  [options]="estimationsDistance$ | async"
-  [placeholder]="'Estimations de la distance'"
-></multiple-select>
+</autocomplete-v2>
 
 <!-- DISTANCE -->
 <mat-form-field fxFlex="1 0 100px">

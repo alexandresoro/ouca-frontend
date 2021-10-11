@@ -30,7 +30,7 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import { Age, Classe, Commune, Comportement, Departement, Espece, EstimationDistance, EstimationNombre, LieuDit, Milieu, Settings, Sexe } from "src/app/model/graphql";
+import { Age, Classe, Commune, Comportement, Departement, Espece, LieuDit, Milieu, Settings, Sexe } from "src/app/model/graphql";
 import { Donnee } from 'src/app/model/types/donnee.object';
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
@@ -54,8 +54,6 @@ type CreationQueryResult = {
   comportements: Comportement[]
   departements: Departement[]
   especes: Espece[]
-  estimationsDistance: EstimationDistance[]
-  estimationsNombre: EstimationNombre[]
   lieuxDits: LieuDit[]
   milieux: Milieu[]
   settings: Settings
@@ -94,15 +92,6 @@ const CREATION_QUERY = gql`
       nomFrancais
       nomLatin
       classeId
-    }
-    estimationsDistance {
-      id
-      libelle
-    }
-    estimationsNombre {
-      id
-      libelle
-      nonCompte
     }
     lieuxDits {
       id
@@ -308,7 +297,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     )
       .pipe(takeUntil(this.destroy$))
       .subscribe(([queryResult, donnee]) => {
-        this.inventaireFormService.updateForm(
+        void this.inventaireFormService.updateForm(
           this.inventaireForm,
           queryResult,
           donnee?.inventaire,
@@ -323,7 +312,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     )
       .pipe(takeUntil(this.destroy$))
       .subscribe(([pageModel, donnee]) => {
-        this.donneeFormService.updateForm(
+        void this.donneeFormService.updateForm(
           this.donneeForm,
           pageModel,
           donnee
@@ -338,7 +327,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
         )
       )
       .subscribe(([clearDonnee, donneeEntities]) => {
-        this.donneeFormService.updateForm(
+        void this.donneeFormService.updateForm(
           this.donneeForm,
           donneeEntities,
           null

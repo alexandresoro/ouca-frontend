@@ -1,18 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { EstimationDistance } from "src/app/model/graphql";
-import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+import { merge, Observable } from "rxjs";
+import { debounceTime, filter, map, switchMap } from "rxjs/operators";
+import { EstimationDistance, FindParams } from "src/app/model/graphql";
 
-type InputDistanceQueryResult = {
+type DistanceQueryResult = {
   estimationsDistance: EstimationDistance[],
 }
 
 const INPUT_DISTANCE_QUERY = gql`
-  query {
-    estimationsDistance {
+  query EstimationsDistance($params: FindParams) {
+    estimationsDistance(params: $params) {
       id
       libelle
     }
@@ -24,34 +23,45 @@ const INPUT_DISTANCE_QUERY = gql`
   templateUrl: "./input-distance.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputDistanceComponent {
+export class InputDistanceComponent implements OnInit {
   @Input() public controlGroup: FormGroup;
 
-  @Input() public isMultipleSelectMode?: boolean;
+  public matchingEstimationsDistance$: Observable<EstimationDistance[]>;
 
-  public estimationsDistance$: Observable<EstimationDistance[]>;
-
-  constructor(private apollo: Apollo) {
-    this.estimationsDistance$ = this.apollo.watchQuery<InputDistanceQueryResult>({
-      query: INPUT_DISTANCE_QUERY
-    }).valueChanges.pipe(
-      map(({ data }) => {
-        return data?.estimationsDistance;
-      })
-    );
+  constructor(
+    private apollo: Apollo
+  ) {
   }
 
-  public autocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "libelle",
-      exactSearchMode: false,
-      startWithMode: true
-    }
-  ];
+  ngOnInit(): void {
+
+    this.matchingEstimationsDistance$ = merge(
+      this.controlGroup.controls['estimationDistance'].valueChanges.pipe(
+        filter((value: string | EstimationDistance) => typeof value === "string"),
+        debounceTime(150),
+        switchMap((value: string) => {
+          return this.apollo.query<DistanceQueryResult, { params: FindParams }>({
+            query: INPUT_DISTANCE_QUERY,
+            variables: {
+              params: {
+                q: value
+              }
+            }
+          }).pipe(
+            map(({ data }) => data?.estimationsDistance)
+          )
+        })
+      ),
+      this.controlGroup.controls['estimationDistance'].valueChanges.pipe(
+        filter((value: string | EstimationDistance) => typeof value !== "string" && !!value?.id),
+        map((value: EstimationDistance) => [value])
+      )
+    );
+  }
 
   public displayEstimationDistanceFormat = (
     estimation: EstimationDistance
   ): string => {
-    return estimation ? estimation.libelle : null;
+    return estimation?.libelle ?? null;
   };
 }

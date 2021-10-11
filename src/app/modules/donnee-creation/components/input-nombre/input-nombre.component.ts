@@ -1,19 +1,19 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
-import { combineLatest, Observable, of } from "rxjs";
-import { distinctUntilChanged, map } from "rxjs/operators";
-import { EstimationNombre } from "src/app/model/graphql";
+import { combineLatest, merge, Observable, Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, withLatestFrom } from "rxjs/operators";
+import { EstimationNombre, FindParams, Settings } from "src/app/model/graphql";
 import { CreationModeService } from "src/app/services/creation-mode.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
-type InputNombreQueryResult = {
+type NombreQueryResult = {
   estimationsNombre: EstimationNombre[],
 }
 
 const INPUT_NOMBRE_QUERY = gql`
-  query {
-    estimationsNombre {
+  query EstimationsNombre($params: FindParams) {
+    estimationsNombre(params: $params) {
       id
       libelle
       nonCompte
@@ -21,57 +21,98 @@ const INPUT_NOMBRE_QUERY = gql`
   }
 `;
 
+type DefaultNombreQueryResult = {
+  settings: Pick<Settings, 'defaultNombre'>,
+}
+
+const INPUT_DEFAULT_NOMBRE_QUERY = gql`
+query DefaultNombreQuery {
+  settings {
+    defaultNombre
+  }
+}
+`;
+
 @Component({
   selector: "input-nombre",
   templateUrl: "./input-nombre.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputNombreComponent {
+export class InputNombreComponent implements OnInit, OnDestroy {
   @Input() public controlGroup: FormGroup;
 
-  @Input() public defaultNombre: number;
+  private readonly destroy$ = new Subject();
 
-  @Input() public isMultipleSelectMode?: boolean;
+  public matchingEstimationsNombre$: Observable<EstimationNombre[]>;
 
-  public estimationsNombre$: Observable<EstimationNombre[]>;
+  private defaultNombre$: Observable<number>;
 
   constructor(
     private apollo: Apollo,
     private creationModeService: CreationModeService
   ) {
-    this.estimationsNombre$ = this.apollo.watchQuery<InputNombreQueryResult>({
-      query: INPUT_NOMBRE_QUERY
-    }).valueChanges.pipe(
-      map(({ data }) => {
-        return data?.estimationsNombre;
-      })
-    );
   }
 
   public ngOnInit(): void {
-    const estimationControl = this.isMultipleSelectMode
-      ? this.controlGroup.get("estimationsNombre")
-      : this.controlGroup.get("estimationNombre");
 
-    const canNombreFieldBeActivated$: Observable<boolean> = this
-      .isMultipleSelectMode
-      ? of(true)
-      : this.creationModeService.getStatus$().pipe(
-        map((status) => {
-          return status.isDonneeEnabled;
+    this.defaultNombre$ = this.apollo.watchQuery<DefaultNombreQueryResult>({
+      query: INPUT_DEFAULT_NOMBRE_QUERY
+    }).valueChanges.pipe(
+      map(({ data }) => {
+        return data?.settings?.defaultNombre;
+      })
+    );
+
+    const estimationControl = this.controlGroup.get("estimationNombre");
+
+    this.matchingEstimationsNombre$ = merge(
+      estimationControl.valueChanges.pipe(
+        filter((value: string | EstimationNombre) => typeof value === "string"),
+        debounceTime(150),
+        switchMap((value: string) => {
+          return this.apollo.query<NombreQueryResult, { params: FindParams }>({
+            query: INPUT_NOMBRE_QUERY,
+            variables: {
+              params: {
+                q: value
+              }
+            }
+          }).pipe(
+            map(({ data }) => data?.estimationsNombre)
+          )
         })
-      );
+      ),
+      estimationControl.valueChanges.pipe(
+        filter((value: string | EstimationNombre) => typeof value !== "string" && !!value?.id),
+        map((value: EstimationNombre) => [value])
+      )
+    );
+
+    const canNombreFieldBeActivated$: Observable<boolean> = this.creationModeService.getStatus$().pipe(
+      map((status) => {
+        return status.isDonneeEnabled;
+      })
+    );
 
     combineLatest(
       estimationControl.valueChanges.pipe(distinctUntilChanged()),
       canNombreFieldBeActivated$
-    ).subscribe(([selectedEstimation, canFieldBeActive]) => {
-      if (canFieldBeActive) {
-        this.onEstimationNombreChanged(selectedEstimation);
-      } else {
-        this.controlGroup.controls.nombre.disable();
-      }
-    });
+    ).pipe(
+      takeUntil(this.destroy$),
+      withLatestFrom(this.defaultNombre$)
+    )
+      .subscribe(([[selectedEstimation, canFieldBeActive], defaultNombre]) => {
+        if (canFieldBeActive) {
+          this.onEstimationNombreChanged(selectedEstimation, defaultNombre);
+        } else {
+          this.controlGroup.controls.nombre.disable();
+        }
+      });
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   public autocompleteAttributes: AutocompleteAttribute[] = [
@@ -82,7 +123,7 @@ export class InputNombreComponent {
     }
   ];
 
-  private onEstimationNombreChanged(estimation: EstimationNombre): void {
+  private onEstimationNombreChanged(estimation: EstimationNombre, defaultNombre: number): void {
     if (estimation?.nonCompte) {
       this.controlGroup.controls.nombre.disable();
       this.controlGroup.controls.nombre.setValue(null);
@@ -91,7 +132,7 @@ export class InputNombreComponent {
 
       if (!this.controlGroup.controls.nombre.value) {
         // Set default value
-        this.controlGroup.controls.nombre.setValue(this.defaultNombre);
+        this.controlGroup.controls.nombre.setValue(defaultNombre);
       }
     }
   }
@@ -99,6 +140,6 @@ export class InputNombreComponent {
   public displayEstimationNombreFormat = (
     estimation: EstimationNombre
   ): string => {
-    return estimation ? estimation.libelle : null;
+    return estimation?.libelle ?? null;
   };
 }

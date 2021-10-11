@@ -5,6 +5,8 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
+import { Apollo, gql } from "apollo-angular";
+import { map } from "rxjs/operators";
 import { Age, Classe, Comportement, Espece, EstimationDistance, EstimationNombre, Milieu, Settings, Sexe } from "../model/graphql";
 import { Donnee } from '../model/types/donnee.object';
 import { EntiteAvecLibelleEtCode } from '../model/types/entite-avec-libelle-et-code.object';
@@ -15,10 +17,39 @@ import { InventaireFormObject } from "../modules/donnee-creation/models/inventai
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
 import { ListHelper } from "../modules/shared/helpers/list-helper";
 
+type FindDonneeDataQueryResult = {
+  estimationDistance: EstimationDistance | null
+  estimationNombre: EstimationNombre | null
+}
+
+type FindDonneeDataQueryParams = {
+  estimationDistanceId: number,
+  estimationNombreId: number
+}
+
+const FIND_DONNEE_DATA_QUERY = gql`
+query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!) {
+  estimationDistance(id: $estimationDistanceId) {
+    id
+    libelle
+  }
+  estimationNombre(id: $estimationNombreId) {
+    id
+    libelle
+    nonCompte
+  }
+}
+`;
+
 @Injectable({
   providedIn: "root"
 })
 export class DonneeFormService {
+
+  constructor(
+    private apollo: Apollo
+  ) { }
+
   public createForm = (): FormGroup => {
     const form = new FormGroup({
       id: new FormControl(),
@@ -72,21 +103,19 @@ export class DonneeFormService {
   /**
    * Fill the donnee form with the values of an existing donnee
    */
-  public updateForm = (
+  public updateForm = async (
     form: FormGroup,
     entities: {
       classes: Classe[]
       especes: Espece[];
       ages: Age[];
       sexes: Sexe[];
-      estimationsNombre: EstimationNombre[];
-      estimationsDistance: EstimationDistance[];
       comportements: Comportement[];
       milieux: Milieu[]
       settings: Settings
     },
     donnee: Donnee | DonneeFormObject
-  ): void => {
+  ): Promise<void> => {
     if (!entities) {
       return;
     }
@@ -98,13 +127,27 @@ export class DonneeFormService {
         {
           ages: entities.ages,
           sexes: entities.sexes,
-          estimationsNombre: entities.estimationsNombre
         },
         entities.settings
       );
       form.reset(defaultOptions);
     } else {
-      const donneeFormValue = this.getDonneeFormValue(entities, donnee);
+
+      const findDonneeData = await this.apollo.query<FindDonneeDataQueryResult, FindDonneeDataQueryParams>({
+        query: FIND_DONNEE_DATA_QUERY,
+        variables: {
+          estimationDistanceId: donnee?.estimationDistanceId ?? -1,
+          estimationNombreId: donnee?.estimationNombreId ?? -1
+        }
+      }).pipe(
+        map(({ data }) => data)
+      ).toPromise();
+
+      const donneeFormValue = this.getDonneeFormValue(
+        entities,
+        findDonneeData,
+        donnee
+      );
       form.reset(donneeFormValue);
     }
   };
@@ -115,11 +158,10 @@ export class DonneeFormService {
       especes: Espece[];
       ages: Age[];
       sexes: Sexe[];
-      estimationsNombre: EstimationNombre[];
-      estimationsDistance: EstimationDistance[];
       comportements: Comportement[];
       milieux: Milieu[];
     },
+    donneeData: FindDonneeDataQueryResult,
     donnee: Donnee | DonneeFormObject
   ): DonneeFormValue => {
     const espece = ListHelper.findEntityInListByID(
@@ -131,16 +173,6 @@ export class DonneeFormService {
       entities.classes,
       espece?.classeId
     ) ?? (donnee as DonneeFormObject).classe;
-
-    const estimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
-      entities.estimationsNombre,
-      donnee.estimationNombreId
-    );
-
-    const estimationDistance: EstimationDistance = ListHelper.findEntityInListByID(
-      entities.estimationsDistance,
-      donnee.estimationDistanceId
-    );
 
     const sexe: Sexe = ListHelper.findEntityInListByID(
       entities.sexes,
@@ -162,11 +194,11 @@ export class DonneeFormService {
       sexe,
       nombreGroup: {
         nombre: donnee.nombre,
-        estimationNombre
+        estimationNombre: donneeData?.estimationNombre
       },
       distanceGroup: {
         distance: donnee.distance,
-        estimationDistance
+        estimationDistance: donneeData?.estimationDistance
       },
       regroupement: donnee.regroupement,
       comportementsGroup: this.getComportementsForForm(
@@ -182,7 +214,6 @@ export class DonneeFormService {
     entities: {
       ages: Age[];
       sexes: Sexe[];
-      estimationsNombre: EstimationNombre[];
     },
     appConfiguration: Settings
   ): DefaultDonneeOptions => {
@@ -196,10 +227,7 @@ export class DonneeFormService {
       appConfiguration?.defaultSexe?.id
     );
 
-    const defaultEstimationNombre: EstimationNombre = ListHelper.findEntityInListByID(
-      entities.estimationsNombre,
-      appConfiguration?.defaultEstimationNombre?.id
-    );
+    const defaultEstimationNombre = appConfiguration?.defaultEstimationNombre;
 
     let defaultNombre: number = null;
     if (
