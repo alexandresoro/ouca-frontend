@@ -54,6 +54,7 @@ type InputLieuxDitsQueryResult = {
 const INPUT_LIEUX_DITS_QUERY = gql`
   query {
     settings {
+      id
       coordinatesSystem
     }
   }

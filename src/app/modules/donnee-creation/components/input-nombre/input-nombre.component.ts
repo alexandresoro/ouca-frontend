@@ -28,6 +28,7 @@ type DefaultNombreQueryResult = {
 const INPUT_DEFAULT_NOMBRE_QUERY = gql`
 query DefaultNombreQuery {
   settings {
+    id
     defaultNombre
   }
 }

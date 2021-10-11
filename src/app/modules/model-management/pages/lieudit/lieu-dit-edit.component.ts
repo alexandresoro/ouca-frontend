@@ -66,6 +66,7 @@ const LIEUX_DITS_QUERY = gql`
       code
     }
     settings {
+      id
       coordinatesSystem
     }
   }

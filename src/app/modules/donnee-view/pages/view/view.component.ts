@@ -102,6 +102,7 @@ const VIEW_QUERY = gql`
       libelle
     }
     settings {
+      id
       coordinatesSystem
     }
   }
