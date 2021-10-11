@@ -23,14 +23,13 @@ import {
 import {
   distinctUntilChanged,
   filter,
-
   map,
   take,
   takeUntil,
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import { Classe, Commune, Comportement, Departement, Espece, LieuDit, Milieu, Settings } from "src/app/model/graphql";
+import { Classe, Commune, Departement, Espece, LieuDit, Settings } from "src/app/model/graphql";
 import { Donnee } from 'src/app/model/types/donnee.object';
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
@@ -50,11 +49,9 @@ import {
 type CreationQueryResult = {
   classes: Classe[]
   communes: Commune[]
-  comportements: Comportement[]
   departements: Departement[]
   especes: Espece[]
   lieuxDits: LieuDit[]
-  milieux: Milieu[]
   settings: Settings
 }
 
@@ -69,12 +66,6 @@ const CREATION_QUERY = gql`
       code
       nom
       departementId
-    }
-    comportements {
-      id
-      code
-      libelle
-      nicheur
     }
     departements {
       id
@@ -95,11 +86,6 @@ const CREATION_QUERY = gql`
       latitude
       coordinatesSystem
       communeId
-    }
-    milieux {
-      id
-      code
-      libelle
     }
     settings {
       id

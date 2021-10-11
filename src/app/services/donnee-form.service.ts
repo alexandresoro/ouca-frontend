@@ -9,7 +9,6 @@ import { Apollo, gql } from "apollo-angular";
 import { map } from "rxjs/operators";
 import { Age, Classe, Comportement, Espece, EstimationDistance, EstimationNombre, Milieu, Settings, Sexe } from "../model/graphql";
 import { Donnee } from '../model/types/donnee.object';
-import { EntiteAvecLibelleEtCode } from '../model/types/entite-avec-libelle-et-code.object';
 import { DefaultDonneeOptions } from "../modules/donnee-creation/models/default-donnee-options.model";
 import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
@@ -19,23 +18,33 @@ import { ListHelper } from "../modules/shared/helpers/list-helper";
 
 type FindDonneeDataQueryResult = {
   age: Age | null
+  comportements: Comportement[]
   estimationDistance: EstimationDistance | null
   estimationNombre: EstimationNombre | null
+  milieux: Milieu[]
   sexe: Sexe | null
 }
 
 type FindDonneeDataQueryParams = {
   ageId: number
+  comportementsIds: number[]
   estimationDistanceId: number
   estimationNombreId: number
   sexeId: number
+  milieuxIds: number[]
 }
 
 const FIND_DONNEE_DATA_QUERY = gql`
-query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ageId: Int!, $sexeId: Int!) {
+query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ageId: Int!, $sexeId: Int!, $comportementsIds: [Int!]!, $milieuxIds: [Int!]!) {
   age(id: $ageId) {
     id
     libelle
+  }
+  comportements: comportementList(ids: $comportementsIds) {
+    id
+    code
+    libelle
+    nicheur
   }
   estimationDistance(id: $estimationDistanceId) {
     id
@@ -45,6 +54,11 @@ query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ag
     id
     libelle
     nonCompte
+  }
+  milieux: milieuList(ids: $milieuxIds) {
+    id
+    code
+    libelle
   }
   sexe(id: $sexeId) {
     id
@@ -119,9 +133,7 @@ export class DonneeFormService {
     form: FormGroup,
     entities: {
       classes: Classe[]
-      especes: Espece[];
-      comportements: Comportement[];
-      milieux: Milieu[]
+      especes: Espece[]
       settings: Settings
     },
     donnee: Donnee | DonneeFormObject
@@ -141,8 +153,10 @@ export class DonneeFormService {
         query: FIND_DONNEE_DATA_QUERY,
         variables: {
           ageId: donnee?.ageId ?? -1,
+          comportementsIds: donnee?.comportementsIds,
           estimationDistanceId: donnee?.estimationDistanceId ?? -1,
           estimationNombreId: donnee?.estimationNombreId ?? -1,
+          milieuxIds: donnee?.milieuxIds,
           sexeId: donnee?.sexeId ?? -1
         }
       }).pipe(
@@ -161,9 +175,7 @@ export class DonneeFormService {
   private getDonneeFormValue = (
     entities: {
       classes: Classe[]
-      especes: Espece[];
-      comportements: Comportement[];
-      milieux: Milieu[];
+      especes: Espece[]
     },
     donneeData: FindDonneeDataQueryResult,
     donnee: Donnee | DonneeFormObject
@@ -195,18 +207,13 @@ export class DonneeFormService {
         estimationDistance: donneeData?.estimationDistance
       },
       regroupement: donnee.regroupement,
-      comportementsGroup: this.getComportementsForForm(
-        entities.comportements,
-        donnee.comportementsIds
-      ),
-      milieuxGroup: this.getMilieuxForForm(entities.milieux, donnee.milieuxIds),
+      comportementsGroup: this.getComportementsForForm(donneeData?.comportements),
+      milieuxGroup: this.getMilieuxForForm(donneeData?.milieux),
       commentaire: donnee.commentaire
     };
   };
 
-  private getDefaultOptions = (
-    appConfiguration: Settings
-  ): DefaultDonneeOptions => {
+  private getDefaultOptions = (appConfiguration: Settings): DefaultDonneeOptions => {
 
     const defaultEstimationNombre = appConfiguration?.defaultEstimationNombre;
 
@@ -301,23 +308,6 @@ export class DonneeFormService {
   };
 
   /**
-   * Returns the comportement at specified index if it exists
-   * @param comportements list of comportements
-   * @param index index of the comportement to return
-   */
-  private getComportement = (
-    allComportements: Comportement[],
-    comportementsIds: number[],
-    index: number
-  ): Comportement => {
-    return this.getEntiteCodeEtLibelle(
-      allComportements,
-      comportementsIds,
-      index
-    );
-  };
-
-  /**
    * Add a comportement to the list of comportements if not already in the list
    * @param comportements list of comportements
    * @param comportement comportement to add in the list
@@ -331,10 +321,7 @@ export class DonneeFormService {
     }
   };
 
-  private getComportementsForForm = (
-    comportements: Comportement[],
-    comportementsIds: number[]
-  ): {
+  private getComportementsForForm = (comportements: Comportement[]): {
     comportement1: Comportement;
     comportement2: Comportement;
     comportement3: Comportement;
@@ -343,29 +330,26 @@ export class DonneeFormService {
     comportement6: Comportement;
   } => {
     return {
-      comportement1: this.getComportement(comportements, comportementsIds, 1),
-      comportement2: this.getComportement(comportements, comportementsIds, 2),
-      comportement3: this.getComportement(comportements, comportementsIds, 3),
-      comportement4: this.getComportement(comportements, comportementsIds, 4),
-      comportement5: this.getComportement(comportements, comportementsIds, 5),
-      comportement6: this.getComportement(comportements, comportementsIds, 6)
+      comportement1: comportements[0],
+      comportement2: comportements[1],
+      comportement3: comportements[2],
+      comportement4: comportements[3],
+      comportement5: comportements[4],
+      comportement6: comportements[5]
     };
   };
 
-  private getMilieuxForForm = (
-    milieux: Milieu[],
-    milieuxIds: number[]
-  ): {
+  private getMilieuxForForm = (milieux: Milieu[]): {
     milieu1: Milieu;
     milieu2: Milieu;
     milieu3: Milieu;
     milieu4: Milieu;
   } => {
     return {
-      milieu1: this.getMilieu(milieux, milieuxIds, 1),
-      milieu2: this.getMilieu(milieux, milieuxIds, 2),
-      milieu3: this.getMilieu(milieux, milieuxIds, 3),
-      milieu4: this.getMilieu(milieux, milieuxIds, 4)
+      milieu1: milieux[0],
+      milieu2: milieux[1],
+      milieu3: milieux[2],
+      milieu4: milieux[3]
     };
   };
 
@@ -379,19 +363,6 @@ export class DonneeFormService {
   };
 
   /**
-   * Returns the milieu at specified index if it exists
-   * @param milieux list of milieux
-   * @param index index of the milieu to return
-   */
-  private getMilieu = (
-    allMilieux: Milieu[],
-    milieuxIds: number[],
-    index: number
-  ): Milieu => {
-    return this.getEntiteCodeEtLibelle(allMilieux, milieuxIds, index);
-  };
-
-  /**
    * Add a milieu to the list of milieux if not already in the list
    * @param milieux list of milieux
    * @param milieu milieu to add in the list
@@ -400,22 +371,6 @@ export class DonneeFormService {
     if (milieu?.id) {
       this.addId(milieuxIds, milieu.id);
     }
-  };
-
-  /**
-   * Get the entity stored at index of a list if it exists
-   * @param entitesCodeEtLibelle list of entities
-   * @param index index of the entity to return
-   */
-  private getEntiteCodeEtLibelle = <T extends EntiteAvecLibelleEtCode>(
-    entities: T[],
-    ids: number[],
-    index: number
-  ): T => {
-    const id: number =
-      ids.length >= index && !!ids[index - 1] ? ids[index - 1] : null;
-
-    return ListHelper.findEntityInListByID(entities, id);
   };
 
   /**

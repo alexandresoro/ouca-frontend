@@ -16,18 +16,6 @@ export class ListHelper {
     );
   }
 
-  public static findEntityInListByNumberAttribute<T extends EntiteSimple>(
-    entities: T[],
-    comparedAttributeName: string,
-    searchedValue: number
-  ): T | null {
-    return this.findEntityInListByAttribute(
-      entities,
-      comparedAttributeName,
-      searchedValue
-    );
-  }
-
   public static findEntityInListByStringAttribute<T extends EntiteSimple>(
     entities: T[],
     comparedAttributeName: string,
@@ -67,16 +55,4 @@ export class ListHelper {
     }) ?? [];
   };
 
-  public static getEntitiesFromIDs = <T extends EntiteSimple>(
-    allEntities: T[],
-    idsToGet: number[]
-  ): T[] => {
-    return idsToGet?.map((id) => {
-      return ListHelper.findEntityInListByNumberAttribute(
-        allEntities,
-        "id",
-        id
-      );
-    }) ?? [];
-  };
 }

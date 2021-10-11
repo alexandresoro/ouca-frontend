@@ -1,48 +1,42 @@
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+<autocomplete-v2
   [displayFn]="displayComportementFormat"
   [control]="$any(controlGroup.controls['comportement1'])"
   [type]="'Comportement 1'"
-  [valuesObs]="comportements$"
+  [values]="matchingComportementsPerInput$[0]"
 >
-</autocomplete>
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+</autocomplete-v2>
+<autocomplete-v2
   [displayFn]="displayComportementFormat"
   [control]="$any(controlGroup.controls['comportement2'])"
   [type]="'Comportement 2'"
-  [valuesObs]="comportements$"
+  [values]="matchingComportementsPerInput$[1]"
 >
-</autocomplete>
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+</autocomplete-v2>
+<autocomplete-v2
   [displayFn]="displayComportementFormat"
   [control]="$any(controlGroup.controls['comportement3'])"
   [type]="'Comportement 3'"
-  [valuesObs]="comportements$"
+  [values]="matchingComportementsPerInput$[2]"
 >
-</autocomplete>
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+</autocomplete-v2>
+<autocomplete-v2
   [displayFn]="displayComportementFormat"
   [control]="$any(controlGroup.controls['comportement4'])"
   [type]="'Comportement 4'"
-  [valuesObs]="comportements$"
+  [values]="matchingComportementsPerInput$[3]"
 >
-</autocomplete>
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+</autocomplete-v2>
+<autocomplete-v2
   [displayFn]="displayComportementFormat"
   [control]="$any(controlGroup.controls['comportement5'])"
   [type]="'Comportement 5'"
-  [valuesObs]="comportements$"
+  [values]="matchingComportementsPerInput$[4]"
 >
-</autocomplete>
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+</autocomplete-v2>
+<autocomplete-v2
   [displayFn]="displayComportementFormat"
   [control]="$any(controlGroup.controls['comportement6'])"
   [type]="'Comportement 6'"
-  [valuesObs]="comportements$"
+  [values]="matchingComportementsPerInput$[5]"
 >
-</autocomplete>
+</autocomplete-v2>

@@ -1,32 +1,28 @@
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+<autocomplete-v2
   [displayFn]="displayMilieuFormat"
   [control]="$any(controlGroup.controls['milieu1'])"
   [type]="'Milieu 1'"
-  [valuesObs]="milieux$"
+  [values]="matchingMilieuxPerInput$[0]"
 >
-</autocomplete>
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+</autocomplete-v2>
+<autocomplete-v2
   [displayFn]="displayMilieuFormat"
   [control]="$any(controlGroup.controls['milieu2'])"
   [type]="'Milieu 2'"
-  [valuesObs]="milieux$"
+  [values]="matchingMilieuxPerInput$[1]"
 >
-</autocomplete>
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+</autocomplete-v2>
+<autocomplete-v2
   [displayFn]="displayMilieuFormat"
   [control]="$any(controlGroup.controls['milieu3'])"
   [type]="'Milieu 3'"
-  [valuesObs]="milieux$"
+  [values]="matchingMilieuxPerInput$[2]"
 >
-</autocomplete>
-<autocomplete
-  [attributesToFilter]="autocompleteAttributes"
+</autocomplete-v2>
+<autocomplete-v2
   [displayFn]="displayMilieuFormat"
   [control]="$any(controlGroup.controls['milieu4'])"
   [type]="'Milieu 4'"
-  [valuesObs]="milieux$"
+  [values]="matchingMilieuxPerInput$[3]"
 >
-</autocomplete>
+</autocomplete-v2>

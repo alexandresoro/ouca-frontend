@@ -9,16 +9,16 @@ import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { map, takeUntil } from 'rxjs/operators';
-import { Milieu } from "src/app/model/graphql";
-import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
+import { FindParams, Milieu } from "src/app/model/graphql";
+import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 
-type InputMilieuxQueryResult = {
-  milieux: Milieu[],
+type MilieuxQueryResult = {
+  milieux: Milieu[]
 }
 
 const INPUT_MILIEUX_QUERY = gql`
-  query {
-    milieux {
+  query Milieux($params: FindParams) {
+    milieux(params: $params) {
       id
       code
       libelle
@@ -36,37 +36,34 @@ export class InputMilieuxComponent implements OnInit, OnDestroy {
 
   @Input() public controlGroup: FormGroup;
 
-  public milieux$: Observable<Milieu[]>;
+  public matchingMilieuxPerInput$: Observable<Milieu[]>[] = [];
 
   private readonly destroy$ = new Subject();
-
-  public autocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "code",
-      exactSearchMode: true,
-      startWithMode: true,
-      weight: 1
-    },
-    {
-      key: "libelle",
-      exactSearchMode: false,
-      startWithMode: false
-    }
-  ];
 
   constructor(
     private apollo: Apollo,
   ) {
-    this.milieux$ = this.apollo.watchQuery<InputMilieuxQueryResult>({
-      query: INPUT_MILIEUX_QUERY
-    }).valueChanges.pipe(
-      map(({ data }) => {
-        return data?.milieux;
-      })
-    );
   }
 
   ngOnInit(): void {
+
+    for (let indexMilieu = 0; indexMilieu < 4; indexMilieu++) {
+      this.matchingMilieuxPerInput$[indexMilieu] = autocompleteUpdaterObservable(
+        this.controlGroup.controls[`milieu${indexMilieu + 1}`],
+        (value: string) => {
+          return this.apollo.query<MilieuxQueryResult, { params: FindParams }>({
+            query: INPUT_MILIEUX_QUERY,
+            variables: {
+              params: {
+                q: value
+              }
+            }
+          }).pipe(
+            map(({ data }) => data?.milieux)
+          )
+        });
+    }
+
     // First milieu should be enabled if and only if the donnee form is enabled
     this.donneeForm.statusChanges.pipe(
       takeUntil(this.destroy$)
