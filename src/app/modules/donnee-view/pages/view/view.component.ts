@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatTabGroup } from '@angular/material/tabs';
 import { ApolloQueryResult } from "@apollo/client/core";
 import { Apollo, gql } from "apollo-angular";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import { map, takeUntil, withLatestFrom } from "rxjs/operators";
 import { getDateFromString } from 'src/app/date-adapter/date-fns-adapter';
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
 import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Age, Commune, Comportement, CoordinatesSystemType, Departement, Espece, EstimationDistance, EstimationNombre, LieuDit, Meteo, Milieu, Observateur, Sexe } from "src/app/model/graphql";
+import { Age, Classe, Commune, Comportement, CoordinatesSystemType, Departement, Espece, EstimationDistance, EstimationNombre, LieuDit, Meteo, Milieu, Observateur, Sexe } from "src/app/model/graphql";
 import { DonneesFilter } from 'src/app/model/types/donnees-filter.object';
 import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
@@ -21,8 +21,9 @@ import { SearchCriteriaService } from "../../services/search-criteria.service";
 
 type ViewQueryResult = {
   ages: Age[],
+  classes: Classe[],
   comportements: Comportement[],
-  especes: Espece[],
+  especes: Omit<Espece, 'classe'>[],
   estimationsNombre: EstimationNombre[],
   estimationsDistance: EstimationDistance[],
   meteos: Meteo[],
@@ -40,6 +41,10 @@ type ViewQueryResult = {
 const VIEW_QUERY = gql`
   query {
     ages {
+      id
+      libelle
+    }
+    classes {
       id
       libelle
     }
@@ -113,7 +118,7 @@ const VIEW_QUERY = gql`
   templateUrl: "./view.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewComponent implements OnDestroy {
+export class ViewComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
   private viewQuery$: Observable<ApolloQueryResult<ViewQueryResult>>;
@@ -161,7 +166,15 @@ export class ViewComponent implements OnDestroy {
   });
 
   public observateurs$: Observable<Observateur[]>;
-  public especes$: Observable<Espece[]>;
+  public classes$: Observable<Classe[]>;
+  public especes$: Observable<Omit<Espece, 'classe'>[]>;
+
+  public filteredEspeces$: Observable<Omit<Espece, 'classe'>[]> = new Observable<
+    Omit<Espece, 'classe'>[]
+  >();
+
+  private selectedClasse$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(null);
+
   public estimationsNombre$: Observable<EstimationNombre[]>;
   public estimationsDistance$: Observable<EstimationDistance[]>;
   public sexes$: Observable<Sexe[]>;
@@ -188,6 +201,10 @@ export class ViewComponent implements OnDestroy {
   public donneesToDisplay: FlatDonnee[] = [];
 
   public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
+
+  public especeGroup: FormGroup = this.searchForm.controls[
+    "especeGroup"
+  ] as FormGroup;
 
   public nombreGroup: FormGroup = this.searchForm.controls[
     "nombreGroup"
@@ -222,6 +239,9 @@ export class ViewComponent implements OnDestroy {
     this.estimationsDistance$ = this.viewQuery$.pipe(
       map(({ data }) => data?.estimationsDistance)
     );
+    this.classes$ = this.viewQuery$.pipe(
+      map(({ data }) => data?.classes)
+    );
     this.especes$ = this.viewQuery$.pipe(
       map(({ data }) => data?.especes)
     );
@@ -254,6 +274,34 @@ export class ViewComponent implements OnDestroy {
     this.viewQuery$.subscribe(({ data }) => {
       this.searchForm.controls.coordinatesSystemType.setValue(data?.settings?.coordinatesSystem);
     });
+  }
+
+  public ngOnInit(): void {
+
+    this.especeGroup.get("classes").valueChanges.pipe(takeUntil(this.destroy$)).subscribe((newValue) => {
+      // This is done because when we first reach this component, we may have no value changes triggered,
+      // so we need to initialize it with null (see the BehaviorSubject above)
+      this.selectedClasse$.next(newValue);
+    });
+
+    this.filteredEspeces$ = combineLatest(
+      this.selectedClasse$,
+      this.especes$,
+      (selection, especes) => {
+        if (especes) {
+          if (selection?.length > 0) {
+            return especes.filter((espece) => {
+              return selection.includes(espece.classeId);
+            });
+          } else {
+            return especes;
+          }
+        } else {
+          return [];
+        }
+      }
+    ).pipe(takeUntil(this.destroy$));
+
   }
 
   public ngOnDestroy(): void {
@@ -476,7 +524,7 @@ export class ViewComponent implements OnDestroy {
    */
   private setEspecesWithNbDonnees = (
     donnees: FlatDonnee[],
-    especes: Espece[]
+    especes: Omit<Espece, 'classe'>[]
   ): void => {
 
 

@@ -18,7 +18,8 @@ import { combineLatest, Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
 import { Classe, Espece } from "src/app/model/graphql";
 
-export type EspeceWithNbDonnees = Espece & {
+export type EspeceWithNbDonnees = Omit<Espece, 'classe'> & {
+  classe?: string
   nbDonnees: number
 }
 

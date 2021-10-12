@@ -127,11 +127,21 @@
             <!-- THIRD COLUMN-->
             <div fxFlex="25%">
               <!-- CLASSE / ESPECE -->
-              <input-espece
-                formGroupName="especeGroup"
-                [controlGroup]="$any(searchForm.controls['especeGroup'])"
-                [isMultipleSelectMode]="true"
-              ></input-espece>
+              <multiple-select
+                [attributesToDisplay]="['libelle']"
+                [control]="$any(especeGroup.controls['classes'])"
+                [id]="'classes'"
+                [options]="classes$ | async"
+                [placeholder]="'Classes espèces'"
+              ></multiple-select>
+
+              <multiple-select
+                [attributesToDisplay]="['code', 'nomFrancais', 'nomLatin']"
+                [control]="$any(especeGroup.controls['especes'])"
+                [id]="'especes'"
+                [options]="filteredEspeces$ | async"
+                [placeholder]="'Espèces'"
+              ></multiple-select>
 
               <!-- ESTIMATION NOMBRE / NOMBRE -->
               <multiple-select
