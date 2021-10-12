@@ -1,6 +1,5 @@
 <!-- CLASSE -->
 <autocomplete
-  *ngIf="!isMultipleSelectMode"
   [attributesToFilter]="classeAutocompleteAttributes"
   type="Classe"
   [valuesObs]="classes$"
@@ -9,18 +8,8 @@
 >
 </autocomplete>
 
-<multiple-select
-  *ngIf="isMultipleSelectMode"
-  [attributesToDisplay]="['libelle']"
-  [control]="$any(controlGroup.controls['classes'])"
-  [id]="'classes'"
-  [options]="classes$ | async"
-  [placeholder]="'Classes espèces'"
-></multiple-select>
-
 <!-- ESPECE -->
 <autocomplete
-  *ngIf="!isMultipleSelectMode"
   [attributesToFilter]="especeAutocompleteAttributes"
   type="Espèce"
   [valuesObs]="filteredEspeces$"
@@ -29,12 +18,3 @@
   [displayFn]="displayEspeceFormat"
 >
 </autocomplete>
-
-<multiple-select
-  *ngIf="isMultipleSelectMode"
-  [attributesToDisplay]="['code', 'nomFrancais', 'nomLatin']"
-  [control]="$any(controlGroup.controls['especes'])"
-  [id]="'especes'"
-  [options]="filteredEspeces$ | async"
-  [placeholder]="'Espèces'"
-></multiple-select>

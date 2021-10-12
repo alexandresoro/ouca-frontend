@@ -187,7 +187,7 @@ export class DonneeFormService {
 
     const classe = ListHelper.findEntityInListByID(
       entities.classes,
-      espece?.classeId
+      espece?.classe?.id
     ) ?? (donnee as DonneeFormObject).classe;
 
     return {

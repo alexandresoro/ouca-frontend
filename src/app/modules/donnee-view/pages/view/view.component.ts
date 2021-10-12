@@ -23,7 +23,7 @@ type ViewQueryResult = {
   ages: Age[],
   classes: Classe[],
   comportements: Comportement[],
-  especes: Omit<Espece, 'classe'>[],
+  especes: Espece[],
   estimationsNombre: EstimationNombre[],
   estimationsDistance: EstimationDistance[],
   meteos: Meteo[],
@@ -69,7 +69,10 @@ const VIEW_QUERY = gql`
       code
       nomFrancais
       nomLatin
-      classeId
+      classe {
+        id
+        libelle
+      }
     }
     estimationsNombre {
       id
@@ -167,7 +170,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public observateurs$: Observable<Observateur[]>;
   public classes$: Observable<Classe[]>;
-  public especes$: Observable<Omit<Espece, 'classe'>[]>;
+  public especes$: Observable<Espece[]>;
 
   public filteredEspeces$: Observable<Omit<Espece, 'classe'>[]> = new Observable<
     Omit<Espece, 'classe'>[]
@@ -291,7 +294,7 @@ export class ViewComponent implements OnInit, OnDestroy {
         if (especes) {
           if (selection?.length > 0) {
             return especes.filter((espece) => {
-              return selection.includes(espece.classeId);
+              return selection.includes(espece?.classe?.id);
             });
           } else {
             return especes;
@@ -524,7 +527,7 @@ export class ViewComponent implements OnInit, OnDestroy {
    */
   private setEspecesWithNbDonnees = (
     donnees: FlatDonnee[],
-    especes: Omit<Espece, 'classe'>[]
+    especes: Espece[]
   ): void => {
 
 

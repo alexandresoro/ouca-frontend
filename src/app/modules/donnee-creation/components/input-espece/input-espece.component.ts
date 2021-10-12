@@ -14,8 +14,8 @@ import { distinctUntilKeyChangedLoose } from 'src/app/modules/shared/rx-operator
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 type InputEspecesQueryResult = {
-  classes: Classe[],
-  especes: Espece[],
+  classes: Classe[]
+  especes: Espece[]
 }
 
 const INPUT_ESPECES_QUERY = gql`
@@ -29,7 +29,10 @@ const INPUT_ESPECES_QUERY = gql`
       code
       nomFrancais
       nomLatin
-      classeId
+      classe {
+        id
+        libelle
+      }
     }
   }
 `;
@@ -42,21 +45,15 @@ const INPUT_ESPECES_QUERY = gql`
 export class InputEspeceComponent implements OnInit, OnDestroy {
   @Input() public controlGroup: FormGroup;
 
-  @Input() public isMultipleSelectMode?: boolean;
-
   private readonly destroy$ = new Subject();
 
   public classes$: Observable<Classe[]>;
 
   private especes$: Observable<Espece[]>;
 
-  public filteredEspeces$: Observable<Espece[]> = new Observable<
-    Espece[]
-  >();
+  public filteredEspeces$: Observable<Espece[]> = new Observable<Espece[]>();
 
-  private selectedClasse$: BehaviorSubject<
-    Classe | number[]
-  > = new BehaviorSubject<Classe | number[]>(null);
+  private selectedClasse$: BehaviorSubject<Classe> = new BehaviorSubject<Classe>(null);
 
   public classeAutocompleteAttributes: AutocompleteAttribute[] = [
     {
@@ -106,9 +103,7 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    const classeControl = this.isMultipleSelectMode
-      ? this.controlGroup.get("classes")
-      : this.controlGroup.get("classe");
+    const classeControl = this.controlGroup.get("classe");
 
     if (
       this.controlGroup.controls.espece &&
@@ -139,22 +134,12 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
       (selection, especes) => {
         if (especes) {
           if (selection) {
-            if (this.isMultipleSelectMode) {
-              if ((selection as number[]).length > 0) {
-                return especes.filter((espece) => {
-                  return (selection as number[]).includes(espece.classeId);
-                });
-              } else {
-                return especes;
-              }
-            } else {
-              if ((selection as Classe).id) {
-                return especes.filter((espece) => {
-                  return (
-                    espece?.classeId === (selection as Classe).id
-                  );
-                });
-              }
+            if (selection.id) {
+              return especes.filter((espece) => {
+                return (
+                  espece?.classe?.id === selection.id
+                );
+              });
             }
           } else {
             return especes;
@@ -176,7 +161,7 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
 
         // No need to clear the espece if it belongs to the classe
         const isCurrentEspeceBelongingToCurrentClasse = !!filteredEspeces?.find((espece) => {
-          return espece?.classeId === valueClasse?.id;
+          return espece?.classe?.id === valueClasse?.id;
         });
 
         // When the value of the classe changes, clear the selected espece

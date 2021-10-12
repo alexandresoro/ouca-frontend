@@ -76,7 +76,10 @@ const CREATION_QUERY = gql`
       code
       nomFrancais
       nomLatin
-      classeId
+      classe {
+        id
+        libelle
+      }
     }
     lieuxDits {
       id

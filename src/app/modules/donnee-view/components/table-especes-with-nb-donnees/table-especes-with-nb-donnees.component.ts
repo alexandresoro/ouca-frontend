@@ -18,8 +18,7 @@ import { combineLatest, Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
 import { Classe, Espece } from "src/app/model/graphql";
 
-export type EspeceWithNbDonnees = Omit<Espece, 'classe'> & {
-  classe?: string
+export type EspeceWithNbDonnees = Espece & {
   nbDonnees: number
 }
 
@@ -57,7 +56,7 @@ export class TableEspecesWithNbDonneesComponent implements OnChanges, AfterViewI
   @Input() public especesToDisplay: EspeceWithNbDonnees[];
 
   public dataSource: MatTableDataSource<
-    EspeceWithNbDonnees
+    Omit<EspeceWithNbDonnees, 'classe'> & { classe: string }
   > = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -90,7 +89,7 @@ export class TableEspecesWithNbDonneesComponent implements OnChanges, AfterViewI
       takeUntil(this.destroy$)
     ).subscribe(([especesToDisplay, classes]) => {
       this.dataSource.data = especesToDisplay.map((espece) => {
-        const classe = classes?.find(classe => classe.id === espece.classeId)?.libelle
+        const classe = classes?.find(classe => classe.id === espece?.classe?.id)?.libelle
         return {
           ...espece,
           classe

@@ -64,7 +64,10 @@ const SEARCH_QUERY = gql`
       code
       nomFrancais
       nomLatin
-      classeId
+      classe {
+        id
+        libelle
+      }
     }
     estimationsNombre {
       id
