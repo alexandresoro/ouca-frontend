@@ -9,21 +9,30 @@ import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import { map, takeUntil, withLatestFrom } from "rxjs/operators";
-import { Classe, Espece } from "src/app/model/graphql";
+import { Classe, Espece, FindParams } from "src/app/model/graphql";
+import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 import { distinctUntilKeyChangedLoose } from 'src/app/modules/shared/rx-operators';
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
-type InputEspecesQueryResult = {
+type ClassesQueryResult = {
   classes: Classe[]
+}
+
+type EspecesQueryResult = {
   especes: Espece[]
 }
 
-const INPUT_ESPECES_QUERY = gql`
-  query {
-    classes {
+const INPUT_CLASSES_QUERY = gql`
+  query Classes($params: FindParams) {
+    classes(params: $params) {
       id
       libelle
     }
+  }
+`;
+
+const INPUT_ESPECES_QUERY = gql`
+  query {
     especes {
       id
       code
@@ -47,7 +56,7 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
 
   private readonly destroy$ = new Subject();
 
-  public classes$: Observable<Classe[]>;
+  public matchingClasses$: Observable<Classe[]>;
 
   private especes$: Observable<Espece[]>;
 
@@ -85,15 +94,9 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private apollo: Apollo) {
-    const queryResult$ = this.apollo.watchQuery<InputEspecesQueryResult>({
+    const queryResult$ = this.apollo.watchQuery<EspecesQueryResult>({
       query: INPUT_ESPECES_QUERY
     }).valueChanges;
-
-    this.classes$ = queryResult$.pipe(
-      map(({ data }) => {
-        return data?.classes;
-      })
-    );
 
     this.especes$ = queryResult$.pipe(
       map(({ data }) => {
@@ -103,7 +106,21 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+
     const classeControl = this.controlGroup.get("classe");
+
+    this.matchingClasses$ = autocompleteUpdaterObservable(classeControl, (value: string) => {
+      return this.apollo.query<ClassesQueryResult, { params: FindParams }>({
+        query: INPUT_CLASSES_QUERY,
+        variables: {
+          params: {
+            q: value
+          }
+        }
+      }).pipe(
+        map(({ data }) => data?.classes)
+      )
+    });
 
     if (
       this.controlGroup.controls.espece &&

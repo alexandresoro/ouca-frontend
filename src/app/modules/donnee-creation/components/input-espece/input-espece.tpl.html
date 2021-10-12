@@ -1,12 +1,11 @@
 <!-- CLASSE -->
-<autocomplete
-  [attributesToFilter]="classeAutocompleteAttributes"
+<autocomplete-v2
   type="Classe"
-  [valuesObs]="classes$"
+  [values]="matchingClasses$"
   [control]="$any(controlGroup.controls['classe'])"
   [displayFn]="displayClasseFormat"
 >
-</autocomplete>
+</autocomplete-v2>
 
 <!-- ESPECE -->
 <autocomplete
