@@ -29,7 +29,7 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import { Classe, Commune, Departement, Espece, LieuDit, Settings } from "src/app/model/graphql";
+import { Commune, Departement, LieuDit, Settings } from "src/app/model/graphql";
 import { Donnee } from 'src/app/model/types/donnee.object';
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
@@ -47,20 +47,14 @@ import {
 } from "../../helpers/creation-dialog.helper";
 
 type CreationQueryResult = {
-  classes: Classe[]
   communes: Commune[]
   departements: Departement[]
-  especes: Espece[]
   lieuxDits: LieuDit[]
   settings: Settings
 }
 
 const CREATION_QUERY = gql`
   query CreationQuery {
-    classes {
-      id
-      libelle
-    }
     communes {
       id
       code
@@ -70,16 +64,6 @@ const CREATION_QUERY = gql`
     departements {
       id
       code
-    }
-    especes {
-      id
-      code
-      nomFrancais
-      nomLatin
-      classe {
-        id
-        libelle
-      }
     }
     lieuxDits {
       id
@@ -285,15 +269,15 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
     combineLatest(
       [
-        queryResult$,
+        this.appConfiguration$,
         this.donneeService.getCurrentDonnee$()
       ]
     )
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([pageModel, donnee]) => {
+      .subscribe(([appConfiguration, donnee]) => {
         void this.donneeFormService.updateForm(
           this.donneeForm,
-          pageModel,
+          appConfiguration,
           donnee
         );
       });
@@ -302,13 +286,13 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         withLatestFrom(
-          queryResult$
+          this.appConfiguration$
         )
       )
-      .subscribe(([clearDonnee, donneeEntities]) => {
+      .subscribe(([clearDonnee, appConfiguration]) => {
         void this.donneeFormService.updateForm(
           this.donneeForm,
-          donneeEntities,
+          appConfiguration,
           null
         );
       });

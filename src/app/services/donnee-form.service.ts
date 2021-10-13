@@ -7,18 +7,18 @@ import {
 } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { map } from "rxjs/operators";
-import { Age, Classe, Comportement, Espece, EstimationDistance, EstimationNombre, Milieu, Settings, Sexe } from "../model/graphql";
+import { Age, Comportement, Espece, EstimationDistance, EstimationNombre, Milieu, Settings, Sexe } from "../model/graphql";
 import { Donnee } from '../model/types/donnee.object';
 import { DefaultDonneeOptions } from "../modules/donnee-creation/models/default-donnee-options.model";
 import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
 import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
-import { ListHelper } from "../modules/shared/helpers/list-helper";
 
 type FindDonneeDataQueryResult = {
   age: Age | null
   comportements: Comportement[]
+  espece: Espece | null
   estimationDistance: EstimationDistance | null
   estimationNombre: EstimationNombre | null
   milieux: Milieu[]
@@ -27,6 +27,7 @@ type FindDonneeDataQueryResult = {
 
 type FindDonneeDataQueryParams = {
   ageId: number
+  especeId: number
   comportementsIds: number[]
   estimationDistanceId: number
   estimationNombreId: number
@@ -35,7 +36,7 @@ type FindDonneeDataQueryParams = {
 }
 
 const FIND_DONNEE_DATA_QUERY = gql`
-query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ageId: Int!, $sexeId: Int!, $comportementsIds: [Int!]!, $milieuxIds: [Int!]!) {
+query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ageId: Int!, $sexeId: Int!, $comportementsIds: [Int!]!, $milieuxIds: [Int!]!, $especeId: Int!) {
   age(id: $ageId) {
     id
     libelle
@@ -45,6 +46,16 @@ query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ag
     code
     libelle
     nicheur
+  }
+  espece(id: $especeId) {
+    id
+    code
+    nomFrancais
+    nomLatin
+    classe {
+      id
+      libelle
+    }
   }
   estimationDistance(id: $estimationDistanceId) {
     id
@@ -131,21 +142,14 @@ export class DonneeFormService {
    */
   public updateForm = async (
     form: FormGroup,
-    entities: {
-      classes: Classe[]
-      especes: Espece[]
-      settings: Settings
-    },
+    settings: Settings,
     donnee: Donnee | DonneeFormObject
   ): Promise<void> => {
-    if (!entities) {
-      return;
-    }
 
     console.log("Affichage de la donnée dans le formulaire.", donnee);
 
     if (!donnee || (donnee as DonneeFormObject).isDonneeEmpty) {
-      const defaultOptions = this.getDefaultOptions(entities.settings);
+      const defaultOptions = this.getDefaultOptions(settings);
       form.reset(defaultOptions);
     } else {
 
@@ -154,6 +158,7 @@ export class DonneeFormService {
         variables: {
           ageId: donnee?.ageId ?? -1,
           comportementsIds: donnee?.comportementsIds,
+          especeId: donnee?.especeId ?? -1,
           estimationDistanceId: donnee?.estimationDistanceId ?? -1,
           estimationNombreId: donnee?.estimationNombreId ?? -1,
           milieuxIds: donnee?.milieuxIds,
@@ -164,7 +169,6 @@ export class DonneeFormService {
       ).toPromise();
 
       const donneeFormValue = this.getDonneeFormValue(
-        entities,
         findDonneeData,
         donnee
       );
@@ -173,28 +177,14 @@ export class DonneeFormService {
   };
 
   private getDonneeFormValue = (
-    entities: {
-      classes: Classe[]
-      especes: Espece[]
-    },
     donneeData: FindDonneeDataQueryResult,
     donnee: Donnee | DonneeFormObject
   ): DonneeFormValue => {
-    const espece = ListHelper.findEntityInListByID(
-      entities.especes,
-      donnee.especeId
-    );
-
-    const classe = ListHelper.findEntityInListByID(
-      entities.classes,
-      espece?.classe?.id
-    ) ?? (donnee as DonneeFormObject).classe;
-
     return {
       id: donnee.id,
       especeGroup: {
-        classe,
-        espece
+        classe: donneeData?.espece?.classe,
+        espece: donneeData?.espece
       },
       age: donneeData?.age,
       sexe: donneeData?.sexe,
