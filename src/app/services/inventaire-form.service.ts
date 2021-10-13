@@ -55,6 +55,28 @@ query FindInventaireData($observateurId: Int!, $associesIds: [Int!]!, $meteosIds
 }
 `;
 
+type InventaireSettings = Pick<Settings, 'id' | 'coordinatesSystem' | 'defaultObservateur' | 'defaultDepartement'>;
+type InventaireSettingsQueryResult = {
+  settings: InventaireSettings
+}
+
+const INVENTAIRE_SETTINGS_QUERY = gql`
+query InventaireSettings {
+  settings {
+    id
+    defaultDepartement {
+      id
+      code
+    }
+    defaultObservateur {
+      id
+      libelle
+    }
+    coordinatesSystem
+  }
+}
+`;
+
 @Injectable({
   providedIn: "root"
 })
@@ -117,7 +139,6 @@ export class InventaireFormService {
       communes: Commune[]
       departements: Departement[]
       lieuxDits: LieuDit[]
-      settings: Settings
     },
     inventaire: Inventaire | InventaireFormObject
   ): Promise<void> => {
@@ -127,12 +148,16 @@ export class InventaireFormService {
 
     console.log("Affichage de l'inventaire dans le formulaire.", inventaire);
 
-    this.coordinatesService.setCoordinatesSystemType(
-      entities.settings.coordinatesSystem
-    );
+    const inventaireSettingsData = await this.apollo.query<InventaireSettingsQueryResult>({
+      query: INVENTAIRE_SETTINGS_QUERY
+    }).pipe(
+      map(({ data }) => data?.settings)
+    ).toPromise();
+
+    this.coordinatesService.setCoordinatesSystemType(inventaireSettingsData?.coordinatesSystem);
 
     if (!inventaire) {
-      const defaultOptions = this.getDefaultOptions(entities.settings);
+      const defaultOptions = this.getDefaultOptions(inventaireSettingsData);
 
       this.coordinatesService.setAreCoordinatesInvalid(false);
       this.coordinatesService.setAreCoordinatesTransformed(false);
@@ -154,7 +179,7 @@ export class InventaireFormService {
         entities,
         findInventaireData,
         inventaire,
-        entities.settings.coordinatesSystem
+        inventaireSettingsData?.coordinatesSystem
       );
 
       form.reset(inventaireFormValue);
@@ -162,7 +187,7 @@ export class InventaireFormService {
   };
 
   private getDefaultOptions = (
-    appConfiguration: Settings
+    inventaireSettings: InventaireSettings
   ): DefaultInventaireOptions => {
 
     const today = set(new Date(), {
@@ -173,12 +198,12 @@ export class InventaireFormService {
     });
 
     return {
-      observateur: appConfiguration?.defaultObservateur,
+      observateur: inventaireSettings?.defaultObservateur,
       observateursAssocies: [],
       date: today,
       lieu: {
-        departement: appConfiguration?.defaultDepartement,
-        coordinatesSystem: appConfiguration.coordinatesSystem
+        departement: inventaireSettings?.defaultDepartement,
+        coordinatesSystem: inventaireSettings.coordinatesSystem
       },
       meteos: []
     };

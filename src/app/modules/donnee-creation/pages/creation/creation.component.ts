@@ -46,11 +46,13 @@ import {
   getUpdateInventaireDialogData
 } from "../../helpers/creation-dialog.helper";
 
+type CreationSettings = Pick<Settings, 'id' | 'coordinatesSystem' | 'isRegroupementDisplayed' | 'isDistanceDisplayed' | 'isMeteoDisplayed' | 'areAssociesDisplayed'>
+
 type CreationQueryResult = {
   communes: Commune[]
   departements: Departement[]
   lieuxDits: LieuDit[]
-  settings: Settings
+  settings: CreationSettings
 }
 
 const CREATION_QUERY = gql`
@@ -80,29 +82,7 @@ const CREATION_QUERY = gql`
       isDistanceDisplayed
       isMeteoDisplayed
       isRegroupementDisplayed
-      defaultDepartement {
-        id
-        code
-      }
-      defaultObservateur {
-        id
-        libelle
-      }
       coordinatesSystem
-      defaultEstimationNombre {
-        id
-        libelle
-        nonCompte
-      }
-      defaultSexe {
-        id
-        libelle
-      }
-      defaultAge {
-        id
-        libelle
-      }
-      defaultNombre
     }
   }
 `;
@@ -125,7 +105,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public departements$: Observable<Departement[]>;
 
-  public appConfiguration$: Observable<Settings>;
+  public appConfiguration$: Observable<CreationSettings>;
 
   public inventaireForm: FormGroup;
 
