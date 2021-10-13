@@ -78,6 +78,33 @@ query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ag
 }
 `;
 
+type DonneeSettings = Pick<Settings, 'id' | 'defaultEstimationNombre' | 'defaultNombre' | 'defaultSexe' | 'defaultAge'>;
+type DonneeSettingsQueryResult = {
+  settings: DonneeSettings
+}
+
+const DONNEE_SETTINGS_QUERY = gql`
+query DonneeSettings {
+  settings {
+    id
+    defaultEstimationNombre {
+      id
+      libelle
+      nonCompte
+    }
+    defaultSexe {
+      id
+      libelle
+    }
+    defaultAge {
+      id
+      libelle
+    }
+    defaultNombre
+  }
+}
+`;
+
 @Injectable({
   providedIn: "root"
 })
@@ -142,14 +169,20 @@ export class DonneeFormService {
    */
   public updateForm = async (
     form: FormGroup,
-    settings: Settings,
     donnee: Donnee | DonneeFormObject
   ): Promise<void> => {
 
     console.log("Affichage de la donnée dans le formulaire.", donnee);
 
     if (!donnee || (donnee as DonneeFormObject).isDonneeEmpty) {
-      const defaultOptions = this.getDefaultOptions(settings);
+
+      const donneeSettingsData = await this.apollo.query<DonneeSettingsQueryResult>({
+        query: DONNEE_SETTINGS_QUERY
+      }).pipe(
+        map(({ data }) => data?.settings)
+      ).toPromise();
+
+      const defaultOptions = this.getDefaultOptions(donneeSettingsData);
       form.reset(defaultOptions);
     } else {
 
@@ -203,17 +236,17 @@ export class DonneeFormService {
     };
   };
 
-  private getDefaultOptions = (appConfiguration: Settings): DefaultDonneeOptions => {
+  private getDefaultOptions = (donneeSettings: DonneeSettings): DefaultDonneeOptions => {
 
-    const defaultEstimationNombre = appConfiguration?.defaultEstimationNombre;
+    const defaultEstimationNombre = donneeSettings?.defaultEstimationNombre;
 
     let defaultNombre: number = null;
     if (
-      appConfiguration?.defaultNombre &&
+      donneeSettings?.defaultNombre &&
       (!defaultEstimationNombre ||
         (defaultEstimationNombre && !defaultEstimationNombre.nonCompte))
     ) {
-      defaultNombre = appConfiguration.defaultNombre;
+      defaultNombre = donneeSettings.defaultNombre;
     }
 
     return {
@@ -221,8 +254,8 @@ export class DonneeFormService {
         nombre: defaultNombre,
         estimationNombre: defaultEstimationNombre
       },
-      sexe: appConfiguration?.defaultSexe,
-      age: appConfiguration?.defaultAge
+      sexe: donneeSettings?.defaultSexe,
+      age: donneeSettings?.defaultAge
     };
   };
 

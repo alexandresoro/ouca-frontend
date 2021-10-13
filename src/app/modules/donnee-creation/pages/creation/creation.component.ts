@@ -267,32 +267,21 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
         );
       });
 
-    combineLatest(
-      [
-        this.appConfiguration$,
-        this.donneeService.getCurrentDonnee$()
-      ]
-    )
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([appConfiguration, donnee]) => {
+    this.donneeService.getCurrentDonnee$().pipe(takeUntil(this.destroy$))
+      .subscribe((donnee) => {
         void this.donneeFormService.updateForm(
           this.donneeForm,
-          appConfiguration,
           donnee
         );
       });
 
     this.clearDonnee$
       .pipe(
-        takeUntil(this.destroy$),
-        withLatestFrom(
-          this.appConfiguration$
-        )
+        takeUntil(this.destroy$)
       )
-      .subscribe(([clearDonnee, appConfiguration]) => {
+      .subscribe(() => {
         void this.donneeFormService.updateForm(
           this.donneeForm,
-          appConfiguration,
           null
         );
       });
