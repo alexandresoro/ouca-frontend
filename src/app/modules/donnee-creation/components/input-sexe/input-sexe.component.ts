@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { FindParams, Sexe } from "src/app/model/graphql";
+import { QuerySexesArgs, Sexe } from "src/app/model/graphql";
 import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 
 type SexesQueryResult = {
@@ -36,7 +36,7 @@ export class InputSexeComponent implements OnInit {
 
   ngOnInit(): void {
     this.matchingSexes$ = autocompleteUpdaterObservable(this.control, (value: string) => {
-      return this.apollo.query<SexesQueryResult, { params: FindParams }>({
+      return this.apollo.query<SexesQueryResult, QuerySexesArgs>({
         query: INPUT_SEXES_QUERY,
         variables: {
           params: {

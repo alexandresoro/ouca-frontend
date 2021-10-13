@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { distinctUntilChanged, map, takeUntil, withLatestFrom } from "rxjs/operators";
-import { EstimationNombre, FindParams, Settings } from "src/app/model/graphql";
+import { EstimationNombre, QueryEstimationsNombreArgs, Settings } from "src/app/model/graphql";
 import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 import { CreationModeService } from "src/app/services/creation-mode.service";
 import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
@@ -68,7 +68,7 @@ export class InputNombreComponent implements OnInit, OnDestroy {
     const estimationControl = this.controlGroup.get("estimationNombre");
 
     this.matchingEstimationsNombre$ = autocompleteUpdaterObservable(estimationControl, (value: string) => {
-      return this.apollo.query<NombreQueryResult, { params: FindParams }>({
+      return this.apollo.query<NombreQueryResult, QueryEstimationsNombreArgs>({
         query: INPUT_NOMBRE_QUERY,
         variables: {
           params: {

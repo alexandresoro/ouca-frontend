@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from 'rxjs';
 import { map } from "rxjs/operators";
-import { FindParams, Observateur } from "src/app/model/graphql";
+import { Observateur, QueryObservateursArgs } from "src/app/model/graphql";
 import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 
 const OBSERVATEURS_QUERY = gql`
@@ -33,7 +33,7 @@ export class InputObservateurComponent implements OnInit {
 
   ngOnInit(): void {
     this.matchingObservateurs$ = autocompleteUpdaterObservable(this.control, (value: string) => {
-      return this.apollo.query<{ observateurs: Observateur[] }, { params: FindParams }>({
+      return this.apollo.query<{ observateurs: Observateur[] }, QueryObservateursArgs>({
         query: OBSERVATEURS_QUERY,
         variables: {
           params: {

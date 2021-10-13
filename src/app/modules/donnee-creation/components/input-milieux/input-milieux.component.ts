@@ -9,7 +9,7 @@ import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { map, takeUntil } from 'rxjs/operators';
-import { FindParams, Milieu } from "src/app/model/graphql";
+import { Milieu, QueryMilieuxArgs } from "src/app/model/graphql";
 import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 
 type MilieuxQueryResult = {
@@ -51,7 +51,7 @@ export class InputMilieuxComponent implements OnInit, OnDestroy {
       this.matchingMilieuxPerInput$[indexMilieu] = autocompleteUpdaterObservable(
         this.controlGroup.controls[`milieu${indexMilieu + 1}`],
         (value: string) => {
-          return this.apollo.query<MilieuxQueryResult, { params: FindParams }>({
+          return this.apollo.query<MilieuxQueryResult, QueryMilieuxArgs>({
             query: INPUT_MILIEUX_QUERY,
             variables: {
               params: {

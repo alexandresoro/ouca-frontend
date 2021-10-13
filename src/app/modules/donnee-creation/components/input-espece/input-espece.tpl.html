@@ -8,12 +8,10 @@
 </autocomplete-v2>
 
 <!-- ESPECE -->
-<autocomplete
-  [attributesToFilter]="especeAutocompleteAttributes"
+<autocomplete-v2
   type="Espèce"
-  [valuesObs]="filteredEspeces$"
+  [values]="matchingEspeces$"
   [control]="$any(controlGroup.controls['espece'])"
-  [maxDisplayedEntries]="50"
   [displayFn]="displayEspeceFormat"
 >
-</autocomplete>
+</autocomplete-v2>

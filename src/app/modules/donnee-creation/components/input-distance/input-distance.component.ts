@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { EstimationDistance, FindParams } from "src/app/model/graphql";
+import { EstimationDistance, QueryEstimationsDistanceArgs } from "src/app/model/graphql";
 import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 
 type DistanceQueryResult = {
@@ -36,7 +36,7 @@ export class InputDistanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.matchingEstimationsDistance$ = autocompleteUpdaterObservable(this.controlGroup.controls['estimationDistance'], (value: string) => {
-      return this.apollo.query<DistanceQueryResult, { params: FindParams }>({
+      return this.apollo.query<DistanceQueryResult, QueryEstimationsDistanceArgs>({
         query: INPUT_DISTANCE_QUERY,
         variables: {
           params: {

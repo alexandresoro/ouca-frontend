@@ -7,12 +7,11 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { map, takeUntil, withLatestFrom } from "rxjs/operators";
-import { Classe, Espece, FindParams } from "src/app/model/graphql";
+import { combineLatest, Observable, of, Subject } from "rxjs";
+import { debounceTime, map, startWith, switchMap, takeUntil } from "rxjs/operators";
+import { Classe, Espece, QueryClassesArgs, QueryEspecesArgs } from "src/app/model/graphql";
 import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 import { distinctUntilKeyChangedLoose } from 'src/app/modules/shared/rx-operators';
-import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 type ClassesQueryResult = {
   classes: Classe[]
@@ -32,8 +31,8 @@ const INPUT_CLASSES_QUERY = gql`
 `;
 
 const INPUT_ESPECES_QUERY = gql`
-  query {
-    especes {
+  query Especes($params: FindParams, $classeId: Int) {
+    especes(params: $params, classeId: $classeId) {
       id
       code
       nomFrancais
@@ -58,59 +57,18 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
 
   public matchingClasses$: Observable<Classe[]>;
 
-  private especes$: Observable<Espece[]>;
-
-  public filteredEspeces$: Observable<Espece[]> = new Observable<Espece[]>();
-
-  private selectedClasse$: BehaviorSubject<Classe> = new BehaviorSubject<Classe>(null);
-
-  public classeAutocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "libelle",
-      exactSearchMode: false,
-      startWithMode: true
-    }
-  ];
-
-  public especeAutocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "code",
-      exactSearchMode: true,
-      startWithMode: true,
-      weight: 10
-    },
-    {
-      key: "nomFrancais",
-      exactSearchMode: false,
-      startWithMode: false,
-      weight: 1
-    },
-    {
-      key: "nomLatin",
-      exactSearchMode: false,
-      startWithMode: false,
-      weight: 1
-    }
-  ];
+  public matchingEspeces$: Observable<Espece[]>;
 
   constructor(private apollo: Apollo) {
-    const queryResult$ = this.apollo.watchQuery<EspecesQueryResult>({
-      query: INPUT_ESPECES_QUERY
-    }).valueChanges;
-
-    this.especes$ = queryResult$.pipe(
-      map(({ data }) => {
-        return data?.especes;
-      })
-    );
   }
 
   public ngOnInit(): void {
 
     const classeControl = this.controlGroup.get("classe");
+    const especeControl = this.controlGroup.get("espece");
 
     this.matchingClasses$ = autocompleteUpdaterObservable(classeControl, (value: string) => {
-      return this.apollo.query<ClassesQueryResult, { params: FindParams }>({
+      return this.apollo.query<ClassesQueryResult, QueryClassesArgs>({
         query: INPUT_CLASSES_QUERY,
         variables: {
           params: {
@@ -122,71 +80,84 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
       )
     });
 
-    if (
-      this.controlGroup.controls.espece &&
-      this.controlGroup.controls.classe
-    ) {
-      this.controlGroup.controls.espece.valueChanges
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(
-          (selectedEspece) => {
-            if (selectedEspece?.id) {
-              this.controlGroup.controls.classe.setValue(selectedEspece.classe, {
-                emitEvent: false
-              });
-            }
+    this.controlGroup.controls.espece.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (selectedEspece: string | Espece) => {
+          if ((selectedEspece as Espece)?.id) {
+            this.controlGroup.controls.classe.setValue((selectedEspece as Espece).classe, {
+              emitEvent: false
+            });
           }
-        );
-    }
-
-    classeControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((newValue) => {
-      // This is done because when we first reach this component, we may have no value changes triggered,
-      // so we need to initialize it with null (see the BehaviorSubject above)
-      this.selectedClasse$.next(newValue);
-    });
-
-    this.filteredEspeces$ = combineLatest(
-      this.selectedClasse$,
-      this.especes$,
-      (selection, especes) => {
-        if (especes) {
-          if (selection) {
-            if (selection.id) {
-              return especes.filter((espece) => {
-                return (
-                  espece?.classe?.id === selection.id
-                );
-              });
-            }
-          } else {
-            return especes;
-          }
-        } else {
-          return [];
         }
-      }
-    ).pipe(takeUntil(this.destroy$));
+      );
+
+    this.matchingEspeces$ = combineLatest([
+      classeControl.valueChanges.pipe(
+        distinctUntilKeyChangedLoose("id"),
+        startWith<Classe | string>(null as Classe),
+      ),
+      especeControl.valueChanges.pipe(
+        debounceTime<Espece | string>(150) // We debounce here, as I don't have any proper solution to do it only for the case we need to, like the other cases
+      )
+    ]).pipe(
+      takeUntil(this.destroy$),
+      switchMap(([classeValue, especeValue]) => {
+
+        // 1. classe is a non empty string, no espece should match
+        if (typeof classeValue === "string" && classeValue.length) {
+          return of([] as Espece[]);
+        }
+
+        // 2. espece is a valid espece only return itself
+        if (typeof especeValue !== "string" && !!especeValue?.id) {
+          return of([especeValue]);
+        }
+
+        // 3. Espece is empty
+        if (!especeValue) {
+          return of([] as Espece[]);
+        }
+
+        // At this point classe can be
+        // - A valid classe with id -> filter especes accordingly
+        // - null -> no filter
+        // - empty string -> no filter
+        return this.apollo.query<EspecesQueryResult, QueryEspecesArgs>({
+          query: INPUT_ESPECES_QUERY,
+          variables: {
+            params: {
+              q: (especeValue as string),
+              max: 50
+            },
+            classeId: (classeValue as Classe)?.id ?? null
+          }
+        }).pipe(
+          map(({ data }) => data?.especes)
+        );
+      })
+    );
 
     // When the classe changes, we reset the espece accordingly
     classeControl.valueChanges
       .pipe(
         distinctUntilKeyChangedLoose("id"),
-        withLatestFrom(this.filteredEspeces$),
         takeUntil(this.destroy$)
       )
-      .subscribe(([valueClasse, filteredEspeces]) => {
+      .subscribe((valueClasse) => {
 
         // No need to clear the espece if it belongs to the classe
-        const isCurrentEspeceBelongingToCurrentClasse = !!filteredEspeces?.find((espece) => {
-          return espece?.classe?.id === valueClasse?.id;
-        });
+        const isCurrentEspeceBelongingToCurrentClasse = (this.controlGroup.get("espece").value?.id === valueClasse?.id);
 
         // When the value of the classe changes, clear the selected espece
         // However, do not do that when the control itself is disabled
         // This can happen for example when 
         // wanting to edit back the inventaire after an espece has been set
         if (!classeControl.disabled && !isCurrentEspeceBelongingToCurrentClasse) {
-          this.resetSelectedEspece();
+          if (this.controlGroup?.controls?.espece?.value) {
+            // When selecting a classe, filter the list of especes
+            this.controlGroup.controls.espece.setValue(null);
+          }
         }
       });
 
@@ -197,19 +168,8 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * When selecting a classe, filter the list of especes
-   */
-  public resetSelectedEspece(): void {
-    if (this.controlGroup?.controls?.espece?.value) {
-      this.controlGroup.controls.espece.setValue(null);
-    } else if (this.controlGroup?.controls?.especes?.value) {
-      this.controlGroup.controls.especes.setValue(null);
-    }
-  }
-
   public displayClasseFormat = (classe: Classe): string => {
-    return classe ? classe.libelle : "";
+    return classe?.libelle ?? "";
   };
 
   public displayEspeceFormat = (espece: Espece): string => {

@@ -9,7 +9,7 @@ import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { combineLatest, Observable, Subject } from "rxjs";
 import { map, takeUntil } from 'rxjs/operators';
-import { Comportement, FindParams } from "src/app/model/graphql";
+import { Comportement, QueryComportementsArgs } from "src/app/model/graphql";
 import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 
 type ComportementsQueryResult = {
@@ -51,7 +51,7 @@ export class InputComportementsComponent implements OnInit, OnDestroy {
       this.matchingComportementsPerInput$[indexComportement] = autocompleteUpdaterObservable(
         this.controlGroup.controls[`comportement${indexComportement + 1}`],
         (value: string) => {
-          return this.apollo.query<ComportementsQueryResult, { params: FindParams }>({
+          return this.apollo.query<ComportementsQueryResult, QueryComportementsArgs>({
             query: INPUT_COMPORTEMENTS_QUERY,
             variables: {
               params: {
