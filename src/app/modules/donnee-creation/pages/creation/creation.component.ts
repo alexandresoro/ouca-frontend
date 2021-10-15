@@ -99,12 +99,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private requestedDonneeId: number;
 
-  public lieuxDits$: Observable<LieuDit[]>;
-
-  public communes$: Observable<Commune[]>;
-
-  public departements$: Observable<Departement[]>;
-
   public appConfiguration$: Observable<CreationSettings>;
 
   public inventaireForm: FormGroup;
@@ -163,10 +157,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
         return data;
       })
     );
-
-    this.lieuxDits$ = queryResult$.pipe(map((data) => data?.lieuxDits));
-    this.communes$ = queryResult$.pipe(map((data) => data?.communes));
-    this.departements$ = queryResult$.pipe(map((data) => data?.departements));
 
     this.appConfiguration$ = queryResult$.pipe(map((data) => data?.settings));
 
