@@ -89,16 +89,27 @@
             <!-- SECOND COLUMN -->
             <div fxFlex="25%">
               <!-- DEPARTEMENT / COMMUNE / LIEUDIT -->
-              <input-lieudit
-                formGroupName="lieuditGroup"
-                [lieuxDits$]="lieuxDits$"
-                [communes$]="communes$"
-                [departements$]="departements$"
-                [controlGroup]="$any(searchForm.controls['lieuditGroup'])"
-                [hideCoordinates]="true"
-                [isMultipleSelectMode]="true"
-              >
-              </input-lieudit>
+              <multiple-select
+                [attributesToDisplay]="['code']"
+                [control]="$any(lieuGroup.controls['departements'])"
+                [id]="'departements'"
+                [options]="departements$ | async"
+                [placeholder]="'Départements'"
+              ></multiple-select>
+              <multiple-select
+                [attributesToDisplay]="['code', 'nom']"
+                [control]="$any(lieuGroup.controls['communes'])"
+                [id]="'communes'"
+                [options]="filteredCommunes$ | async"
+                [placeholder]="'Communes'"
+              ></multiple-select>
+              <multiple-select
+                [attributesToDisplay]="['nom']"
+                [control]="$any(lieuGroup.controls['lieuxdits'])"
+                [id]="'lieuxdits'"
+                [options]="filteredLieuxdits$ | async"
+                [placeholder]="'Lieux-dits'"
+              ></multiple-select>
 
               <!-- TEMPERATURE -->
               <input-temperature

@@ -52,7 +52,10 @@ const VIEW_QUERY = gql`
       id
       code
       nom
-      departementId
+      departement {
+        id
+        code
+      }
     }
     comportements {
       id
@@ -90,7 +93,15 @@ const VIEW_QUERY = gql`
       longitude
       latitude
       coordinatesSystem
-      communeId
+      commune {
+        id
+        code
+        nom
+        departement {
+          id
+          code
+        }
+      }
     }
     meteos {
       id
@@ -178,6 +189,10 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   private selectedClasse$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(null);
 
+  private selectedDepartement$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(null);
+
+  private selectedCommune$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(null);
+
   public estimationsNombre$: Observable<EstimationNombre[]>;
   public estimationsDistance$: Observable<EstimationDistance[]>;
   public sexes$: Observable<Sexe[]>;
@@ -188,7 +203,11 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public lieuxDits$: Observable<LieuDit[]>;
 
+  public filteredLieuxdits$: Observable<LieuDit[]>;
+
   public communes$: Observable<Commune[]>;
+
+  public filteredCommunes$: Observable<Commune[]>;
 
   public departements$: Observable<Departement[]>;
 
@@ -204,6 +223,10 @@ export class ViewComponent implements OnInit, OnDestroy {
   public donneesToDisplay: FlatDonnee[] = [];
 
   public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
+
+  public lieuGroup: FormGroup = this.searchForm.controls[
+    "lieuditGroup"
+  ] as FormGroup;
 
   public especeGroup: FormGroup = this.searchForm.controls[
     "especeGroup"
@@ -287,6 +310,18 @@ export class ViewComponent implements OnInit, OnDestroy {
       this.selectedClasse$.next(newValue);
     });
 
+    this.lieuGroup.get("departements").valueChanges.pipe(takeUntil(this.destroy$)).subscribe((newValue) => {
+      // This is done because when we first reach this component, we may have no value changes triggered,
+      // so we need to initialize it with null (see the BehaviorSubject above)
+      this.selectedDepartement$.next(newValue);
+    });
+
+    this.lieuGroup.get("communes").valueChanges.pipe(takeUntil(this.destroy$)).subscribe((newValue) => {
+      // This is done because when we first reach this component, we may have no value changes triggered,
+      // so we need to initialize it with null (see the BehaviorSubject above)
+      this.selectedCommune$.next(newValue);
+    });
+
     this.filteredEspeces$ = combineLatest(
       this.selectedClasse$,
       this.especes$,
@@ -299,6 +334,34 @@ export class ViewComponent implements OnInit, OnDestroy {
           } else {
             return especes;
           }
+        } else {
+          return [];
+        }
+      }
+    ).pipe(takeUntil(this.destroy$));
+
+    this.filteredCommunes$ = combineLatest(
+      this.selectedDepartement$,
+      this.communes$,
+      (selection, communes) => {
+        if (communes && selection?.length > 0) {
+          return communes.filter((commune) => {
+            return selection.includes(commune?.departement?.id);
+          });
+        } else {
+          return [];
+        }
+      }
+    ).pipe(takeUntil(this.destroy$));
+
+    this.filteredLieuxdits$ = combineLatest(
+      this.selectedCommune$,
+      this.lieuxDits$,
+      (selection, lieuxDits) => {
+        if (lieuxDits && selection?.length > 0) {
+          return lieuxDits.filter((lieuDit) => {
+            return selection.includes(lieuDit?.commune?.id);
+          });
         } else {
           return [];
         }
