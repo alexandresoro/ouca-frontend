@@ -15,7 +15,6 @@ import { Apollo, gql } from "apollo-angular";
 import {
   BehaviorSubject,
   combineLatest,
-  forkJoin,
   fromEvent,
   Observable,
   Subject
@@ -24,12 +23,11 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  take,
   takeUntil,
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import { Commune, Departement, LieuDit, Settings } from "src/app/model/graphql";
+import { Settings } from "src/app/model/graphql";
 import { Donnee } from 'src/app/model/types/donnee.object';
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
@@ -49,33 +47,11 @@ import {
 type CreationSettings = Pick<Settings, 'id' | 'coordinatesSystem' | 'isRegroupementDisplayed' | 'isDistanceDisplayed' | 'isMeteoDisplayed' | 'areAssociesDisplayed'>
 
 type CreationQueryResult = {
-  communes: Commune[]
-  departements: Departement[]
-  lieuxDits: LieuDit[]
   settings: CreationSettings
 }
 
 const CREATION_QUERY = gql`
   query CreationQuery {
-    communes {
-      id
-      code
-      nom
-      departementId
-    }
-    departements {
-      id
-      code
-    }
-    lieuxDits {
-      id
-      nom
-      altitude
-      longitude
-      latitude
-      coordinatesSystem
-      communeId
-    }
     settings {
       id
       areAssociesDisplayed
@@ -106,12 +82,6 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
   public donneeForm: FormGroup;
 
   private clearDonnee$: Subject<Donnee> = new Subject<Donnee>();
-
-  private isInitialDonneeDonneeActive$ = new BehaviorSubject<boolean>(null);
-
-  public isInitializationCompleted$: BehaviorSubject<
-    boolean
-  > = new BehaviorSubject<boolean>(false);
 
   public isPreviousDonneeBtnDisplayed$: Observable<boolean>;
 
@@ -148,17 +118,15 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngOnInit(): void {
 
-    const queryResult$ = this.apollo.watchQuery<CreationQueryResult>({
+    this.appConfiguration$ = this.apollo.watchQuery<CreationQueryResult>({
       query: CREATION_QUERY
     }).valueChanges.pipe(
       takeUntil(this.destroy$),
       filter(result => !!result.data),
       map(({ data }) => {
-        return data;
+        return data?.settings;
       })
     );
-
-    this.appConfiguration$ = queryResult$.pipe(map((data) => data?.settings));
 
     this.appConfiguration$.subscribe((configuration) => {
       this.fxDistance$.next(configuration?.isRegroupementDisplayed ? "auto" : "0 0 50%");
@@ -203,9 +171,9 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       initialDonnee$ = this.donneeService.initialize().pipe(map(() => false));
     }
-    initialDonnee$.subscribe((isInitialDonneeDonneeActive) => {
-      this.isInitialDonneeDonneeActive$.next(isInitialDonneeDonneeActive);
-      this.isInitialDonneeDonneeActive$.complete();
+    initialDonnee$.subscribe((enableDonneeForm) => {
+      this.creationModeService.setInventaireEnabled(true);
+      this.creationModeService.setDonneeEnabled(enableDonneeForm);
     });
 
     // Update the coordinates form controls depending on the application coordinates system
@@ -222,23 +190,12 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
         );
       });
 
-    combineLatest(
-      [
-        queryResult$,
-        this.donneeService.getCurrentDonnee$()
-      ]
-    )
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([queryResult, donnee]) => {
-        void this.inventaireFormService.updateForm(
-          this.inventaireForm,
-          queryResult,
-          donnee?.inventaire,
-        );
-      });
-
     this.donneeService.getCurrentDonnee$().pipe(takeUntil(this.destroy$))
       .subscribe((donnee) => {
+        void this.inventaireFormService.updateForm(
+          this.inventaireForm,
+          donnee?.inventaire,
+        );
         void this.donneeFormService.updateForm(
           this.donneeForm,
           donnee
@@ -286,51 +243,15 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isModalOpened$.next(false);
     });
 
-    // Enable the inventaire form as soon as we have received the minimal info
-    forkJoin([
-      queryResult$.pipe(take(1)),
-      this.isInitialDonneeDonneeActive$
-    ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.creationModeService.setInventaireEnabled(true);
-      });
-
-    // Enable the donnee form as soon as we have received the minimal info
-    forkJoin([
-      queryResult$.pipe(take(1)),
-      this.isInitialDonneeDonneeActive$
-    ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([isDonneeReady, enableDonneeForm]) => {
-        this.creationModeService.setDonneeEnabled(enableDonneeForm);
-      });
-
-    // Set the initialization as completed once we received everything we need
-    forkJoin([
-      queryResult$.pipe(take(1)),
-      this.isInitialDonneeDonneeActive$
-    ])
-      .pipe(
-        takeUntil(this.destroy$),
-        map(() => true)
-      )
-      .subscribe(() => {
-        // Cannot subscribe directly as we need to keep 
-        // the initialization state for the duration of the component
-        this.isInitializationCompleted$.next(true);
-      });
-
     // Handle the state of the previous donnee button
     this.isPreviousDonneeBtnDisplayed$ = combineLatest(
       [
         this.donneeService.getIsDonneeCallOngoing$(),
-        this.donneeService.hasPreviousDonnee$(),
-        this.isInitializationCompleted$
+        this.donneeService.hasPreviousDonnee$()
       ]).pipe(
         takeUntil(this.destroy$),
-        map(([ongoingCall, hasPreviousDonnee, isInitializationCompleted]) => {
-          return !ongoingCall && hasPreviousDonnee && isInitializationCompleted;
+        map(([ongoingCall, hasPreviousDonnee]) => {
+          return !ongoingCall && hasPreviousDonnee;
         })
       );
 
@@ -338,12 +259,11 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isNextDonneeBtnDisplayed$ = combineLatest(
       [
         this.donneeService.getIsDonneeCallOngoing$(),
-        this.donneeService.hasNextDonnee$(),
-        this.isInitializationCompleted$
+        this.donneeService.hasNextDonnee$()
       ]).pipe(
         takeUntil(this.destroy$),
-        map(([ongoingCall, hasNextDonnee, isInitializationCompleted]) => {
-          return !ongoingCall && hasNextDonnee && isInitializationCompleted;
+        map(([ongoingCall, hasNextDonnee]) => {
+          return !ongoingCall && hasNextDonnee;
         })
       );
 

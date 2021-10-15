@@ -33,7 +33,6 @@
           type="button"
           matTooltip="Recherche par ID"
           matTooltipClass="default-tooltip"
-          [disabled]="!(isInitializationCompleted$ | async)"
           (click)="onSearchByIdBtnClicked()"
         >
           <mat-icon>search</mat-icon>
@@ -57,7 +56,6 @@
           matTooltip="Réinitialiser le formulaire"
           matTooltipClass="default-tooltip"
           *ngIf="!(isCurrentDonneeAnExistingOne$() | async)"
-          [disabled]="!(isInitializationCompleted$ | async)"
           (click)="onClearFormButtonClicked()"
         >
           <mat-icon>clear</mat-icon>
