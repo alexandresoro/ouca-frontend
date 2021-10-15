@@ -1,197 +1,161 @@
 <div>
   <div class="full-width-container">
-
-    <div *ngIf="!isMultipleSelectMode" fxLayout="row wrap" fxLayoutGap="20px">
+    <div fxLayout="row wrap" fxLayoutGap="20px">
       <!-- DEPARTEMENT -->
-      <autocomplete
+      <autocomplete-v2
         fxFlex="1 0 100px"
-        [attributesToFilter]="departementAutocompleteAttributes"
         type="Département"
-        [valuesObs]="departements$"
+        [values]="matchingDepartements$"
         [control]="$any(controlGroup.controls['departement'])"
         [displayFn]="displayDepartementFormat"
         (optionActivated)="onDepartementControlActivated($event)"
         (focus)="onDepartementControlFocused()"
         >
-        
-      </autocomplete>
+      </autocomplete-v2>
       
       <button tabindex="-1" type="button" *ngIf="isCurrentSystemGps$ | async" mat-icon-button color="primary" [disabled]="isSearchInMapButtonDisabled$ | async" (click)="onSearchInMapClicked()">
         <mat-icon>my_location</mat-icon>
       </button>
     </div>
-
-    <multiple-select
-      *ngIf="isMultipleSelectMode"
-      [attributesToDisplay]="['code']"
-      [control]="$any(controlGroup.controls['departements'])"
-      [id]="'communes'"
-      [options]="departements$ | async"
-      [placeholder]="'Départements'"
-    ></multiple-select>
   </div>
 
   <div class="full-width-container">
     <!-- COMMUNE -->
-    <autocomplete
-      *ngIf="!isMultipleSelectMode"
+    <autocomplete-v2
       [type]="'Commune'"
-      [valuesObs]="filteredCommunes$"
+      [values]="matchingCommunes$"
       [control]="$any(controlGroup.controls['commune'])"
-      [attributesToFilter]="communeAutocompleteAttributes"
       [displayFn]="displayCommuneFormat"
       (optionActivated)="onCommuneControlActivated($event)"
       (focus)="onCommuneControlFocused()"
     >
-    </autocomplete>
-
-    <multiple-select
-      *ngIf="isMultipleSelectMode"
-      [attributesToDisplay]="['code', 'nom']"
-      [control]="$any(controlGroup.controls['communes'])"
-      [id]="'communes'"
-      [options]="filteredCommunes$ | async"
-      [placeholder]="'Communes'"
-    ></multiple-select>
+    </autocomplete-v2>
   </div>
 
   <div class="full-width-container">
     <!-- LIEU-DIT -->
-    <autocomplete
-      *ngIf="!isMultipleSelectMode"
+    <autocomplete-v2
       [type]="'Lieu-dit'"
-      [valuesObs]="filteredLieuxdits$"
+      [values]="matchingLieuxDits$"
       [control]="$any(controlGroup.controls['lieudit'])"
-      [attributesToFilter]="lieuditAutocompleteAttributes"
       [displayFn]="displayLieuDitFormat"
       (optionActivated)="onLieuDitActivated($event)"
       (focus)="onLieuDitControlFocused()"
     >
-    </autocomplete>
-
-    <multiple-select
-      *ngIf="isMultipleSelectMode"
-      [attributesToDisplay]="['nom']"
-      [control]="$any(controlGroup.controls['lieuxdits'])"
-      [id]="'lieuxdits'"
-      [options]="filteredLieuxdits$ | async"
-      [placeholder]="'Lieux-dits'"
-    ></multiple-select>
+    </autocomplete-v2>
   </div>
 
-  <div *ngIf="!hideCoordinates">
-    <ng-container *ngIf="!(getAreCoordinatesInvalid$() | async)">
-      <div fxLayout="row wrap" fxLayoutGap="20px">
-        <!-- LATITUDE -->
-        <mat-form-field fxFlex="1 0 100px">
-          <input
-            [formControl]="$any(controlGroup.controls['latitude'])"
-            matInput
-            [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
-            [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
-            [step]="getCoordinatesInputStep(getCoordinatesSystem$() | async)"
-            type="number"
-            placeholder="Latitude"
-            id="input-latitude"
-            name="latitude"
-          />
-        </mat-form-field>
+  <ng-container *ngIf="!(getAreCoordinatesInvalid$() | async)">
+    <div fxLayout="row wrap" fxLayoutGap="20px">
+      <!-- LATITUDE -->
+      <mat-form-field fxFlex="1 0 100px">
+        <input
+          [formControl]="$any(controlGroup.controls['latitude'])"
+          matInput
+          [min]="(getCoordinatesSystem$() | async)?.latitudeRange.min"
+          [max]="(getCoordinatesSystem$() | async)?.latitudeRange.max"
+          [step]="getCoordinatesInputStep(getCoordinatesSystem$() | async)"
+          type="number"
+          placeholder="Latitude"
+          id="input-latitude"
+          name="latitude"
+        />
+      </mat-form-field>
 
-        <!-- LONGITUDE -->
-        <mat-form-field fxFlex="1 0 100px">
-          <input
-            [formControl]="$any(controlGroup.controls['longitude'])"
-            matInput
-            [min]="(getCoordinatesSystem$() | async)?.longitudeRange.min"
-            [max]="(getCoordinatesSystem$() | async)?.longitudeRange.max"
-            [step]="getCoordinatesInputStep(getCoordinatesSystem$() | async)"
-            type="number"
-            placeholder="Longitude"
-            id="input-longitude"
-            name="longitude"
-          />
-        </mat-form-field>
+      <!-- LONGITUDE -->
+      <mat-form-field fxFlex="1 0 100px">
+        <input
+          [formControl]="$any(controlGroup.controls['longitude'])"
+          matInput
+          [min]="(getCoordinatesSystem$() | async)?.longitudeRange.min"
+          [max]="(getCoordinatesSystem$() | async)?.longitudeRange.max"
+          [step]="getCoordinatesInputStep(getCoordinatesSystem$() | async)"
+          type="number"
+          placeholder="Longitude"
+          id="input-longitude"
+          name="longitude"
+        />
+      </mat-form-field>
 
-        <!-- ALTITUDE -->
-        <mat-form-field fxFlex="1 0 100px">
-          <input
-            [formControl]="$any(controlGroup.controls['altitude'])"
-            matInput
-            min="0"
-            max="65535"
-            type="number"
-            placeholder="Altitude"
-            id="input-altitude"
-            name="altitude"
-          />
-        </mat-form-field>
-      </div>
+      <!-- ALTITUDE -->
+      <mat-form-field fxFlex="1 0 100px">
+        <input
+          [formControl]="$any(controlGroup.controls['altitude'])"
+          matInput
+          min="0"
+          max="65535"
+          type="number"
+          placeholder="Altitude"
+          id="input-altitude"
+          name="altitude"
+        />
+      </mat-form-field>
+    </div>
 
-      <div>
-        <mat-error
-          *ngIf="controlGroup.controls['altitude'].hasError('forbiddenValue')"
-          class="creation-page-error"
-        >
-          L'altitude doit être un nombre entier compris entre 0 et 65535.
-        </mat-error>
-        <mat-error
-          *ngIf="
-            controlGroup.controls['longitude'].hasError('min') ||
-            controlGroup.controls['longitude'].hasError('max')
-          "
-          class="creation-page-error"
-        >
-          La longitude doit être un nombre compris entre
-          {{ (getCoordinatesSystem$() | async)?.longitudeRange.min }} et
-          {{ (getCoordinatesSystem$() | async)?.longitudeRange.max }}.
-        </mat-error>
-        <mat-error
-          *ngIf="
-            controlGroup.controls['latitude'].hasError('min') ||
-            controlGroup.controls['latitude'].hasError('max')
-          "
-          class="creation-page-error"
-        >
-          La latitude doit être un nombre compris entre
-          {{ (getCoordinatesSystem$() | async)?.latitudeRange.min }} et
-          {{ (getCoordinatesSystem$() | async)?.latitudeRange.max }}.
-        </mat-error>
-      </div>
-
-      <div
-      *ngIf="shouldDisplayOngoingCallForAltitudeMessage$ | async"
+    <div>
+      <mat-error
+        *ngIf="controlGroup.controls['altitude'].hasError('forbiddenValue')"
+        class="creation-page-error"
       >
-        <mat-icon [inline]="true">warning</mat-icon> Une mise à jour de l'altitude correspondant aux coordonnées actuelles est en cours. L'altitude actuellement affichée peut ne pas être correcte.
-      </div>
-
-      <div
-        *ngIf="areCoordinatesCustomized$ | async"
-        class="coordinates-customized-message"
+        L'altitude doit être un nombre entier compris entre 0 et 65535.
+      </mat-error>
+      <mat-error
+        *ngIf="
+          controlGroup.controls['longitude'].hasError('min') ||
+          controlGroup.controls['longitude'].hasError('max')
+        "
+        class="creation-page-error"
       >
-        <mat-icon [inline]="true">info</mat-icon> Les coordonnées du lieu-dit
-        sont personnalisées pour cet inventaire.
-      </div>
-
-      <div
-        *ngIf="getAreCoordinatesTransformed$() | async"
-        class="coordinates-transformed-message"
+        La longitude doit être un nombre compris entre
+        {{ (getCoordinatesSystem$() | async)?.longitudeRange.min }} et
+        {{ (getCoordinatesSystem$() | async)?.longitudeRange.max }}.
+      </mat-error>
+      <mat-error
+        *ngIf="
+          controlGroup.controls['latitude'].hasError('min') ||
+          controlGroup.controls['latitude'].hasError('max')
+        "
+        class="creation-page-error"
       >
-        <mat-icon [inline]="true">info</mat-icon> Les coordonnées de cet
-        inventaire sont converties à partir d'un autre système de coordonnées.
-        Si vous les modifiez, elles seront sauvegardées dans le système de
-        coordonnées courant de l'application (voir page de gestion des
-        préférences).
-      </div>
-    </ng-container>
+        La latitude doit être un nombre compris entre
+        {{ (getCoordinatesSystem$() | async)?.latitudeRange.min }} et
+        {{ (getCoordinatesSystem$() | async)?.latitudeRange.max }}.
+      </mat-error>
+    </div>
+
     <div
-      *ngIf="getAreCoordinatesInvalid$() | async"
-      class="coordinates-invalid-message"
+    *ngIf="shouldDisplayOngoingCallForAltitudeMessage$ | async"
+    >
+      <mat-icon [inline]="true">warning</mat-icon> Une mise à jour de l'altitude correspondant aux coordonnées actuelles est en cours. L'altitude actuellement affichée peut ne pas être correcte.
+    </div>
+
+    <div
+      *ngIf="areCoordinatesCustomized$ | async"
+      class="coordinates-customized-message"
+    >
+      <mat-icon [inline]="true">info</mat-icon> Les coordonnées du lieu-dit
+      sont personnalisées pour cet inventaire.
+    </div>
+
+    <div
+      *ngIf="getAreCoordinatesTransformed$() | async"
+      class="coordinates-transformed-message"
     >
       <mat-icon [inline]="true">info</mat-icon> Les coordonnées de cet
-      inventaire ne peuvent pas être affichées car elles sont renseignées dans
-      un système de coordonnées qui ne peut pas être converti vers le système de
+      inventaire sont converties à partir d'un autre système de coordonnées.
+      Si vous les modifiez, elles seront sauvegardées dans le système de
       coordonnées courant de l'application (voir page de gestion des
       préférences).
     </div>
+  </ng-container>
+  <div
+    *ngIf="getAreCoordinatesInvalid$() | async"
+    class="coordinates-invalid-message"
+  >
+    <mat-icon [inline]="true">info</mat-icon> Les coordonnées de cet
+    inventaire ne peuvent pas être affichées car elles sont renseignées dans
+    un système de coordonnées qui ne peut pas être converti vers le système de
+    coordonnées courant de l'application (voir page de gestion des
+    préférences).
   </div>
 </div>

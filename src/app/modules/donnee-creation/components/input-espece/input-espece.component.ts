@@ -7,10 +7,10 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
-import { combineLatest, Observable, of, Subject } from "rxjs";
+import { combineLatest, Observable, Subject } from "rxjs";
 import { debounceTime, map, startWith, switchMap, takeUntil } from "rxjs/operators";
 import { Classe, Espece, QueryClassesArgs, QueryEspecesArgs } from "src/app/model/graphql";
-import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
+import autocompleteUpdaterObservable, { autocompleteWithParentHandler } from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 import { distinctUntilKeyChangedLoose } from 'src/app/modules/shared/rx-operators';
 
 type ClassesQueryResult = {
@@ -104,37 +104,20 @@ export class InputEspeceComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       switchMap(([classeValue, especeValue]) => {
 
-        // 1. classe is a non empty string, no espece should match
-        if (typeof classeValue === "string" && classeValue.length) {
-          return of([] as Espece[]);
-        }
-
-        // 2. espece is a valid espece only return itself
-        if (typeof especeValue !== "string" && !!especeValue?.id) {
-          return of([especeValue]);
-        }
-
-        // 3. Espece is empty
-        if (!especeValue) {
-          return of([] as Espece[]);
-        }
-
-        // At this point classe can be
-        // - A valid classe with id -> filter especes accordingly
-        // - null -> no filter
-        // - empty string -> no filter
-        return this.apollo.query<EspecesQueryResult, QueryEspecesArgs>({
-          query: INPUT_ESPECES_QUERY,
-          variables: {
-            params: {
-              q: (especeValue as string),
-              max: 50
-            },
-            classeId: (classeValue as Classe)?.id ?? null
-          }
-        }).pipe(
-          map(({ data }) => data?.especes)
-        );
+        return autocompleteWithParentHandler([classeValue, especeValue], (classeValue, especeValue) => {
+          return this.apollo.query<EspecesQueryResult, QueryEspecesArgs>({
+            query: INPUT_ESPECES_QUERY,
+            variables: {
+              params: {
+                q: especeValue,
+                max: 50
+              },
+              classeId: classeValue?.id ?? null
+            }
+          }).pipe(
+            map(({ data }) => data?.especes)
+          );
+        });
       })
     );
 

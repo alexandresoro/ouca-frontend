@@ -1,9 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-
   EventEmitter,
-
   Input,
   OnDestroy,
   OnInit,
@@ -21,41 +19,135 @@ import L from 'leaflet';
 import {
   BehaviorSubject,
   combineLatest,
+  EMPTY,
   iif,
-  merge,
   Observable,
   of,
-  ReplaySubject,
+
   Subject
 } from "rxjs";
-import { delay, distinctUntilChanged, filter, map, switchMap, takeUntil, withLatestFrom } from "rxjs/operators";
+import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap, takeUntil, withLatestFrom } from "rxjs/operators";
 import { areSameCoordinates, getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
 import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Commune, CoordinatesSystemType, Departement, LieuDit } from "src/app/model/graphql";
-import { findCommuneById } from 'src/app/model/helpers/commune.helper';
-import { findDepartementById } from 'src/app/model/helpers/departement.helper';
+import { Commune, CoordinatesSystemType, Departement, LieuDit, QueryCommunesArgs, QueryDepartementsArgs, QueryLieuDitArgs, QueryLieuxDitsArgs } from "src/app/model/graphql";
 import { Coordinates } from 'src/app/model/types/coordinates.object';
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
-import { getAllLieuxDitsCoordinatesOfCommune, getAllLieuxDitsCoordinatesOfDepartement } from 'src/app/modules/shared/helpers/coordinates-helper';
+import autocompleteUpdaterObservable, { autocompleteWithParentHandler } from "src/app/modules/shared/helpers/autocomplete-updater-observable";
+import { getLieuxDitsCoordinates } from 'src/app/modules/shared/helpers/coordinates-helper';
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { distinctUntilKeyChangedLoose } from 'src/app/modules/shared/rx-operators';
 import { CoordinatesService } from "src/app/services/coordinates.service";
 import { CreationMapService } from 'src/app/services/creation-map.service';
 import { CreationModeService } from 'src/app/services/creation-mode.service';
 import { IgnAlticodageService } from 'src/app/services/ign-alticodage.service';
-import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
-type InputLieuxDitsQueryResult = {
+type DepartementsQueryResult = {
+  departements: Departement[]
+}
+
+type CommunesQueryResult = {
+  communes: Commune[]
+}
+
+type LieuxDitsQueryResult = {
+  lieuxDits: LieuDit[]
+}
+
+type LieuxDitsCoordinatesQueryResult = {
+  lieuxDits: Pick<LieuDit, 'id' | 'latitude' | 'longitude'>[]
+}
+
+type LieuDitQueryResult = {
+  lieuDit: LieuDit
+}
+
+type CoordinatesQueryResult = {
   settings: {
     coordinatesSystem: CoordinatesSystemType
   }
 }
 
+const INPUT_LIEUX_DITS_COORDINATES_QUERY = gql`
+  query LieuxDitsCoordinates($params: FindParams, $communeId: Int) {
+    lieuxDits(params: $params, communeId: $communeId) {
+      id
+      longitude
+      latitude
+    }
+  }
+`;
+
+const INPUT_DEPARTEMENTS_QUERY = gql`
+  query Departements($params: FindParams) {
+    departements(params: $params) {
+      id
+      code
+    }
+  }
+`;
+
+const INPUT_COMMUNES_QUERY = gql`
+  query Communes($params: FindParams, $departementId: Int) {
+    communes(params: $params, departementId: $departementId) {
+      id
+      code
+      nom
+      departement {
+        id
+        code
+      }
+    }
+  }
+`;
+
 const INPUT_LIEUX_DITS_QUERY = gql`
+  query LieuxDits($params: FindParams, $communeId: Int) {
+    lieuxDits(params: $params, communeId: $communeId) {
+      id
+      nom
+      altitude
+      longitude
+      latitude
+      coordinatesSystem
+      commune {
+        id
+        code
+        nom
+        departement {
+          id
+          code
+        }
+      }
+    }
+  }
+`;
+
+const INPUT_SETTINGS_QUERY = gql`
   query {
     settings {
       id
       coordinatesSystem
+    }
+  }
+`;
+
+const INPUT_LIEUX_DIT_BY_ID_QUERY = gql`
+  query LieuDit($id: Int!) {
+    lieuDit(id: $id) {
+      id
+      nom
+      altitude
+      longitude
+      latitude
+      coordinatesSystem
+      commune {
+        id
+        code
+        nom
+        departement {
+          id
+          code
+        }
+      }
     }
   }
 `;
@@ -69,31 +161,15 @@ const INPUT_LIEUX_DITS_QUERY = gql`
 export class InputLieuditComponent implements OnInit, OnDestroy {
   @Input() public controlGroup: FormGroup;
 
-  @Input() public lieuxDits$: Observable<LieuDit[]>;
-
-  @Input() public communes$: Observable<Commune[]>;
-
-  @Input() public departements$: Observable<Departement[]>;
-
-  @Input() public hideCoordinates?: boolean = false;
-
-  @Input() public isMultipleSelectMode?: boolean;
-
   @Output() public searchInMapClick: EventEmitter<void> = new EventEmitter<void>();
 
   private readonly destroy$ = new Subject();
 
-  private departementDefault$: ReplaySubject<Departement> = new ReplaySubject<
-    Departement
-  >(1);
+  public matchingDepartements$: Observable<Departement[]>;
 
-  private communeDefault$: ReplaySubject<Departement> = new ReplaySubject<
-    Departement
-  >(1);
+  public matchingCommunes$: Observable<Commune[]>;
 
-  public filteredLieuxdits$: Observable<LieuDit[]>;
-
-  public filteredCommunes$: Observable<Commune[]>;
+  public matchingLieuxDits$: Observable<LieuDit[]>;
 
   public areCoordinatesCustomized$: BehaviorSubject<
     boolean
@@ -101,34 +177,6 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   public isCurrentSystemGps$: Observable<boolean>;
 
   public isSearchInMapButtonDisabled$: Observable<boolean>;
-
-  public departementAutocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "code",
-      exactSearchMode: true,
-      startWithMode: true
-    }
-  ];
-  public communeAutocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "code",
-      exactSearchMode: true,
-      startWithMode: true
-    },
-    {
-      key: "nom",
-      exactSearchMode: false,
-      startWithMode: true
-    }
-  ];
-
-  public lieuditAutocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "nom",
-      exactSearchMode: false,
-      startWithMode: false
-    }
-  ];
 
   // Event that is triggered when a request to display a given commune is done
   private focusOnCommuneEvent$ = new Subject<number>();
@@ -157,239 +205,285 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     private creationMapService: CreationMapService,
     private ignAlticodageService: IgnAlticodageService
   ) {
-    const queryResult$ = this.apollo.watchQuery<InputLieuxDitsQueryResult>({
-      query: INPUT_LIEUX_DITS_QUERY
-    }).valueChanges;
+  }
 
-    this.isCurrentSystemGps$ = queryResult$.pipe(
+  public ngOnInit(): void {
+
+    this.isCurrentSystemGps$ = this.apollo.watchQuery<CoordinatesQueryResult>({
+      query: INPUT_SETTINGS_QUERY
+    }).valueChanges.pipe(
       map(({ data }) => {
         return data?.settings?.coordinatesSystem === CoordinatesSystemType.Gps;
       })
     );
 
-  }
+    const departementControl = this.controlGroup.get("departement");
+    const communeControl = this.controlGroup.get("commune");
+    const lieuditControl = this.controlGroup.get("lieudit");
 
-  public ngOnInit(): void {
-    const departementControl = this.isMultipleSelectMode
-      ? this.controlGroup.get("departements")
-      : this.controlGroup.get("departement");
-    const communeControl = this.isMultipleSelectMode
-      ? this.controlGroup.get("communes")
-      : this.controlGroup.get("commune");
-    const lieuditControl: FormControl = this.isMultipleSelectMode
-      ? (this.controlGroup.get("lieuxdits") as FormControl)
-      : (this.controlGroup.get("lieudit") as FormControl);
+    this.matchingDepartements$ = autocompleteUpdaterObservable(departementControl, (value: string) => {
+      return this.apollo.query<DepartementsQueryResult, QueryDepartementsArgs>({
+        query: INPUT_DEPARTEMENTS_QUERY,
+        variables: {
+          params: {
+            q: value
+          }
+        }
+      }).pipe(
+        map(({ data }) => data?.departements)
+      )
+    });
 
-    if (departementControl?.value?.id) {
-      this.departementDefault$.next(departementControl.value);
-      this.departementDefault$.complete();
-    }
+    this.matchingCommunes$ = combineLatest([
+      departementControl.valueChanges.pipe(
+        distinctUntilKeyChangedLoose("id"),
+        startWith<Departement | string>(null as Departement),
+      ),
+      communeControl.valueChanges.pipe(
+        debounceTime<Commune | string>(150) // We debounce here, as I don't have any proper solution to do it only for the case we need to, like the other cases
+      )
+    ]).pipe(
+      takeUntil(this.destroy$),
+      switchMap(([departementValue, communeValue]) => {
+        return autocompleteWithParentHandler([departementValue, communeValue], (departementValue, communeValue) => {
+          return this.apollo.query<CommunesQueryResult, QueryCommunesArgs>({
+            query: INPUT_COMMUNES_QUERY,
+            variables: {
+              params: {
+                q: communeValue
+              },
+              departementId: departementValue?.id ?? null
+            }
+          }).pipe(
+            map(({ data }) => data?.communes)
+          );
+        });
+      })
+    );
 
-    if (communeControl?.value?.id) {
-      this.communeDefault$.next(communeControl.value);
-      this.communeDefault$.complete();
-    }
+    this.matchingLieuxDits$ = combineLatest([
+      communeControl.valueChanges.pipe(
+        distinctUntilKeyChangedLoose("id"),
+        startWith<Commune | string>(null as Commune),
+      ),
+      lieuditControl.valueChanges.pipe(
+        debounceTime<LieuDit | string>(150) // We debounce here, as I don't have any proper solution to do it only for the case we need to, like the other cases
+      )
+    ]).pipe(
+      takeUntil(this.destroy$),
+      switchMap(([communeValue, lieuDitValue]) => {
+        return autocompleteWithParentHandler([communeValue, lieuDitValue], (communeValue, lieuDitValue) => {
+          return this.apollo.query<LieuxDitsQueryResult, QueryLieuxDitsArgs>({
+            query: INPUT_LIEUX_DITS_QUERY,
+            variables: {
+              params: {
+                q: lieuDitValue
+              },
+              communeId: communeValue?.id ?? null
+            }
+          }).pipe(
+            map(({ data }) => data?.lieuxDits)
+          );
+        });
+      })
+    );
 
     departementControl.valueChanges.subscribe((value) => {
       value?.id && this.focusOnDepartementEvent$.next(value.id);
     });
 
     departementControl.valueChanges
-      .pipe(
-        distinctUntilChanged(),
-        filter((newValue) => {
-          const currentValue: Departement = departementControl.value;
-          // Reset except if the selection remains a departement with the same id
-          return (
-            !currentValue?.id ||
-            !newValue?.id ||
-            currentValue.id !== newValue.id
-          );
-        })
-      )
+      .pipe(distinctUntilKeyChangedLoose("id"))
       .subscribe(() => {
         communeControl.setValue(null);
       });
 
     communeControl.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe((newValue: Commune) => {
-        const currentValue: Commune = communeControl.value;
-        // Reset except if the selection remains a commune with the same id
-        if (
-          !currentValue?.id ||
-          !newValue?.id ||
-          currentValue.id !== newValue.id
-        ) {
-          lieuditControl.setValue(null);
-        }
+      .pipe(distinctUntilKeyChangedLoose("id"))
+      .subscribe(() => {
+        lieuditControl.setValue(null);
       });
-
-    this.filteredCommunes$ = this.getCommunesToDisplay$(departementControl);
-
-    this.filteredLieuxdits$ = this.getLieuxditsToDisplay$(communeControl);
 
     this.isSearchInMapButtonDisabled$ = this.creationModeService.getIsInventaireEnabled$().pipe((map(isInventaireEnabled => !isInventaireEnabled)));
 
-    if (!this.isMultipleSelectMode) {
-
-      // Notify the map service when a lieu dit has changed
-      combineLatest(
-        [
-          lieuditControl.valueChanges
-            .pipe(
-              map<{ id?: number }, number>((value) => value?.id),
-              distinctUntilChanged()
-            ),
-          this.areCoordinatesCustomized$
-        ])
-        .pipe(
-          takeUntil(this.destroy$)
-        )
-        .subscribe(([lieuditId, areCoordinatesCustomized]) => {
-          if (areCoordinatesCustomized && lieuditId) {
-            const latlng = new L.LatLng(this.controlGroup.controls.latitude.value as number, this.controlGroup.controls.longitude.value as number);
-            this.creationMapService.setCustomMarkerPosition(latlng);
-            this.creationMapService.setCustomMarkerInformation({
-              isActive: true,
-              linkedLieuDitId: lieuditId
-            }, true);
-          } else {
-            this.creationMapService.setSelectedLieuDitId(lieuditId, true);
-          }
-        });
-
-      // When the lieu dit is changed from the map, update the controls accordingly
-      this.creationMapService.getLieuDitIdForControl$()
-        .pipe(
-          withLatestFrom(
-            this.lieuxDits$,
-            this.communes$,
-            this.departements$
+    // Notify the map service when a lieu dit has changed
+    combineLatest(
+      [
+        lieuditControl.valueChanges
+          .pipe(
+            map<{ id?: number }, number>((value) => value?.id),
+            distinctUntilChanged()
           ),
-          takeUntil(this.destroy$)
-        )
-        .subscribe(([lieuDitFromUI, lieuxdits, communes, departements]) => {
+        this.areCoordinatesCustomized$
+      ])
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([lieuditId, areCoordinatesCustomized]) => {
+        if (areCoordinatesCustomized && lieuditId) {
+          const latlng = new L.LatLng(this.controlGroup.controls.latitude.value as number, this.controlGroup.controls.longitude.value as number);
+          this.creationMapService.setCustomMarkerPosition(latlng);
+          this.creationMapService.setCustomMarkerInformation({
+            isActive: true,
+            linkedLieuDitId: lieuditId
+          }, true);
+        } else {
+          this.creationMapService.setSelectedLieuDitId(lieuditId, true);
+        }
+      });
+
+    // When the lieu dit is changed from the map, update the controls accordingly
+    this.creationMapService.getLieuDitIdForControl$()
+      .pipe(
+        switchMap((lieuDitFromUI) => {
           if (lieuDitFromUI && lieuDitFromUI !== (lieuditControl.value as LieuDit)?.id) {
-            const lieuDitToSet = lieuxdits.find((lieudit) => {
-              return lieudit.id === lieuDitFromUI;
-            });
-
-            const communeToSet = findCommuneById(communes, lieuDitToSet.communeId);
-            const departementToSet = findDepartementById(departements, communeToSet?.departementId);
-
-            departementControl.markAsPristine();
-            departementControl.setValue(departementToSet);
-
-            communeControl.markAsPristine();
-            communeControl.setValue(communeToSet);
-
-            lieuditControl.markAsPristine();
-
-            lieuditControl.setValue(lieuDitToSet);
-          }
-        });
-
-
-      // Manage custom markers updated from UI
-      this.creationMapService.getCustomMarkerPosition$()
-        .pipe(
-          filter(markerPosition => markerPosition.isSetByMap), // Only listen to actual changes done by UI
-          map(markerPosition => markerPosition?.coordinates),
-          withLatestFrom(this.getCoordinatesSystem$()),
-          takeUntil(this.destroy$)
-        ).subscribe(([coordinates, coordinatesSystem]) => {
-          if (coordinates?.lat && coordinates?.lng) {
-            if (this.controlGroup.controls.latitude.value !== coordinates.lat) {
-              this.controlGroup.controls.latitude.markAsPristine();
-              this.controlGroup.controls.latitude.setValue(coordinates.lat);
-            }
-            if (this.controlGroup.controls.longitude.value !== coordinates.lng) {
-              this.controlGroup.controls.longitude.markAsPristine();
-              this.controlGroup.controls.longitude.setValue(coordinates.lng);
-            }
-
-            // request the altitude for this position
-            this.retrieveAltitude([coordinates.lat, coordinates.lng]);
-
+            return this.apollo.query<LieuDitQueryResult, QueryLieuDitArgs>({
+              query: INPUT_LIEUX_DIT_BY_ID_QUERY,
+              variables: {
+                id: lieuDitFromUI
+              }
+            }).pipe(
+              map(({ data }) => data?.lieuDit)
+            )
           } else {
-            const lieudit = this.controlGroup.controls.lieudit.value;
-            if (lieudit?.id) {
-              const coordinatesToSet = this.getCoordinatesOfLieuDit([lieudit, coordinatesSystem]);
-              this.controlGroup.controls.latitude.markAsPristine();
-              this.controlGroup.controls.latitude.setValue(coordinatesToSet.latitude);
-              this.controlGroup.controls.longitude.markAsPristine();
-              this.controlGroup.controls.longitude.setValue(coordinatesToSet.longitude);
-              this.controlGroup.controls.altitude.markAsPristine();
-              this.controlGroup.controls.altitude.setValue(coordinatesToSet.altitude);
-            }
-
+            return EMPTY;
           }
-        });
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((lieuDit) => {
+        departementControl.markAsPristine();
+        departementControl.setValue(lieuDit?.commune?.departement);
 
-      // When a lieu dit control becomes invalid, we send it anyway as "null" focus, to reset properly the markers on the map
-      lieuditControl.valueChanges
-        .pipe(
-          filter((value) => !(value?.id)),
-          takeUntil(this.destroy$)
-        )
-        .subscribe(() => {
-          this.creationMapService.setFocusedLieuDitId(null);
-        });
+        communeControl.markAsPristine();
+        communeControl.setValue(lieuDit?.commune);
 
-      // Focus on lieu dit if this is a valid lieu dit set in the control
-      lieuditControl.valueChanges
-        .pipe(
-          filter((value) => !!value?.id),
-          takeUntil(this.destroy$)
-        )
-        .subscribe((lieuDit) => {
-          lieuDit?.coordinates && this.creationMapService.setCoordinatesToFocus([[lieuDit.coordinates.latitude, lieuDit.coordinates.longitude]]);
-        });
+        lieuditControl.markAsPristine();
+        lieuditControl.setValue(lieuDit);
+      });
 
-      // Focus on the commune if no lieu dit is selected
-      this.focusOnCommuneEvent$
-        .pipe(
-          withLatestFrom(this.lieuxDits$),
-          takeUntil(this.destroy$)
-        )
-        .subscribe(([communeId, allLieuxDits]) => {
-          if (communeId) {
-            const currentLieuDitId = this.controlGroup.controls?.lieudit?.value?.id;
-            if (!currentLieuDitId) {
-              this.creationMapService.setCoordinatesToFocus(getAllLieuxDitsCoordinatesOfCommune(allLieuxDits, communeId));
-            }
+
+    // Manage custom markers updated from UI
+    this.creationMapService.getCustomMarkerPosition$()
+      .pipe(
+        filter(markerPosition => markerPosition.isSetByMap), // Only listen to actual changes done by UI
+        map(markerPosition => markerPosition?.coordinates),
+        withLatestFrom(this.getCoordinatesSystem$()),
+        takeUntil(this.destroy$)
+      ).subscribe(([coordinates, coordinatesSystem]) => {
+        if (coordinates?.lat && coordinates?.lng) {
+          if (this.controlGroup.controls.latitude.value !== coordinates.lat) {
+            this.controlGroup.controls.latitude.markAsPristine();
+            this.controlGroup.controls.latitude.setValue(coordinates.lat);
           }
-        });
-
-      // Focus should be on the departement if no commune is selected
-      this.focusOnDepartementEvent$
-        .pipe(
-          withLatestFrom(this.lieuxDits$, this.communes$),
-          takeUntil(this.destroy$)
-        )
-        .subscribe(([departementId, allLieuxDits, communes]) => {
-          if (departementId) {
-            const currentCommuneId = this.controlGroup.controls?.commune?.value?.id;
-            if (!currentCommuneId) {
-              this.creationMapService.setCoordinatesToFocus(getAllLieuxDitsCoordinatesOfDepartement(allLieuxDits, communes, departementId));
-            }
+          if (this.controlGroup.controls.longitude.value !== coordinates.lng) {
+            this.controlGroup.controls.longitude.markAsPristine();
+            this.controlGroup.controls.longitude.setValue(coordinates.lng);
           }
-        });
 
-      // Set the coordinates that should be display when the lieu dit selected changes
-      this.getCoordinatesToDisplay$(lieuditControl).subscribe(this.displayCoordinates);
+          // request the altitude for this position
+          this.retrieveAltitude([coordinates.lat, coordinates.lng]);
 
-      // Observable that checks if coordinates are customized
-      this.updateAreCoordinatesCustomized();
+        } else {
+          const lieudit = this.controlGroup.controls.lieudit.value;
+          if (lieudit?.id) {
+            const coordinatesToSet = this.getCoordinatesOfLieuDit([lieudit, coordinatesSystem]);
+            this.controlGroup.controls.latitude.markAsPristine();
+            this.controlGroup.controls.latitude.setValue(coordinatesToSet.latitude);
+            this.controlGroup.controls.longitude.markAsPristine();
+            this.controlGroup.controls.longitude.setValue(coordinatesToSet.longitude);
+            this.controlGroup.controls.altitude.markAsPristine();
+            this.controlGroup.controls.altitude.setValue(coordinatesToSet.altitude);
+          }
 
-      this.getAreCoordinatesInvalid$()
-        .pipe(distinctUntilChanged())
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((areInvalid) => {
-          this.updateCoordinatesControls(this.controlGroup, areInvalid);
-        });
-    }
+        }
+      });
+
+    // When a lieu dit control becomes invalid, we send it anyway as "null" focus, to reset properly the markers on the map
+    lieuditControl.valueChanges
+      .pipe(
+        filter((value) => !(value?.id)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.creationMapService.setFocusedLieuDitId(null);
+      });
+
+    // Focus on lieu dit if this is a valid lieu dit set in the control
+    lieuditControl.valueChanges
+      .pipe(
+        filter((value) => !!value?.id),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((lieuDit: LieuDit) => {
+        lieuDit?.latitude && lieuDit?.longitude && this.creationMapService.setCoordinatesToFocus([[lieuDit.latitude, lieuDit.longitude]]);
+      });
+
+    // Focus on the commune if no lieu dit is selected
+    this.focusOnCommuneEvent$
+      .pipe(
+        switchMap((communeId) => {
+          const currentLieuDitId = this.controlGroup.controls?.lieudit?.value?.id;
+          if (communeId && !currentLieuDitId) {
+            return this.apollo.query<LieuxDitsCoordinatesQueryResult, QueryLieuxDitsArgs>({
+              query: INPUT_LIEUX_DITS_COORDINATES_QUERY,
+              variables: {
+                communeId
+              }
+            }).pipe(
+              map(({ data }) => data?.lieuxDits)
+            )
+          } else {
+            return EMPTY;
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((lieuxDitsOfCommuneCoordinates) => {
+        this.creationMapService.setCoordinatesToFocus(
+          lieuxDitsOfCommuneCoordinates.map(getLieuxDitsCoordinates)
+        );
+      });
+
+    // Focus should be on the departement if no commune is selected
+    this.focusOnDepartementEvent$
+      .pipe(
+        switchMap((departementId) => {
+          const currentCommuneId = this.controlGroup.controls?.commune?.value?.id;
+          if (departementId && !currentCommuneId) {
+            return this.apollo.query<LieuxDitsCoordinatesQueryResult, QueryLieuxDitsArgs>({
+              query: INPUT_LIEUX_DITS_COORDINATES_QUERY,
+              variables: {
+                departementId
+              }
+            }).pipe(
+              map(({ data }) => data?.lieuxDits)
+            )
+          } else {
+            return EMPTY;
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((lieuxDitsOfDepartementCoordinates) => {
+        this.creationMapService.setCoordinatesToFocus(
+          lieuxDitsOfDepartementCoordinates.map(getLieuxDitsCoordinates)
+        );
+      });
+
+    // Set the coordinates that should be display when the lieu dit selected changes
+    this.getCoordinatesToDisplay$(lieuditControl).subscribe(this.displayCoordinates);
+
+    // Observable that checks if coordinates are customized
+    this.updateAreCoordinatesCustomized();
+
+    this.getAreCoordinatesInvalid$()
+      .pipe(distinctUntilChanged())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((areInvalid) => {
+        this.updateCoordinatesControls(this.controlGroup, areInvalid);
+      });
+
   }
 
   public ngOnDestroy(): void {
@@ -414,7 +508,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     this.focusOnDepartementEvent$.next(this.controlGroup.controls?.departement?.value?.id);
   }
 
-  public onDepartementControlActivated = (departement: EntiteSimple): void => {
+  public onDepartementControlActivated = (departement: Departement): void => {
     this.focusOnDepartementEvent$.next(departement?.id);
   }
 
@@ -422,7 +516,7 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     this.focusOnCommuneEvent$.next(this.controlGroup.controls?.commune?.value?.id);
   }
 
-  public onCommuneControlActivated = (commune: EntiteSimple): void => {
+  public onCommuneControlActivated = (commune: Commune): void => {
     this.focusOnCommuneEvent$.next(commune?.id);
   }
 
@@ -442,54 +536,6 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   public getCoordinatesInputStep = (coordinatesSystem: CoordinatesSystem): number => {
     return coordinatesSystem?.decimalPlaces ? Math.pow(10, -coordinatesSystem.decimalPlaces) : 1;
   }
-
-  private getCommunesToDisplay$ = (
-    departementControl: AbstractControl
-  ): Observable<Commune[]> => {
-    return combineLatest(
-      merge(departementControl.valueChanges, this.departementDefault$),
-      this.communes$,
-      (selection: string | number[] | Departement, communes) => {
-        if (communes && selection) {
-          if (this.isMultipleSelectMode) {
-            return communes.filter((commune) => {
-              return (selection as number[]).includes(commune?.departementId);
-            });
-          } else {
-            return communes.filter((commune) => {
-              return commune.departementId === (selection as Departement).id;
-            });
-          }
-        } else {
-          return [];
-        }
-      }
-    ).pipe(takeUntil(this.destroy$));
-  };
-
-  private getLieuxditsToDisplay$ = (
-    communeControl: AbstractControl
-  ): Observable<LieuDit[]> => {
-    return combineLatest(
-      merge(communeControl.valueChanges, this.communeDefault$),
-      this.lieuxDits$,
-      (selection: string | number[] | Commune, lieuxdits) => {
-        if (lieuxdits && selection) {
-          if (this.isMultipleSelectMode) {
-            return lieuxdits.filter((lieudit) => {
-              return (selection as number[]).includes(lieudit.communeId);
-            });
-          } else {
-            return lieuxdits.filter((lieudit) => {
-              return lieudit.communeId === (selection as Commune).id;
-            });
-          }
-        } else {
-          return [];
-        }
-      }
-    ).pipe(takeUntil(this.destroy$));
-  };
 
   private getCoordinatesOfLieuDit = ([selectedLieudit, coordinatesSystem]: [LieuDit, CoordinatesSystem]): {
     altitude: number;
@@ -570,17 +616,24 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
       .subscribe(([altitude, longitude, latitude]) => {
 
         if (altitude != null && longitude != null && latitude != null) {
-          const lieudit = this.controlGroup.controls.lieudit.value;
-          if (lieudit?.id) {
+          const lieudit: string | LieuDit = this.controlGroup.controls.lieudit.value;
+
+          if ((lieudit as LieuDit)?.id) {
             const inventaireCoordinates: Coordinates = {
               longitude,
               latitude,
               system: this.coordinatesService.getCoordinatesSystemType()
             };
 
+            const lieuDitCoordinates = {
+              system: (lieudit as LieuDit)?.coordinatesSystem,
+              longitude: (lieudit as LieuDit)?.longitude,
+              latitude: (lieudit as LieuDit)?.latitude
+            }
+
             if (
-              altitude !== lieudit.altitude ||
-              !areSameCoordinates(lieudit.coordinates, inventaireCoordinates)
+              altitude !== (lieudit as LieuDit).altitude ||
+              !areSameCoordinates(lieuDitCoordinates, inventaireCoordinates)
             ) {
               this.areCoordinatesCustomized$.next(true);
               return;
@@ -600,15 +653,13 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
     areInvalid: boolean
   }
   ): void => {
-    if (!this.hideCoordinates) {
-      if (!coordinates.areInvalid && this.controlGroup.contains("altitude")) {
-        this.controlGroup.controls.altitude.setValue(coordinates.altitude);
-        this.controlGroup.controls.longitude.setValue(coordinates.longitude);
-        this.controlGroup.controls.latitude.setValue(coordinates.latitude);
-      }
-      this.coordinatesService.setAreCoordinatesTransformed(coordinates.areTransformed);
-      this.coordinatesService.setAreCoordinatesInvalid(coordinates.areInvalid);
+    if (!coordinates.areInvalid && this.controlGroup.contains("altitude")) {
+      this.controlGroup.controls.altitude.setValue(coordinates.altitude);
+      this.controlGroup.controls.longitude.setValue(coordinates.longitude);
+      this.controlGroup.controls.latitude.setValue(coordinates.latitude);
     }
+    this.coordinatesService.setAreCoordinatesTransformed(coordinates.areTransformed);
+    this.coordinatesService.setAreCoordinatesInvalid(coordinates.areInvalid);
   };
 
   private updateCoordinatesControls = (
@@ -645,15 +696,15 @@ export class InputLieuditComponent implements OnInit, OnDestroy {
   };
 
   public displayCommuneFormat = (commune: Commune): string => {
-    return commune ? commune.code + " - " + commune.nom : "";
+    return commune ? `${commune.code} - ${commune.nom}` : "";
   };
 
   public displayDepartementFormat = (departement: Departement): string => {
-    return departement ? departement.code : null;
+    return departement?.code ?? null;
   };
 
   public displayLieuDitFormat = (lieudit: LieuDit): string => {
-    return lieudit ? lieudit.nom : null;
+    return lieudit?.nom ?? null;
   };
 
   /**

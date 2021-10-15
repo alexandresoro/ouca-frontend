@@ -21,3 +21,30 @@ export default <T extends { id: number }>(control: AbstractControl, queryResults
   );
 
 }
+
+export const autocompleteWithParentHandler = <P, C extends { id: number }>(
+  [parentValue, childValue]: [P | string, C | string],
+  queryResultsObservable: (parentValue: P, childValue: string) => Observable<C[]>
+): Observable<C[]> => {
+
+  // 1. parent is a non empty string, no commune should match
+  if (typeof parentValue === "string" && parentValue.length) {
+    return of([] as C[]);
+  }
+
+  // 2. child is a valid child with id only return itself
+  if (typeof childValue !== "string" && !!childValue?.id) {
+    return of([childValue]);
+  }
+
+  // 3. Commune is empty
+  if (!childValue) {
+    return of([] as C[]);
+  }
+
+  // At this point classe can be
+  // - A valid parent with id -> filter children accordingly
+  // - null -> no filter
+  // - empty string -> no filter
+  return queryResultsObservable(parentValue as P, childValue as string);
+}
