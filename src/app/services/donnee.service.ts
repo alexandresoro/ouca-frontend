@@ -215,7 +215,9 @@ export class DonneeService {
     donnee: DonneeCachedObject
   ): void => {
     this.isDonneeCallOngoing$.next(true);
-    this.fetchLastDonneeIdService.fetch().subscribe(({ data }) => {
+    this.fetchLastDonneeIdService.fetch({}, {
+      fetchPolicy: 'network-only'
+    }).subscribe(({ data }) => {
       if (!data?.lastDonneeId) {
         return;
       }
