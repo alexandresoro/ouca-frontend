@@ -5,36 +5,48 @@ import 'leaflet.control.opacity';
 import 'leaflet.markercluster';
 import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, map, takeUntil, withLatestFrom } from 'rxjs/operators';
-import { Commune, Departement, LieuDit } from 'src/app/model/graphql';
+import { Commune, Departement, LieuDit, QueryLieuDitArgs } from 'src/app/model/graphql';
 import { baseMaps, markerDefault, markerGreen, markerRed, markerYellow, overlays } from 'src/app/modules/shared/objects/map-objects';
 import { CreationMapService } from 'src/app/services/creation-map.service';
 
 L.Marker.prototype.options.icon = markerDefault;
 
+type LieuDitForTootltipQueryResult = {
+  lieuDit: Pick<LieuDit, 'id' | 'nom'> & {
+    commune: Pick<Commune, 'id' | 'nom'> & {
+      departement: Departement
+    }
+  }
+}
+
+const INPUT_LIEUX_DIT_FOR_TOOLTIP_QUERY = gql`
+  query LieuDitMap($id: Int!) {
+    lieuDit(id: $id) {
+      id
+      nom
+      commune {
+        id
+        nom
+        departement {
+          id
+          code
+        }
+      }
+    }
+  }
+`;
+
+
 type CreationMapQueryResult = {
-  lieuxDits: Pick<LieuDit, 'id' | 'nom' | 'latitude' | 'longitude' | 'communeId'>[],
-  communes: Commune[],
-  departements: Departement[],
+  lieuxDits: Pick<LieuDit, 'id' | 'latitude' | 'longitude'>[]
 }
 
 const CREATION_MAP_QUERY = gql`
   query {
     lieuxDits {
       id
-      nom
       longitude
       latitude
-      communeId
-    }
-    communes {
-      id
-      code
-      departementId
-      nom
-    }
-    departements {
-      id
-      code
     }
   }
 `;
@@ -243,12 +255,27 @@ export class CreationMapComponent implements OnInit, OnDestroy {
   }
 
   private onUpdatedLieuxDits = (data: CreationMapQueryResult) => {
-    const { lieuxDits, communes, departements } = data;
+    const { lieuxDits } = data;
     const markers = lieuxDits.map((lieuDit) => {
-      const commune = communes?.find(commune => commune.id === lieuDit.communeId) ?? null;
-      const departement = departements?.find(departement => departement.id === commune?.departementId) ?? null;
-      const tooltipText = `${lieuDit.nom} -  ${commune.nom.toUpperCase()} (${departement.code})`;
-      const marker = L.marker([lieuDit.latitude, lieuDit.longitude]).bindTooltip(tooltipText);
+      const marker = L.marker([lieuDit.latitude, lieuDit.longitude]).bindTooltip("");
+
+      marker.on('mouseover', () => {
+        this.apollo.query<LieuDitForTootltipQueryResult, QueryLieuDitArgs>({
+          query: INPUT_LIEUX_DIT_FOR_TOOLTIP_QUERY,
+          variables: {
+            id: lieuDit.id
+          }
+        }).pipe(
+          map(({ data }) => data?.lieuDit)
+        )
+          .toPromise()
+          .then((lieuDitInfo) => {
+            marker.setTooltipContent(`${lieuDitInfo.nom} -  ${lieuDitInfo.commune.nom.toUpperCase()} (${lieuDitInfo.commune.departement.code})`)
+          })
+          .catch(() => {
+            marker.setTooltipContent(null);
+          });
+      })
 
       // Handle click on a marker
       marker.on('click', () => { this.onExistingLieuDitClick(lieuDit.id) });
