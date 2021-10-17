@@ -7,76 +7,12 @@ import {
 } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { map } from "rxjs/operators";
-import { Age, Comportement, Espece, EstimationDistance, EstimationNombre, Milieu, Settings, Sexe } from "../model/graphql";
-import { Donnee } from '../model/types/donnee.object';
+import { Comportement, Donnee, Espece, Milieu, Settings } from "../model/graphql";
+import { Donnee as DonneeOld } from '../model/types/donnee.object';
+import { DonneeCachedObject, InventaireCachedObject } from "../modules/donnee-creation/models/cached-object";
 import { DefaultDonneeOptions } from "../modules/donnee-creation/models/default-donnee-options.model";
-import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
 import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
-import { InventaireFormObject } from "../modules/donnee-creation/models/inventaire-form-object.model";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
-
-type FindDonneeDataQueryResult = {
-  age: Age | null
-  comportements: Comportement[]
-  espece: Espece | null
-  estimationDistance: EstimationDistance | null
-  estimationNombre: EstimationNombre | null
-  milieux: Milieu[]
-  sexe: Sexe | null
-}
-
-type FindDonneeDataQueryParams = {
-  ageId: number
-  especeId: number
-  comportementsIds: number[]
-  estimationDistanceId: number
-  estimationNombreId: number
-  sexeId: number
-  milieuxIds: number[]
-}
-
-const FIND_DONNEE_DATA_QUERY = gql`
-query FindDonneeData($estimationDistanceId: Int!, $estimationNombreId: Int!, $ageId: Int!, $sexeId: Int!, $comportementsIds: [Int!]!, $milieuxIds: [Int!]!, $especeId: Int!) {
-  age(id: $ageId) {
-    id
-    libelle
-  }
-  comportements: comportementList(ids: $comportementsIds) {
-    id
-    code
-    libelle
-    nicheur
-  }
-  espece(id: $especeId) {
-    id
-    code
-    nomFrancais
-    nomLatin
-    classe {
-      id
-      libelle
-    }
-  }
-  estimationDistance(id: $estimationDistanceId) {
-    id
-    libelle
-  }
-  estimationNombre(id: $estimationNombreId) {
-    id
-    libelle
-    nonCompte
-  }
-  milieux: milieuList(ids: $milieuxIds) {
-    id
-    code
-    libelle
-  }
-  sexe(id: $sexeId) {
-    id
-    libelle
-  }
-}
-`;
 
 type DonneeSettings = Pick<Settings, 'id' | 'defaultEstimationNombre' | 'defaultNombre' | 'defaultSexe' | 'defaultAge'>;
 type DonneeSettingsQueryResult = {
@@ -169,12 +105,13 @@ export class DonneeFormService {
    */
   public updateForm = async (
     form: FormGroup,
-    donnee: Donnee | DonneeFormObject
+    donnee: Donnee | DonneeCachedObject
   ): Promise<void> => {
 
     console.log("Affichage de la donnée dans le formulaire.", donnee);
 
-    if (!donnee || (donnee as DonneeFormObject).isDonneeEmpty) {
+    if (!donnee || (donnee as DonneeCachedObject)?.isDonneeEmpty) {
+      // Reset the default inventaire
 
       const donneeSettingsData = await this.apollo.query<DonneeSettingsQueryResult>({
         query: DONNEE_SETTINGS_QUERY
@@ -184,54 +121,38 @@ export class DonneeFormService {
 
       const defaultOptions = this.getDefaultOptions(donneeSettingsData);
       form.reset(defaultOptions);
+
     } else {
+      // This is an existing donnee for which we have everything to construct the form
+      // OR
+      // This is donnee that has no id -> so this is the cached one
 
-      const findDonneeData = await this.apollo.query<FindDonneeDataQueryResult, FindDonneeDataQueryParams>({
-        query: FIND_DONNEE_DATA_QUERY,
-        variables: {
-          ageId: donnee?.ageId ?? -1,
-          comportementsIds: donnee?.comportementsIds,
-          especeId: donnee?.especeId ?? -1,
-          estimationDistanceId: donnee?.estimationDistanceId ?? -1,
-          estimationNombreId: donnee?.estimationNombreId ?? -1,
-          milieuxIds: donnee?.milieuxIds,
-          sexeId: donnee?.sexeId ?? -1
-        }
-      }).pipe(
-        map(({ data }) => data)
-      ).toPromise();
-
-      const donneeFormValue = this.getDonneeFormValue(
-        findDonneeData,
-        donnee
-      );
+      const donneeFormValue = this.getDonneeFormFromDonneeObject(donnee);
       form.reset(donneeFormValue);
+
     }
   };
 
-  private getDonneeFormValue = (
-    donneeData: FindDonneeDataQueryResult,
-    donnee: Donnee | DonneeFormObject
-  ): DonneeFormValue => {
+  private getDonneeFormFromDonneeObject = (donnee: Donnee | DonneeCachedObject): DonneeFormValue => {
     return {
-      id: donnee.id,
+      id: (donnee as Donnee)?.id ?? null,
       especeGroup: {
-        classe: donneeData?.espece?.classe,
-        espece: donneeData?.espece
+        classe: donnee.espece?.classe,
+        espece: donnee?.espece?.id ? donnee.espece : null
       },
-      age: donneeData?.age,
-      sexe: donneeData?.sexe,
+      age: donnee.age,
+      sexe: donnee.sexe,
       nombreGroup: {
-        nombre: donnee.nombre,
-        estimationNombre: donneeData?.estimationNombre
+        nombre: donnee?.nombre,
+        estimationNombre: donnee.estimationNombre
       },
       distanceGroup: {
         distance: donnee.distance,
-        estimationDistance: donneeData?.estimationDistance
+        estimationDistance: donnee.estimationDistance
       },
       regroupement: donnee.regroupement,
-      comportementsGroup: this.getComportementsForForm(donneeData?.comportements),
-      milieuxGroup: this.getMilieuxForForm(donneeData?.milieux),
+      comportementsGroup: this.getComportementsForForm(donnee.comportements),
+      milieuxGroup: this.getMilieuxForForm(donnee.milieux),
       commentaire: donnee.commentaire
     };
   };
@@ -262,10 +183,10 @@ export class DonneeFormService {
   /**
    * Returns a donnee object from the values filled in donnee form
    */
-  public getDonneeFromForm = (form: FormGroup): Donnee => {
+  public getDonneeFromForm = (form: FormGroup): DonneeOld => {
     const donneeFormValue: DonneeFormValue = form.value;
 
-    const donnee: Donnee = {
+    const donnee: DonneeOld = {
       id: donneeFormValue.id,
       inventaireId: null,
       especeId: donneeFormValue?.especeGroup?.espece?.id ?? null,
@@ -288,17 +209,41 @@ export class DonneeFormService {
     return donnee;
   };
 
-  public getDonneeFormObject = (
-    form: FormGroup,
-    inventaireFormObject: InventaireFormObject
-  ): DonneeFormObject => {
-    const donneeFormValue: DonneeFormValue = form.value;
+  public buildCachedDonneeFromForm = (donneeFormValue: DonneeFormValue, inventaire: InventaireCachedObject): DonneeCachedObject => {
 
-    return {
-      ...this.getDonneeFromForm(form),
-      inventaire: inventaireFormObject,
-      classe: donneeFormValue.especeGroup?.classe ?? null
+    const comportements = (donneeFormValue?.comportementsGroup != null) ? Object.values(donneeFormValue.comportementsGroup) : [];
+    const milieux = (donneeFormValue?.milieuxGroup != null) ? Object.values(donneeFormValue?.milieuxGroup) : [];
+
+    let especeStruct: Partial<Espece> | null = null;
+    if (donneeFormValue?.especeGroup?.espece) {
+      especeStruct = {
+        ...donneeFormValue?.especeGroup?.espece,
+        ...(donneeFormValue?.especeGroup?.classe ? { classe: donneeFormValue.especeGroup.classe } : {})
+      };
+    } else if (donneeFormValue?.especeGroup?.classe) {
+      especeStruct = {
+        classe: donneeFormValue?.especeGroup?.classe
+      }
+    }
+
+    const donnee = {
+      inventaire,
+      ...((especeStruct != null) ? { espece: especeStruct } : {}),
+      nombre: donneeFormValue?.nombreGroup?.nombre,
+      estimationNombre: donneeFormValue?.nombreGroup?.estimationNombre,
+      sexe: donneeFormValue.sexe,
+      age: donneeFormValue.age,
+      distance: donneeFormValue?.distanceGroup?.distance,
+      estimationDistance: donneeFormValue?.distanceGroup?.estimationDistance,
+      regroupement: donneeFormValue.regroupement,
+      comportements,
+      milieux,
+      commentaire: donneeFormValue.commentaire
     };
+
+    console.log("Donnée générée depuis le formulaire:", donnee);
+
+    return donnee;
   };
 
   private getComportements = (donneeFormValue: DonneeFormValue): number[] => {

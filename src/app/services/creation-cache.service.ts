@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
+import { DonneeCachedObject } from "../modules/donnee-creation/models/cached-object";
 import { DonneeInCache } from "../modules/donnee-creation/models/donnee-in-cache.model";
 
 @Injectable({
@@ -12,7 +12,7 @@ export class CreationCacheService {
   >(null);
 
   public saveCurrentContext = (
-    donnee: DonneeFormObject,
+    donnee: DonneeCachedObject,
     isInventaireEnabled: boolean,
     isDonneeEnabled: boolean
   ): void => {

@@ -1,7 +1,7 @@
-import { DonneeFormObject } from "./donnee-form-object.model";
+import { DonneeCachedObject } from "./cached-object";
 
 export interface DonneeInCache {
-  donnee: DonneeFormObject;
+  donnee: DonneeCachedObject;
   isInventaireEnabled: boolean;
   isDonneeEnabled: boolean;
 }

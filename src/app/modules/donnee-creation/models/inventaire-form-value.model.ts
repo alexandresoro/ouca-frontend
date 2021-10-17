@@ -5,16 +5,16 @@ export interface InventaireFormValue {
   observateur: Observateur;
   observateursAssocies: Observateur[];
   date: Date;
-  heure: string;
-  duree: string;
+  heure?: string;
+  duree?: string;
   lieu: {
     departement: Departement;
-    commune: Commune;
-    lieudit: LieuDit;
+    commune: Partial<Commune>;
+    lieudit: Partial<Omit<LieuDit, 'commune'>> & { commune?: Partial<Commune> };
     altitude?: number;
     longitude?: number;
     latitude?: number;
   };
-  temperature: number;
+  temperature?: number;
   meteos: Meteo[];
 }

@@ -6,8 +6,9 @@ import { Donnee } from '../model/types/donnee.object';
 import { Inventaire } from '../model/types/inventaire.object';
 import { PostResponse } from '../model/types/post-response.object';
 import { InventaireHelper } from "../modules/donnee-creation/helpers/inventaire.helper";
-import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
+import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
 import { DonneeInCache } from "../modules/donnee-creation/models/donnee-in-cache.model";
+import { InventaireFormValue } from "../modules/donnee-creation/models/inventaire-form-value.model";
 import { BackendApiService } from "./backend-api.service";
 import { CreationCacheService } from "./creation-cache.service";
 import { CreationModeService } from "./creation-mode.service";
@@ -226,12 +227,10 @@ export class CreationPageService {
   public addADonneeToAnExistingInventaire = (
     inventaireForm: FormGroup
   ): void => {
-    const donnee: DonneeFormObject = {
+    const donnee = {
       isDonneeEmpty: true,
-      inventaire: this.inventaireFormService.getInventaireFromForm(
-        inventaireForm.value
-      )
-    } as DonneeFormObject;
+      inventaire: this.inventaireFormService.buildCachedInventaireFromForm(inventaireForm?.value)
+    };
     this.donneeService.setCurrentlyEditingDonnee(donnee);
     this.creationModeService.setStatus(false, true);
   };
@@ -240,11 +239,11 @@ export class CreationPageService {
     inventaireForm: FormGroup,
     donneeForm: FormGroup
   ): void => {
-    const inventaire = this.inventaireFormService.getInventaireFormObject(
-      inventaireForm
+    const inventaire = this.inventaireFormService.buildCachedInventaireFromForm(
+      inventaireForm?.value as InventaireFormValue
     );
-    const donnee = this.donneeFormService.getDonneeFormObject(
-      donneeForm,
+    const donnee = this.donneeFormService.buildCachedDonneeFromForm(
+      donneeForm?.value as DonneeFormValue,
       inventaire
     );
     const isInventaireEnabled = inventaireForm?.enabled;

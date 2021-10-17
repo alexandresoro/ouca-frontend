@@ -4,7 +4,7 @@ export interface DonneeFormValue {
   id: number;
   especeGroup: {
     classe: Classe;
-    espece: Espece;
+    espece: Partial<Espece>;
   };
   nombreGroup: {
     nombre: number;

@@ -1,20 +1,126 @@
 import { Injectable } from "@angular/core";
+import { Apollo, gql } from "apollo-angular";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
-import { Donnee } from '../model/types/donnee.object';
+import { Donnee, DonneeResult, QueryDonneeArgs } from "../model/graphql";
 import { PostResponse } from '../model/types/post-response.object';
-import { DonneeFormObject } from "../modules/donnee-creation/models/donnee-form-object.model";
+import { DonneeCachedObject } from "../modules/donnee-creation/models/cached-object";
+import { has } from "../modules/shared/helpers/utils";
 import { BackendApiService } from "./backend-api.service";
 import { FetchLastDonneeIdService } from "./fetch-last-donnee-id.service";
 import { StatusMessageService } from "./status-message.service";
+
+type DonneeQueryResult = {
+  donnee: DonneeResult
+}
+
+const DONNEE_QUERY = gql`
+  query DonneeQuery($id: Int!) {
+    donnee(id: $id) {
+      id
+      donnee {
+        id
+        inventaire {
+          id
+          observateur {
+            id
+            libelle
+          }
+          associes {
+            id
+            libelle
+          }
+          date
+          heure
+          duree
+          lieuDit {
+            id
+            nom
+            altitude
+            longitude
+            latitude
+            coordinatesSystem
+            commune {
+              id
+              code
+              nom
+              departement {
+                id
+                code
+              }
+            }
+          }
+          customizedCoordinates {
+            altitude
+            longitude
+            latitude
+            system
+          }
+          temperature
+          meteos {
+            id
+            libelle
+          }
+        }
+        espece {
+          id
+          code
+          nomFrancais
+          nomLatin
+          classe {
+            id
+            libelle
+          }
+        }
+        estimationNombre {
+          id
+          libelle
+          nonCompte
+        }
+        nombre
+        estimationDistance {
+          id
+          libelle
+        }
+        distance
+        regroupement
+        sexe {
+          id
+          libelle
+        }
+        age {
+          id
+          libelle
+        }
+        comportements {
+          id
+          code
+          libelle
+          nicheur
+        }
+        milieux {
+          id
+          code
+          libelle
+        }
+        commentaire
+      }
+      navigation {
+        previousDonneeId
+        nextDonneeId
+        index
+      }
+    }
+  }
+`;
 
 @Injectable({
   providedIn: "root"
 })
 export class DonneeService {
   private currentDonnee$: BehaviorSubject<
-    Donnee | DonneeFormObject
-  > = new BehaviorSubject<Donnee | DonneeFormObject>(null);
+    Donnee | DonneeCachedObject
+  > = new BehaviorSubject<Donnee | DonneeCachedObject>(null);
 
   private currentDonneeIndex$: BehaviorSubject<number> = new BehaviorSubject<
     number
@@ -33,12 +139,13 @@ export class DonneeService {
   >(false);
 
   constructor(
+    private apollo: Apollo,
     private fetchLastDonneeIdService: FetchLastDonneeIdService,
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService
   ) { }
 
-  public getCurrentDonnee$ = (): Observable<Donnee | DonneeFormObject> => {
+  public getCurrentDonnee$ = (): Observable<Donnee | DonneeCachedObject> => {
     return this.currentDonnee$.asObservable();
   };
 
@@ -59,11 +166,11 @@ export class DonneeService {
   };
 
   public isCurrentDonneeAnExistingOne = (): boolean => {
-    return !!this.currentDonnee$.value?.id;
+    return has(this.currentDonnee$.value, 'id');
   };
 
   public isCurrentDonneeAnExistingOne$ = (): Observable<boolean> => {
-    return this.currentDonnee$.pipe(map((donnee) => !!donnee?.id));
+    return this.currentDonnee$.pipe(map((donnee) => has(donnee, 'id')));
   };
 
   public getIsDonneeCallOngoing$ = (): Observable<boolean> => {
@@ -73,22 +180,27 @@ export class DonneeService {
   public getDonneeById = (donneeId: number): Observable<boolean> => {
     this.isDonneeCallOngoing$.next(true);
 
-    return this.backendApiService.getDonneeByIdWithContext(donneeId).pipe(
-      tap((donnee) => {
+    return this.apollo.query<DonneeQueryResult, QueryDonneeArgs>({
+      query: DONNEE_QUERY,
+      variables: {
+        id: donneeId
+      },
+      fetchPolicy: 'network-only'
+    }).pipe(
+      map(({ data }) => data?.donnee),
+      tap((donneeResult) => {
         this.isDonneeCallOngoing$.next(false);
-        if (donnee?.id) {
-          this.currentDonnee$.next(donnee);
-          this.currentDonneeIndex$.next(donnee.indexDonnee);
-          this.previousDonneeId$.next(donnee.previousDonneeId);
-          this.nextDonneeId$.next(donnee.nextDonneeId);
+        if (donneeResult?.donnee?.id) {
+          this.currentDonnee$.next(donneeResult?.donnee);
+          this.currentDonneeIndex$.next(donneeResult?.navigation?.index);
+          this.previousDonneeId$.next(donneeResult?.navigation?.previousDonneeId);
+          this.nextDonneeId$.next(donneeResult?.navigation?.nextDonneeId);
         } else {
-          this.statusMessageService.showErrorMessage(
-            "Aucune fiche espèce trouvée avec l'ID " + donneeId + "."
-          );
+          this.statusMessageService.showErrorMessage(`Aucune fiche espèce trouvée avec l'ID ${donneeId}.`);
         }
       }),
-      map((donnee) => !!donnee?.id)
-    );
+      map((donneeResult) => !!donneeResult?.donnee?.id)
+    )
   };
 
   public getPreviousDonnee = (): Observable<boolean> => {
@@ -100,7 +212,7 @@ export class DonneeService {
   };
 
   public setCurrentlyEditingDonnee = (
-    donnee: Donnee | DonneeFormObject
+    donnee: DonneeCachedObject
   ): void => {
     this.isDonneeCallOngoing$.next(true);
     this.fetchLastDonneeIdService.fetch().subscribe(({ data }) => {
@@ -134,9 +246,9 @@ export class DonneeService {
   };
 
   public deleteCurrentDonnee = (): Observable<PostResponse> => {
-    const currentDonnee = this.currentDonnee$.value;
+    const currentDonnee = this.currentDonnee$.value as Donnee;
     return this.backendApiService
-      .deleteDonnee(currentDonnee?.id, currentDonnee?.inventaireId)
+      .deleteDonnee(currentDonnee?.id, currentDonnee?.inventaire?.id)
       .pipe(
         tap((response) => {
           if (response.isSuccess) {
@@ -156,7 +268,7 @@ export class DonneeService {
   public getDisplayedDonneeId$ = (): Observable<number> => {
     return this.currentDonnee$.pipe(
       map((donnee) => {
-        return donnee?.id;
+        return (donnee as Donnee)?.id;
       })
     );
   };
