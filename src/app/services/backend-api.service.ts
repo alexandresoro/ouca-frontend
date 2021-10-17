@@ -2,7 +2,6 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
-import { DonneeWithNavigationData } from '../model/types/donnee-with-navigation-data.object';
 import { Donnee } from '../model/types/donnee.object';
 import { DonneesFilter } from '../model/types/donnees-filter.object';
 import { EntiteSimple } from '../model/types/entite-simple.object';
@@ -21,8 +20,6 @@ export class BackendApiService {
   private DONNEE: string = "donnee/";
   private EXPORT: string = "export";
   private FIND: string = "find";
-  private FIND_WITH_CONTEXT: string = "find_with_context";
-
   private INVENTAIRE: string = "inventaire/";
   private NEXT_REGROUPEMENT: string = "next_regroupement";
   private UPDATE: string = "update";
@@ -114,12 +111,6 @@ export class BackendApiService {
       "&inventaireId=" +
       inventaireId
     );
-  }
-
-  public getDonneeByIdWithContext(
-    id: number
-  ): Observable<DonneeWithNavigationData> {
-    return this.httpGet(this.DONNEE + this.FIND_WITH_CONTEXT + "?id=" + id);
   }
 
   public getNextRegroupement(): Observable<number> {
