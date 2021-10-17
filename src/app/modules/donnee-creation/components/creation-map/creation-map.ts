@@ -246,7 +246,7 @@ export class CreationMapComponent implements OnInit, OnDestroy {
     const { lieuxDits, communes, departements } = data;
     const markers = lieuxDits.map((lieuDit) => {
       const commune = communes?.find(commune => commune.id === lieuDit.communeId) ?? null;
-      const departement = departements?.find(departement => departement.id === commune?.id) ?? null;
+      const departement = departements?.find(departement => departement.id === commune?.departementId) ?? null;
       const tooltipText = `${lieuDit.nom} -  ${commune.nom.toUpperCase()} (${departement.code})`;
       const marker = L.marker([lieuDit.latitude, lieuDit.longitude]).bindTooltip(tooltipText);
 
