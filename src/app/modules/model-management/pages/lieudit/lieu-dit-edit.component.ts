@@ -35,9 +35,12 @@ import { BackendApiService } from "src/app/services/backend-api.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
+type LieuDitWithCommuneId = Omit<LieuDit, 'commune'> & { commune: { id: number } };
+type CommuneWithDepartementId = Omit<Commune, 'departement'> & { departement: { id: number } };
+
 type LieuxDitsQueryResult = {
-  lieuxDits: LieuDit[],
-  communes: Commune[],
+  lieuxDits: LieuDitWithCommuneId[],
+  communes: CommuneWithDepartementId[],
   departements: Departement[],
   settings: {
     coordinatesSystem: CoordinatesSystemType
@@ -53,13 +56,17 @@ const LIEUX_DITS_QUERY = gql`
       longitude
       latitude
       coordinatesSystem
-      communeId
+      commune {
+        id
+      }
     }
     communes {
       id
       code
-      departementId
       nom
+      departement {
+        id
+      }
     }
     departements {
       id
@@ -78,20 +85,20 @@ const LIEUX_DITS_QUERY = gql`
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LieuDitEditComponent
-  extends EntiteSimpleEditAbstractComponent<LieuDit>
+  extends EntiteSimpleEditAbstractComponent<LieuDitWithCommuneId>
   implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
-  private lieuxDits$: Observable<LieuDit[]>;
+  private lieuxDits$: Observable<LieuDitWithCommuneId[]>;
 
   public departements$: Observable<Departement[]>;
 
-  private communes$: Observable<Commune[]>;
+  private communes$: Observable<CommuneWithDepartementId[]>;
 
   private communesSubj$: BehaviorSubject<Commune[]> = new BehaviorSubject<Commune[]>([]);
 
-  public filteredCommunes$: BehaviorSubject<Commune[]> = new BehaviorSubject<
-    Commune[]
+  public filteredCommunes$: BehaviorSubject<CommuneWithDepartementId[]> = new BehaviorSubject<
+    CommuneWithDepartementId[]
   >(null);
 
   public coordinatesSystem$: Observable<CoordinatesSystem>;
@@ -184,11 +191,11 @@ export class LieuDitEditComponent
       this.getEntityToDisplay$().pipe(
         withLatestFrom(this.communes$),
         filter(([lieuDit, communes]) => {
-          const departementId = communes?.find(commune => commune.id === lieuDit.id)?.departementId;
-          return !!lieuDit.communeId && !!departementId;
+          const departementId = communes?.find(commune => commune.id === lieuDit.id)?.departement?.id;
+          return !!lieuDit?.commune?.id && !!departementId;
         }),
         map(([lieuDit, communes]) => {
-          const departementId = communes?.find(commune => commune.id === lieuDit.id)?.departementId;
+          const departementId = communes?.find(commune => commune.id === lieuDit.id)?.departement?.id;
           return departementId;
         })
       )
@@ -204,7 +211,7 @@ export class LieuDitEditComponent
         }
 
         return communes.filter((commune) => {
-          return commune.departementId === selectedDepartement;
+          return commune?.departement?.id === selectedDepartement;
         });
       }
     )
@@ -296,12 +303,12 @@ export class LieuDitEditComponent
     longitude: number;
     latitude: number;
   } {
-    const departementId = this.communesSubj$.value?.find(commune => commune.id === lieuDit.communeId)?.departementId;
+    const departementId = this.communesSubj$.value?.find(commune => commune.id === lieuDit?.commune?.id)?.departement?.id;
     return {
       id: lieuDit.id,
       departement: departementId,
-      communeId: lieuDit.communeId,
-      nomCommune: lieuDit.communeId,
+      communeId: lieuDit?.commune?.id,
+      nomCommune: lieuDit?.commune?.id,
       nom: lieuDit.nom,
       altitude: lieuDit.altitude,
       longitude: lieuDit.longitude,
@@ -345,19 +352,19 @@ export class LieuDitEditComponent
     return "lieudit";
   };
 
-  public getEntities$(): Observable<LieuDit[]> {
+  public getEntities$(): Observable<LieuDitWithCommuneId[]> {
     return this.lieuxDits$;
   }
 
   private updateLieuDitValidators = (
     form: FormGroup,
-    lieuxDits: LieuDit[]
+    lieuxDits: LieuDitWithCommuneId[]
   ): void => {
     form.setValidators([this.nomValidator(lieuxDits)]);
     form.updateValueAndValidity();
   };
 
-  private nomValidator = (lieuxDits: LieuDit[]): ValidatorFn => {
+  private nomValidator = (lieuxDits: LieuDitWithCommuneId[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const nom: string = form.controls.nom.value;
       const communeId: number = form.controls.communeId.value;
@@ -369,7 +376,7 @@ export class LieuDitEditComponent
             return (
               deburr(lieuDit.nom.trim().toLowerCase()) ===
               deburr(nom.trim().toLowerCase()) &&
-              lieuDit.communeId === communeId
+              lieuDit.commune?.id === communeId
             );
           })
           : null;

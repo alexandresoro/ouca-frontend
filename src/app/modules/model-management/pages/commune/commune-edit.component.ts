@@ -23,8 +23,10 @@ import { BackendApiService } from "src/app/services/backend-api.service";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
+type CommuneWithDepartementId = Omit<Commune, 'departement'> & { departement: { id: number } };
+
 type CommunesQueryResult = {
-  communes: Commune[]
+  communes: CommuneWithDepartementId[]
 }
 
 const COMMUNES_QUERY = gql`
@@ -32,8 +34,10 @@ const COMMUNES_QUERY = gql`
     communes {
       id
       code
-      departementId
       nom
+      departement {
+        id
+      }
     }
   }
 `;
@@ -43,11 +47,11 @@ const COMMUNES_QUERY = gql`
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommuneEditComponent
-  extends EntiteSimpleEditAbstractComponent<Commune>
+  extends EntiteSimpleEditAbstractComponent<CommuneWithDepartementId>
   implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
-  private communes$: Observable<Commune[]>;
+  private communes$: Observable<CommuneWithDepartementId[]>;
 
   constructor(
     private apollo: Apollo,
@@ -105,7 +109,11 @@ export class CommuneEditComponent
     code: number;
     nom: string;
   } {
-    return commune;
+    const { departement, ...rest } = commune;
+    return {
+      ...rest,
+      departementId: departement?.id
+    };
   }
 
   public getFormType(): typeof CommuneFormComponent {
@@ -116,13 +124,13 @@ export class CommuneEditComponent
     return "commune";
   };
 
-  public getEntities$(): Observable<Commune[]> {
+  public getEntities$(): Observable<(Omit<Commune, 'departement'> & { departement: { id: number } })[]> {
     return this.communes$;
   }
 
   private updateCommuneValidators = (
     form: FormGroup,
-    communes: Commune[]
+    communes: CommuneWithDepartementId[]
   ): void => {
     form.setValidators([
       this.codeValidator(communes),
@@ -131,7 +139,7 @@ export class CommuneEditComponent
     form.updateValueAndValidity();
   };
 
-  private codeValidator = (communes: Commune[]): ValidatorFn => {
+  private codeValidator = (communes: CommuneWithDepartementId[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const code: number = form.controls.code.value;
       const departementId: number = form.controls.departementId.value;
@@ -139,7 +147,7 @@ export class CommuneEditComponent
 
       const matchingCommune = communes?.find((commune) => {
         return (
-          commune.code === code && commune.departementId === departementId
+          commune.code === code && commune?.departement?.id === departementId
         );
       });
 
@@ -159,7 +167,7 @@ export class CommuneEditComponent
     return FormValidatorHelper.isAnIntegerValidator(0, 65535);
   };
 
-  private nomValidator = (communes: Commune[]): ValidatorFn => {
+  private nomValidator = (communes: CommuneWithDepartementId[]): ValidatorFn => {
     return (form: FormGroup): ValidationErrors | null => {
       const nom: string = form.controls.nom.value;
       const departementId: number = form.controls.departementId.value;
@@ -170,7 +178,7 @@ export class CommuneEditComponent
           return (
             deburr(commune.nom.trim().toLowerCase()) ===
             deburr(nom.trim().toLowerCase()) &&
-            commune.departementId === departementId
+            commune?.departement?.id === departementId
           );
         })
         : null;

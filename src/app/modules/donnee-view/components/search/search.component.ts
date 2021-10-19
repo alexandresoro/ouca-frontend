@@ -15,7 +15,11 @@ import { TimeHelper } from "src/app/modules/shared/helpers/time.helper";
 import { SearchCriterion } from "../../models/search-criterion.model";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
 
-type LieuDitSimple = Pick<LieuDit, 'id' | 'nom' | 'communeId'>;
+type LieuDitSimple = Pick<LieuDit, 'id' | 'nom'> & {
+  commune: {
+    id: number
+  }
+};
 
 type SearchQueryResult = {
   ages: Age[],
@@ -46,8 +50,11 @@ const SEARCH_QUERY = gql`
     communes {
       id
       code
-      departementId
       nom
+      departement {
+        id
+        code
+      }
     }
     comportements {
       id
@@ -81,7 +88,9 @@ const SEARCH_QUERY = gql`
     lieuxDits {
       id
       nom
-      communeId
+      commune {
+        id
+      }
     }
     meteos {
       id
@@ -558,12 +567,12 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   };
 
   public getDisplayedCommune = (commune: Commune): string => {
-    const departementCode = this.departementsSubj$.value?.find(departement => departement.id === commune.departementId)?.code;
+    const departementCode = this.departementsSubj$.value?.find(departement => departement.id === commune?.departement?.id)?.code;
     return `Commune : ${commune.nom} (${departementCode})`;
   };
 
   public getDisplayedLieuDit = (lieuDit: LieuDitSimple): string => {
-    const commune = this.communesSubj$.value?.find(commune => commune.id === lieuDit.communeId);
+    const commune = this.communesSubj$.value?.find(commune => commune.id === lieuDit.commune?.id);
     return `Lieu-dit : ${lieuDit.nom} à ${this.getDisplayedCommune(commune)}`;
   };
 
