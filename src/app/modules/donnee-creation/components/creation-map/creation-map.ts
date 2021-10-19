@@ -267,14 +267,9 @@ export class CreationMapComponent implements OnInit, OnDestroy {
           }
         }).pipe(
           map(({ data }) => data?.lieuDit)
-        )
-          .toPromise()
-          .then((lieuDitInfo) => {
-            marker.setTooltipContent(`${lieuDitInfo.nom} -  ${lieuDitInfo.commune.nom.toUpperCase()} (${lieuDitInfo.commune.departement.code})`)
-          })
-          .catch(() => {
-            marker.setTooltipContent(null);
-          });
+        ).subscribe((lieuDitInfo) => {
+          marker.setTooltipContent(`${lieuDitInfo.nom} -  ${lieuDitInfo.commune.nom.toUpperCase()} (${lieuDitInfo.commune.departement.code})`)
+        });
       })
 
       // Handle click on a marker

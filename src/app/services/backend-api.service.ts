@@ -21,7 +21,6 @@ export class BackendApiService {
   private EXPORT: string = "export";
   private FIND: string = "find";
   private INVENTAIRE: string = "inventaire/";
-  private NEXT_REGROUPEMENT: string = "next_regroupement";
   private UPDATE: string = "update";
   private SAVE: string = "save";
   private CLEAR: string = "clear";
@@ -111,10 +110,6 @@ export class BackendApiService {
       "&inventaireId=" +
       inventaireId
     );
-  }
-
-  public getNextRegroupement(): Observable<number> {
-    return this.httpGet(this.DONNEE + this.NEXT_REGROUPEMENT);
   }
 
   public saveDonnee(donneeToSave: Donnee): Observable<PostResponse> {
