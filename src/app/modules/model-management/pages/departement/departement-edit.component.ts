@@ -16,7 +16,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
-import { Departement } from "src/app/model/graphql";
+import { Departement, MutationUpsertDepartementArgs } from "src/app/model/graphql";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
@@ -29,6 +29,15 @@ type DepartementsQueryResult = {
 const DEPARTEMENTS_QUERY = gql`
   query {
     departements {
+      id
+      code
+    }
+  }
+`;
+
+const DEPARTEMENT_UPSERT = gql`
+  mutation DepartementUpsert($id: Int, $data: InputDepartement!) {
+    upsertDepartement(id: $id, data: $data) {
       id
       code
     }
@@ -89,6 +98,20 @@ export class DepartementEditComponent
       code: new FormControl("", [Validators.required])
     });
   }
+
+  public saveEntity = (formValue: unknown): void => {
+    const { id, ...rest } = formValue as Departement;
+
+    this.apollo.mutate<Departement, MutationUpsertDepartementArgs>({
+      mutation: DEPARTEMENT_UPSERT,
+      variables: {
+        id,
+        data: rest
+      }
+    }).subscribe(({ data }) => {
+      data && this.backToEntityPage();
+    })
+  };
 
   public getFormType(): typeof DepartementFormComponent {
     return DepartementFormComponent;

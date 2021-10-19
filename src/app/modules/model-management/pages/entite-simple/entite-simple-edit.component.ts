@@ -63,10 +63,9 @@ export abstract class EntiteSimpleEditAbstractComponent<
 
   public saveEntity = (formValue: unknown): void => {
     const entityName = this.getEntityName();
-    const entity: EntiteSimple = this.getEntityFromFormValue(formValue);
 
     this.backendApiService
-      .saveEntity(entity, entityName)
+      .saveEntity(formValue as T, entityName)
       .subscribe((isSuccessful) => {
         if (isSuccessful) {
           this.backToEntityPage();
