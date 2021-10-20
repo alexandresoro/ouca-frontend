@@ -200,28 +200,4 @@ export class BackendApiService {
     );
   };
 
-  public deleteEntity = (
-    id: number,
-    entityName: string
-  ): Observable<boolean> => {
-    return this.deleteEntityRequest(entityName, id).pipe(
-      tap((response: PostResponse) => {
-        if (response.isSuccess) {
-          this.statusMessageService.showSuccessMessage(
-            ENTITIES_PROPERTIES[entityName].theEntityLabelUppercase +
-            " a été supprimé" +
-            (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
-            " avec succès."
-          );
-        } else {
-          this.statusMessageService.showErrorMessage(
-            "Une erreur est survenue pendant la suppression.",
-            response.message
-          );
-        }
-      }),
-      map((response: PostResponse) => response.isSuccess)
-    );
-  };
-
 }

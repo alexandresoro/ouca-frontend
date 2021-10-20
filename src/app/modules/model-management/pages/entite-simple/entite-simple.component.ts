@@ -1,22 +1,25 @@
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { Observable } from "rxjs";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { ConfirmationDialogData } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog.component";
-import { BackendApiService } from "src/app/services/backend-api.service";
 import { ExportService } from "src/app/services/export.service";
 
 export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
   constructor(
     private dialog: MatDialog,
-    protected backendApiService: BackendApiService,
     private exportService: ExportService,
-    private router: Router
+    private router: Router,
   ) { }
 
   abstract getEntityName(): string;
 
   abstract getDeleteMessage(entity: T): string;
+
+  abstract getDeleteMutation(entity: T): Observable<number | null>;
+
+  abstract handleEntityDeletionResult(id: number | null): void;
 
   public exportObjects(): void {
     this.exportService.exportEntities(this.getEntityName());
@@ -47,9 +50,9 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
 
     dialogRef.afterClosed().subscribe((shouldDeleteEntity) => {
       if (shouldDeleteEntity) {
-        this.backendApiService
-          .deleteEntity(entity.id, this.getEntityName())
-          .subscribe();
+        this.getDeleteMutation(entity).subscribe((resultId) => {
+          this.handleEntityDeletionResult(resultId);
+        });
       }
     });
   };

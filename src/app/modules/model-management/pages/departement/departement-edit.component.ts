@@ -19,6 +19,7 @@ import { map, takeUntil } from "rxjs/operators";
 import { Departement, MutationUpsertDepartementArgs } from "src/app/model/graphql";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { BackendApiService } from "src/app/services/backend-api.service";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
@@ -58,6 +59,7 @@ export class DepartementEditComponent
 
   constructor(
     private apollo: Apollo,
+    private statusMessageService: StatusMessageService,
     backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
@@ -108,7 +110,17 @@ export class DepartementEditComponent
         id,
         data: rest
       }
-    }).subscribe(({ data }) => {
+    }).subscribe(({ data, errors }) => {
+      if (data) {
+        this.statusMessageService.showSuccessMessage(
+          "Le département a été sauvegardé avec succès."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde.",
+          JSON.stringify(errors)
+        );
+      }
       data && this.backToEntityPage();
     })
   };
