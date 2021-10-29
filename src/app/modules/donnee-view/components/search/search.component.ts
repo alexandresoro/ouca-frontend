@@ -1,113 +1,137 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { ApolloQueryResult } from "@apollo/client/core";
 import { Apollo, gql } from "apollo-angular";
 import deburr from 'lodash.deburr';
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { map, startWith, takeUntil, withLatestFrom } from "rxjs/operators";
+import { BehaviorSubject, Observable, of, Subject } from "rxjs";
+import { map, startWith, switchMap } from "rxjs/operators";
 import { isADate } from "src/app/date-adapter/date-fns-adapter";
-import { Age, Classe, Commune, Comportement, Departement, Espece, EstimationDistance, EstimationNombre, LieuDit, Meteo, Milieu, Observateur, Sexe } from "src/app/model/graphql";
+import { AgesPaginatedResult, AgeWithCounts, ClassesPaginatedResult, ClasseWithCounts, CommunesPaginatedResult, CommuneWithCounts, ComportementsPaginatedResult, ComportementWithCounts, DepartementsPaginatedResult, DepartementWithCounts, EspecesPaginatedResult, EspeceWithCounts, EstimationDistanceWithCounts, EstimationNombreWithCounts, EstimationsDistancePaginatedResult, EstimationsNombrePaginatedResult, LieuDitWithCounts, LieuxDitsPaginatedResult, MeteosPaginatedResult, MeteoWithCounts, MilieuWithCounts, MilieuxPaginatedResult, ObservateursPaginatedResult, ObservateurWithCounts, SearchParams, SexesPaginatedResult, SexeWithCounts } from "src/app/model/graphql";
 import { EntiteAvecLibelleEtCode } from 'src/app/model/types/entite-avec-libelle-et-code.object';
-import { EntiteAvecLibelle } from 'src/app/model/types/entite-avec-libelle.object';
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
 import { TimeHelper } from "src/app/modules/shared/helpers/time.helper";
 import { SearchCriterion } from "../../models/search-criterion.model";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
 
-type LieuDitSimple = Pick<LieuDit, 'id' | 'nom'> & {
-  commune: {
-    id: number
-  }
-};
-
-type SearchQueryResult = {
-  ages: Age[],
-  classes: Classe[],
-  communes: Commune[],
-  comportements: Comportement[],
-  departements: Departement[],
-  especes: Espece[],
-  lieuxDits: LieuDitSimple[],
-  estimationsNombre: EstimationNombre[],
-  estimationsDistance: EstimationDistance[],
-  meteos: Meteo[],
-  milieux: Milieu[],
-  observateurs: Observateur[]
-  sexes: Sexe[],
+type SearchWithCriteriaQueryResult = {
+  paginatedDepartements: Pick<DepartementsPaginatedResult, 'result'>
+  paginatedCommunes: Pick<CommunesPaginatedResult, 'result'>
+  paginatedLieuxdits: Pick<LieuxDitsPaginatedResult, 'result'>
+  paginatedEspeces: Pick<EspecesPaginatedResult, 'result'>
+  paginatedClasses: Pick<ClassesPaginatedResult, 'result'>
+  paginatedSexes: Pick<SexesPaginatedResult, 'result'>
+  paginatedAges: Pick<AgesPaginatedResult, 'result'>
+  paginatedComportements: Pick<ComportementsPaginatedResult, 'result'>
+  paginatedMilieux: Pick<MilieuxPaginatedResult, 'result'>
+  paginatedMeteos: Pick<MeteosPaginatedResult, 'result'>
+  paginatedEstimationsNombre: Pick<EstimationsNombrePaginatedResult, 'result'>
+  paginatedEstimationsDistance: Pick<EstimationsDistancePaginatedResult, 'result'>
+  paginatedObservateurs: Pick<ObservateursPaginatedResult, 'result'>
 }
 
-const SEARCH_QUERY = gql`
-  query {
-    ages {
-      id
-      libelle
-    }
-    classes {
-      id
-      libelle
-    }
-    communes {
-      id
-      code
-      nom
-      departement {
+const SEARCH_WITH_CRITERIA_QUERY = gql`
+  query SearchWithCriteriaQuery($searchParams: SearchParams) {
+    paginatedDepartements(searchParams: $searchParams) {
+      result {
         id
         code
       }
     }
-    comportements {
-      id
-      code
-      libelle
-      nicheur
+    paginatedCommunes(searchParams: $searchParams) {
+      result {
+        id
+        code
+        nom
+        departement {
+          id
+          code
+        }
+      }
     }
-    departements {
-      id
-      code
+    paginatedLieuxdits(searchParams: $searchParams) {
+      result {
+        id
+        nom
+        commune {
+          id
+          code
+          nom
+          departement {
+            id
+            code
+          }
+        }
+      }
     }
-    especes {
-      id
-      code
-      nomFrancais
-      nomLatin
-      classe {
+    paginatedEspeces(searchParams: $searchParams) {
+      result {
+        id
+        code
+        nomFrancais
+        nomLatin
+        classe {
+          id
+          libelle
+        }
+      }
+    }
+    paginatedClasses(searchParams: $searchParams) {
+      result {
         id
         libelle
       }
     }
-    estimationsNombre {
-      id
-      libelle
-      nonCompte
-    }
-    estimationsDistance {
-      id
-      libelle
-    }
-    lieuxDits {
-      id
-      nom
-      commune {
+    paginatedSexes(searchParams: $searchParams) {
+      result {
         id
+        libelle
       }
     }
-    meteos {
-      id
-      libelle
+    paginatedAges(searchParams: $searchParams) {
+      result {
+        id
+        libelle
+      }
     }
-    milieux {
-      id
-      code
-      libelle
+    paginatedComportements(searchParams: $searchParams) {
+      result {
+        id
+        code
+        libelle
+        nicheur
+      }
     }
-    observateurs {
-      id
-      libelle
+    paginatedMilieux(searchParams: $searchParams) {
+      result {
+        id
+        code
+        libelle
+      }
     }
-    sexes {
-      id
-      libelle
+    paginatedMeteos(searchParams: $searchParams) {
+      result {
+        id
+        libelle
+      }
+    }
+    paginatedEstimationsNombre(searchParams: $searchParams) {
+      result {
+        id
+        libelle
+        nonCompte
+      }
+    }
+    paginatedEstimationsDistance(searchParams: $searchParams) {
+      result {
+        id
+        libelle
+      }
+    }
+    paginatedObservateurs(searchParams: $searchParams) {
+      result {
+        id
+        libelle
+      }
     }
   }
 `;
@@ -126,40 +150,24 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
 
   public searchCriteria$: Observable<SearchCriterion[]>;
 
-  public filteredObservateurs$: Observable<Observateur[]>;
-  public filteredDepartements$: Observable<Departement[]>;
-  public filteredCommunes$: Observable<Commune[]>;
-  public filteredLieuxDits$: Observable<LieuDitSimple[]>;
-  public filteredMeteos$: Observable<Meteo[]>;
-  public filteredClasses$: Observable<Classe[]>;
-  public filteredEspeces$: Observable<Espece[]>;
-  public filteredSexes$: Observable<Sexe[]>;
-  public filteredAges$: Observable<Age[]>;
-  public filteredEstimationsNombre$: Observable<EstimationNombre[]>;
-  public filteredEstimationsDistance$: Observable<EstimationDistance[]>;
-  public filteredComportements$: Observable<Comportement[]>;
-  public filteredMilieux$: Observable<Milieu[]>;
+  public filteredObservateurs$: Observable<ObservateurWithCounts[]>;
+  public filteredDepartements$: Observable<DepartementWithCounts[]>;
+  public filteredCommunes$: Observable<CommuneWithCounts[]>;
+  public filteredLieuxDits$: Observable<LieuDitWithCounts[]>;
+  public filteredMeteos$: Observable<MeteoWithCounts[]>;
+  public filteredClasses$: Observable<ClasseWithCounts[]>;
+  public filteredEspeces$: Observable<EspeceWithCounts[]>;
+  public filteredSexes$: Observable<SexeWithCounts[]>;
+  public filteredAges$: Observable<AgeWithCounts[]>;
+  public filteredEstimationsNombre$: Observable<EstimationNombreWithCounts[]>;
+  public filteredEstimationsDistance$: Observable<EstimationDistanceWithCounts[]>;
+  public filteredComportements$: Observable<ComportementWithCounts[]>;
+  public filteredMilieux$: Observable<MilieuWithCounts[]>;
   public filteredNicheurs$: Observable<Nicheur[]>;
   public filteredOthers$: Observable<
     { type: string; object: string | number }[]
   >;
 
-  private observateurs$: Observable<Observateur[]>;
-  private classes$: Observable<Classe[]>;
-  private especes$: Observable<Espece[]>;
-  private estimationsNombre$: Observable<EstimationNombre[]>;
-  private estimationsDistance$: Observable<EstimationDistance[]>;
-  private sexes$: Observable<Sexe[]>;
-  private ages$: Observable<Age[]>;
-  private comportements$: Observable<Comportement[]>;
-  private milieux$: Observable<Milieu[]>;
-  private meteos$: Observable<Meteo[]>;
-  private departements$: Observable<Departement[]>;
-  private departementsSubj$: BehaviorSubject<Departement[]> = new BehaviorSubject<Departement[]>([]);
-  private communes$: Observable<Commune[]>;
-
-  private communesSubj$: BehaviorSubject<Commune[]> = new BehaviorSubject<Commune[]>([]);
-  private lieuxDits$: Observable<LieuDitSimple[]>;
   private nicheursStatuses: Nicheur[] = Object.values(NICHEUR_VALUES);
 
   private CHARACTERS_TO_IGNORE = /(\s|\'|\-|\,)/g;
@@ -169,11 +177,11 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
     this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
   );
 
-  private userInputChange$: Observable<[any, number]>;
-
   private readonly destroy$ = new Subject();
 
-  private searchQuery$: Observable<ApolloQueryResult<SearchQueryResult>>;
+  private searchResult$: Observable<SearchWithCriteriaQueryResult | null>;
+
+  private pageNumber$: BehaviorSubject<number> = new BehaviorSubject(0);
 
   constructor(
     private apollo: Apollo,
@@ -187,6 +195,7 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
       this.numberOfResultsPerType$.next(
         this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
       );
+      this.pageNumber$.next(0);
     });
   }
 
@@ -197,161 +206,81 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
 
   private init = (): void => {
 
-    this.searchQuery$ = this.apollo.watchQuery<SearchQueryResult>({
-      query: SEARCH_QUERY
-    }).valueChanges.pipe(
-      takeUntil(this.destroy$)
+    this.searchResult$ = this.searchCtrl.valueChanges.pipe(
+      startWith<string>(null as string),
+      switchMap((searchValue) => {
+        console.log(searchValue)
+        if (!searchValue?.length) { // If the requested value is an empty string, do not display any result
+          return of<null>(null);
+        }
+        return this.apollo.query<SearchWithCriteriaQueryResult, { searchParams: SearchParams }>({
+          query: SEARCH_WITH_CRITERIA_QUERY, // TODO fetch policy ?
+          variables: {
+            searchParams: {
+              q: searchValue,
+              pageNumber: 0,
+              pageSize: this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
+            }
+          }
+        }).pipe(
+          map(({ data }) => data)
+        );
+      })
     );
 
     this.searchCriteria$ = this.searchCriteriaService.getCurrentSearchCriteria$();
 
-    this.observateurs$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.observateurs)
-    );
-    this.estimationsNombre$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.estimationsNombre)
-    );
-    this.estimationsDistance$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.estimationsDistance)
-    );
-    this.classes$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.classes)
-    );
-    this.especes$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.especes)
-    );
-    this.sexes$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.sexes)
-    );
-    this.ages$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.ages)
-    );
-    this.comportements$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.comportements)
-    );
-    this.milieux$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.milieux)
-    );
-    this.meteos$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.meteos)
-    );
-    this.lieuxDits$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.lieuxDits)
-    );
-    this.departements$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.departements)
-    );
-    this.communes$ = this.searchQuery$.pipe(
-      map(({ data }) => data?.communes)
-    );
+    this.filteredObservateurs$ = this.searchResult$.pipe(
+      map(result => result?.paginatedObservateurs?.result ?? [])
+    )
 
-    this.departements$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(this.departementsSubj$);
+    this.filteredDepartements$ = this.searchResult$.pipe(
+      map(result => result?.paginatedDepartements?.result ?? [])
+    )
 
-    this.communes$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(this.communesSubj$);
+    this.filteredCommunes$ = this.searchResult$.pipe(
+      map(result => result?.paginatedCommunes?.result ?? [])
+    )
 
-    this.userInputChange$ = combineLatest(
-      this.searchCtrl.valueChanges.pipe(startWith(null)),
-      this.numberOfResultsPerType$
-    );
+    this.filteredLieuxDits$ = this.searchResult$.pipe(
+      map(result => result?.paginatedLieuxdits?.result ?? [])
+    )
 
-    this.filteredObservateurs$ = this.userInputChange$.pipe(
-      withLatestFrom(this.observateurs$),
-      map(([[filterValue, listSize], allObservateurs]) =>
-        this.filterEntitiesWithLabel(allObservateurs, listSize, filterValue)
-      )
-    );
+    this.filteredMeteos$ = this.searchResult$.pipe(
+      map(result => result?.paginatedMeteos?.result ?? [])
+    )
 
-    this.filteredDepartements$ = this.userInputChange$.pipe(
-      withLatestFrom(this.departements$),
-      map(([[filterValue, listSize], allDepartements]) =>
-        this.filterDepartements(allDepartements, listSize, filterValue)
-      )
-    );
+    this.filteredClasses$ = this.searchResult$.pipe(
+      map(result => result?.paginatedClasses?.result ?? [])
+    )
 
-    this.filteredCommunes$ = this.userInputChange$.pipe(
-      withLatestFrom(this.communes$),
-      map(([[filterValue, listSize], allCommunes]) =>
-        this.filterCommunes(allCommunes, listSize, filterValue)
-      )
-    );
+    this.filteredEspeces$ = this.searchResult$.pipe(
+      map(result => result?.paginatedEspeces?.result ?? [])
+    )
 
-    this.filteredLieuxDits$ = this.userInputChange$.pipe(
-      withLatestFrom(this.lieuxDits$),
-      map(([[filterValue, listSize], allLieuxDits]) =>
-        this.filterLieuxDits(allLieuxDits, listSize, filterValue)
-      )
-    );
+    this.filteredSexes$ = this.searchResult$.pipe(
+      map(result => result?.paginatedSexes?.result ?? [])
+    )
 
-    this.filteredMeteos$ = this.userInputChange$.pipe(
-      withLatestFrom(this.meteos$),
-      map(([[filterValue, listSize], allMeteos]) =>
-        this.filterEntitiesWithLabel(allMeteos, listSize, filterValue)
-      )
-    );
+    this.filteredAges$ = this.searchResult$.pipe(
+      map(result => result?.paginatedAges?.result ?? [])
+    )
 
-    this.filteredClasses$ = this.userInputChange$.pipe(
-      withLatestFrom(this.classes$),
-      map(([[filterValue, listSize], allClasses]) =>
-        this.filterEntitiesWithLabel(allClasses, listSize, filterValue)
-      )
-    );
+    this.filteredEstimationsNombre$ = this.searchResult$.pipe(
+      map(result => result?.paginatedEstimationsNombre?.result ?? [])
+    )
 
-    this.filteredEspeces$ = this.userInputChange$.pipe(
-      withLatestFrom(this.especes$),
-      map(([[filterValue, listSize], allEspeces]) =>
-        this.filterEspeces(allEspeces, listSize, filterValue)
-      )
-    );
+    this.filteredEstimationsDistance$ = this.searchResult$.pipe(
+      map(result => result?.paginatedEstimationsDistance?.result ?? [])
+    )
 
-    this.filteredSexes$ = this.userInputChange$.pipe(
-      withLatestFrom(this.sexes$),
-      map(([[filterValue, listSize], allSexes]) =>
-        this.filterEntitiesWithLabel(allSexes, listSize, filterValue)
-      )
-    );
+    this.filteredComportements$ = this.searchResult$.pipe(
+      map(result => result?.paginatedComportements?.result ?? [])
+    )
 
-    this.filteredAges$ = this.userInputChange$.pipe(
-      withLatestFrom(this.ages$),
-      map(([[filterValue, listSize], allAges]) =>
-        this.filterEntitiesWithLabel(allAges, listSize, filterValue)
-      )
-    );
-
-    this.filteredEstimationsNombre$ = this.userInputChange$.pipe(
-      withLatestFrom(this.estimationsNombre$),
-      map(([[filterValue, listSize], allEstimations]) =>
-        this.filterEntitiesWithLabel(allEstimations, listSize, filterValue)
-      )
-    );
-
-    this.filteredEstimationsDistance$ = this.userInputChange$.pipe(
-      withLatestFrom(this.estimationsDistance$),
-      map(([[filterValue, listSize], allEstimations]) =>
-        this.filterEntitiesWithLabel(allEstimations, listSize, filterValue)
-      )
-    );
-
-    this.filteredComportements$ = this.userInputChange$.pipe(
-      withLatestFrom(this.comportements$),
-      map(([[filterValue, listSize], allComportements]) =>
-        this.filterEntitiesWithLabelAndCode(
-          allComportements,
-          listSize,
-          filterValue
-        )
-      )
-    );
-
-    this.filteredMilieux$ = this.userInputChange$.pipe(
-      withLatestFrom(this.milieux$),
-      map(([[filterValue, listSize], allMilieux]) =>
-        this.filterEntitiesWithLabelAndCode(allMilieux, listSize, filterValue)
-      )
-    );
+    this.filteredMilieux$ = this.searchResult$.pipe(
+      map(result => result?.paginatedMilieux?.result ?? [])
+    )
 
     this.filteredNicheurs$ = this.searchCtrl.valueChanges.pipe(
       startWith(null),
@@ -375,116 +304,6 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   public removeChip(criterion: any): void {
     this.searchCriteriaService.removeCriterion(criterion);
   }
-
-  private filterEntitiesWithLabel = <T extends EntiteAvecLibelle>(
-    allEntities: T[],
-    listSize: number,
-    filterValue: any
-  ): T[] => {
-    if (filterValue && !filterValue.type) {
-      const valueToFind = this.transformValue(filterValue);
-      return allEntities
-        .filter((entity) =>
-          this.transformValue(entity.libelle).includes(valueToFind)
-        )
-        .slice(0, listSize);
-    } else {
-      return [];
-    }
-  };
-
-  private filterEntitiesWithLabelAndCode = <T extends EntiteAvecLibelleEtCode>(
-    allEntities: T[],
-    listSize: number,
-    filterValue: any
-  ): T[] => {
-    if (filterValue && !filterValue.type) {
-      const valueToFind = this.transformValue(filterValue);
-      return allEntities
-        .filter(
-          (entity) =>
-            this.transformValue(entity.libelle).includes(valueToFind) ||
-            this.transformValue(entity.code).startsWith(valueToFind)
-        )
-        .slice(0, listSize);
-    } else {
-      return [];
-    }
-  };
-
-  private filterDepartements = (
-    allDepartements: Departement[],
-    listSize: number,
-    filterValue: any
-  ): Departement[] => {
-    if (filterValue && !filterValue.type) {
-      const valueToFind = this.transformValue(filterValue);
-
-      return allDepartements
-        .filter((departement) =>
-          this.transformValue(departement.code).includes(valueToFind)
-        )
-        .slice(0, listSize);
-    } else {
-      return [];
-    }
-  };
-
-  private filterCommunes = (
-    allCommunes: Commune[],
-    listSize: number,
-    filterValue: any
-  ): Commune[] => {
-    if (filterValue && !filterValue.type) {
-      const valueToFind = this.transformValue(filterValue);
-
-      return allCommunes
-        .filter((commune) =>
-          this.transformValue(commune.nom).includes(valueToFind)
-        )
-        .slice(0, listSize);
-    } else {
-      return [];
-    }
-  };
-
-  private filterLieuxDits = (
-    allLieuxDits: LieuDitSimple[],
-    listSize: number,
-    filterValue: any
-  ): LieuDitSimple[] => {
-    if (filterValue && !filterValue.type) {
-      const valueToFind = this.transformValue(filterValue);
-
-      return allLieuxDits
-        .filter((lieuDit) =>
-          this.transformValue(lieuDit.nom).includes(valueToFind)
-        )
-        .slice(0, listSize);
-    } else {
-      return [];
-    }
-  };
-
-  private filterEspeces = (
-    allEspeces: Espece[],
-    listSize: number,
-    filterValue: any
-  ): Espece[] => {
-    if (filterValue && !filterValue.type) {
-      const valueToFind = this.transformValue(filterValue);
-      return allEspeces
-        .filter(
-          (espece) =>
-            this.transformValue(espece.code).includes(valueToFind) ||
-            this.transformValue(espece.nomFrancais).includes(valueToFind) ||
-            this.transformValue(espece.nomLatin).includes(valueToFind)
-        )
-        .slice(0, listSize);
-    } else {
-      return [];
-    }
-  };
 
   private filterNicheurs = (
     allNicheurs: Nicheur[],
@@ -562,21 +381,19 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
     return result;
   };
 
-  public getDisplayedDepartement = (departement: Departement): string => {
+  public getDisplayedDepartement = (departement: DepartementWithCounts): string => {
     return "Département : " + departement.code;
   };
 
-  public getDisplayedCommune = (commune: Commune): string => {
-    const departementCode = this.departementsSubj$.value?.find(departement => departement.id === commune?.departement?.id)?.code;
-    return `Commune : ${commune.nom} (${departementCode})`;
+  public getDisplayedCommune = (commune: CommuneWithCounts): string => {
+    return `Commune : ${commune.nom} (${commune.departement.code})`;
   };
 
-  public getDisplayedLieuDit = (lieuDit: LieuDitSimple): string => {
-    const commune = this.communesSubj$.value?.find(commune => commune.id === lieuDit.commune?.id);
-    return `Lieu-dit : ${lieuDit.nom} à ${this.getDisplayedCommune(commune)}`;
+  public getDisplayedLieuDit = (lieuDit: LieuDitWithCounts): string => {
+    return `Lieu-dit : ${lieuDit.nom} à ${this.getDisplayedCommune(lieuDit.commune)}`;
   };
 
-  public getDisplayedEspece = (espece: Espece): string => {
+  public getDisplayedEspece = (espece: EspeceWithCounts): string => {
     return "Espèce : " + espece.nomFrancais + " (" + espece.code + ")";
   };
 
@@ -630,7 +447,7 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
 
   public getDisplayEntityWithLabel = (
     entityName: string,
-    entity: EntiteAvecLibelle
+    entity: { libelle: string }
   ): string => {
     return entityName + " : " + entity.libelle;
   };
@@ -705,7 +522,9 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
     }
   };
 
-  public onMoreResultsClicked = (): void => {
+  public onMoreResultsClicked = (): void => { // TODO fix this somehow
+    const newPage = this.pageNumber$.value + 1;
+    this.pageNumber$.next(newPage);
     this.numberOfResultsPerType$.next(
       this.numberOfResultsPerType$.value +
       this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
