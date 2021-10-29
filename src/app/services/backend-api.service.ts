@@ -1,14 +1,12 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { tap } from "rxjs/operators";
 import { Donnee } from '../model/types/donnee.object';
 import { DonneesFilter } from '../model/types/donnees-filter.object';
 import { FlatDonnee } from '../model/types/flat-donnee.object';
 import { Inventaire } from '../model/types/inventaire.object';
 import { PostResponse } from '../model/types/post-response.object';
-import { ENTITIES_PROPERTIES } from "../modules/model-management/models/entities-properties.model";
-import { StatusMessageService } from "./status-message.service";
 
 @Injectable({
   providedIn: "root"
@@ -25,8 +23,7 @@ export class BackendApiService {
   private CLEAR: string = "clear";
   private SEARCH: string = "search";
 
-  constructor(public http: HttpClient,
-    private statusMessageService: StatusMessageService
+  constructor(public http: HttpClient
   ) { }
 
   private getApiUrl = (): string => {
@@ -125,20 +122,6 @@ export class BackendApiService {
     return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
   }
 
-  public saveEntityRequest<T extends { id?: number }>(
-    entityName: string,
-    entityToSave: T
-  ): Observable<PostResponse> {
-    return this.httpPost(entityName + "/" + this.SAVE, entityToSave);
-  }
-
-  public deleteEntityRequest(
-    entityName: string,
-    id: number
-  ): Observable<PostResponse> {
-    return this.httpGet(entityName + "/" + this.DELETE + "?id=" + id);
-  }
-
   public getDonneesByCustomizedFilters(
     parameters: DonneesFilter
   ): Observable<FlatDonnee[]> {
@@ -173,30 +156,6 @@ export class BackendApiService {
     especeId: number
   ): Observable<{ name: string; value: number }[]> => {
     return this.httpGet("espece/details_by_sexe?id=" + especeId);
-  };
-
-  public saveEntity = <E extends { id?: number }>(
-    entity: E,
-    entityName: string
-  ): Observable<boolean> => {
-    return this.saveEntityRequest(entityName, entity).pipe(
-      tap((response: PostResponse) => {
-        if (response.isSuccess) {
-          this.statusMessageService.showSuccessMessage(
-            ENTITIES_PROPERTIES[entityName].theEntityLabelUppercase +
-            " a été sauvegardé" +
-            (ENTITIES_PROPERTIES[entityName].isFeminine ? "e" : "") +
-            " avec succès."
-          );
-        } else {
-          this.statusMessageService.showErrorMessage(
-            "Une erreur est survenue pendant la sauvegarde.",
-            response.message
-          );
-        }
-      }),
-      map((response: PostResponse) => response.isSuccess)
-    );
   };
 
 }
