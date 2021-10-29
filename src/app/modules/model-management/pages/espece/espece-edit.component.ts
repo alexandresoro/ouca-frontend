@@ -16,9 +16,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
-import { Espece } from "src/app/model/graphql";
+import { Espece, InputEspece, MutationUpsertEspeceArgs } from "src/app/model/graphql";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { EspeceFormComponent } from "../../components/form/espece-form/espece-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
@@ -29,6 +29,21 @@ type EspecesQueryResult = {
 const ESPECES_QUERY = gql`
   query {
     especes {
+      id
+      code
+      nomFrancais
+      nomLatin
+      classe {
+        id
+        libelle
+      }
+    }
+  }
+`;
+
+const ESPECE_UPSERT = gql`
+  mutation EspeceUpsert($id: Int, $data: InputEspece!) {
+    upsertEspece(id: $id, data: $data) {
       id
       code
       nomFrancais
@@ -56,12 +71,12 @@ export class EspeceEditComponent
 
   constructor(
     private apollo: Apollo,
-    backendApiService: BackendApiService,
+    private statusMessageService: StatusMessageService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(backendApiService, router, route, location);
+    super(router, route, location);
   }
 
   ngOnInit(): void {
@@ -74,6 +89,30 @@ export class EspeceEditComponent
     );
     this.initialize();
   }
+
+  public saveEntity = (formValue: InputEspece & { id: number | null }): void => {
+    const { id, ...rest } = formValue;
+
+    this.apollo.mutate<Espece, MutationUpsertEspeceArgs>({
+      mutation: ESPECE_UPSERT,
+      variables: {
+        id,
+        data: rest
+      }
+    }).subscribe(({ data, errors }) => {
+      if (data) {
+        this.statusMessageService.showSuccessMessage(
+          "L'espèce a été sauvegardée avec succès."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde.",
+          JSON.stringify(errors)
+        );
+      }
+      data && this.backToEntityPage();
+    })
+  };
 
   ngOnDestroy(): void {
     this.destroy$.next();

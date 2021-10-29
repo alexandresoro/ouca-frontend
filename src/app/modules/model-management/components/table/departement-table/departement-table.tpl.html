@@ -83,12 +83,5 @@
     ></tr>
   </table>
 
-  <mat-card *ngIf="dataSource.isLoading$ | async" style="display: flex; justify-content: center; align-items: center">
-    <mat-progress-spinner 
-      color="primary" 
-      mode="indeterminate">
-    </mat-progress-spinner>
-  </mat-card>
-
   <mat-paginator [pageSizeOptions]="[50, 100, 150]"></mat-paginator>
 </div>

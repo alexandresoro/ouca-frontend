@@ -1,8 +1,32 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EspecesOrderBy, EspeceWithCounts } from "src/app/model/graphql";
-import { EspecesGetService } from "src/app/services/especes-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { EspecesOrderBy, EspecesPaginatedResult, EspeceWithCounts } from "src/app/model/graphql";
 import { EntiteTableComponent } from "../entite-table/entite-table.component";
-import { EspecesDataSource } from "./EspecesDataSource";
+
+type PaginatedEspecesQueryResult = {
+  paginatedEspeces: EspecesPaginatedResult
+}
+
+const PAGINATED_ESPECES_QUERY = gql`
+  query PaginatedEspeces($searchParams: SearchParams, $orderBy: EspecesOrderBy, $sortOrder: SortOrder) {
+    paginatedEspeces (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+      count
+      result {
+        id
+        code
+        nomFrancais
+        nomLatin
+        nbDonnees
+        classe {
+          id
+          libelle
+        }
+      }
+    }
+  }
+`;
 
 @Component({
   selector: "espece-table",
@@ -10,7 +34,7 @@ import { EspecesDataSource } from "./EspecesDataSource";
   templateUrl: "./espece-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EspeceTableComponent extends EntiteTableComponent<EspeceWithCounts, EspecesDataSource> {
+export class EspeceTableComponent extends EntiteTableComponent<EspeceWithCounts, PaginatedEspecesQueryResult> {
 
   public displayedColumns: (EspecesOrderBy | "actions")[] = [
     "nomClasse",
@@ -21,22 +45,19 @@ export class EspeceTableComponent extends EntiteTableComponent<EspeceWithCounts,
     "actions"
   ];
 
-  constructor(private especesGetService: EspecesGetService) {
-    super();
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): EspecesDataSource {
-    return new EspecesDataSource(this.especesGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_ESPECES_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadEspeces(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as EspecesOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedEspecesQueryResult>): void => {
+    const especes = data?.paginatedEspeces?.result ?? [];
+    this.dataSource.updateValues(especes, data?.paginatedEspeces?.count);
   }
 
 }

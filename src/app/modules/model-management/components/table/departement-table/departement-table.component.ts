@@ -1,8 +1,28 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { DepartementsOrderBy, DepartementWithCounts } from "src/app/model/graphql";
-import { DepartementsGetService } from "src/app/services/departements-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { DepartementsPaginatedResult, DepartementWithCounts } from "src/app/model/graphql";
 import { EntiteTableComponent } from "../entite-table/entite-table.component";
-import { DepartementsDataSource } from "./DepartementsDataSource";
+
+type PaginatedDepartementsQueryResult = {
+  paginatedDepartements: DepartementsPaginatedResult
+}
+
+const PAGINATED_DEPARTEMENTS_QUERY = gql`
+query PaginatedDepartements($searchParams: SearchParams, $orderBy: DepartementsOrderBy, $sortOrder: SortOrder) {
+  paginatedDepartements (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+    count
+    result {
+      id
+      code
+      nbCommunes
+      nbLieuxDits
+      nbDonnees
+    }
+  }
+}
+`;
 
 @Component({
   selector: "departement-table",
@@ -10,7 +30,7 @@ import { DepartementsDataSource } from "./DepartementsDataSource";
   templateUrl: "./departement-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DepartementTableComponent extends EntiteTableComponent<DepartementWithCounts, DepartementsDataSource> {
+export class DepartementTableComponent extends EntiteTableComponent<DepartementWithCounts, PaginatedDepartementsQueryResult> {
   public displayedColumns: string[] = [
     "code",
     "nbCommunes",
@@ -19,21 +39,19 @@ export class DepartementTableComponent extends EntiteTableComponent<DepartementW
     "actions"
   ];
 
-  constructor(private departementsGetService: DepartementsGetService) {
-    super();
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): DepartementsDataSource {
-    return new DepartementsDataSource(this.departementsGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_DEPARTEMENTS_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadDepartements(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as DepartementsOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedDepartementsQueryResult>): void => {
+    const departements = data?.paginatedDepartements?.result ?? [];
+    this.dataSource.updateValues(departements, data?.paginatedDepartements?.count);
   }
+
 }

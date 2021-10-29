@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { MutationDeleteObservateurArgs, ObservateurWithCounts } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { ObservateurTableComponent } from "../../components/table/observateur-table/observateur-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteObservateurMutationResult = {
@@ -34,6 +35,9 @@ export class ObservateurComponent extends EntiteSimpleComponent<ObservateurWithC
     super(dialog, exportService, router);
   }
 
+  @ViewChild(ObservateurTableComponent)
+  private tableComponent!: ObservateurTableComponent;
+
   getDeleteMutation(entity: ObservateurWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteObservateurMutationResult, MutationDeleteObservateurArgs>({
       mutation: DELETE_OBSERVATEUR,
@@ -47,6 +51,7 @@ export class ObservateurComponent extends EntiteSimpleComponent<ObservateurWithC
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("L'observateur a été supprimé avec succès.");
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");

@@ -1,8 +1,28 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EstimationNombreOrderBy, EstimationNombreWithCounts } from "src/app/model/graphql";
-import { EstimationsNombreGetService } from "src/app/services/estimations-nombre-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { EstimationNombreWithCounts, EstimationsNombrePaginatedResult } from "src/app/model/graphql";
 import { EntiteTableComponent } from "../entite-table/entite-table.component";
-import { EstimationsNombreDataSource } from "./EstimationsNombreDataSource";
+
+type PaginatedEstimationsNombreQueryResult = {
+  paginatedEstimationsNombre: EstimationsNombrePaginatedResult
+}
+
+const PAGINATED_ESTIMATIONS_NOMBRE_QUERY = gql`
+  query PaginatedEstimationsNombre($searchParams: SearchParams, $orderBy: EstimationNombreOrderBy, $sortOrder: SortOrder) {
+    paginatedEstimationsNombre (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+      count
+      result {
+        id
+        libelle
+        nonCompte
+        nbDonnees
+      }
+    }
+  }
+`;
+
 
 @Component({
   selector: "estimation-nombre-table",
@@ -10,7 +30,7 @@ import { EstimationsNombreDataSource } from "./EstimationsNombreDataSource";
   templateUrl: "./estimation-nombre-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EstimationNombreTableComponent extends EntiteTableComponent<EstimationNombreWithCounts, EstimationsNombreDataSource> {
+export class EstimationNombreTableComponent extends EntiteTableComponent<EstimationNombreWithCounts, PaginatedEstimationsNombreQueryResult> {
   public displayedColumns: string[] = [
     "libelle",
     "nonCompte",
@@ -18,22 +38,19 @@ export class EstimationNombreTableComponent extends EntiteTableComponent<Estimat
     "actions"
   ];
 
-  constructor(private estimationsNombreGetService: EstimationsNombreGetService) {
-    super();
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): EstimationsNombreDataSource {
-    return new EstimationsNombreDataSource(this.estimationsNombreGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_ESTIMATIONS_NOMBRE_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadEstimationsNombre(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as EstimationNombreOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedEstimationsNombreQueryResult>): void => {
+    const estimationsNombre = data?.paginatedEstimationsNombre?.result ?? [];
+    this.dataSource.updateValues(estimationsNombre, data?.paginatedEstimationsNombre?.count);
   }
 
   public getNonCompte = (nonCompte: boolean): string => {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { EspeceWithCounts, MutationDeleteEspeceArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { EspeceTableComponent } from "../../components/table/espece-table/espece-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteEspeceMutationResult = {
@@ -34,6 +35,9 @@ export class EspeceComponent extends EntiteSimpleComponent<EspeceWithCounts> {
     super(dialog, exportService, router);
   }
 
+  @ViewChild(EspeceTableComponent)
+  private tableComponent!: EspeceTableComponent;
+
   getDeleteMutation(entity: EspeceWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteEspeceMutationResult, MutationDeleteEspeceArgs>({
       mutation: DELETE_ESPECE,
@@ -47,6 +51,7 @@ export class EspeceComponent extends EntiteSimpleComponent<EspeceWithCounts> {
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("L'espèce a été supprimée avec succès.");
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");

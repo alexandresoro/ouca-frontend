@@ -1,8 +1,27 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { MilieuWithCounts, MilieuxOrderBy } from "src/app/model/graphql";
-import { MilieuxGetService } from "src/app/services/milieux-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { MilieuWithCounts, MilieuxOrderBy, MilieuxPaginatedResult } from "src/app/model/graphql";
 import { EntiteTableComponent } from "../entite-table/entite-table.component";
-import { MilieuxDataSource } from "./MilieuxDataSource";
+
+type PaginatedMilieuxQueryResult = {
+  paginatedMilieux: MilieuxPaginatedResult
+}
+
+const PAGINATED_MILIEUX_QUERY = gql`
+  query PaginatedMilieux($searchParams: SearchParams, $orderBy: MilieuxOrderBy, $sortOrder: SortOrder) {
+    paginatedMilieux (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+      count
+      result {
+        id
+        code
+        libelle
+        nbDonnees
+      }
+    }
+  }
+`;
 
 @Component({
   selector: "milieu-table",
@@ -10,7 +29,7 @@ import { MilieuxDataSource } from "./MilieuxDataSource";
   templateUrl: "./milieu-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MilieuTableComponent extends EntiteTableComponent<MilieuWithCounts, MilieuxDataSource> {
+export class MilieuTableComponent extends EntiteTableComponent<MilieuWithCounts, PaginatedMilieuxQueryResult> {
 
   public displayedColumns: (MilieuxOrderBy | string)[] = [
     "code",
@@ -19,21 +38,18 @@ export class MilieuTableComponent extends EntiteTableComponent<MilieuWithCounts,
     "actions"
   ];
 
-  constructor(private milieuxGetService: MilieuxGetService) {
-    super();
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): MilieuxDataSource {
-    return new MilieuxDataSource(this.milieuxGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_MILIEUX_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadMilieux(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as MilieuxOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedMilieuxQueryResult>): void => {
+    const communes = data?.paginatedMilieux?.result ?? [];
+    this.dataSource.updateValues(communes, data?.paginatedMilieux?.count);
   }
 }

@@ -4,17 +4,17 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
-import { BackendApiService } from "src/app/services/backend-api.service";
 
 export abstract class EntiteSimpleEditAbstractComponent<
   T extends EntiteSimple
   > {
   constructor(
-    protected backendApiService: BackendApiService,
     protected router: Router,
     protected route: ActivatedRoute,
     protected location: Location
   ) { }
+
+  public abstract saveEntity(formValue: unknown): void;
 
   private form: FormGroup;
 
@@ -60,18 +60,6 @@ export abstract class EntiteSimpleEditAbstractComponent<
       }
     });
   }
-
-  public saveEntity = (formValue: unknown): void => {
-    const entityName = this.getEntityName();
-
-    this.backendApiService
-      .saveEntity(formValue as T, entityName)
-      .subscribe((isSuccessful) => {
-        if (isSuccessful) {
-          this.backToEntityPage();
-        }
-      });
-  };
 
   public backToEntityPage = (): void => {
     this.router.navigate(["/" + this.getEntityName()]);

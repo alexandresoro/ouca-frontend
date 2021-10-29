@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { ComportementWithCounts, MutationDeleteComportementArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { ComportementTableComponent } from "../../components/table/comportement-table/comportement-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteComportementMutationResult = {
@@ -34,6 +35,9 @@ export class ComportementComponent extends EntiteSimpleComponent<ComportementWit
     super(dialog, exportService, router);
   }
 
+  @ViewChild(ComportementTableComponent)
+  private tableComponent!: ComportementTableComponent;
+
   getDeleteMutation(entity: ComportementWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteComportementMutationResult, MutationDeleteComportementArgs>({
       mutation: DELETE_COMPORTEMENT,
@@ -47,6 +51,7 @@ export class ComportementComponent extends EntiteSimpleComponent<ComportementWit
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("Le comportement a été supprimé avec succès."
       );
     } else {

@@ -1,8 +1,27 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EntitesAvecLibelleOrderBy, EstimationDistanceWithCounts } from "src/app/model/graphql";
-import { EstimationsDistanceGetService } from "src/app/services/estimations-distance-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { EstimationDistanceWithCounts, EstimationsDistancePaginatedResult } from "src/app/model/graphql";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
-import { EstimationsDistanceDataSource } from "./EstimationsDistanceDataSource";
+
+type PaginatedEstimationsDistanceQueryResult = {
+  paginatedEstimationsDistance: EstimationsDistancePaginatedResult
+}
+
+const PAGINATED_ESTIMATIONS_DISTANCE_QUERY = gql`
+query PaginatedEstimationsDistance($searchParams: SearchParams, $orderBy: EntitesAvecLibelleOrderBy, $sortOrder: SortOrder) {
+  paginatedEstimationsDistance (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+    count
+    result {
+      id
+      libelle
+      nbDonnees
+    }
+  }
+}
+`;
+
 
 @Component({
   selector: "estimation-distance-table",
@@ -13,22 +32,19 @@ import { EstimationsDistanceDataSource } from "./EstimationsDistanceDataSource";
     "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EstimationDistanceTableComponent extends EntiteAvecLibelleTableComponent<EstimationDistanceWithCounts, EstimationsDistanceDataSource> {
-  constructor(private estimationsDistanceGetService: EstimationsDistanceGetService) {
-    super();
+export class EstimationDistanceTableComponent extends EntiteAvecLibelleTableComponent<EstimationDistanceWithCounts, PaginatedEstimationsDistanceQueryResult> {
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): EstimationsDistanceDataSource {
-    return new EstimationsDistanceDataSource(this.estimationsDistanceGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_ESTIMATIONS_DISTANCE_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadEstimationsDistance(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as EntitesAvecLibelleOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedEstimationsDistanceQueryResult>): void => {
+    const estimationsDistance = data?.paginatedEstimationsDistance?.result ?? [];
+    this.dataSource.updateValues(estimationsDistance, data?.paginatedEstimationsDistance?.count);
   }
 }

@@ -1,10 +1,84 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { takeUntil } from "rxjs/operators";
-import { CoordinatesSystemType, LieuxDitsOrderBy } from "src/app/model/graphql";
-import { AppConfigurationGetService } from "src/app/services/app-configuration-get.service";
-import { LieuxDitsGetService } from "src/app/services/lieux-dits-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { getCoordinates } from "src/app/model/coordinates-system/coordinates-helper";
+import { CommuneWithCounts, CoordinatesSystemType, LieuDitWithCounts, LieuxDitsPaginatedResult, Settings } from "src/app/model/graphql";
 import { EntiteTableComponent } from "../entite-table/entite-table.component";
-import { LieuDitRow, LieuxDitsDataSource } from "./LieuxDitsDataSource";
+
+export type LieuDitRow = {
+  id: number
+  commune: CommuneWithCounts
+  nom: string
+  altitude: number
+  longitude: number | string
+  latitude: number | string
+  nbDonnees: number
+}
+
+type PaginatedLieuxDitsAndCoordinatesQueryResult = {
+  paginatedLieuxdits: LieuxDitsPaginatedResult
+  settings: Pick<Settings, 'id' | 'coordinatesSystem'>
+}
+
+const PAGINATED_LIEUX_DITS_AND_COORDINATES_QUERY = gql`
+  query PaginatedLieuxDitsAndCoordinates($searchParams: SearchParams, $orderBy: LieuxDitsOrderBy, $sortOrder: SortOrder) {
+    paginatedLieuxdits (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+      count
+      result {
+        id
+        nom
+        altitude
+        longitude
+        latitude
+        coordinatesSystem
+        commune {
+          id
+          code  
+          nom
+          departement {
+            id
+            code
+          }
+        }
+        nbDonnees
+      }
+    }
+    settings {
+      id
+      coordinatesSystem
+    }
+  }
+`;
+
+const buildRowFromLieudit = (
+  lieudit: LieuDitWithCounts,
+  coordinatesSystemType: CoordinatesSystemType
+): LieuDitRow => {
+
+  const coordinates = getCoordinates(
+    {
+      coordinates: {
+        system: lieudit.coordinatesSystem,
+        latitude: lieudit.latitude,
+        longitude: lieudit.longitude
+      }
+    },
+    coordinatesSystemType
+  );
+
+  return {
+    id: lieudit.id,
+    commune: lieudit.commune,
+    nom: lieudit.nom,
+    altitude: lieudit.altitude,
+    longitude: coordinates.areInvalid
+      ? "Non supporté"
+      : coordinates.longitude,
+    latitude: coordinates.areInvalid ? "Non supporté" : coordinates.latitude,
+    nbDonnees: lieudit.nbDonnees
+  };
+}
 
 @Component({
   selector: "lieudit-table",
@@ -12,7 +86,7 @@ import { LieuDitRow, LieuxDitsDataSource } from "./LieuxDitsDataSource";
   templateUrl: "./lieudit-table.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LieuditTableComponent extends EntiteTableComponent<LieuDitRow, LieuxDitsDataSource> {
+export class LieuditTableComponent extends EntiteTableComponent<LieuDitRow, PaginatedLieuxDitsAndCoordinatesQueryResult> {
 
   public displayedColumns: string[] = [
     "departement",
@@ -26,37 +100,21 @@ export class LieuditTableComponent extends EntiteTableComponent<LieuDitRow, Lieu
     "actions"
   ];
 
-  private coordinatesSystem: CoordinatesSystemType;
-
   constructor(
-    private appConfigurationGetService: AppConfigurationGetService,
-    private lieuxDitsGetService: LieuxDitsGetService,
+    apollo: Apollo
   ) {
-    super();
-    this.coordinatesSystem = null;
+    super(apollo);
   }
 
-  getNewDataSource(): LieuxDitsDataSource {
-    return new LieuxDitsDataSource(this.lieuxDitsGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_LIEUX_DITS_AND_COORDINATES_QUERY;
   }
 
-  protected customOnInit = (): void => {
-    this.appConfigurationGetService.watch().valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(({ data }) => {
-        this.coordinatesSystem = data?.settings?.coordinatesSystem;
-        this.loadEntities();
-      });
-  }
-
-  loadEntities = (): void => {
-    this.dataSource.loadLieuxDits(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as LieuxDitsOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value,
-      this.coordinatesSystem
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedLieuxDitsAndCoordinatesQueryResult>): void => {
+    const lieuxDits = data?.paginatedLieuxdits?.result ?? [];
+    const lieuxDitsRow = lieuxDits?.map((lieudit) => {
+      return buildRowFromLieudit(lieudit, data?.settings?.coordinatesSystem);
+    }) ?? [];
+    this.dataSource.updateValues(lieuxDitsRow, data?.paginatedLieuxdits?.count);
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { MilieuWithCounts, MutationDeleteMilieuArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { MilieuTableComponent } from "../../components/table/milieu-table/milieu-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteMilieuMutationResult = {
@@ -34,6 +35,9 @@ export class MilieuComponent extends EntiteSimpleComponent<MilieuWithCounts> {
     super(dialog, exportService, router);
   }
 
+  @ViewChild(MilieuTableComponent)
+  private tableComponent!: MilieuTableComponent;
+
   getDeleteMutation(entity: MilieuWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteMilieuMutationResult, MutationDeleteMilieuArgs>({
       mutation: DELETE_MILIEU,
@@ -47,6 +51,7 @@ export class MilieuComponent extends EntiteSimpleComponent<MilieuWithCounts> {
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("Le milieu a été supprimé avec succès.");
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");

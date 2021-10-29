@@ -26,13 +26,13 @@ import { filter, map, takeUntil, withLatestFrom } from "rxjs/operators";
 import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
 import { COORDINATES_SYSTEMS_CONFIG } from "src/app/model/coordinates-system/coordinates-system-list.object";
 import { CoordinatesSystem, CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Commune, Departement, LieuDit } from "src/app/model/graphql";
+import { Commune, Departement, InputLieuDit, LieuDit, MutationUpsertLieuDitArgs } from "src/app/model/graphql";
 import { Lieudit } from "src/app/model/types/lieudit.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { has } from 'src/app/modules/shared/helpers/utils';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
-import { BackendApiService } from "src/app/services/backend-api.service";
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
 type LieuDitWithCommuneId = Omit<LieuDit, 'commune'> & { commune: { id: number } };
@@ -79,6 +79,23 @@ const LIEUX_DITS_QUERY = gql`
   }
 `;
 
+const LIEU_DIT_UPSERT = gql`
+  mutation LieuDitUpsert($id: Int, $data: InputLieuDit!) {
+    upsertLieuDit(id: $id, data: $data) {
+      id
+      nom
+      altitude
+      longitude
+      latitude
+      coordinatesSystem
+      commune {
+        id
+      }
+    }
+  }
+`;
+
+
 @Component({
   styleUrls: ["./lieu-dit-edit.component.scss"],
   templateUrl: "./lieu-dit-edit.component.html",
@@ -119,13 +136,13 @@ export class LieuDitEditComponent
 
   constructor(
     private apollo: Apollo,
+    private statusMessageService: StatusMessageService,
     private coordinatesBuilderService: CoordinatesBuilderService,
-    backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(backendApiService, router, route, location);
+    super(router, route, location);
   }
 
   ngOnInit(): void {
@@ -167,6 +184,35 @@ export class LieuDitEditComponent
 
     this.initialize();
   }
+
+  public saveEntity = (formValue: Omit<InputLieuDit, 'coordinatesSystem'> & { id: number | null, departement: number, nomCommune: number }): void => {
+    const { id, departement, nomCommune, ...rest } = formValue;
+    const coordinatesSystem = this.coordinatesSystemSubj$.value.code
+
+    this.apollo.mutate<LieuDit, MutationUpsertLieuDitArgs>({
+      mutation: LIEU_DIT_UPSERT,
+      variables: {
+        id,
+        data: {
+          ...rest,
+          coordinatesSystem
+        }
+      }
+    }).subscribe(({ data, errors }) => {
+      if (data) {
+        this.statusMessageService.showSuccessMessage(
+          "Le lieu-dit a été sauvegardée avec succès."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde.",
+          JSON.stringify(errors)
+        );
+      }
+      data && this.backToEntityPage();
+    })
+  };
+
 
   ngOnDestroy(): void {
     this.destroy$.next();

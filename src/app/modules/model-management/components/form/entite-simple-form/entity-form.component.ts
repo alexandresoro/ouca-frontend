@@ -10,7 +10,6 @@ import {
   ViewChild
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { EntityModeHelper } from "../../../helpers/entity-mode.helper";
 import { EntitySubFormComponent } from "./entity-sub-form.component";
 import { EntitySubFormDirective } from "./entity-sub-form.directive";
@@ -21,7 +20,7 @@ import { EntitySubFormDirective } from "./entity-sub-form.directive";
   templateUrl: "./entity-form.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EntityFormComponent<T extends EntiteSimple> implements OnInit {
+export class EntityFormComponent<T extends { id: number | null }> implements OnInit {
   @Input() componentType: Type<EntitySubFormComponent<T>>;
 
   @ViewChild(EntitySubFormDirective, { static: true })
@@ -35,8 +34,8 @@ export class EntityFormComponent<T extends EntiteSimple> implements OnInit {
 
   @Input() public entityForm: FormGroup;
 
-  @Output() public confirm: EventEmitter<EntiteSimple> = new EventEmitter<
-    EntiteSimple
+  @Output() public confirm: EventEmitter<T> = new EventEmitter<
+    T
   >();
 
   @Output() public back: EventEmitter<null> = new EventEmitter();

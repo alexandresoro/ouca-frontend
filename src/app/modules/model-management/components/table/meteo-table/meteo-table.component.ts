@@ -1,8 +1,27 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EntitesAvecLibelleOrderBy, MeteoWithCounts } from "src/app/model/graphql";
-import { MeteosGetService } from "src/app/services/meteos-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { MeteosPaginatedResult, MeteoWithCounts } from "src/app/model/graphql";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
-import { MeteosDataSource } from "./MeteosDataSource";
+
+type PaginatedMeteosQueryResult = {
+  paginatedMeteos: MeteosPaginatedResult
+}
+
+const PAGINATED_METEOS_QUERY = gql`
+query PaginatedMeteos($searchParams: SearchParams, $orderBy: EntitesAvecLibelleOrderBy, $sortOrder: SortOrder) {
+  paginatedMeteos (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+    count
+    result {
+      id
+      libelle
+      nbDonnees
+    }
+  }
+}
+`;
+
 
 @Component({
   selector: "meteo-table",
@@ -13,22 +32,19 @@ import { MeteosDataSource } from "./MeteosDataSource";
     "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeteoTableComponent extends EntiteAvecLibelleTableComponent<MeteoWithCounts, MeteosDataSource> {
-  constructor(private meteosGetService: MeteosGetService) {
-    super();
+export class MeteoTableComponent extends EntiteAvecLibelleTableComponent<MeteoWithCounts, PaginatedMeteosQueryResult> {
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): MeteosDataSource {
-    return new MeteosDataSource(this.meteosGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_METEOS_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadMeteos(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as EntitesAvecLibelleOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedMeteosQueryResult>): void => {
+    const ages = data?.paginatedMeteos?.result ?? [];
+    this.dataSource.updateValues(ages, data?.paginatedMeteos?.count);
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { CommuneWithCounts, MutationDeleteCommuneArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { CommuneTableComponent } from "../../components/table/commune-table/commune-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteCommuneMutationResult = {
@@ -35,6 +36,9 @@ export class CommuneComponent extends EntiteSimpleComponent<CommuneWithCounts> {
     super(dialog, exportService, router);
   }
 
+  @ViewChild(CommuneTableComponent)
+  private tableComponent!: CommuneTableComponent;
+
   getDeleteMutation(entity: CommuneWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteCommuneMutationResult, MutationDeleteCommuneArgs>({
       mutation: DELETE_COMMUNE,
@@ -48,6 +52,7 @@ export class CommuneComponent extends EntiteSimpleComponent<CommuneWithCounts> {
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("La commune a été supprimée avec succès."
       );
     } else {

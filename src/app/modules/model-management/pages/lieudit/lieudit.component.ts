@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,7 +7,7 @@ import { map } from "rxjs/operators";
 import { MutationDeleteLieuDitArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
-import { LieuDitRow } from "../../components/table/lieudit-table/LieuxDitsDataSource";
+import { LieuDitRow, LieuditTableComponent } from "../../components/table/lieudit-table/lieudit-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteLieuDitMutationResult = {
@@ -35,6 +35,9 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuDitRow> {
     super(dialog, exportService, router);
   }
 
+  @ViewChild(LieuditTableComponent)
+  private tableComponent!: LieuditTableComponent;
+
   getDeleteMutation(entity: LieuDitRow): Observable<number | null> {
     return this.apollo.mutate<DeleteLieuDitMutationResult, MutationDeleteLieuDitArgs>({
       mutation: DELETE_LIEUDIT,
@@ -48,6 +51,7 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuDitRow> {
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("Le lieu-dit a été supprimé avec succès.");
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");

@@ -5,8 +5,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { EstimationNombre } from "src/app/model/graphql";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { EstimationNombre, InputEstimationNombre, MutationUpsertEstimationNombreArgs } from "src/app/model/graphql";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { EstimationNombreFormComponent } from "../../components/form/estimation-nombre-form/estimation-nombre-form.component";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
 
@@ -17,6 +17,16 @@ type EstimationsNombreQueryResult = {
 const ESTIMATIONS_NOMBRE_QUERY = gql`
   query {
     estimationsNombre {
+      id
+      libelle
+      nonCompte
+    }
+  }
+`;
+
+const ESTIMATION_NOMBRE_UPSERT = gql`
+  mutation EstimationNombreUpsert($id: Int, $data: InputEstimationNombre!) {
+    upsertEstimationNombre(id: $id, data: $data) {
       id
       libelle
       nonCompte
@@ -36,12 +46,12 @@ export class EstimationNombreEditComponent
 
   constructor(
     private apollo: Apollo,
-    backendApiService: BackendApiService,
+    private statusMessageService: StatusMessageService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(backendApiService, router, route, location);
+    super(router, route, location);
   }
 
   ngOnInit(): void {
@@ -54,6 +64,30 @@ export class EstimationNombreEditComponent
     );
     this.initialize();
   }
+
+  public saveEntity = (formValue: InputEstimationNombre & { id: number }): void => {
+    const { id, ...rest } = formValue;
+
+    this.apollo.mutate<EstimationNombre, MutationUpsertEstimationNombreArgs>({
+      mutation: ESTIMATION_NOMBRE_UPSERT,
+      variables: {
+        id,
+        data: rest
+      }
+    }).subscribe(({ data, errors }) => {
+      if (data) {
+        this.statusMessageService.showSuccessMessage(
+          "L'estimation du nombre a été sauvegardée avec succès."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde.",
+          JSON.stringify(errors)
+        );
+      }
+      data && this.backToEntityPage();
+    })
+  };
 
   public createForm(): FormGroup {
     return new FormGroup({

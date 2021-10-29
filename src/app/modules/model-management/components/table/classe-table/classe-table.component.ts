@@ -1,8 +1,27 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ClassesOrderBy, ClasseWithCounts } from "src/app/model/graphql";
-import { ClassesGetService } from "src/app/services/classes-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { ClassesOrderBy, ClassesPaginatedResult, ClasseWithCounts } from "src/app/model/graphql";
 import { EntiteTableComponent } from "../entite-table/entite-table.component";
-import { ClassesDataSource } from "./ClassesDataSource";
+
+type PaginatedClassesQueryResult = {
+  paginatedClasses: ClassesPaginatedResult
+}
+
+const PAGINATED_CLASSES_QUERY = gql`
+query PaginatedClasses($searchParams: SearchParams, $orderBy: ClassesOrderBy, $sortOrder: SortOrder) {
+  paginatedClasses (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+    count
+    result {
+      id
+      libelle
+      nbEspeces
+      nbDonnees
+    }
+  }
+}
+`;
 
 @Component({
   selector: "classe-table",
@@ -13,7 +32,7 @@ import { ClassesDataSource } from "./ClassesDataSource";
   templateUrl: "./classe-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClasseTableComponent extends EntiteTableComponent<ClasseWithCounts, ClassesDataSource> {
+export class ClasseTableComponent extends EntiteTableComponent<ClasseWithCounts, PaginatedClassesQueryResult> {
 
   public displayedColumns: (ClassesOrderBy | string)[] = [
     "libelle",
@@ -22,21 +41,18 @@ export class ClasseTableComponent extends EntiteTableComponent<ClasseWithCounts,
     "actions"
   ];
 
-  constructor(private classesGetService: ClassesGetService) {
-    super();
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): ClassesDataSource {
-    return new ClassesDataSource(this.classesGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_CLASSES_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadClasses(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as ClassesOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedClassesQueryResult>): void => {
+    const classes = data?.paginatedClasses?.result ?? [];
+    this.dataSource.updateValues(classes, data?.paginatedClasses?.count);
   }
 }

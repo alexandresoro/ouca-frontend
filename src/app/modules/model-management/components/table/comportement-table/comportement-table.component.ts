@@ -1,9 +1,29 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ComportementsOrderBy, ComportementWithCounts, Nicheur } from "src/app/model/graphql";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { ComportementsPaginatedResult, ComportementWithCounts, Nicheur } from "src/app/model/graphql";
 import { NICHEUR_VALUES } from "src/app/model/types/nicheur.model";
-import { ComportementsGetService } from "src/app/services/comportements-get.service";
 import { EntiteTableComponent } from "../entite-table/entite-table.component";
-import { ComportementsDataSource } from "./ComportementsDataSource";
+
+type PaginatedComportementsQueryResult = {
+  paginatedComportements: ComportementsPaginatedResult
+}
+
+const PAGINATED_COMPORTEMENTS_QUERY = gql`
+  query PaginatedComportements($searchParams: SearchParams, $orderBy: ComportementsOrderBy, $sortOrder: SortOrder) {
+    paginatedComportements (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+      count
+      result {
+        id
+        code
+        libelle
+        nicheur
+        nbDonnees
+      }
+    }
+  }
+`;
 
 @Component({
   selector: "comportement-table",
@@ -11,7 +31,7 @@ import { ComportementsDataSource } from "./ComportementsDataSource";
   templateUrl: "./comportement-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComportementTableComponent extends EntiteTableComponent<ComportementWithCounts, ComportementsDataSource> {
+export class ComportementTableComponent extends EntiteTableComponent<ComportementWithCounts, PaginatedComportementsQueryResult> {
   public displayedColumns: (string)[] = [
     "code",
     "libelle",
@@ -20,22 +40,19 @@ export class ComportementTableComponent extends EntiteTableComponent<Comportemen
     "actions"
   ];
 
-  constructor(private comportementsGetService: ComportementsGetService) {
-    super();
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): ComportementsDataSource {
-    return new ComportementsDataSource(this.comportementsGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_COMPORTEMENTS_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadComportements(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as ComportementsOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedComportementsQueryResult>): void => {
+    const communes = data?.paginatedComportements?.result ?? [];
+    this.dataSource.updateValues(communes, data?.paginatedComportements?.count);
   }
 
   public getNicheur = (code: Nicheur): string => {

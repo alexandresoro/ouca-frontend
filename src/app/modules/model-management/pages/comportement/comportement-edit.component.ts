@@ -5,10 +5,10 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Comportement } from "src/app/model/graphql";
+import { Comportement, InputComportement, MutationUpsertComportementArgs } from "src/app/model/graphql";
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { EntiteAvecLibelleEtCodeEditAbstractComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code-edit.component";
 
 type ComportementsQueryResult = {
@@ -25,6 +25,19 @@ const COMPORTEMENTS_QUERY = gql`
     }
   }
 `;
+
+const COMPORTEMENT_UPSERT = gql`
+  mutation ComportementUpsert($id: Int, $data: InputComportement!) {
+    upsertComportement(id: $id, data: $data) {
+      id
+      code
+      libelle
+      nicheur
+    }
+  }
+`;
+
+
 
 @Component({
   templateUrl: "./comportement-edit.component.html",
@@ -47,12 +60,12 @@ export class ComportementEditComponent
 
   constructor(
     private apollo: Apollo,
-    backendApiService: BackendApiService,
+    private statusMessageService: StatusMessageService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(backendApiService, router, route, location);
+    super(router, route, location);
   }
 
   ngOnInit(): void {
@@ -65,6 +78,31 @@ export class ComportementEditComponent
     );
     this.initialize();
   }
+
+  public saveEntity = (formValue: InputComportement & { id: number | null }): void => {
+    const { id, ...rest } = formValue;
+
+    this.apollo.mutate<Comportement, MutationUpsertComportementArgs>({
+      mutation: COMPORTEMENT_UPSERT,
+      variables: {
+        id,
+        data: rest
+      }
+    }).subscribe(({ data, errors }) => {
+      if (data) {
+        this.statusMessageService.showSuccessMessage(
+          "Le comportement a été sauvegardée avec succès."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde.",
+          JSON.stringify(errors)
+        );
+      }
+      data && this.backToEntityPage();
+    })
+  };
+
 
   public getEntityName = (): string => {
     return "comportement";

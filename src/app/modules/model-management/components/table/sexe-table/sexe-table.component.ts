@@ -1,8 +1,26 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EntitesAvecLibelleOrderBy, SexeWithCounts } from "src/app/model/graphql";
-import { SexesGetService } from "src/app/services/sexes-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { SexesPaginatedResult, SexeWithCounts } from "src/app/model/graphql";
 import { EntiteAvecLibelleTableComponent } from "../entite-avec-libelle-table/entite-avec-libelle-table.component";
-import { SexesDataSource } from "./SexesDataSource";
+
+type PaginatedSexesQueryResult = {
+  paginatedSexes: SexesPaginatedResult
+}
+
+const PAGINATED_SEXES_QUERY = gql`
+query PaginatedSexes($searchParams: SearchParams, $orderBy: EntitesAvecLibelleOrderBy, $sortOrder: SortOrder) {
+  paginatedSexes (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+    count
+    result {
+      id
+      libelle
+      nbDonnees
+    }
+  }
+}
+`;
 
 @Component({
   selector: "sexe-table",
@@ -13,22 +31,19 @@ import { SexesDataSource } from "./SexesDataSource";
     "../entite-avec-libelle-table/entite-avec-libelle-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SexeTableComponent extends EntiteAvecLibelleTableComponent<SexeWithCounts, SexesDataSource> {
-  constructor(private sexesGetService: SexesGetService) {
-    super();
+export class SexeTableComponent extends EntiteAvecLibelleTableComponent<SexeWithCounts, PaginatedSexesQueryResult> {
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): SexesDataSource {
-    return new SexesDataSource(this.sexesGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_SEXES_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadSexes(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as EntitesAvecLibelleOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedSexesQueryResult>): void => {
+    const ages = data?.paginatedSexes?.result ?? [];
+    this.dataSource.updateValues(ages, data?.paginatedSexes?.count);
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { EstimationNombreWithCounts, MutationDeleteEstimationNombreArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { EstimationNombreTableComponent } from "../../components/table/estimation-nombre-table/estimation-nombre-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteEstimationNombreMutationResult = {
@@ -36,6 +37,10 @@ EstimationNombreWithCounts
     super(dialog, exportService, router);
   }
 
+  @ViewChild(EstimationNombreTableComponent)
+  private tableComponent!: EstimationNombreTableComponent;
+
+
   getDeleteMutation(entity: EstimationNombreWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteEstimationNombreMutationResult, MutationDeleteEstimationNombreArgs>({
       mutation: DELETE_ESTIMATION_NOMBRE,
@@ -49,6 +54,7 @@ EstimationNombreWithCounts
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("L'estimation du nombre a été supprimée avec succès.");
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");

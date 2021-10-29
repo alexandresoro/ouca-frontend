@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { EstimationDistanceWithCounts, MutationDeleteEstimationDistanceArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { EstimationDistanceTableComponent } from "../../components/table/estimation-distance-table/estimation-distance-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteEstimationDistanceMutationResult = {
@@ -36,6 +37,10 @@ EstimationDistanceWithCounts
     super(dialog, exportService, router);
   }
 
+  @ViewChild(EstimationDistanceTableComponent)
+  private tableComponent!: EstimationDistanceTableComponent;
+
+
   getDeleteMutation(entity: EstimationDistanceWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteEstimationDistanceMutationResult, MutationDeleteEstimationDistanceArgs>({
       mutation: DELETE_ESTIMATION_DISTANCE,
@@ -49,6 +54,7 @@ EstimationDistanceWithCounts
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("L'estimation de la distance a été supprimée avec succès.");
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");

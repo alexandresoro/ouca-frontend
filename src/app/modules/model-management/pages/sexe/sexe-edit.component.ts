@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Sexe } from "src/app/model/graphql";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { InputSexe, MutationUpsertSexeArgs, Sexe } from "src/app/model/graphql";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
 
 type SexesQueryResult = {
@@ -15,6 +15,15 @@ type SexesQueryResult = {
 const SEXES_QUERY = gql`
   query {
     sexes {
+      id
+      libelle
+    }
+  }
+`;
+
+const SEXE_UPSERT = gql`
+  mutation SexeUpsert($id: Int, $data: InputSexe!) {
+    upsertSexe(id: $id, data: $data) {
       id
       libelle
     }
@@ -33,12 +42,12 @@ export class SexeEditComponent
 
   constructor(
     private apollo: Apollo,
-    backendApiService: BackendApiService,
+    private statusMessageService: StatusMessageService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(backendApiService, router, route, location);
+    super(router, route, location);
   }
 
   ngOnInit(): void {
@@ -51,6 +60,30 @@ export class SexeEditComponent
     );
     this.initialize();
   }
+
+  public saveEntity = (formValue: InputSexe & { id: number }): void => {
+    const { id, ...rest } = formValue;
+
+    this.apollo.mutate<Sexe, MutationUpsertSexeArgs>({
+      mutation: SEXE_UPSERT,
+      variables: {
+        id,
+        data: rest
+      }
+    }).subscribe(({ data, errors }) => {
+      if (data) {
+        this.statusMessageService.showSuccessMessage(
+          "Le sexe a été sauvegardé avec succès."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde.",
+          JSON.stringify(errors)
+        );
+      }
+      data && this.backToEntityPage();
+    })
+  };
 
   public getEntityName = (): string => {
     return "sexe";

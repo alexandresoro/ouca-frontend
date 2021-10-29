@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { DepartementWithCounts, MutationDeleteDepartementArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { DepartementTableComponent } from "../../components/table/departement-table/departement-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteDepartementMutationResult = {
@@ -34,6 +35,9 @@ export class DepartementComponent extends EntiteSimpleComponent<DepartementWithC
     super(dialog, exportService, router);
   }
 
+  @ViewChild(DepartementTableComponent)
+  private tableComponent!: DepartementTableComponent;
+
   getDeleteMutation(entity: DepartementWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteDepartementMutationResult, MutationDeleteDepartementArgs>({
       mutation: DELETE_DEPARTEMENT,
@@ -47,6 +51,7 @@ export class DepartementComponent extends EntiteSimpleComponent<DepartementWithC
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("Le département a été supprimé avec succès.");
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");

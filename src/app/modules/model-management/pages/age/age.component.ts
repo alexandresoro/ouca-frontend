@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 import { AgeWithCounts, MutationDeleteAgeArgs } from "src/app/model/graphql";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
+import { AgeTableComponent } from "../../components/table/age-table/age-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
 
 type DeleteAgeMutationResult = {
@@ -35,6 +36,9 @@ export class AgeComponent extends EntiteSimpleComponent<AgeWithCounts> {
     super(dialog, exportService, router);
   }
 
+  @ViewChild(AgeTableComponent)
+  private tableComponent!: AgeTableComponent;
+
   getDeleteMutation(entity: AgeWithCounts): Observable<number | null> {
     return this.apollo.mutate<DeleteAgeMutationResult, MutationDeleteAgeArgs>({
       mutation: DELETE_AGE,
@@ -48,6 +52,7 @@ export class AgeComponent extends EntiteSimpleComponent<AgeWithCounts> {
 
   handleEntityDeletionResult(id: number | null): void {
     if (id) {
+      void this.tableComponent.updateEntities();
       this.statusMessageService.showSuccessMessage("L'âge a été supprimé avec succès.");
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");

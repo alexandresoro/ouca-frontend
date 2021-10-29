@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Donnee } from '../model/types/donnee.object';
 import { DonneesFilter } from '../model/types/donnees-filter.object';
-import { EntiteSimple } from '../model/types/entite-simple.object';
 import { FlatDonnee } from '../model/types/flat-donnee.object';
 import { Inventaire } from '../model/types/inventaire.object';
 import { PostResponse } from '../model/types/post-response.object';
@@ -126,7 +125,7 @@ export class BackendApiService {
     return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
   }
 
-  public saveEntityRequest<T extends EntiteSimple>(
+  public saveEntityRequest<T extends { id?: number }>(
     entityName: string,
     entityToSave: T
   ): Observable<PostResponse> {
@@ -176,7 +175,7 @@ export class BackendApiService {
     return this.httpGet("espece/details_by_sexe?id=" + especeId);
   };
 
-  public saveEntity = <E extends EntiteSimple>(
+  public saveEntity = <E extends { id?: number }>(
     entity: E,
     entityName: string
   ): Observable<boolean> => {

@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Milieu } from "src/app/model/graphql";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { InputMilieu, Milieu, MutationUpsertMilieuArgs } from "src/app/model/graphql";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { EntiteAvecLibelleEtCodeEditAbstractComponent } from "../entite-avec-libelle-et-code/entite-avec-libelle-et-code-edit.component";
 
 type MilieuxQueryResult = {
@@ -15,6 +15,16 @@ type MilieuxQueryResult = {
 const MILIEUX_QUERY = gql`
   query {
     milieux {
+      id
+      code
+      libelle
+    }
+  }
+`;
+
+const MILIEU_UPSERT = gql`
+  mutation MilieuUpsert($id: Int, $data: InputMilieu!) {
+    upsertMilieu(id: $id, data: $data) {
       id
       code
       libelle
@@ -34,12 +44,12 @@ export class MilieuEditComponent
 
   constructor(
     private apollo: Apollo,
-    backendApiService: BackendApiService,
+    private statusMessageService: StatusMessageService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(backendApiService, router, route, location);
+    super(router, route, location);
   }
 
   ngOnInit(): void {
@@ -52,6 +62,30 @@ export class MilieuEditComponent
     );
     this.initialize();
   }
+
+  public saveEntity = (formValue: InputMilieu & { id: number | null }): void => {
+    const { id, ...rest } = formValue;
+
+    this.apollo.mutate<Milieu, MutationUpsertMilieuArgs>({
+      mutation: MILIEU_UPSERT,
+      variables: {
+        id,
+        data: rest
+      }
+    }).subscribe(({ data, errors }) => {
+      if (data) {
+        this.statusMessageService.showSuccessMessage(
+          "Le milieu a été sauvegardée avec succès."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde.",
+          JSON.stringify(errors)
+        );
+      }
+      data && this.backToEntityPage();
+    })
+  };
 
   public getEntityName = (): string => {
     return "milieu";

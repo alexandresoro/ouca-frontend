@@ -18,7 +18,6 @@ import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
 import { Departement, MutationUpsertDepartementArgs } from "src/app/model/graphql";
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
-import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { DepartementFormComponent } from "../../components/form/departement-form/departement-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
@@ -60,12 +59,11 @@ export class DepartementEditComponent
   constructor(
     private apollo: Apollo,
     private statusMessageService: StatusMessageService,
-    backendApiService: BackendApiService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(backendApiService, router, route, location);
+    super(router, route, location);
   }
 
   ngOnInit(): void {

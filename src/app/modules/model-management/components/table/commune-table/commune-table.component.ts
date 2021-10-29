@@ -1,8 +1,32 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { CommunesOrderBy, CommuneWithCounts } from "src/app/model/graphql";
-import { CommunesGetService } from "src/app/services/communes-get.service";
+import { ApolloQueryResult } from "@apollo/client/core";
+import { Apollo, gql } from "apollo-angular";
+import { DocumentNode } from "graphql";
+import { CommunesPaginatedResult, CommuneWithCounts } from "src/app/model/graphql";
 import { EntiteTableComponent } from "../entite-table/entite-table.component";
-import { CommunesDataSource } from "./CommunesDataSource";
+
+type PaginatedCommunesQueryResult = {
+  paginatedCommunes: CommunesPaginatedResult
+}
+
+const PAGINATED_COMMUNES_QUERY = gql`
+  query PaginatedCommunes($searchParams: SearchParams, $orderBy: CommunesOrderBy, $sortOrder: SortOrder) {
+    paginatedCommunes (searchParams: $searchParams, orderBy: $orderBy, sortOrder: $sortOrder) {
+      count
+      result {
+        id
+        code
+        nom
+        departement {
+          id
+          code
+        }
+        nbLieuxDits
+        nbDonnees
+      }
+    }
+  }
+`;
 
 @Component({
   selector: "commune-table",
@@ -10,7 +34,7 @@ import { CommunesDataSource } from "./CommunesDataSource";
   templateUrl: "./commune-table.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CommuneTableComponent extends EntiteTableComponent<CommuneWithCounts, CommunesDataSource> {
+export class CommuneTableComponent extends EntiteTableComponent<CommuneWithCounts, PaginatedCommunesQueryResult> {
   public displayedColumns: string[] = [
     "departement",
     "code",
@@ -20,21 +44,19 @@ export class CommuneTableComponent extends EntiteTableComponent<CommuneWithCount
     "actions"
   ];
 
-  constructor(private communesGetService: CommunesGetService) {
-    super();
+  constructor(
+    apollo: Apollo
+  ) {
+    super(apollo);
   }
 
-  getNewDataSource(): CommunesDataSource {
-    return new CommunesDataSource(this.communesGetService);
+  protected getQuery(): DocumentNode {
+    return PAGINATED_COMMUNES_QUERY;
   }
 
-  loadEntities = (): void => {
-    this.dataSource.loadCommunes(
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      this.sort.active as CommunesOrderBy,
-      this.sort.direction,
-      this.filterComponent?.input.nativeElement.value
-    );
+  protected onQueryResultValueChange = ({ data }: ApolloQueryResult<PaginatedCommunesQueryResult>): void => {
+    const communes = data?.paginatedCommunes?.result ?? [];
+    this.dataSource.updateValues(communes, data?.paginatedCommunes?.count);
   }
+
 }

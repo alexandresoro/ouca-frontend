@@ -17,9 +17,9 @@ import { Apollo, gql } from "apollo-angular";
 import deburr from 'lodash.deburr';
 import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
-import { Commune } from "src/app/model/graphql";
+import { Commune, InputCommune, MutationUpsertCommuneArgs } from "src/app/model/graphql";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { CommuneFormComponent } from "../../components/form/commune-form/commune-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
 
@@ -42,6 +42,21 @@ const COMMUNES_QUERY = gql`
   }
 `;
 
+const COMMUNE_UPSERT = gql`
+  mutation CommuneUpsert($id: Int, $data: InputCommune!) {
+    upsertCommune(id: $id, data: $data) {
+      id
+      code
+      nom
+      departement {
+        id
+        code
+      }
+    }
+  }
+`;
+
+
 @Component({
   templateUrl: "../entite-simple/entity-edit.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -55,12 +70,12 @@ export class CommuneEditComponent
 
   constructor(
     private apollo: Apollo,
-    backendApiService: BackendApiService,
+    private statusMessageService: StatusMessageService,
     route: ActivatedRoute,
     router: Router,
     location: Location
   ) {
-    super(backendApiService, router, route, location);
+    super(router, route, location);
   }
 
   ngOnInit(): void {
@@ -73,6 +88,30 @@ export class CommuneEditComponent
     );
     this.initialize();
   }
+
+  public saveEntity = (formValue: InputCommune & { id: number }): void => {
+    const { id, ...rest } = formValue;
+
+    this.apollo.mutate<Commune, MutationUpsertCommuneArgs>({
+      mutation: COMMUNE_UPSERT,
+      variables: {
+        id,
+        data: rest
+      }
+    }).subscribe(({ data, errors }) => {
+      if (data) {
+        this.statusMessageService.showSuccessMessage(
+          "La commune a été sauvegardée avec succès."
+        );
+      } else {
+        this.statusMessageService.showErrorMessage(
+          "Une erreur est survenue pendant la sauvegarde.",
+          JSON.stringify(errors)
+        );
+      }
+      data && this.backToEntityPage();
+    })
+  };
 
   ngOnDestroy(): void {
     this.destroy$.next();
