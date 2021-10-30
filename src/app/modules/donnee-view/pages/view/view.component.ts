@@ -1,18 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { MatTabGroup } from '@angular/material/tabs';
 import { ApolloQueryResult } from "@apollo/client/core";
 import { Apollo, gql } from "apollo-angular";
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { map, takeUntil, withLatestFrom } from "rxjs/operators";
 import { getDateFromString } from 'src/app/date-adapter/date-fns-adapter';
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
 import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { Age, Classe, Commune, Comportement, CoordinatesSystemType, Departement, Espece, EstimationDistance, EstimationNombre, LieuDit, Meteo, Milieu, Observateur, Sexe } from "src/app/model/graphql";
+import { CoordinatesSystemType, Espece } from "src/app/model/graphql";
 import { DonneesFilter } from 'src/app/model/types/donnees-filter.object';
 import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
-import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
-import { interpretBrowserDateAsTimestampDate } from 'src/app/modules/shared/helpers/time.helper';
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { getContentTypeFromResponse, saveFile } from "../../../shared/helpers/file-downloader.helper";
@@ -20,53 +17,14 @@ import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donn
 import { SearchCriteriaService } from "../../services/search-criteria.service";
 
 type ViewQueryResult = {
-  ages: Age[],
-  classes: Classe[],
-  comportements: Comportement[],
   especes: Espece[],
-  estimationsNombre: EstimationNombre[],
-  estimationsDistance: EstimationDistance[],
-  meteos: Meteo[],
-  milieux: Milieu[],
-  observateurs: Observateur[]
-  sexes: Sexe[],
   settings: {
     coordinatesSystem: CoordinatesSystemType
   }
-  communes: Commune[]; // Note that these 3 are only required because they are inputs of input-lieudit which is shared with creation.
-  departements: Departement[], // And as creation needs them directly, it was provided as input of input-lieudit to avoid a second costly call
-  lieuxDits: LieuDit[];
 }
 
 const VIEW_QUERY = gql`
   query {
-    ages {
-      id
-      libelle
-    }
-    classes {
-      id
-      libelle
-    }
-    communes {
-      id
-      code
-      nom
-      departement {
-        id
-        code
-      }
-    }
-    comportements {
-      id
-      code
-      libelle
-      nicheur
-    }
-    departements {
-      id
-      code
-    }
     especes {
       id
       code
@@ -76,49 +34,6 @@ const VIEW_QUERY = gql`
         id
         libelle
       }
-    }
-    estimationsNombre {
-      id
-      libelle
-      nonCompte
-    }
-    estimationsDistance {
-      id
-      libelle
-    }
-    lieuxDits {
-      id
-      nom
-      altitude
-      longitude
-      latitude
-      coordinatesSystem
-      commune {
-        id
-        code
-        nom
-        departement {
-          id
-          code
-        }
-      }
-    }
-    meteos {
-      id
-      libelle
-    }
-    milieux {
-      id
-      code
-      libelle
-    }
-    observateurs {
-      id
-      libelle
-    }
-    sexes {
-      id
-      libelle
     }
     settings {
       id
@@ -142,76 +57,12 @@ export class ViewComponent implements OnInit, OnDestroy {
   );
 
   public searchForm: FormGroup = new FormGroup({
-    id: new FormControl(),
-    observateurs: new FormControl(),
-    temperature: new FormControl(),
-    meteos: new FormControl(),
-    associes: new FormControl(),
-    heure: new FormControl(),
-    duree: new FormControl(),
-    especeGroup: new FormGroup({
-      classes: new FormControl(),
-      especes: new FormControl()
-    }),
-    lieuditGroup: new FormGroup({
-      departements: new FormControl(),
-      communes: new FormControl(),
-      lieuxdits: new FormControl()
-    }),
-    nombreGroup: new FormGroup({
-      nombre: new FormControl(),
-      estimationsNombre: new FormControl()
-    }),
-    sexes: new FormControl(),
-    ages: new FormControl(),
-    distanceGroup: new FormGroup({
-      distance: new FormControl(),
-      estimationsDistance: new FormControl()
-    }),
-    regroupement: new FormControl(),
-    fromDate: new FormControl(),
-    toDate: new FormControl(),
-    commentaire: new FormControl(),
-    nicheurs: new FormControl(),
-    comportements: new FormControl(),
-    milieux: new FormControl(),
     coordinatesSystemType: new FormControl(),
     excelMode: new FormControl()
   });
 
-  public observateurs$: Observable<Observateur[]>;
-  public classes$: Observable<Classe[]>;
   public especes$: Observable<Espece[]>;
 
-  public filteredEspeces$: Observable<Omit<Espece, 'classe'>[]> = new Observable<
-    Omit<Espece, 'classe'>[]
-  >();
-
-  private selectedClasse$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(null);
-
-  private selectedDepartement$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(null);
-
-  private selectedCommune$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(null);
-
-  public estimationsNombre$: Observable<EstimationNombre[]>;
-  public estimationsDistance$: Observable<EstimationDistance[]>;
-  public sexes$: Observable<Sexe[]>;
-  public ages$: Observable<Age[]>;
-  public comportements$: Observable<Comportement[]>;
-  public milieux$: Observable<Milieu[]>;
-  public meteos$: Observable<Meteo[]>;
-
-  public lieuxDits$: Observable<LieuDit[]>;
-
-  public filteredLieuxdits$: Observable<LieuDit[]>;
-
-  public communes$: Observable<Commune[]>;
-
-  public filteredCommunes$: Observable<Commune[]>;
-
-  public departements$: Observable<Departement[]>;
-
-  public nicheursStatuses: Nicheur[] = Object.values(NICHEUR_VALUES);
   public displayWaitPanel$: BehaviorSubject<boolean> = new BehaviorSubject<
     boolean
   >(false);
@@ -224,31 +75,15 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
 
-  public lieuGroup: FormGroup = this.searchForm.controls[
-    "lieuditGroup"
-  ] as FormGroup;
-
-  public especeGroup: FormGroup = this.searchForm.controls[
-    "especeGroup"
-  ] as FormGroup;
-
-  public nombreGroup: FormGroup = this.searchForm.controls[
-    "nombreGroup"
-  ] as FormGroup;
-
-  public distanceGroup: FormGroup = this.searchForm.controls[
-    "distanceGroup"
-  ] as FormGroup;
-
-  @ViewChild('searchTabs') searchTabs: MatTabGroup;
-  private QUICK_SEARCH_TAB_INDEX = 0;
-
   constructor(
     private apollo: Apollo,
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService,
     private searchCriteriaService: SearchCriteriaService
   ) {
+  }
+
+  public ngOnInit(): void {
 
     this.viewQuery$ = this.apollo.watchQuery<ViewQueryResult>({
       query: VIEW_QUERY
@@ -256,118 +91,13 @@ export class ViewComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    this.observateurs$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.observateurs)
-    );
-    this.estimationsNombre$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.estimationsNombre)
-    );
-    this.estimationsDistance$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.estimationsDistance)
-    );
-    this.classes$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.classes)
-    );
     this.especes$ = this.viewQuery$.pipe(
       map(({ data }) => data?.especes)
-    );
-    this.sexes$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.sexes)
-    );
-    this.ages$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.ages)
-    );
-    this.comportements$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.comportements)
-    );
-    this.milieux$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.milieux)
-    );
-    this.meteos$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.meteos)
-    );
-
-    this.lieuxDits$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.lieuxDits)
-    );
-    this.communes$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.communes)
-    );
-    this.departements$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.departements)
     );
 
     this.viewQuery$.subscribe(({ data }) => {
       this.searchForm.controls.coordinatesSystemType.setValue(data?.settings?.coordinatesSystem);
     });
-  }
-
-  public ngOnInit(): void {
-
-    this.especeGroup.get("classes").valueChanges.pipe(takeUntil(this.destroy$)).subscribe((newValue) => {
-      // This is done because when we first reach this component, we may have no value changes triggered,
-      // so we need to initialize it with null (see the BehaviorSubject above)
-      this.selectedClasse$.next(newValue);
-    });
-
-    this.lieuGroup.get("departements").valueChanges.pipe(takeUntil(this.destroy$)).subscribe((newValue) => {
-      // This is done because when we first reach this component, we may have no value changes triggered,
-      // so we need to initialize it with null (see the BehaviorSubject above)
-      this.selectedDepartement$.next(newValue);
-    });
-
-    this.lieuGroup.get("communes").valueChanges.pipe(takeUntil(this.destroy$)).subscribe((newValue) => {
-      // This is done because when we first reach this component, we may have no value changes triggered,
-      // so we need to initialize it with null (see the BehaviorSubject above)
-      this.selectedCommune$.next(newValue);
-    });
-
-    this.filteredEspeces$ = combineLatest(
-      this.selectedClasse$,
-      this.especes$,
-      (selection, especes) => {
-        if (especes) {
-          if (selection?.length > 0) {
-            return especes.filter((espece) => {
-              return selection.includes(espece?.classe?.id);
-            });
-          } else {
-            return especes;
-          }
-        } else {
-          return [];
-        }
-      }
-    ).pipe(takeUntil(this.destroy$));
-
-    this.filteredCommunes$ = combineLatest(
-      this.selectedDepartement$,
-      this.communes$,
-      (selection, communes) => {
-        if (communes && selection?.length > 0) {
-          return communes.filter((commune) => {
-            return selection.includes(commune?.departement?.id);
-          });
-        } else {
-          return [];
-        }
-      }
-    ).pipe(takeUntil(this.destroy$));
-
-    this.filteredLieuxdits$ = combineLatest(
-      this.selectedCommune$,
-      this.lieuxDits$,
-      (selection, lieuxDits) => {
-        if (lieuxDits && selection?.length > 0) {
-          return lieuxDits.filter((lieuDit) => {
-            return selection.includes(lieuDit?.commune?.id);
-          });
-        } else {
-          return [];
-        }
-      }
-    ).pipe(takeUntil(this.destroy$));
-
   }
 
   public ngOnDestroy(): void {
@@ -506,34 +236,13 @@ export class ViewComponent implements OnInit, OnDestroy {
     return searchCriteria;
   };
 
-  private buildSearchCriteriaFromDetailledSearchPanel = (): DonneesFilter => {
-    const filters: DonneesFilter = this.searchForm.value;
-    filters.fromDate = filters.fromDate
-      ? interpretBrowserDateAsTimestampDate(
-        this.searchForm.controls.fromDate.value
-      )
-      : null;
-    filters.toDate = filters.toDate
-      ? interpretBrowserDateAsTimestampDate(
-        this.searchForm.controls.toDate.value
-      )
-      : null;
-    return filters;
-  }
-
   public onSearchButtonClicked(): void {
     this.displayWaitPanel$.next(true);
     this.displayNoDataPanel$.next(false);
     this.donneesToDisplay = [];
     this.especesWithNbDonnees = [];
 
-    let filters: DonneesFilter;
-
-    if (this.searchTabs.selectedIndex == this.QUICK_SEARCH_TAB_INDEX) {
-      filters = this.buildSearchCriteraFromQuickSearchPanel();
-    } else {
-      filters = this.buildSearchCriteriaFromDetailledSearchPanel();
-    }
+    const filters = this.buildSearchCriteraFromQuickSearchPanel();
 
     // Send the dates in UTC  
     if (filters.excelMode) {
