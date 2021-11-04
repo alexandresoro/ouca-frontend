@@ -15,10 +15,6 @@ import { StatusMessageService } from "../../../../services/status-message.servic
 import { getContentTypeFromResponse, saveFile } from "../../../shared/helpers/file-downloader.helper";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
 
-type EspeceWithNbDonnees = Espece & {
-  nbDonnees: number
-}
-
 type ViewQueryResult = {
   especes: Espece[],
   settings: {
