@@ -7,17 +7,9 @@
         placeholder="Filtre"
         id="input-filtre"
         name="filtre"
-        [(ngModel)]="filterValue"
+        #filterEspeceInput
       />
     </mat-form-field>
-    <button
-      mat-raised-button
-      type="button"
-      color="primary"
-      (click)="applyFilter()"
-    >
-      Filtrer les résultats
-    </button>
   </div>
 
   <table
@@ -27,12 +19,12 @@
     class="mat-elevation-z8"
     multiTemplateDataRows
   >
-    <ng-container matColumnDef="classe">
+    <ng-container matColumnDef="nomClasse">
       <th mat-header-cell mat-sort-header *matHeaderCellDef class="classe">
         Classe
       </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.classe }}
+        {{ element.classe.libelle }}
       </td>
     </ng-container>
 
@@ -82,8 +74,6 @@
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
-      [class.selected-row]="selectedEspece && selectedEspece.code === row.code"
-      (click)="onRowClicked(row)"
     ></tr>
   </table>
 

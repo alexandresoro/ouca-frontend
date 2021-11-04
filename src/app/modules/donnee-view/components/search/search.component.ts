@@ -209,7 +209,6 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
     this.searchResult$ = this.searchCtrl.valueChanges.pipe(
       startWith<string>(null as string),
       switchMap((searchValue) => {
-        console.log(searchValue)
         if (!searchValue?.length) { // If the requested value is an empty string, do not display any result
           return of<null>(null);
         }

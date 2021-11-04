@@ -199,3 +199,18 @@ export const getDateFromString = (value: string): Date | null => {
 
   return null;
 };
+
+export const getFormattedDateStringFromString = (value: string): string | null => {
+  const dateFormat = "dd/MM/yyyy";
+
+  const parsedDate = parse(value, dateFormat, new Date(), {
+    locale
+  });
+
+  // Invalid date is represented by NaN which is not === to itself
+  if (parsedDate.getTime() === parsedDate.getTime()) {
+    return format(parsedDate, 'yyyy-MM-dd');
+  }
+
+  return null;
+};

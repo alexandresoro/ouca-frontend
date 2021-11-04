@@ -13,8 +13,11 @@ import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { getContentTypeFromResponse, saveFile } from "../../../shared/helpers/file-downloader.helper";
-import { EspeceWithNbDonnees } from "../../components/table-especes-with-nb-donnees/table-especes-with-nb-donnees.component";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
+
+type EspeceWithNbDonnees = Espece & {
+  nbDonnees: number
+}
 
 type ViewQueryResult = {
   especes: Espece[],

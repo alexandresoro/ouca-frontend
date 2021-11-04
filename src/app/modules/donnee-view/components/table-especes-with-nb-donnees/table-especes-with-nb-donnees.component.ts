@@ -2,35 +2,39 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  Input,
-  OnChanges,
+  ElementRef,
   OnDestroy,
-
-  SimpleChanges,
+  OnInit,
   ViewChild
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
-import { Apollo, gql } from "apollo-angular";
-import deburr from 'lodash.deburr';
-import { combineLatest, Observable, Subject } from "rxjs";
-import { map, takeUntil } from "rxjs/operators";
-import { Classe, Espece } from "src/app/model/graphql";
+import { Apollo, gql, QueryRef } from "apollo-angular";
+import { BehaviorSubject, fromEvent, merge, Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { EspecesOrderBy, EspecesPaginatedResult, QueryPaginatedSearchEspecesArgs, SearchDonneeCriteria, SortOrder } from "src/app/model/graphql";
+import { SearchCriteriaService } from "../../services/search-criteria.service";
+import { TableSearchEspecesDataSource } from "./TableSearchEspecesDataSource";
 
-export type EspeceWithNbDonnees = Espece & {
-  nbDonnees: number
+type PaginatedSearchEspecesQueryResult = {
+  paginatedSearchEspeces: EspecesPaginatedResult
 }
 
-type TableEspecesWithNbDonneesQueryResult = {
-  classes: Classe[]
-}
-
-const TABLE_ESPECES_WITH_NB_DONNEES_QUERY = gql`
-  query {
-    classes {
-      id
-      libelle
+const PAGINATED_SEARCH_ESPECES_QUERY = gql`
+  query PaginatedSearchEspeces($searchParams: SearchParams, $searchCriteria: SearchDonneeCriteria, $orderBy: EspecesOrderBy, $sortOrder: SortOrder) {
+    paginatedSearchEspeces (searchParams: $searchParams, searchCriteria: $searchCriteria, orderBy: $orderBy, sortOrder: $sortOrder) {
+      count
+      result {
+        id
+        code
+        nomFrancais
+        nomLatin
+        nbDonnees
+        classe {
+          id
+          libelle
+        }
+      }
     }
   }
 `;
@@ -41,83 +45,111 @@ const TABLE_ESPECES_WITH_NB_DONNEES_QUERY = gql`
   templateUrl: "./table-especes-with-nb-donnees.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableEspecesWithNbDonneesComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class TableEspecesWithNbDonneesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly destroy$ = new Subject();
 
-  public displayedColumns: string[] = [
-    "classe",
+  public displayedColumns: EspecesOrderBy[] = [
+    "nomClasse",
     "code",
     "nomFrancais",
     "nomLatin",
     "nbDonnees"
   ];
 
-  @Input() public especesToDisplay: EspeceWithNbDonnees[];
-
-  public dataSource: MatTableDataSource<
-    Omit<EspeceWithNbDonnees, 'classe'> & { classe: string }
-  > = new MatTableDataSource();
+  public dataSource: TableSearchEspecesDataSource;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public filterValue: string = "";
+  @ViewChild('filterEspeceInput') filterEspeceInput: ElementRef<HTMLInputElement>;
 
-  public selectedEspece: EspeceWithNbDonnees;
+  private searchDonneeCriteria$: BehaviorSubject<SearchDonneeCriteria> = new BehaviorSubject<SearchDonneeCriteria>(null);
 
-  private especesToDisplay$: Subject<EspeceWithNbDonnees[]> = new Subject();
-
-  private classes$: Observable<Classe[]>;
+  private queryRef: QueryRef<PaginatedSearchEspecesQueryResult, QueryPaginatedSearchEspecesArgs>;
 
   constructor(
-    private apollo: Apollo
+    private apollo: Apollo,
+    private searchCriteriaService: SearchCriteriaService
   ) {
+  }
 
-    this.classes$ = this.apollo.watchQuery<TableEspecesWithNbDonneesQueryResult>({
-      query: TABLE_ESPECES_WITH_NB_DONNEES_QUERY
-    }).valueChanges.pipe(
-      takeUntil(this.destroy$),
-      map(({ data }) => data?.classes)
-    );
+  private getQueryFetchParams = () => {
+    return {
+      searchParams: {
+        pageNumber: this.paginator.pageIndex,
+        pageSize: this.paginator.pageSize,
+        q: this.filterEspeceInput?.nativeElement.value ?? undefined
+      },
+      orderBy: this.sort.active as EspecesOrderBy ?? undefined,
+      sortOrder: this.sort.direction !== "" ? this.sort.direction : SortOrder.Asc,
+      searchCriteria: this.searchDonneeCriteria$.value
+    }
+  }
 
-    combineLatest([
-      this.especesToDisplay$,
-      this.classes$
-    ]).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(([especesToDisplay, classes]) => {
-      this.dataSource.data = especesToDisplay.map((espece) => {
-        const classe = classes?.find(classe => classe.id === espece?.classe?.id)?.libelle
-        return {
-          ...espece,
-          classe
-        };
+  private refreshEntities = async (): Promise<void> => {
+    await this.queryRef?.refetch(this.getQueryFetchParams());
+  }
+
+  ngOnInit(): void {
+    this.dataSource = new TableSearchEspecesDataSource();
+
+    this.searchCriteriaService.getCurrentSearchDonneeCriteria$()
+      .pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((SearchDonneeCriteria) => {
+        this.searchDonneeCriteria$.next(SearchDonneeCriteria);
       });
-    });
-
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (
-      data: unknown,
-      sortHeaderId: string
-    ): string => {
-      if (typeof data[sortHeaderId] === "string") {
-        return deburr(data[sortHeaderId].toLocaleLowerCase());
-      }
+    void this.refreshEntities(); // We need to put it here as the implementation will probably rely on the paginator/sort/filter elements to be initialized
 
-      return data[sortHeaderId];
-    };
-  }
+    this.sort.sortChange.subscribe(() => this.paginator.firstPage());
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.especesToDisplay && !!changes.especesToDisplay.currentValue) {
-      this.especesToDisplay$.next(changes.especesToDisplay.currentValue);
-    }
+    fromEvent(this.filterEspeceInput?.nativeElement, 'keyup').pipe(
+      takeUntil(this.destroy$),
+      debounceTime(150),
+      distinctUntilChanged(),
+    )
+      .subscribe(() => {
+        this.paginator?.firstPage();
+        void this.refreshEntities()
+      });
+
+    merge(this.sort.sortChange, this.paginator.page).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      void this.refreshEntities()
+    });
+
+    this.searchDonneeCriteria$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.paginator?.firstPage();
+      void this.refreshEntities()
+    })
+
+    this.dataSource.count$
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe((count) => {
+        this.paginator.length = count;
+      });
+
+    this.queryRef = this.apollo.watchQuery<PaginatedSearchEspecesQueryResult, QueryPaginatedSearchEspecesArgs>({
+      query: PAGINATED_SEARCH_ESPECES_QUERY,
+      variables: this.getQueryFetchParams()
+    });
+
+    this.queryRef.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(({ data }) => {
+      const especes = data?.paginatedSearchEspeces?.result ?? [];
+      this.dataSource.updateValues(especes, data?.paginatedSearchEspeces?.count);
+    });
   }
 
   public ngOnDestroy(): void {
@@ -125,21 +157,4 @@ export class TableEspecesWithNbDonneesComponent implements OnChanges, AfterViewI
     this.destroy$.complete();
   }
 
-  public applyFilter(): void {
-    if (this.dataSource) {
-      this.dataSource.filter = this.filterValue.trim().toLowerCase();
-
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
-    }
-  }
-
-  public onRowClicked = (espece: EspeceWithNbDonnees): void => {
-    if (this.selectedEspece && this.selectedEspece.code === espece.code) {
-      this.selectedEspece = null;
-    } else {
-      this.selectedEspece = espece;
-    }
-  };
 }

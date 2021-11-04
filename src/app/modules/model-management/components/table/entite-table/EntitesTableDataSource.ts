@@ -17,12 +17,6 @@ export class EntitesTableDataSource<T> implements DataSource<T> {
     this.countSubject.complete();
   }
 
-  setLoadingState(): void {
-  }
-
-  disableLoadingState(): void {
-  }
-
   updateValues(newEntites: T[], newCount: number): void {
     this.countSubject.next(newCount);
     this.entitesSubject.next(newEntites);
