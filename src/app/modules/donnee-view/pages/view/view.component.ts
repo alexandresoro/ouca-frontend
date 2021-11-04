@@ -76,8 +76,6 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public donneesToDisplay: FlatDonnee[] = [];
 
-  public especesWithNbDonnees: EspeceWithNbDonnees[] = [];
-
   constructor(
     private apollo: Apollo,
     private backendApiService: BackendApiService,
@@ -243,7 +241,6 @@ export class ViewComponent implements OnInit, OnDestroy {
     this.displayWaitPanel$.next(true);
     this.displayNoDataPanel$.next(false);
     this.donneesToDisplay = [];
-    this.especesWithNbDonnees = [];
 
     const filters = this.buildSearchCriteraFromQuickSearchPanel();
 
@@ -291,36 +288,9 @@ export class ViewComponent implements OnInit, OnDestroy {
         .subscribe(([results, especes]) => {
           this.displayWaitPanel$.next(false);
           this.donneesToDisplay = results;
-          this.setEspecesWithNbDonnees(this.donneesToDisplay, especes);
           this.displayNoDataPanel$.next(this.donneesToDisplay.length === 0);
         });
     }
   }
 
-  /**
-   * Counts number of donnees by code espece
-   */
-  private setEspecesWithNbDonnees = (
-    donnees: FlatDonnee[],
-    especes: Espece[]
-  ): void => {
-
-
-    const nbDonneesByEspeceMap = donnees?.reduce<Record<string, number>>((acc, value) => {
-      const codeEspece = value.codeEspece;
-      acc[codeEspece] = (acc[codeEspece] ?? 0) + 1;
-      return acc;
-    }, {}) ?? {};
-
-    this.especesWithNbDonnees = Object.entries(nbDonneesByEspeceMap)?.map(([key, value]) => {
-      const espece = especes?.find((espece) => {
-        return espece.code === key;
-      });
-
-      return {
-        ...espece,
-        nbDonnees: value
-      };
-    }) ?? [];
-  };
 }
