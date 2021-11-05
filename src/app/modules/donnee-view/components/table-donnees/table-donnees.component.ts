@@ -6,23 +6,123 @@ import {
   trigger
 } from "@angular/animations";
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  Input,
-  OnChanges,
+  OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewChild
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
-import { format } from "date-fns";
-import deburr from 'lodash.deburr';
+import { Apollo, gql, QueryRef } from "apollo-angular";
+import { BehaviorSubject, merge, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
-import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
-import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/helpers/time.helper";
+import { Comportement, Donnee, Inventaire, Meteo, Nicheur, Observateur, PaginatedSearchDonneesResult, QueryPaginatedSearchDonneesArgs, SearchDonneeCriteria, SearchDonneesOrderBy, SortOrder } from "src/app/model/graphql";
+import { NICHEUR_VALUES } from "src/app/model/types/nicheur.model";
+import { SearchCriteriaService } from "../../services/search-criteria.service";
+import { TableSearchDonneesDataSource } from "./TableSearchDonneesDataSource";
+
+type PaginatedSearchDonneesQueryResult = {
+  paginatedSearchDonnees: PaginatedSearchDonneesResult
+}
+
+const PAGINATED_SEARCH_DONNEES_QUERY = gql`
+  query PaginatedSearchDonnees($sortOrder: SortOrder, $orderBy: SearchDonneesOrderBy, $searchParams: SearchDonneeParams, $searchCriteria: SearchDonneeCriteria) {
+    paginatedSearchDonnees(sortOrder: $sortOrder, orderBy: $orderBy, searchParams: $searchParams, searchCriteria: $searchCriteria) {
+      count
+      result {
+        id
+        inventaire {
+          id
+          observateur {
+            id
+            libelle
+          }
+          associes {
+            id
+            libelle
+          }
+          date
+          heure
+          duree
+          lieuDit {
+            id
+            nom
+            altitude
+            longitude
+            latitude
+            coordinatesSystem
+            commune {
+              id
+              code
+              nom
+              departement {
+                id
+                code
+              }
+            }
+          }
+          customizedCoordinates {
+            altitude
+            longitude
+            latitude
+            system
+          }
+          temperature
+          meteos {
+            id
+            libelle
+          }
+        }
+        espece {
+          id
+          code
+          nomFrancais
+          nomLatin
+          classe {
+            id
+            libelle
+          }
+        }
+        sexe {
+          id
+          libelle
+        }
+        age {
+          id
+          libelle
+        }
+        estimationNombre {
+          id
+          libelle
+          nonCompte
+        }
+        nombre
+        estimationDistance {
+          id
+          libelle
+        }
+        distance
+        regroupement
+        comportements {
+          id
+          code
+          libelle
+          nicheur
+        }
+        milieux {
+          id
+          code
+          libelle
+        }
+        commentaire
+      }
+    }
+  }
+`;
 
 @Component({
   selector: "table-donnees",
@@ -43,11 +143,11 @@ import { interpretBrowserDateAsTimestampDate } from "src/app/modules/shared/help
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableDonneesComponent implements OnChanges, OnInit {
-  public COMPORTEMENTS_INDEXES: number[] = [1, 2, 3, 4, 5, 6];
-  public MILIEUX_INDEXES: number[] = [1, 2, 3, 4];
+export class TableDonneesComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  public displayedColumns: string[] = [
+  private readonly destroy$ = new Subject();
+
+  public displayedColumns: SearchDonneesOrderBy[] = [
     "codeEspece",
     "nomFrancais",
     "nombre",
@@ -56,112 +156,103 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     "departement",
     "codeCommune",
     "nomCommune",
-    "lieudit",
+    "lieuDit",
     "date",
     "heure",
     "duree",
     "observateur"
   ];
 
-  @Input() public donneesToDisplay: FlatDonnee[];
-
-  public dataSource: MatTableDataSource<FlatDonnee> = new MatTableDataSource();
+  public dataSource: TableSearchDonneesDataSource;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public filterValue: string = "";
+  private searchDonneeCriteria$: BehaviorSubject<SearchDonneeCriteria> = new BehaviorSubject<SearchDonneeCriteria>(null);
 
-  public filteringOnGoing: boolean = false;
+  private queryRef: QueryRef<PaginatedSearchDonneesQueryResult, QueryPaginatedSearchDonneesArgs>;
 
-  public selectedDonnee: FlatDonnee | null;
+  public selectedDonnee: Donnee | null;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private apollo: Apollo,
+    private searchCriteriaService: SearchCriteriaService
+  ) { }
 
-  private filterData = (data: FlatDonnee, filterValue: string): boolean => {
-    const { date, comportements, milieux, ...otherDataKeyValue } = data;
-    const otherData = Object.keys(otherDataKeyValue);
-
-
-    const otherDataFilter = otherData?.some((dataField) => {
-      if (Number.isFinite(data[dataField])) {
-        return "" + data[dataField] === filterValue;
-      }
-
-      return ("" + data[dataField]).trim().toLowerCase().includes(filterValue);
-    }) ?? false;
-    if (otherDataFilter) {
-      return true;
+  private getQueryFetchParams = (): QueryPaginatedSearchDonneesArgs => {
+    return {
+      searchParams: {
+        pageNumber: this.paginator.pageIndex,
+        pageSize: this.paginator.pageSize
+      },
+      orderBy: this.sort.active as SearchDonneesOrderBy ?? undefined,
+      sortOrder: this.sort.direction !== "" ? this.sort.direction : SortOrder.Asc,
+      searchCriteria: this.searchDonneeCriteria$.value
     }
+  }
 
-    const comportementsFilter = data.comportements?.some((comportement) => {
-      return (
-        Number(comportement.code) === Number(filterValue) ||
-        comportement.libelle.trim().toLowerCase().includes(filterValue)
-      );
-    }) ?? false;
-    if (comportementsFilter) {
-      return true;
-    }
-
-    const milieuxFilter = data.milieux?.some((milieu) => {
-      return (
-        Number(milieu.code) === Number(filterValue) ||
-        milieu.libelle.trim().toLowerCase().includes(filterValue)
-      );
-    }) ?? false;
-    if (milieuxFilter) {
-      return true;
-    }
-
-    if (
-      format(
-        interpretBrowserDateAsTimestampDate(new Date(data.date)),
-        "dd/MM/yyyy"
-      ).includes(filterValue)
-    ) {
-      return true;
-    }
-
-    return false;
-  };
+  private refreshEntities = async (): Promise<void> => {
+    await this.queryRef?.refetch(this.getQueryFetchParams());
+  }
 
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (
-      data: unknown,
-      sortHeaderId: string
-    ): string => {
-      if (typeof data[sortHeaderId] === "string") {
-        return deburr(data[sortHeaderId].toLocaleLowerCase());
-      }
+    this.dataSource = new TableSearchDonneesDataSource();
 
-      return data[sortHeaderId];
-    };
-    this.dataSource.filterPredicate = this.filterData;
+    this.searchCriteriaService.getCurrentSearchDonneeCriteria$()
+      .pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((searchDonneeCriteria) => {
+        this.searchDonneeCriteria$.next(searchDonneeCriteria);
+      });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.donneesToDisplay && !!changes.donneesToDisplay.currentValue) {
-      this.dataSource.data = changes.donneesToDisplay.currentValue;
-    }
+  ngAfterViewInit(): void {
+    void this.refreshEntities(); // We need to put it here as the implementation will probably rely on the paginator/sort/filter elements to be initialized
+
+    this.sort.sortChange.subscribe(() => this.paginator.firstPage());
+
+    merge(this.sort.sortChange, this.paginator.page).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      void this.refreshEntities()
+    });
+
+    this.searchDonneeCriteria$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.paginator?.firstPage();
+      void this.refreshEntities()
+    })
+
+    this.dataSource.count$
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe((count) => {
+        this.paginator.length = count;
+      });
+
+    this.queryRef = this.apollo.watchQuery<PaginatedSearchDonneesQueryResult, QueryPaginatedSearchDonneesArgs>({
+      query: PAGINATED_SEARCH_DONNEES_QUERY,
+      variables: this.getQueryFetchParams()
+    });
+
+    this.queryRef.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(({ data }) => {
+      const donnees = data?.paginatedSearchDonnees?.result ?? [];
+      this.dataSource.updateValues(donnees, data?.paginatedSearchDonnees?.count);
+    });
   }
 
-  public applyFilter(): void {
-    this.filteringOnGoing = true;
-    if (this.dataSource) {
-      this.dataSource.filter = this.filterValue.trim().toLowerCase();
-
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
-    }
-    this.filteringOnGoing = false;
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  public onRowClicked = (object: FlatDonnee): void => {
+  public onRowClicked = (object: Donnee): void => {
     if (this.selectedDonnee?.id === object.id) {
       this.selectedDonnee = null;
     } else {
@@ -173,33 +264,62 @@ export class TableDonneesComponent implements OnChanges, OnInit {
     this.router.navigate(["/creation"], { state: { id } });
   };
 
-  public getCoordinatesSystem = (flatDonnee: FlatDonnee): string => {
-    const systemType = flatDonnee.customizedCoordinatesSystem
-      ? flatDonnee.customizedCoordinatesSystem
-      : flatDonnee.coordinatesSystem;
-    return COORDINATES_SYSTEMS_CONFIG[systemType].name;
-  };
-
-  public getCoordinatesUnitName = (flatDonnee: FlatDonnee): string => {
-    const systemType = flatDonnee.customizedCoordinatesSystem
-      ? flatDonnee.customizedCoordinatesSystem
-      : flatDonnee.coordinatesSystem;
-    return COORDINATES_SYSTEMS_CONFIG[systemType].unitName;
-  };
-
-  public getRowState = (row: FlatDonnee): string => {
+  public getRowState = (row: Donnee): string => {
     return this.selectedDonnee?.id === row.id ? "expanded" : "collapsed";
   };
 
-  public getLongitude = (donnee: FlatDonnee): string => {
-    return (donnee.longitude == null)
-      ? "Non supporté"
-      : donnee.longitude + " " + this.getCoordinatesUnitName(donnee);
+  public getLongitude = (inventaire: Inventaire): string => {
+    const hasCustomizedCoordinates = !!inventaire?.customizedCoordinates;
+    const value = hasCustomizedCoordinates ? inventaire?.customizedCoordinates?.longitude : inventaire?.lieuDit?.longitude;
+    const system = hasCustomizedCoordinates ? inventaire?.customizedCoordinates?.system : inventaire?.lieuDit?.coordinatesSystem;
+    const unit = COORDINATES_SYSTEMS_CONFIG[system].unitName
+
+    return `${value} ${unit}`;
   };
 
-  public getLatitude = (donnee: FlatDonnee): string => {
-    return (donnee.latitude == null)
-      ? "Non supporté"
-      : donnee.latitude + " " + this.getCoordinatesUnitName(donnee);
+  public getLatitude = (inventaire: Inventaire): string => {
+    const hasCustomizedCoordinates = !!inventaire?.customizedCoordinates;
+    const value = hasCustomizedCoordinates ? inventaire?.customizedCoordinates?.latitude : inventaire?.lieuDit?.latitude;
+    const system = hasCustomizedCoordinates ? inventaire?.customizedCoordinates?.system : inventaire?.lieuDit?.coordinatesSystem;
+    const unit = COORDINATES_SYSTEMS_CONFIG[system].unitName
+
+    return `${value} ${unit}`;
   };
+
+  public getAltitude = (inventaire: Inventaire): number => {
+    return (inventaire?.customizedCoordinates) ? (inventaire?.customizedCoordinates?.altitude) : inventaire?.lieuDit?.altitude;
+  }
+
+  public getAssocies = (associes: Observateur[]): string => {
+    return associes?.map(associe => associe.libelle)?.join(",") ?? "";
+  }
+
+  public getMeteos = (meteos: Meteo[]): string => {
+    return meteos?.map(meteos => meteos.libelle)?.join(",") ?? "";
+  }
+
+  public getNicheurStatusToDisplay = (comportements: Comportement[]): string => {
+
+    // Compute nicheur status for the Donnée (i.e. highest nicheur status of the comportements)
+    // First we keep only the comportements having a nicheur status
+    const nicheurStatuses: Nicheur[] = comportements?.filter(
+      (comportement) => {
+        return !!comportement.nicheur;
+      }
+    ).map(
+      (comportement) => {
+        return comportement.nicheur;
+      }
+    ) ?? [];
+
+    // Then we keep the highest nicheur status
+    const nicheurStatusCode = nicheurStatuses?.length && nicheurStatuses.reduce(
+      (nicheurStatusOne, nicheurStatusTwo) => {
+        return NICHEUR_VALUES[nicheurStatusOne].weight >= NICHEUR_VALUES[nicheurStatusTwo].weight ? nicheurStatusOne : nicheurStatusTwo
+      }
+    );
+
+    return nicheurStatusCode ? NICHEUR_VALUES[nicheurStatusCode].name : "Non";
+  }
+
 }

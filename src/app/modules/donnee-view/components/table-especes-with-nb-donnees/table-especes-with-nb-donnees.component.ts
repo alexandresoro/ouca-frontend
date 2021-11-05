@@ -2,7 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
+
   OnDestroy,
   OnInit,
   ViewChild
@@ -10,8 +10,8 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { Apollo, gql, QueryRef } from "apollo-angular";
-import { BehaviorSubject, fromEvent, merge, Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { BehaviorSubject, merge, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { EspecesOrderBy, EspecesPaginatedResult, QueryPaginatedSearchEspecesArgs, SearchDonneeCriteria, SortOrder } from "src/app/model/graphql";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
 import { TableSearchEspecesDataSource } from "./TableSearchEspecesDataSource";
@@ -21,7 +21,7 @@ type PaginatedSearchEspecesQueryResult = {
 }
 
 const PAGINATED_SEARCH_ESPECES_QUERY = gql`
-  query PaginatedSearchEspeces($searchParams: SearchParams, $searchCriteria: SearchDonneeCriteria, $orderBy: EspecesOrderBy, $sortOrder: SortOrder) {
+  query PaginatedSearchEspeces($searchParams: SearchDonneeParams, $searchCriteria: SearchDonneeCriteria, $orderBy: EspecesOrderBy, $sortOrder: SortOrder) {
     paginatedSearchEspeces (searchParams: $searchParams, searchCriteria: $searchCriteria, orderBy: $orderBy, sortOrder: $sortOrder) {
       count
       result {
@@ -63,8 +63,6 @@ export class TableEspecesWithNbDonneesComponent implements OnInit, AfterViewInit
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  @ViewChild('filterEspeceInput') filterEspeceInput: ElementRef<HTMLInputElement>;
-
   private searchDonneeCriteria$: BehaviorSubject<SearchDonneeCriteria> = new BehaviorSubject<SearchDonneeCriteria>(null);
 
   private queryRef: QueryRef<PaginatedSearchEspecesQueryResult, QueryPaginatedSearchEspecesArgs>;
@@ -75,12 +73,11 @@ export class TableEspecesWithNbDonneesComponent implements OnInit, AfterViewInit
   ) {
   }
 
-  private getQueryFetchParams = () => {
+  private getQueryFetchParams = (): QueryPaginatedSearchEspecesArgs => {
     return {
       searchParams: {
         pageNumber: this.paginator.pageIndex,
-        pageSize: this.paginator.pageSize,
-        q: this.filterEspeceInput?.nativeElement.value ?? undefined
+        pageSize: this.paginator.pageSize
       },
       orderBy: this.sort.active as EspecesOrderBy ?? undefined,
       sortOrder: this.sort.direction !== "" ? this.sort.direction : SortOrder.Asc,
@@ -98,8 +95,8 @@ export class TableEspecesWithNbDonneesComponent implements OnInit, AfterViewInit
     this.searchCriteriaService.getCurrentSearchDonneeCriteria$()
       .pipe(
         takeUntil(this.destroy$)
-      ).subscribe((SearchDonneeCriteria) => {
-        this.searchDonneeCriteria$.next(SearchDonneeCriteria);
+      ).subscribe((searchDonneeCriteria) => {
+        this.searchDonneeCriteria$.next(searchDonneeCriteria);
       });
   }
 
@@ -107,16 +104,6 @@ export class TableEspecesWithNbDonneesComponent implements OnInit, AfterViewInit
     void this.refreshEntities(); // We need to put it here as the implementation will probably rely on the paginator/sort/filter elements to be initialized
 
     this.sort.sortChange.subscribe(() => this.paginator.firstPage());
-
-    fromEvent(this.filterEspeceInput?.nativeElement, 'keyup').pipe(
-      takeUntil(this.destroy$),
-      debounceTime(150),
-      distinctUntilChanged(),
-    )
-      .subscribe(() => {
-        this.paginator?.firstPage();
-        void this.refreshEntities()
-      });
 
     merge(this.sort.sortChange, this.paginator.page).pipe(
       takeUntil(this.destroy$)

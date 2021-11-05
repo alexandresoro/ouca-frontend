@@ -139,7 +139,7 @@ export class SearchCriteriaService {
             milieux.push(object.id);
             break;
           case "nicheur":
-            nicheurs.push(object.id);
+            nicheurs.push(object.code);
             break;
           case "commentaire":
             searchCriteria.commentaire = object;

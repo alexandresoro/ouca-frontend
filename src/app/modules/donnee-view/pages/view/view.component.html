@@ -16,19 +16,6 @@
         Lancer la recherche
       </button>
 
-      <!-- Coordinates system -->
-      <mat-form-field class="search-coordinates-field">
-        <mat-select
-          id="input-coordinates"
-          placeholder="Système de coordonnées"
-          [formControl]="$any(searchForm.controls['coordinatesSystemType'])"
-        >
-          <mat-option *ngFor="let s of coordinatesSystems" [value]="s.code">
-            {{ s.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
       <!-- RETURNS AN EXCEL FILE -->
       <mat-checkbox
         id="input-excel"
@@ -42,14 +29,13 @@
   <!-- RESULTS PANEL-->
   <ng-container
     *ngIf="
-      !(displayWaitPanel$ | async) &&
-      donneesToDisplay.length > 0
+      !(displayWaitPanel$ | async)
     "
   >
     <mat-tab-group class="view-tab-group">
       <!-- DONNEES TABLE -->
       <mat-tab label="Données">
-        <table-donnees [donneesToDisplay]="donneesToDisplay"></table-donnees>
+        <table-donnees></table-donnees>
       </mat-tab>
       <!-- ESPECES TABLE -->
       <mat-tab label="Espèces">
@@ -57,16 +43,6 @@
       </mat-tab>
     </mat-tab-group>
   </ng-container>
-
-  <!-- NO DATA PANEL -->
-  <div *ngIf="displayNoDataPanel$ | async" style="text-align: center">
-    <img
-      src="../../../../../assets/img/blue-green-bird.svg"
-      alt="Oiseaux"
-      height="220px"
-    />
-    <div>Aucune donnée ne correspond à ces critères...</div>
-  </div>
 
   <!-- WAIT PANEL-->
   <div *ngIf="displayWaitPanel$ | async" style="text-align: center">

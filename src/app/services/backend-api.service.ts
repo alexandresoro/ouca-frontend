@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { Donnee } from '../model/types/donnee.object';
 import { DonneesFilter } from '../model/types/donnees-filter.object';
-import { FlatDonnee } from '../model/types/flat-donnee.object';
 import { Inventaire } from '../model/types/inventaire.object';
 import { PostResponse } from '../model/types/post-response.object';
 
@@ -21,7 +20,6 @@ export class BackendApiService {
   private UPDATE: string = "update";
   private SAVE: string = "save";
   private CLEAR: string = "clear";
-  private SEARCH: string = "search";
 
   constructor(public http: HttpClient
   ) { }
@@ -120,12 +118,6 @@ export class BackendApiService {
 
   public getInventaireById(id: number): Observable<Inventaire> {
     return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
-  }
-
-  public getDonneesByCustomizedFilters(
-    parameters: DonneesFilter
-  ): Observable<FlatDonnee[]> {
-    return this.httpPost(this.DONNEE + this.SEARCH, parameters);
   }
 
   public exportDonneesByCustomizedFilters(

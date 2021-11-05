@@ -1,100 +1,34 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { ApolloQueryResult } from "@apollo/client/core";
-import { Apollo, gql } from "apollo-angular";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { map, takeUntil, withLatestFrom } from "rxjs/operators";
+import { BehaviorSubject, Subject } from "rxjs";
 import { getDateFromString } from 'src/app/date-adapter/date-fns-adapter';
-import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
-import { CoordinatesSystem } from 'src/app/model/coordinates-system/coordinates-system.object';
-import { CoordinatesSystemType, Espece } from "src/app/model/graphql";
 import { DonneesFilter } from 'src/app/model/types/donnees-filter.object';
-import { FlatDonnee } from 'src/app/model/types/flat-donnee.object';
 import { BackendApiService } from "src/app/services/backend-api.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 import { getContentTypeFromResponse, saveFile } from "../../../shared/helpers/file-downloader.helper";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
-
-type ViewQueryResult = {
-  especes: Espece[],
-  settings: {
-    coordinatesSystem: CoordinatesSystemType
-  }
-}
-
-const VIEW_QUERY = gql`
-  query {
-    especes {
-      id
-      code
-      nomFrancais
-      nomLatin
-      classe {
-        id
-        libelle
-      }
-    }
-    settings {
-      id
-      coordinatesSystem
-    }
-  }
-`;
 
 @Component({
   styleUrls: ["./view.component.scss"],
   templateUrl: "./view.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewComponent implements OnInit, OnDestroy {
+export class ViewComponent implements OnDestroy {
   private readonly destroy$ = new Subject();
 
-  private viewQuery$: Observable<ApolloQueryResult<ViewQueryResult>>;
-
-  public coordinatesSystems: CoordinatesSystem[] = Object.values(
-    COORDINATES_SYSTEMS_CONFIG
-  );
-
   public searchForm: FormGroup = new FormGroup({
-    coordinatesSystemType: new FormControl(),
     excelMode: new FormControl()
   });
-
-  public especes$: Observable<Espece[]>;
 
   public displayWaitPanel$: BehaviorSubject<boolean> = new BehaviorSubject<
     boolean
   >(false);
 
-  public displayNoDataPanel$: BehaviorSubject<boolean> = new BehaviorSubject<
-    boolean
-  >(false);
-
-  public donneesToDisplay: FlatDonnee[] = [];
-
   constructor(
-    private apollo: Apollo,
     private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService,
     private searchCriteriaService: SearchCriteriaService
   ) {
-  }
-
-  public ngOnInit(): void {
-
-    this.viewQuery$ = this.apollo.watchQuery<ViewQueryResult>({
-      query: VIEW_QUERY
-    }).valueChanges.pipe(
-      takeUntil(this.destroy$)
-    );
-
-    this.especes$ = this.viewQuery$.pipe(
-      map(({ data }) => data?.especes)
-    );
-
-    this.viewQuery$.subscribe(({ data }) => {
-      this.searchForm.controls.coordinatesSystemType.setValue(data?.settings?.coordinatesSystem);
-    });
   }
 
   public ngOnDestroy(): void {
@@ -140,7 +74,7 @@ export class ViewComponent implements OnInit, OnDestroy {
       nicheurs: [],
       commentaire: null,
       excelMode: this.searchForm.value.excelMode,
-      coordinatesSystemType: this.searchForm.value.coordinatesSystemType
+      coordinatesSystemType: "gps"
     };
 
     if (options) {
@@ -234,14 +168,14 @@ export class ViewComponent implements OnInit, OnDestroy {
   };
 
   public onSearchButtonClicked(): void {
-    this.displayWaitPanel$.next(true);
-    this.displayNoDataPanel$.next(false);
-    this.donneesToDisplay = [];
 
     const filters = this.buildSearchCriteraFromQuickSearchPanel();
 
     // Send the dates in UTC  
     if (filters.excelMode) {
+
+      this.displayWaitPanel$.next(true);
+
       this.backendApiService
         .exportDonneesByCustomizedFilters(filters)
         .subscribe((response) => {
@@ -274,17 +208,6 @@ export class ViewComponent implements OnInit, OnDestroy {
             }
           };
           reader.readAsText(response.body);
-        });
-    } else {
-      this.backendApiService
-        .getDonneesByCustomizedFilters(filters)
-        .pipe(
-          withLatestFrom(this.especes$),
-        )
-        .subscribe(([results, especes]) => {
-          this.displayWaitPanel$.next(false);
-          this.donneesToDisplay = results;
-          this.displayNoDataPanel$.next(this.donneesToDisplay.length === 0);
         });
     }
   }

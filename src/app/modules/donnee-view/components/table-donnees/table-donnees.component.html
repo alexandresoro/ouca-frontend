@@ -1,23 +1,4 @@
 <div class="view-table-container">
-  <!-- TABLE FILTER -->
-  <mat-form-field class="view-table-filter">
-    <input
-      matInput
-      type="text"
-      placeholder="Filtre"
-      id="input-filtre"
-      name="filtre"
-      [(ngModel)]="filterValue"
-    />
-  </mat-form-field>
-  <button
-    mat-raised-button
-    type="button"
-    color="primary"
-    (click)="applyFilter()"
-  >
-    Filtrer les résultats
-  </button>
 
   <div class="mat-elevation-z8 overflow">
     <table
@@ -38,7 +19,7 @@
           Observateur
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.observateur }}
+          {{ element.inventaire?.observateur?.libelle }}
         </td>
       </ng-container>
 
@@ -53,7 +34,7 @@
           Date
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.date | date: "dd/MM/yyyy" }}
+          {{ element.inventaire?.date | date: "dd/MM/yyyy" }}
         </td>
       </ng-container>
 
@@ -68,7 +49,7 @@
           Heure
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.heure }}
+          {{ element.inventaire?.heure }}
         </td>
       </ng-container>
 
@@ -83,7 +64,7 @@
           Durée
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.duree }}
+          {{ element.inventaire?.duree }}
         </td>
       </ng-container>
 
@@ -98,7 +79,7 @@
           Département
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.departement }}
+          {{ element.inventaire?.lieuDit?.commune?.departement?.code }}
         </td>
       </ng-container>
 
@@ -113,7 +94,7 @@
           Code commune
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.codeCommune }}
+          {{ element.inventaire?.lieuDit?.commune?.code }}
         </td>
       </ng-container>
 
@@ -128,12 +109,12 @@
           Nom commune
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.nomCommune }}
+          {{ element.inventaire?.lieuDit?.commune?.nom }}
         </td>
       </ng-container>
 
       <!-- COLUMN LIEUDIT -->
-      <ng-container matColumnDef="lieudit">
+      <ng-container matColumnDef="lieuDit">
         <th
           mat-header-cell
           mat-sort-header
@@ -143,7 +124,7 @@
           Lieu-dit
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.lieudit }}
+          {{ element.inventaire?.lieuDit?.nom }}
         </td>
       </ng-container>
 
@@ -158,7 +139,7 @@
           Code espèce
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.codeEspece }}
+          {{ element.espece?.code }}
         </td>
       </ng-container>
 
@@ -173,7 +154,7 @@
           Nom français
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.nomFrancais }}
+          {{ element.espece?.nomFrancais }}
         </td>
       </ng-container>
 
@@ -203,7 +184,7 @@
           Sexe
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.sexe }}
+          {{ element.sexe?.libelle }}
         </td>
       </ng-container>
 
@@ -218,7 +199,7 @@
           Âge
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.age }}
+          {{ element.age?.libelle }}
         </td>
       </ng-container>
 
@@ -245,65 +226,65 @@
                 <ul class="donnee-details-list">
                   <li><b>ID:</b> {{ element.id }}</li>
 
-                  <li><b>Observateur:</b> {{ element.observateur }}</li>
+                  <li><b>Observateur:</b> {{ element.inventaire?.observateur?.libelle }}</li>
 
-                  <li *ngIf="element.associes"><b>Observateurs associés:</b> {{ element.associes }}</li>
+                  <li *ngIf="element.inventaire?.associes"><b>Observateurs associés:</b> {{ getAssocies(element.inventaire?.associes) }}</li>
 
-                  <li><b>Date:</b> {{ element.date | date: "dd/MM/yyyy" }}</li>
+                  <li><b>Date:</b> {{ element.inventaire?.date | date: "dd/MM/yyyy" }}</li>
 
-                  <li *ngIf="element.heure"><b>Heure:</b> {{ element.heure }}</li>
+                  <li *ngIf="element.inventaire?.heure"><b>Heure:</b> {{ element.inventaire?.heure }}</li>
 
-                  <li *ngIf="element.duree"><b>Durée:</b> {{ element.duree }}</li>
+                  <li *ngIf="element.inventaire?.duree"><b>Durée:</b> {{ element.inventaire?.duree }}</li>
 
-                  <li *ngIf="element.temperature"><b>Température:</b> {{ element.temperature }} °C</li>
+                  <li *ngIf="element.inventaire?.temperature"><b>Température:</b> {{ element.inventaire?.temperature }} °C</li>
 
-                  <li *ngIf="element.meteos.length > 0"><b>Météos:</b> {{ element.meteos }}</li>
+                  <li *ngIf="element.inventaire?.meteos?.length"><b>Météos:</b> {{ getMeteos(element.inventaire?.meteos) }}</li>
                 </ul>
               </div>
 
               <!-- SECOND COLUMN -->
               <div>
                 <ul class="donnee-details-list">
-                  <li><b>Département:</b> {{ element.departement }}</li>
+                  <li><b>Département:</b> {{ element.inventaire?.lieuDit?.commune?.departement?.code }}</li>
 
-                  <li><b>Code commune:</b> {{ element.codeCommune }}</li>
+                  <li><b>Code commune:</b> {{ element.inventaire?.lieuDit?.commune?.code }}</li>
 
-                  <li><b>Nom commune:</b> {{ element.nomCommune }}</li>
+                  <li><b>Nom commune:</b> {{ element.inventaire?.lieuDit?.commune?.nom }}</li>
 
-                  <li><b>Lieu-dit:</b> {{ element.lieudit }}</li>
+                  <li><b>Lieu-dit:</b> {{ element.inventaire?.lieuDit?.nom }}</li>
 
-                  <li><b>Latitude:</b> {{ getLatitude(element) }}</li>
+                  <li><b>Latitude:</b> {{ getLatitude(element.inventaire) }}</li>
 
-                  <li><b>Longitude:</b> {{ getLongitude(element) }}</li>
+                  <li><b>Longitude:</b> {{ getLongitude(element.inventaire) }}</li>
 
-                  <li><b>Altitude:</b> {{ element.altitude }} mètres</li>
+                  <li><b>Altitude:</b> {{ getAltitude(element.inventaire) }} mètres</li>
                 </ul>
               </div>
 
               <!-- THIRD COLUMN -->
               <div>
                 <ul class="donnee-details-list">
-                  <li><b>Classe:</b> {{ element.classe }}</li>
+                  <li><b>Classe:</b> {{ element.espece?.classe?.libelle }}</li>
 
-                  <li><b>Code espèce:</b> {{ element.codeEspece }}</li>
+                  <li><b>Code espèce:</b> {{ element.espece?.code }}</li>
 
-                  <li><b>Nom français:</b> {{ element.nomFrancais }}</li>
+                  <li><b>Nom français:</b> {{ element.espece?.nomFrancais }}</li>
 
-                  <li><b>Nom scientifique:</b> {{ element.nomLatin }}</li>
+                  <li><b>Nom scientifique:</b> {{ element.espece?.nomLatin }}</li>
 
                   <li>
                     <b>Nombre:</b> 
-                    <span *ngIf="element.nombre"> {{ element.nombre }} ({{ element.estimationNombre }})</span>
-                    <span *ngIf="!element.nombre"> {{ element.estimationNombre }}</span>
+                    <span *ngIf="element.nombre"> {{ element.nombre }} ({{ element.estimationNombre?.libelle }})</span>
+                    <span *ngIf="!element.nombre"> {{ element.estimationNombre?.libelle }}</span>
                   </li>
 
-                  <li><b>Sexe:</b> {{ element.sexe }}</li>
+                  <li><b>Sexe:</b> {{ element.sexe?.libelle }}</li>
 
-                  <li><b>Âge:</b> {{ element.age }}</li>
+                  <li><b>Âge:</b> {{ element.age?.libelle }}</li>
 
                   <li *ngIf="element.distance || element.estimationDistance">
                     <b>Distance:</b> 
-                    <span *ngIf="element.estimationDistance"> {{ element.estimationDistance }}</span>
+                    <span *ngIf="element.estimationDistance"> {{ element.estimationDistance?.libelle }}</span>
                     <span *ngIf="element.distance || element.distance === 0"> {{ element.distance }} mètres</span>
                   </li>
 
@@ -314,7 +295,7 @@
               <!-- FOURTH COLUMN -->
               <div>
                 <ul class="donnee-details-list">
-                  <li><b>Nicheur:</b> {{ !element.nicheur ? "Non" : element.nicheur }}</li>
+                  <li><b>Nicheur:</b> {{ getNicheurStatusToDisplay(element.comportements) }}</li>
 
                   <li *ngIf="element.comportements.length > 0">
                     <b>Comportements:</b>
