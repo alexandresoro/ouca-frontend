@@ -6,6 +6,14 @@ handle /api/* {
   reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 }
 
+handle /download/* {
+  reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
+}
+
+handle /graphql {
+  reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
+}
+
 handle /ws/* {
   reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 }
