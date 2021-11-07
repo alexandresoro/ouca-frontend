@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Version } from "src/app/model/graphql";
+import { AppVersion } from 'src/app/model/websocket/websocket-appversion.type';
 import { BackendApiService } from 'src/app/services/backend-api.service';
 import { StatusMessageService } from 'src/app/services/status-message.service';
 
@@ -13,7 +13,7 @@ import { StatusMessageService } from 'src/app/services/status-message.service';
 export class ApplicationUpgradeDialog {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: Version,
+    @Inject(MAT_DIALOG_DATA) public data: AppVersion,
     private backendApiService: BackendApiService,
     private dialogRef: MatDialogRef<ApplicationUpgradeDialog>,
     private statusMessageService: StatusMessageService
