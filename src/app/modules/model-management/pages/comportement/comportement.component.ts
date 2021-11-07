@@ -5,7 +5,8 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ComportementWithCounts, MutationDeleteComportementArgs } from "src/app/model/graphql";
-import { ExportService } from "src/app/services/export.service";
+import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
+import { DOWNLOAD_PATH, EXCEL_FILE_EXTENSION } from "src/app/modules/shared/helpers/utils";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { ComportementTableComponent } from "../../components/table/comportement-table/comportement-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -14,9 +15,19 @@ type DeleteComportementMutationResult = {
   deleteComportement: number | null
 }
 
+type ExportComportementsResult = {
+  exportComportements: string | null
+}
+
 const DELETE_COMPORTEMENT = gql`
   mutation DeleteComportement($id: Int!) {
     deleteComportement(id: $id)
+  }
+`;
+
+const EXPORT_COMPORTEMENTS = gql`
+  query ExportComportements {
+    exportComportements
   }
 `;
 
@@ -29,10 +40,9 @@ export class ComportementComponent extends EntiteSimpleComponent<ComportementWit
     private apollo: Apollo,
     private statusMessageService: StatusMessageService,
     dialog: MatDialog,
-    exportService: ExportService,
     router: Router
   ) {
-    super(dialog, exportService, router);
+    super(dialog, router);
   }
 
   @ViewChild(ComportementTableComponent)
@@ -57,6 +67,17 @@ export class ComportementComponent extends EntiteSimpleComponent<ComportementWit
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");
     }
+  }
+
+  public exportComportements = (): void => {
+    this.apollo.query<ExportComportementsResult>({
+      query: EXPORT_COMPORTEMENTS,
+      fetchPolicy: "network-only"
+    }).subscribe(({ data }) => {
+      if (data?.exportComportements) {
+        downloadFile(DOWNLOAD_PATH + data?.exportComportements, this.getEntityName() + EXCEL_FILE_EXTENSION);
+      }
+    })
   }
 
   getEntityName(): string {

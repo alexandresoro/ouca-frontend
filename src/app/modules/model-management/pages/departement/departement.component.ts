@@ -7,7 +7,6 @@ import { map } from "rxjs/operators";
 import { DepartementWithCounts, MutationDeleteDepartementArgs } from "src/app/model/graphql";
 import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
 import { DOWNLOAD_PATH, EXCEL_FILE_EXTENSION } from "src/app/modules/shared/helpers/utils";
-import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { DepartementTableComponent } from "../../components/table/departement-table/departement-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -41,10 +40,9 @@ export class DepartementComponent extends EntiteSimpleComponent<DepartementWithC
     private apollo: Apollo,
     private statusMessageService: StatusMessageService,
     dialog: MatDialog,
-    exportService: ExportService,
     router: Router
   ) {
-    super(dialog, exportService, router);
+    super(dialog, router);
   }
 
   @ViewChild(DepartementTableComponent)

@@ -5,7 +5,8 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { EstimationDistanceWithCounts, MutationDeleteEstimationDistanceArgs } from "src/app/model/graphql";
-import { ExportService } from "src/app/services/export.service";
+import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
+import { DOWNLOAD_PATH, EXCEL_FILE_EXTENSION } from "src/app/modules/shared/helpers/utils";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { EstimationDistanceTableComponent } from "../../components/table/estimation-distance-table/estimation-distance-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -14,9 +15,19 @@ type DeleteEstimationDistanceMutationResult = {
   deleteEstimationDistance: number | null
 }
 
+type ExportEstimationsDistanceResult = {
+  exportEstimationsDistance: string | null
+}
+
 const DELETE_ESTIMATION_DISTANCE = gql`
   mutation DeleteEstimationDistance($id: Int!) {
     deleteEstimationDistance(id: $id)
+  }
+`;
+
+const EXPORT_ESTIMATIONS_DISTANCE = gql`
+  query ExportEstimationsDistance {
+    exportEstimationsDistance
   }
 `;
 
@@ -31,10 +42,9 @@ EstimationDistanceWithCounts
     private apollo: Apollo,
     private statusMessageService: StatusMessageService,
     dialog: MatDialog,
-    exportService: ExportService,
     router: Router
   ) {
-    super(dialog, exportService, router);
+    super(dialog, router);
   }
 
   @ViewChild(EstimationDistanceTableComponent)
@@ -59,6 +69,17 @@ EstimationDistanceWithCounts
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");
     }
+  }
+
+  public exportEstimationsDistance = (): void => {
+    this.apollo.query<ExportEstimationsDistanceResult>({
+      query: EXPORT_ESTIMATIONS_DISTANCE,
+      fetchPolicy: "network-only"
+    }).subscribe(({ data }) => {
+      if (data?.exportEstimationsDistance) {
+        downloadFile(DOWNLOAD_PATH + data?.exportEstimationsDistance, this.getEntityName() + EXCEL_FILE_EXTENSION);
+      }
+    })
   }
 
   getEntityName(): string {

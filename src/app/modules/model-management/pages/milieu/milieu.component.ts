@@ -5,7 +5,8 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { MilieuWithCounts, MutationDeleteMilieuArgs } from "src/app/model/graphql";
-import { ExportService } from "src/app/services/export.service";
+import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
+import { DOWNLOAD_PATH, EXCEL_FILE_EXTENSION } from "src/app/modules/shared/helpers/utils";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { MilieuTableComponent } from "../../components/table/milieu-table/milieu-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -14,9 +15,19 @@ type DeleteMilieuMutationResult = {
   deleteMilieu: number | null
 }
 
+type ExportMilieuxResult = {
+  exportMilieux: string | null
+}
+
 const DELETE_MILIEU = gql`
   mutation DeleteMilieu($id: Int!) {
     deleteMilieu(id: $id)
+  }
+`;
+
+const EXPORT_MILIEUX = gql`
+  query ExportMilieux {
+    exportMilieux
   }
 `;
 
@@ -29,10 +40,9 @@ export class MilieuComponent extends EntiteSimpleComponent<MilieuWithCounts> {
     private apollo: Apollo,
     private statusMessageService: StatusMessageService,
     dialog: MatDialog,
-    exportService: ExportService,
     router: Router
   ) {
-    super(dialog, exportService, router);
+    super(dialog, router);
   }
 
   @ViewChild(MilieuTableComponent)
@@ -56,6 +66,17 @@ export class MilieuComponent extends EntiteSimpleComponent<MilieuWithCounts> {
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");
     }
+  }
+
+  public exportMilieux = (): void => {
+    this.apollo.query<ExportMilieuxResult>({
+      query: EXPORT_MILIEUX,
+      fetchPolicy: "network-only"
+    }).subscribe(({ data }) => {
+      if (data?.exportMilieux) {
+        downloadFile(DOWNLOAD_PATH + data?.exportMilieux, this.getEntityName() + EXCEL_FILE_EXTENSION);
+      }
+    })
   }
 
   getEntityName(): string {

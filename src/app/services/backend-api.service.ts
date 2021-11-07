@@ -88,10 +88,6 @@ export class BackendApiService {
     );
   }
 
-  public exportData(entityName: string): Observable<HttpResponse<any>> {
-    return this.httpGetObserveResponse(entityName + "/" + this.EXPORT);
-  }
-
   public deleteDonnee(
     donneeId: number,
     inventaireId: number

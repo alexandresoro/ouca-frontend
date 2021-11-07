@@ -5,7 +5,8 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { MutationDeleteLieuDitArgs } from "src/app/model/graphql";
-import { ExportService } from "src/app/services/export.service";
+import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
+import { DOWNLOAD_PATH, EXCEL_FILE_EXTENSION } from "src/app/modules/shared/helpers/utils";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { LieuDitRow, LieuditTableComponent } from "../../components/table/lieudit-table/lieudit-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -14,9 +15,19 @@ type DeleteLieuDitMutationResult = {
   deleteLieuDit: number | null
 }
 
+type ExportLieuxDitsResult = {
+  exportLieuxDits: string | null
+}
+
 const DELETE_LIEUDIT = gql`
   mutation DeleteLieuDit($id: Int!) {
     deleteLieuDit(id: $id)
+  }
+`;
+
+const EXPORT_LIEUX_DITS = gql`
+  query ExportLieuxDits {
+    exportLieuxDits
   }
 `;
 
@@ -29,10 +40,9 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuDitRow> {
     private apollo: Apollo,
     private statusMessageService: StatusMessageService,
     dialog: MatDialog,
-    exportService: ExportService,
     router: Router
   ) {
-    super(dialog, exportService, router);
+    super(dialog, router);
   }
 
   @ViewChild(LieuditTableComponent)
@@ -56,6 +66,17 @@ export class LieuditComponent extends EntiteSimpleComponent<LieuDitRow> {
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");
     }
+  }
+
+  public exportLieuxDits = (): void => {
+    this.apollo.query<ExportLieuxDitsResult>({
+      query: EXPORT_LIEUX_DITS,
+      fetchPolicy: "network-only"
+    }).subscribe(({ data }) => {
+      if (data?.exportLieuxDits) {
+        downloadFile(DOWNLOAD_PATH + data?.exportLieuxDits, this.getEntityName() + EXCEL_FILE_EXTENSION);
+      }
+    })
   }
 
   getEntityName(): string {

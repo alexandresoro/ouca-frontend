@@ -4,12 +4,10 @@ import { Observable } from "rxjs";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { ConfirmationDialogData } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog.component";
-import { ExportService } from "src/app/services/export.service";
 
 export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
   constructor(
     private dialog: MatDialog,
-    private exportService: ExportService,
     private router: Router,
   ) { }
 
@@ -20,10 +18,6 @@ export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
   abstract getDeleteMutation(entity: T): Observable<number | null>;
 
   abstract handleEntityDeletionResult(id: number | null): void;
-
-  public exportObjects(): void {
-    this.exportService.exportEntities(this.getEntityName());
-  }
 
   public newObject(): void {
     this.router.navigate(["/" + this.getEntityName() + "/create"]);

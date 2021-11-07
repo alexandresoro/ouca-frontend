@@ -5,7 +5,8 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { CommuneWithCounts, MutationDeleteCommuneArgs } from "src/app/model/graphql";
-import { ExportService } from "src/app/services/export.service";
+import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
+import { DOWNLOAD_PATH, EXCEL_FILE_EXTENSION } from "src/app/modules/shared/helpers/utils";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { CommuneTableComponent } from "../../components/table/commune-table/commune-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -14,12 +15,21 @@ type DeleteCommuneMutationResult = {
   deleteCommune: number | null
 }
 
+type ExportCommunesResult = {
+  exportCommunes: string | null
+}
+
 const DELETE_COMMUNE = gql`
   mutation DeleteCommune($id: Int!) {
     deleteCommune(id: $id)
   }
 `;
 
+const EXPORT_COMMUNES = gql`
+  query ExportCommunes {
+    exportCommunes
+  }
+`;
 
 @Component({
   templateUrl: "./commune.component.html",
@@ -30,10 +40,9 @@ export class CommuneComponent extends EntiteSimpleComponent<CommuneWithCounts> {
     private apollo: Apollo,
     private statusMessageService: StatusMessageService,
     dialog: MatDialog,
-    exportService: ExportService,
     router: Router
   ) {
-    super(dialog, exportService, router);
+    super(dialog, router);
   }
 
   @ViewChild(CommuneTableComponent)
@@ -58,6 +67,17 @@ export class CommuneComponent extends EntiteSimpleComponent<CommuneWithCounts> {
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");
     }
+  }
+
+  public exportCommunes = (): void => {
+    this.apollo.query<ExportCommunesResult>({
+      query: EXPORT_COMMUNES,
+      fetchPolicy: "network-only"
+    }).subscribe(({ data }) => {
+      if (data?.exportCommunes) {
+        downloadFile(DOWNLOAD_PATH + data?.exportCommunes, this.getEntityName() + EXCEL_FILE_EXTENSION);
+      }
+    })
   }
 
   getEntityName(): string {

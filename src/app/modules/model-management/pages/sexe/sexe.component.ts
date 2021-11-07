@@ -5,7 +5,8 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { MutationDeleteSexeArgs, SexeWithCounts } from "src/app/model/graphql";
-import { ExportService } from "src/app/services/export.service";
+import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
+import { DOWNLOAD_PATH, EXCEL_FILE_EXTENSION } from "src/app/modules/shared/helpers/utils";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { SexeTableComponent } from "../../components/table/sexe-table/sexe-table.component";
 import { EntiteSimpleComponent } from "../entite-simple/entite-simple.component";
@@ -14,9 +15,19 @@ type DeleteSexeMutationResult = {
   deleteSexe: number | null
 }
 
+type ExportSexesResult = {
+  exportSexes: string | null
+}
+
 const DELETE_SEXE = gql`
   mutation DeleteSexe($id: Int!) {
     deleteSexe(id: $id)
+  }
+`;
+
+const EXPORT_SEXES = gql`
+  query ExportSexes {
+    exportSexes
   }
 `;
 
@@ -29,10 +40,9 @@ export class SexeComponent extends EntiteSimpleComponent<SexeWithCounts> {
     private apollo: Apollo,
     private statusMessageService: StatusMessageService,
     dialog: MatDialog,
-    exportService: ExportService,
     router: Router
   ) {
-    super(dialog, exportService, router);
+    super(dialog, router);
   }
 
   @ViewChild(SexeTableComponent)
@@ -57,6 +67,18 @@ export class SexeComponent extends EntiteSimpleComponent<SexeWithCounts> {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");
     }
   }
+
+  public exportSexes = (): void => {
+    this.apollo.query<ExportSexesResult>({
+      query: EXPORT_SEXES,
+      fetchPolicy: "network-only"
+    }).subscribe(({ data }) => {
+      if (data?.exportSexes) {
+        downloadFile(DOWNLOAD_PATH + data?.exportSexes, this.getEntityName() + EXCEL_FILE_EXTENSION);
+      }
+    })
+  }
+
 
   getEntityName(): string {
     return "sexe";
