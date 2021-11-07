@@ -5,6 +5,8 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DepartementWithCounts, MutationDeleteDepartementArgs } from "src/app/model/graphql";
+import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
+import { DOWNLOAD_PATH, EXCEL_FILE_EXTENSION } from "src/app/modules/shared/helpers/utils";
 import { ExportService } from "src/app/services/export.service";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { DepartementTableComponent } from "../../components/table/departement-table/departement-table.component";
@@ -14,9 +16,19 @@ type DeleteDepartementMutationResult = {
   deleteDepartement: number | null
 }
 
+type ExportDepartementsResult = {
+  exportDepartements: string | null
+}
+
 const DELETE_DEPARTEMENT = gql`
   mutation DeleteDepartement($id: Int!) {
     deleteDepartement(id: $id)
+  }
+`;
+
+const EXPORT_DEPARTEMENTS = gql`
+  query ExportDepartements {
+    exportDepartements
   }
 `;
 
@@ -56,6 +68,17 @@ export class DepartementComponent extends EntiteSimpleComponent<DepartementWithC
     } else {
       this.statusMessageService.showErrorMessage("Une erreur est survenue pendant la suppression.");
     }
+  }
+
+  public exportDepartements = (): void => {
+    this.apollo.query<ExportDepartementsResult>({
+      query: EXPORT_DEPARTEMENTS,
+      fetchPolicy: "network-only"
+    }).subscribe(({ data }) => {
+      if (data?.exportDepartements) {
+        downloadFile(DOWNLOAD_PATH + data?.exportDepartements, this.getEntityName() + EXCEL_FILE_EXTENSION);
+      }
+    })
   }
 
   public getEntityName(): string {

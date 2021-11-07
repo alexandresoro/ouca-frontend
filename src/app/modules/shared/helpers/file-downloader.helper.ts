@@ -26,6 +26,19 @@ export const saveFile = (
   URL.revokeObjectURL(blobUrl);
 };
 
+export const downloadFile = (
+  resourcePath: string,
+  fileName: string
+): void => {
+  const temporaryA = document.createElement('a');
+  temporaryA.href = resourcePath;
+  temporaryA.download = fileName;
+
+  temporaryA.click();
+
+  temporaryA.remove();
+};
+
 export const getContentTypeFromResponse = (
   res: HttpResponse<any>
 ): string | null => {
