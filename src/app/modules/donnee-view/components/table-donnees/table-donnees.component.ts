@@ -20,8 +20,8 @@ import { Apollo, gql, QueryRef } from "apollo-angular";
 import { BehaviorSubject, merge, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { COORDINATES_SYSTEMS_CONFIG } from 'src/app/model/coordinates-system/coordinates-system-list.object';
-import { Comportement, Donnee, Inventaire, Meteo, Nicheur, Observateur, PaginatedSearchDonneesResult, QueryPaginatedSearchDonneesArgs, SearchDonneeCriteria, SearchDonneesOrderBy, SortOrder } from "src/app/model/graphql";
-import { NICHEUR_VALUES } from "src/app/model/types/nicheur.model";
+import { Comportement, Donnee, Inventaire, Meteo, Observateur, PaginatedSearchDonneesResult, QueryPaginatedSearchDonneesArgs, SearchDonneeCriteria, SearchDonneesOrderBy, SortOrder } from "src/app/model/graphql";
+import { getNicheurStatusToDisplay } from "src/app/model/helpers/nicheur-helper";
 import { SearchCriteriaService } from "../../services/search-criteria.service";
 import { TableSearchDonneesDataSource } from "./TableSearchDonneesDataSource";
 
@@ -299,27 +299,7 @@ export class TableDonneesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public getNicheurStatusToDisplay = (comportements: Comportement[]): string => {
-
-    // Compute nicheur status for the Donnée (i.e. highest nicheur status of the comportements)
-    // First we keep only the comportements having a nicheur status
-    const nicheurStatuses: Nicheur[] = comportements?.filter(
-      (comportement) => {
-        return !!comportement.nicheur;
-      }
-    ).map(
-      (comportement) => {
-        return comportement.nicheur;
-      }
-    ) ?? [];
-
-    // Then we keep the highest nicheur status
-    const nicheurStatusCode = nicheurStatuses?.length && nicheurStatuses.reduce(
-      (nicheurStatusOne, nicheurStatusTwo) => {
-        return NICHEUR_VALUES[nicheurStatusOne].weight >= NICHEUR_VALUES[nicheurStatusTwo].weight ? nicheurStatusOne : nicheurStatusTwo
-      }
-    );
-
-    return nicheurStatusCode ? NICHEUR_VALUES[nicheurStatusCode].name : "Non";
+    return getNicheurStatusToDisplay(comportements, "Non");
   }
 
 }
