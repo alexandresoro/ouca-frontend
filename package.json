@@ -36,7 +36,7 @@
     "date-fns-tz": "^1.1.6",
     "graphql": "^15.0.0",
     "leaflet": "^1.7.1",
-    "leaflet.control.opacity": "^1.5.0",
+    "leaflet.control.opacity": "^1.6.0",
     "leaflet.markercluster": "^1.5.3",
     "lodash.deburr": "^4.1.0",
     "material-design-icons-iconfont": "^6.1.1",
