@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
@@ -38,21 +38,6 @@ export class BackendApiService {
     return this.http.get<T>(requestPath).pipe(
       tap(() => {
         console.log("HTTP GET ", requestPath);
-      })
-    );
-  }
-
-  private httpGetObserveResponse<T>(
-    relativePath: string
-  ): Observable<HttpResponse<any>> {
-    const requestPath: string = this.getApiUrl() + relativePath;
-    const httpOptions: Record<string, any> = {
-      observe: "response",
-      responseType: "blob" as "json"
-    };
-    return this.http.get<any>(requestPath, httpOptions).pipe(
-      tap(() => {
-        console.log("HTTP GET", requestPath);
       })
     );
   }
