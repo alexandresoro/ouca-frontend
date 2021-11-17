@@ -1,12 +1,19 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { Apollo, gql } from "apollo-angular";
 import { BehaviorSubject } from "rxjs";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { downloadFile } from "src/app/modules/shared/helpers/file-downloader.helper";
+import { DOWNLOAD_PATH } from "src/app/modules/shared/helpers/utils";
 import { StatusMessageService } from "../../../../services/status-message.service";
-import {
-  getContentTypeFromResponse,
-  getFileNameFromResponseContentDisposition,
-  saveFile
-} from "../../../shared/helpers/file-downloader.helper";
+
+type DumpDatabaseResult = {
+  dumpDatabase: string | null
+}
+
+const DUMP_DATABASE = gql`
+  query DumpDatabase {
+    dumpDatabase
+  }
+`;
 
 @Component({
   templateUrl: "./database.component.html",
@@ -18,23 +25,26 @@ export class DatabaseComponent {
   >(false);
 
   constructor(
-    private backendApiService: BackendApiService,
+    private apollo: Apollo,
     private statusMessageService: StatusMessageService
-  ) {}
+  ) { }
 
   public onSaveDatabaseClicked = (): void => {
     this.displayWaitPanel();
-    this.backendApiService.saveDatabase().subscribe((response) => {
-      saveFile(
-        response.body,
-        getFileNameFromResponseContentDisposition(response),
-        getContentTypeFromResponse(response)
-      );
+
+    this.apollo.query<DumpDatabaseResult>({
+      query: DUMP_DATABASE,
+      fetchPolicy: "network-only"
+    }).subscribe(({ data }) => {
       this.hideWaitPanel();
-      this.statusMessageService.showSuccessMessage(
-        "La sauvegarde de la base de données est terminée."
-      );
-    });
+
+      if (data?.dumpDatabase) {
+        downloadFile(DOWNLOAD_PATH + data?.dumpDatabase, data?.dumpDatabase);
+        this.statusMessageService.showSuccessMessage(
+          "La sauvegarde de la base de données est terminée."
+        );
+      }
+    })
   };
 
   private displayWaitPanel = (): void => {

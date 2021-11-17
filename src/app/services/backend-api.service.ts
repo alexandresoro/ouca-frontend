@@ -97,10 +97,6 @@ export class BackendApiService {
     return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
   }
 
-  public saveDatabase(): Observable<HttpResponse<any>> {
-    return this.httpGetObserveResponse(this.DATABASE + this.SAVE);
-  }
-
   public updateDatabase(): Observable<void> {
     return this.httpGet(this.DATABASE + this.UPDATE);
   }
