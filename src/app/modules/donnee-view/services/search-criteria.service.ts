@@ -37,10 +37,6 @@ export class SearchCriteriaService {
     )
   }
 
-  public getCurrentSearchCriteria = (): SearchCriterion[] => {
-    return this.searchCriteria$.value;
-  };
-
   private buildSearchDonneeCriteriaFromSearchCriteria = (options: SearchCriterion[]): SearchDonneeCriteria => {
 
     const searchCriteria: SearchDonneeCriteria = {};

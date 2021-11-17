@@ -12,29 +12,14 @@
   padding-left: 30px;
   padding-right: 30px;
   padding-top: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   border: 3px solid variables.$main-color;
   border-radius: 10px;
-}
-.search-filters-panel:not(:last-child) {
   margin-bottom: 40px;
-}
-
-.search-filters-panel .search-tab-group {
-  margin-bottom: 10px;
-}
-
-#input-excel {
-  margin-left: 30px;
 }
 
 .view-tab-group {
   div.mat-tab-body-wrapper {
     @include mixins.view-table-body-wrapper;
   }
-}
-
-.search-coordinates-field {
-  margin-left: 30px;
-  width: 200px;
 }

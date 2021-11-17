@@ -2,28 +2,18 @@
 <div class="view-page-container">
 
   <!-- SEARCH PANEL -->
-  <div class="search-filters-panel">
-    <form [formGroup]="searchForm">
-      <search></search>
+  <div class="search-filters-panel" fxLayout="row" fxLayoutGap="50px" fxLayoutAlign="center center">
+    <search fxFlex="1 0 auto"></search>
 
-      <button
-        mat-raised-button
-        type="submit"
-        color="primary"
-        (click)="onSearchButtonClicked()"
-        [disabled]="displayWaitPanel$ | async"
-      >
-        Lancer la recherche
-      </button>
-
-      <!-- RETURNS AN EXCEL FILE -->
-      <mat-checkbox
-        id="input-excel"
-        name="input-excel"
-        [formControl]="$any(searchForm.controls['excelMode'])"
-        >Exporter les résultats dans un fichier Excel</mat-checkbox
-      >
-    </form>
+    <button
+      mat-raised-button
+      type="submit"
+      color="accent"
+      (click)="onExcelExportClicked()"
+      [disabled]="displayWaitPanel$ | async"
+    >
+      Exporter les résultats dans un fichier Excel
+    </button>
   </div>
 
   <!-- RESULTS PANEL-->

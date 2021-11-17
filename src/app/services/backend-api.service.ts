@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { Donnee } from '../model/types/donnee.object';
-import { DonneesFilter } from '../model/types/donnees-filter.object';
 import { Inventaire } from '../model/types/inventaire.object';
 import { PostResponse } from '../model/types/post-response.object';
 
@@ -14,7 +13,6 @@ export class BackendApiService {
   private DATABASE: string = "database/";
   private DELETE: string = "delete";
   private DONNEE: string = "donnee/";
-  private EXPORT: string = "export";
   private FIND: string = "find";
   private INVENTAIRE: string = "inventaire/";
   private UPDATE: string = "update";
@@ -59,23 +57,6 @@ export class BackendApiService {
     );
   }
 
-  private httpPostObserveResponse<T>(
-    relativePath: string,
-    objectToPost: any
-  ): Observable<HttpResponse<any>> {
-    const requestPath: string = this.getApiUrl() + relativePath;
-
-    const httpOptions: Record<string, any> = {
-      observe: "response",
-      responseType: "blob" as "json"
-    };
-    return this.http.post<any>(requestPath, objectToPost, httpOptions).pipe(
-      tap(() => {
-        console.log("HTTP POST", requestPath, objectToPost);
-      })
-    );
-  }
-
   private httpPost<T>(
     relativePath: string,
     objectToPost: any
@@ -114,12 +95,6 @@ export class BackendApiService {
 
   public getInventaireById(id: number): Observable<Inventaire> {
     return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
-  }
-
-  public exportDonneesByCustomizedFilters(
-    parameters: DonneesFilter
-  ): Observable<HttpResponse<any>> {
-    return this.httpPostObserveResponse(this.DONNEE + this.EXPORT, parameters);
   }
 
   public saveDatabase(): Observable<HttpResponse<any>> {
