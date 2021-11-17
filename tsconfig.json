@@ -16,11 +16,13 @@
       "dom",
       "esnext.asynciterable"
     ],
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "strictNullChecks": false, // TODO Put this at true someday to improve code quality
+    "strictFunctionTypes": false,  // TODO Put this at true someday to improve code quality
+    "suppressImplicitAnyIndexErrors": true // TODO Remove this someday to improve code quality
   },
   "include": [
     "src"
