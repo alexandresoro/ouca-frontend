@@ -129,7 +129,7 @@ export class ConfigurationFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.appConfigurationGetService.fetch().subscribe(({ data }) => {
 
-      const { defaultObservateur, defaultDepartement, defaultEstimationNombre, defaultAge, defaultSexe } = data?.settings;
+      const { defaultObservateur, defaultDepartement, defaultEstimationNombre, defaultAge, defaultSexe } = data?.settings || {};
 
       this.form.reset({
         ...data?.settings,
