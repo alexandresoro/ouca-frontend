@@ -188,8 +188,8 @@ export class CreationPageService {
   public deleteCurrentDonnee = (): void => {
     this.donneeService
       .deleteCurrentDonnee()
-      .subscribe((response: PostResponse) => {
-        if (response.isSuccess) {
+      .subscribe((success) => {
+        if (success) {
           // After the successful deletion of the donnee, we need to retrieve the "next" one
           if (this.donneeService.hasNextDonnee()) {
             this.displayNextDonnee();

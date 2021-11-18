@@ -2,13 +2,22 @@ import { Injectable } from "@angular/core";
 import { Apollo, gql } from "apollo-angular";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
-import { Donnee, DonneeResult, QueryDonneeArgs } from "../model/graphql";
-import { PostResponse } from '../model/types/post-response.object';
+import { Donnee, DonneeResult, MutationDeleteDonneeArgs, QueryDonneeArgs } from "../model/graphql";
 import { DonneeCachedObject } from "../modules/donnee-creation/models/cached-object";
 import { has } from "../modules/shared/helpers/utils";
 import { BackendApiService } from "./backend-api.service";
 import { FetchLastDonneeIdService } from "./fetch-last-donnee-id.service";
 import { StatusMessageService } from "./status-message.service";
+
+type DeleteDonneeMutationResult = {
+  deleteDonnee: number | null
+}
+
+const DELETE_DONNEE = gql`
+  mutation DeleteDonnee($id: Int!) {
+    deleteDonnee(id: $id)
+  }
+`;
 
 type DonneeQueryResult = {
   donnee: DonneeResult
@@ -247,24 +256,18 @@ export class DonneeService {
     this.previousDonneeId$.next(id);
   };
 
-  public deleteCurrentDonnee = (): Observable<PostResponse> => {
+  public deleteCurrentDonnee = (): Observable<boolean> => {
     const currentDonnee = this.currentDonnee$.value as Donnee;
-    return this.backendApiService
-      .deleteDonnee(currentDonnee?.id, currentDonnee?.inventaire?.id)
-      .pipe(
-        tap((response) => {
-          if (response.isSuccess) {
-            this.statusMessageService.showSuccessMessage(
-              "La fiche espèce a été supprimée avec succès."
-            );
-          } else {
-            this.statusMessageService.showErrorMessage(
-              "Une erreur est survenue pendant la suppression de la fiche espèce.",
-              response.message
-            );
-          }
-        })
+    if (currentDonnee?.id) {
+      return this.apollo.mutate<DeleteDonneeMutationResult, MutationDeleteDonneeArgs>({
+        mutation: DELETE_DONNEE,
+        variables: {
+          id: currentDonnee.id
+        }
+      }).pipe(
+        map(({ data }) => data?.deleteDonnee != null)
       );
+    }
   };
 
   public getDisplayedDonneeId$ = (): Observable<number> => {

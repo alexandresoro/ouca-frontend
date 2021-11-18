@@ -11,7 +11,6 @@ import { PostResponse } from '../model/types/post-response.object';
 })
 export class BackendApiService {
   private DATABASE: string = "database/";
-  private DELETE: string = "delete";
   private DONNEE: string = "donnee/";
   private FIND: string = "find";
   private INVENTAIRE: string = "inventaire/";
@@ -54,20 +53,6 @@ export class BackendApiService {
     );
   }
 
-  public deleteDonnee(
-    donneeId: number,
-    inventaireId: number
-  ): Observable<PostResponse> {
-    return this.httpGet(
-      this.DONNEE +
-      this.DELETE +
-      "?donneeId=" +
-      donneeId +
-      "&inventaireId=" +
-      inventaireId
-    );
-  }
-
   public saveDonnee(donneeToSave: Donnee): Observable<PostResponse> {
     return this.httpPost(this.DONNEE + this.SAVE, donneeToSave);
   }
@@ -79,6 +64,7 @@ export class BackendApiService {
   }
 
   public getInventaireById(id: number): Observable<Inventaire> {
+    // TODO This one is missing from GraphQL !
     return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
   }
 
