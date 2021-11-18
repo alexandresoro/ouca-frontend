@@ -2,7 +2,7 @@ import deburr from 'lodash.deburr';
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 
 export class ListHelper {
-  private static findEntityInListByAttribute<T extends EntiteSimple>(
+  private static findEntityInListByAttribute<T extends { [key: string]: unknown }>(
     entities: T[],
     comparedAttributeName: string,
     searchedValue: number | string
@@ -16,7 +16,7 @@ export class ListHelper {
     );
   }
 
-  public static findEntityInListByStringAttribute<T extends EntiteSimple>(
+  public static findEntityInListByStringAttribute<T extends { [key: string]: unknown }>(
     entities: T[],
     comparedAttributeName: string,
     searchedValue: string,
@@ -36,17 +36,10 @@ export class ListHelper {
 
     return entities?.find((entity) => {
       return (
-        deburr(entity[comparedAttributeName].trim().toLowerCase()) ===
+        deburr((entity[comparedAttributeName] as string).trim().toLowerCase()) ===
         deburr(searchedValue.trim().toLowerCase())
       );
     });
-  }
-
-  public static findEntityInListByID<T extends EntiteSimple>(
-    entities: T[],
-    id: number
-  ): T | null {
-    return this.findEntityInListByAttribute(entities, "id", id);
   }
 
   public static getIDsFromEntities = (entities: EntiteSimple[]): number[] => {

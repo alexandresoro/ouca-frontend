@@ -114,10 +114,10 @@ export class FormValidatorHelper {
     key: string,
     value: string
   ): { [key: string]: { message: string } } | null {
-    const result = {};
-    result[key] = {
-      message: value
+    return {
+      [key]: {
+        message: value
+      }
     };
-    return result;
   }
 }

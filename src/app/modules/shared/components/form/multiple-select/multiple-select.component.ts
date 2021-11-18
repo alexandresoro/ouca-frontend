@@ -14,11 +14,11 @@ export class MultipleSelectComponent {
   @Input() public options: EntiteSimple[];
   @Input() public placeholder: string;
 
-  public getDisplayedValue = (object: EntiteSimple): string => {
+  public getDisplayedValue = (object: { [key: string]: unknown }): string => {
     let displayedValue = "";
 
     if (object) {
-      displayedValue = object[this.attributesToDisplay[0]];
+      displayedValue = object[this.attributesToDisplay[0]] as string;
       for (
         let indexAttribute = 1;
         indexAttribute < this.attributesToDisplay.length;
