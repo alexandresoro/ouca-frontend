@@ -90,16 +90,4 @@ export class BackendApiService {
     return this.httpGet(this.DATABASE + this.CLEAR);
   }
 
-  public getEspeceDetailsByAge = (
-    especeId: number
-  ): Observable<{ name: string; value: number }[]> => {
-    return this.httpGet("espece/details_by_age?id=" + especeId);
-  };
-
-  public getEspeceDetailsBySexe = (
-    especeId: number
-  ): Observable<{ name: string; value: number }[]> => {
-    return this.httpGet("espece/details_by_sexe?id=" + especeId);
-  };
-
 }

@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Apollo, gql } from "apollo-angular";
-import { combineLatest, Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { Espece } from "src/app/model/graphql";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { Observable, Subject } from "rxjs";
+import { map, switchMap, takeUntil } from "rxjs/operators";
+import { AgeWithSpecimensCount, Espece, QuerySpecimenCountByAgeArgs, QuerySpecimenCountBySexeArgs, SexeWithSpecimensCount } from "src/app/model/graphql";
 
 type ChartsQueryResult = {
-  especes: Espece[],
+  espece: Espece
+  specimenCountByAge: AgeWithSpecimensCount[]
+  specimenCountBySexe: SexeWithSpecimensCount[]
 }
 
 const CHARTS_QUERY = gql`
-  query {
-    especes {
+  query SpecimensPerEspeceQuery($especeId: Int!) {
+    espece(id: $especeId) {
       id
       code
       nomFrancais
@@ -22,6 +23,16 @@ const CHARTS_QUERY = gql`
         libelle
       }
     }
+    specimenCountByAge(especeId: $especeId) {
+      id
+      libelle
+      nbSpecimens
+    }
+    specimenCountBySexe(especeId: $especeId) {
+      id
+      libelle
+      nbSpecimens
+    }
   }
 `;
 
@@ -30,8 +41,9 @@ const CHARTS_QUERY = gql`
   templateUrl: "./charts.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChartsComponent implements OnInit {
-  public especes$: Observable<Espece[]>;
+export class ChartsComponent implements OnInit, OnDestroy {
+
+  private readonly destroy$ = new Subject();
 
   public currentEspece$: Observable<Espece>;
 
@@ -57,44 +69,51 @@ export class ChartsComponent implements OnInit {
 
   constructor(
     private apollo: Apollo,
-    private backendApiService: BackendApiService,
     private route: ActivatedRoute
   ) {
-    this.especes$ = this.apollo.watchQuery<ChartsQueryResult>({
-      query: CHARTS_QUERY
-    }).valueChanges.pipe(
-      map(({ data }) => {
-        return data?.especes;
-      })
-    );
   }
 
   ngOnInit(): void {
-    this.currentEspece$ = combineLatest(
-      this.route.paramMap,
-      this.especes$,
-      (params, especes) => {
-        const id = Number(params.get("id"));
-        return especes?.find((espece) => {
-          return espece.id === id;
+    const chartObservable$ = this.route.paramMap.pipe(
+      map(paramMap => Number(paramMap.get("id"))),
+      switchMap((especeId) => {
+        return this.apollo.query<ChartsQueryResult, QuerySpecimenCountByAgeArgs | QuerySpecimenCountBySexeArgs>({
+          query: CHARTS_QUERY,
+          variables: {
+            especeId
+          },
+          fetchPolicy: "network-only"
         });
-      }
+      })
     );
 
-    this.currentEspece$.subscribe((espece) => {
-      // Call backend to get values
-      this.backendApiService
-        .getEspeceDetailsBySexe(espece.id)
-        .subscribe((data) => {
-          this.specimensBySexe = data;
-        });
+    this.currentEspece$ = chartObservable$.pipe(
+      map(({ data }) => {
+        return data?.espece
+      })
+    )
 
-      this.backendApiService
-        .getEspeceDetailsByAge(espece.id)
-        .subscribe((data) => {
-          this.specimensByAge = data;
-        });
-    });
+    chartObservable$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(({ data }) => {
+      this.specimensByAge = data?.specimenCountByAge?.map(ageResult => {
+        return {
+          name: ageResult?.libelle,
+          value: ageResult?.nbSpecimens
+        }
+      });
+      this.specimensBySexe = data?.specimenCountBySexe?.map(sexeResult => {
+        return {
+          name: sexeResult?.libelle,
+          value: sexeResult?.nbSpecimens
+        }
+      });
+    })
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onSelect(item: unknown): void {
