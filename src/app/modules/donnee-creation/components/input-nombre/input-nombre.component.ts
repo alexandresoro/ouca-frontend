@@ -6,7 +6,6 @@ import { distinctUntilChanged, map, takeUntil, withLatestFrom } from "rxjs/opera
 import { EstimationNombre, QueryEstimationsNombreArgs, Settings } from "src/app/model/graphql";
 import autocompleteUpdaterObservable from "src/app/modules/shared/helpers/autocomplete-updater-observable";
 import { CreationModeService } from "src/app/services/creation-mode.service";
-import { AutocompleteAttribute } from "../../../shared/components/autocomplete/autocomplete-attribute.object";
 
 type NombreQueryResult = {
   estimationsNombre: EstimationNombre[],
@@ -106,14 +105,6 @@ export class InputNombreComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-  public autocompleteAttributes: AutocompleteAttribute[] = [
-    {
-      key: "libelle",
-      exactSearchMode: false,
-      startWithMode: true
-    }
-  ];
 
   private onEstimationNombreChanged(estimation: EstimationNombre, defaultNombre: number): void {
     if (estimation?.nonCompte) {

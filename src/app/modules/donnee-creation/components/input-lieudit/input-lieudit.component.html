@@ -2,7 +2,7 @@
   <div class="full-width-container">
     <div fxLayout="row wrap" fxLayoutGap="20px">
       <!-- DEPARTEMENT -->
-      <autocomplete-v2
+      <autocomplete
         fxFlex="1 0 100px"
         type="Département"
         [values]="matchingDepartements$"
@@ -11,7 +11,7 @@
         (optionActivated)="onDepartementControlActivated($event)"
         (focus)="onDepartementControlFocused()"
         >
-      </autocomplete-v2>
+      </autocomplete>
       
       <button tabindex="-1" type="button" *ngIf="isCurrentSystemGps$ | async" mat-icon-button color="primary" [disabled]="isSearchInMapButtonDisabled$ | async" (click)="onSearchInMapClicked()">
         <mat-icon>my_location</mat-icon>
@@ -21,7 +21,7 @@
 
   <div class="full-width-container">
     <!-- COMMUNE -->
-    <autocomplete-v2
+    <autocomplete
       [type]="'Commune'"
       [values]="matchingCommunes$"
       [control]="$any(controlGroup.controls['commune'])"
@@ -29,12 +29,12 @@
       (optionActivated)="onCommuneControlActivated($event)"
       (focus)="onCommuneControlFocused()"
     >
-    </autocomplete-v2>
+    </autocomplete>
   </div>
 
   <div class="full-width-container">
     <!-- LIEU-DIT -->
-    <autocomplete-v2
+    <autocomplete
       [type]="'Lieu-dit'"
       [values]="matchingLieuxDits$"
       [control]="$any(controlGroup.controls['lieudit'])"
@@ -42,7 +42,7 @@
       (optionActivated)="onLieuDitActivated($event)"
       (focus)="onLieuDitControlFocused()"
     >
-    </autocomplete-v2>
+    </autocomplete>
   </div>
 
   <ng-container *ngIf="!(getAreCoordinatesInvalid$() | async)">

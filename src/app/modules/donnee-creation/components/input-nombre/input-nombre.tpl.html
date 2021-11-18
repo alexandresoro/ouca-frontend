@@ -14,12 +14,12 @@
 </mat-form-field>
 
 <!-- ESTIMATION NOMBRE -->
-<autocomplete-v2
+<autocomplete
   fxFlex="1 0 100px"
   [type]="'Estimation du nombre'"
   [values]="matchingEstimationsNombre$"
   [control]="$any(controlGroup.controls['estimationNombre'])"
   [displayFn]="displayEstimationNombreFormat"
 >
-</autocomplete-v2>
+</autocomplete>
 

@@ -16,8 +16,8 @@
       [displayWith]="displayFn"
       (optionActivated)="onOptionActivated($event)"
     >
-      <mat-option *ngFor="let value of filteredValues | async" [value]="value">
-        {{ getDisplayedValue(value) }}
+      <mat-option *ngFor="let value of values | async" [value]="value">
+        {{ displayFn(value) }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
