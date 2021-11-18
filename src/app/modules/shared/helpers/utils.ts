@@ -2,7 +2,7 @@
  * Utility method that checks if a given object has a direct property
  */
 export const has = (object: unknown, property: string): boolean => {
-  return object && Object.prototype.hasOwnProperty.call(object, property) as boolean;
+  return object && Object.prototype.hasOwnProperty.call(object, property);
 }
 
 /**
