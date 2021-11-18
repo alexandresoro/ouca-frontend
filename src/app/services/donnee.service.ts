@@ -5,7 +5,6 @@ import { map, tap } from "rxjs/operators";
 import { Donnee, DonneeResult, MutationDeleteDonneeArgs, QueryDonneeArgs } from "../model/graphql";
 import { DonneeCachedObject } from "../modules/donnee-creation/models/cached-object";
 import { has } from "../modules/shared/helpers/utils";
-import { BackendApiService } from "./backend-api.service";
 import { FetchLastDonneeIdService } from "./fetch-last-donnee-id.service";
 import { StatusMessageService } from "./status-message.service";
 
@@ -150,7 +149,6 @@ export class DonneeService {
   constructor(
     private apollo: Apollo,
     private fetchLastDonneeIdService: FetchLastDonneeIdService,
-    private backendApiService: BackendApiService,
     private statusMessageService: StatusMessageService
   ) { }
 
