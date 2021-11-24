@@ -7,8 +7,7 @@ import {
 } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
 import { map } from "rxjs/operators";
-import { Comportement, Donnee, Espece, Milieu, Settings } from "../model/graphql";
-import { Donnee as DonneeOld } from '../model/types/donnee.object';
+import { Comportement, Donnee, Espece, InputDonnee, Milieu, Settings } from "../model/graphql";
 import { DonneeCachedObject, InventaireCachedObject } from "../modules/donnee-creation/models/cached-object";
 import { DefaultDonneeOptions } from "../modules/donnee-creation/models/default-donnee-options.model";
 import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
@@ -183,30 +182,40 @@ export class DonneeFormService {
   /**
    * Returns a donnee object from the values filled in donnee form
    */
-  public getDonneeFromForm = (form: FormGroup): DonneeOld => {
+  public buildInputDonneeFromForm = (form: FormGroup, inventaireId: number): InputDonnee & { id?: number } => {
     const donneeFormValue: DonneeFormValue = form.value;
 
-    const donnee: DonneeOld = {
-      id: donneeFormValue.id,
-      inventaireId: null,
-      especeId: donneeFormValue?.especeGroup?.espece?.id ?? null,
-      nombre: donneeFormValue?.nombreGroup?.nombre ?? null,
-      estimationNombreId:
-        donneeFormValue?.nombreGroup?.estimationNombre?.id ?? null,
-      sexeId: donneeFormValue.sexe?.id ?? null,
-      ageId: donneeFormValue.age?.id ?? null,
-      distance: donneeFormValue?.distanceGroup?.distance ?? null,
-      estimationDistanceId:
-        donneeFormValue?.distanceGroup?.estimationDistance?.id ?? null,
-      regroupement: donneeFormValue.regroupement,
-      comportementsIds: this.getComportements(donneeFormValue),
-      milieuxIds: this.getMilieux(donneeFormValue),
-      commentaire: donneeFormValue.commentaire
+    const {
+      id,
+      especeGroup,
+      nombreGroup,
+      sexe,
+      age,
+      distanceGroup,
+      regroupement,
+      comportementsGroup,
+      milieuxGroup,
+      commentaire
+    } = donneeFormValue;
+
+    const comportementsIds = Object.values(comportementsGroup).filter(comportement => comportement?.id).map(comportement => comportement?.id) ?? undefined;
+    const milieuxIds = Object.values(milieuxGroup).filter(milieu => milieu?.id).map(milieu => milieu?.id) ?? undefined;
+
+    return {
+      id,
+      inventaireId,
+      especeId: especeGroup?.espece?.id,
+      nombre: nombreGroup?.nombre,
+      estimationNombreId: nombreGroup?.estimationNombre?.id,
+      sexeId: sexe?.id,
+      ageId: age?.id,
+      distance: distanceGroup?.distance,
+      estimationDistanceId: distanceGroup?.estimationDistance?.id,
+      regroupement,
+      comportementsIds,
+      milieuxIds,
+      commentaire
     };
-
-    console.log("Donnée générée depuis le formulaire:", donnee);
-
-    return donnee;
   };
 
   public buildCachedDonneeFromForm = (donneeFormValue: DonneeFormValue, inventaire: InventaireCachedObject): DonneeCachedObject => {
@@ -246,49 +255,6 @@ export class DonneeFormService {
     return donnee;
   };
 
-  private getComportements = (donneeFormValue: DonneeFormValue): number[] => {
-    const comportementsIds: number[] = [];
-    this.addComportement(
-      comportementsIds,
-      donneeFormValue.comportementsGroup?.comportement1
-    );
-    this.addComportement(
-      comportementsIds,
-      donneeFormValue.comportementsGroup?.comportement2
-    );
-    this.addComportement(
-      comportementsIds,
-      donneeFormValue.comportementsGroup?.comportement3
-    );
-    this.addComportement(
-      comportementsIds,
-      donneeFormValue.comportementsGroup?.comportement4
-    );
-    this.addComportement(
-      comportementsIds,
-      donneeFormValue.comportementsGroup?.comportement5
-    );
-    this.addComportement(
-      comportementsIds,
-      donneeFormValue.comportementsGroup?.comportement6
-    );
-    return comportementsIds;
-  };
-
-  /**
-   * Add a comportement to the list of comportements if not already in the list
-   * @param comportements list of comportements
-   * @param comportement comportement to add in the list
-   */
-  private addComportement = (
-    comportementsIds: number[],
-    comportement: Comportement
-  ): void => {
-    if (comportement?.id) {
-      this.addId(comportementsIds, comportement.id);
-    }
-  };
-
   private getComportementsForForm = (comportements: Comportement[]): {
     comportement1: Comportement;
     comportement2: Comportement;
@@ -319,37 +285,6 @@ export class DonneeFormService {
       milieu3: milieux[2],
       milieu4: milieux[3]
     };
-  };
-
-  private getMilieux = (donneeFormValue: DonneeFormValue): number[] => {
-    const milieuxIds: number[] = [];
-    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup?.milieu1);
-    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup?.milieu2);
-    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup?.milieu3);
-    this.addMilieu(milieuxIds, donneeFormValue.milieuxGroup?.milieu4);
-    return milieuxIds;
-  };
-
-  /**
-   * Add a milieu to the list of milieux if not already in the list
-   * @param milieux list of milieux
-   * @param milieu milieu to add in the list
-   */
-  private addMilieu = (milieuxIds: number[], milieu: Milieu): void => {
-    if (milieu?.id) {
-      this.addId(milieuxIds, milieu.id);
-    }
-  };
-
-  /**
-   * Add the id to the list of ids if this id is not already part of the list
-   * @param ids list to complete
-   * @param id id to add
-   */
-  private addId = (ids: number[], id: number): void => {
-    if (!!id && !ids.includes(id)) {
-      ids.push(id);
-    }
   };
 
   private classeValidator = (): ValidatorFn => {

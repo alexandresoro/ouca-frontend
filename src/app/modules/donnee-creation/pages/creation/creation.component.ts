@@ -369,10 +369,9 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((isInventaireUpdated) => {
         isInventaireUpdated
           ? this.openInventaireDialog()
-          : this.creationPageService.updateInventaireAndDonnee(
-            this.inventaireForm,
-            this.donneeForm,
-            false
+          : this.creationPageService.updateDonnee(
+            this.inventaireForm.getRawValue().id,
+            this.donneeForm
           );
       });
   };

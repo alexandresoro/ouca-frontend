@@ -1,15 +1,14 @@
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
+import { InputDonnee, InputInventaire, Inventaire as InventaireQR, MutationUpsertDonneeArgs, MutationUpsertInventaireArgs, QueryInventaireArgs, UpsertDonneeResult, UpsertInventaireResult } from "../model/graphql";
 import { Donnee } from '../model/types/donnee.object';
-import { Inventaire } from '../model/types/inventaire.object';
-import { PostResponse } from '../model/types/post-response.object';
 import { InventaireHelper } from "../modules/donnee-creation/helpers/inventaire.helper";
 import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
 import { DonneeInCache } from "../modules/donnee-creation/models/donnee-in-cache.model";
 import { InventaireFormValue } from "../modules/donnee-creation/models/inventaire-form-value.model";
-import { BackendApiService } from "./backend-api.service";
 import { CreationCacheService } from "./creation-cache.service";
 import { CreationModeService } from "./creation-mode.service";
 import { DonneeFormService } from "./donnee-form.service";
@@ -17,12 +16,219 @@ import { DonneeService } from "./donnee.service";
 import { InventaireFormService } from "./inventaire-form.service";
 import { StatusMessageService } from "./status-message.service";
 
+type InventaireQueryResult = {
+  inventaire: InventaireQR
+}
+
+const INVENTAIRE_QUERY = gql`
+  query InventaireQuery($id: Int!) {
+    inventaire(id: $id) {
+      id
+      observateur {
+        id
+        libelle
+      }
+      associes {
+        id
+        libelle
+      }
+      date
+      heure
+      duree
+      lieuDit {
+        id
+        nom
+        altitude
+        longitude
+        latitude
+        coordinatesSystem
+        commune {
+          id
+          code
+          nom
+          departement {
+            id
+            code
+          }
+        }
+      }
+      customizedCoordinates {
+        altitude
+        longitude
+        latitude
+        system
+      }
+      temperature
+      meteos {
+        id
+        libelle
+      }
+    }
+  }
+`
+
+type UpsertInventaireMutationResult = {
+  upsertInventaire: UpsertInventaireResult
+}
+
+const INVENTAIRE_UPSERT = gql`
+  mutation UpsertInventaire($data: InputInventaire!, $id: Int, $migrateDonneesIfMatchesExistingInventaire: Boolean) {
+    upsertInventaire(data: $data, id: $id, migrateDonneesIfMatchesExistingInventaire: $migrateDonneesIfMatchesExistingInventaire) {
+      inventaire {
+        id
+        observateur {
+          id
+          libelle
+        }
+        associes {
+          id
+          libelle
+        }
+        date
+        heure
+        duree
+        lieuDit {
+          id
+          nom
+          altitude
+          longitude
+          latitude
+          coordinatesSystem
+          commune {
+            id
+            code
+            nom
+            departement {
+              id
+              code
+            }
+          }
+        }
+        customizedCoordinates {
+          altitude
+          longitude
+          latitude
+          system
+        }
+        temperature
+        meteos {
+          id
+          libelle
+        }
+      }
+      failureReason {
+        inventaireExpectedToBeUpdated
+        correspondingInventaireFound
+      }
+    }
+  }
+`;
+
+type UpsertDonneeMutationResult = {
+  upsertDonnee: UpsertDonneeResult
+}
+
+const DONNEE_UPSERT = gql`
+  mutation UpsertDonnee($data: InputDonnee!, $id: Int) {
+    upsertDonnee(data: $data, id: $id) {
+      donnee {
+        id
+        inventaire {
+          id
+          observateur {
+            id
+            libelle
+          }
+          associes {
+            id
+            libelle
+          }
+          date
+          heure
+          duree
+          lieuDit {
+            id
+            nom
+            altitude
+            longitude
+            latitude
+            coordinatesSystem
+            commune {
+              id
+              code
+              nom
+              departement {
+                id
+                code
+              }
+            }
+          }
+          customizedCoordinates {
+            altitude
+            longitude
+            latitude
+            system
+          }
+          temperature
+          meteos {
+            id
+            libelle
+          }
+        }
+        espece {
+          id
+          code
+          nomFrancais
+          nomLatin
+          classe {
+            id
+            libelle
+          }
+        }
+        sexe {
+          id
+          libelle
+        }
+        age {
+          id
+          libelle
+        }
+        estimationNombre {
+          id
+          libelle
+          nonCompte
+        }
+        nombre
+        estimationDistance {
+          id
+          libelle
+        }
+        distance
+        regroupement
+        comportements {
+          id
+          code
+          libelle
+          nicheur
+        }
+        milieux {
+          id
+          code
+          libelle
+        }
+        commentaire
+      }
+      failureReason
+    }
+  }
+`;
+
 @Injectable({
   providedIn: "root"
 })
 export class CreationPageService {
   constructor(
-    private backendApiService: BackendApiService,
+    private apollo: Apollo,
     private creationCacheService: CreationCacheService,
     private creationModeService: CreationModeService,
     private donneeFormService: DonneeFormService,
@@ -36,7 +242,7 @@ export class CreationPageService {
     donneeForm: FormGroup,
     clearDonnee$: Subject<Donnee>
   ): void => {
-    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
+    const inventaire = this.inventaireFormService.buildInputInventaireFromForm(
       inventaireForm.value
     );
 
@@ -46,10 +252,10 @@ export class CreationPageService {
         savedInventaireId
       );
 
-      const donnee: Donnee = this.donneeFormService.getDonneeFromForm(
-        donneeForm
+      const donnee = this.donneeFormService.buildInputDonneeFromForm(
+        donneeForm,
+        savedInventaireId
       );
-      donnee.inventaireId = savedInventaireId;
 
       this.saveDonnee(donnee).subscribe(() => {
         clearDonnee$.next(null);
@@ -59,7 +265,7 @@ export class CreationPageService {
   };
 
   public updateInventaire(inventaireForm: FormGroup): void {
-    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
+    const inventaire = this.inventaireFormService.buildInputInventaireFromForm(
       inventaireForm.value
     );
     if (inventaire.id) {
@@ -79,15 +285,31 @@ export class CreationPageService {
     }
   }
 
+  public updateDonnee = (
+    inventaireId: number,
+    donneeForm: FormGroup,
+  ): void => {
+
+    const donnee = this.donneeFormService.buildInputDonneeFromForm(
+      donneeForm,
+      inventaireId
+    );
+
+    this.saveDonnee(donnee, true).subscribe(() => {
+      document.getElementById("input-Observateur")?.focus();
+    });
+  };
+
   public updateInventaireAndDonnee = (
     inventaireForm: FormGroup,
     donneeForm: FormGroup,
     shouldCreateNewInventaire?: boolean
   ): void => {
-    const inventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
+    const inventaire = this.inventaireFormService.buildInputInventaireFromForm(
       inventaireForm.value
     );
 
+    // TODO rework this as the use case where we do not change the inventaire is broken
     if (shouldCreateNewInventaire) {
       inventaire.id = null;
     }
@@ -98,68 +320,84 @@ export class CreationPageService {
         savedInventaireId
       );
 
-      const donnee: Donnee = this.donneeFormService.getDonneeFromForm(
-        donneeForm
-      );
-      donnee.inventaireId = savedInventaireId;
-
-      this.saveDonnee(donnee, true).subscribe(() => {
-        document.getElementById("input-Observateur")?.focus();
-      });
+      this.updateDonnee(savedInventaireId, donneeForm);
     });
   };
 
   public isInventaireUpdated = (
     inventaireForm: FormGroup
   ): Observable<boolean> => {
-    const newInventaire: Inventaire = this.inventaireFormService.getInventaireFromForm(
+    const newInventaire = this.inventaireFormService.buildInputInventaireFromForm(
       inventaireForm.getRawValue()
     );
 
-    return this.backendApiService.getInventaireById(newInventaire.id).pipe(
-      map((oldInventaire) => {
+    return this.apollo.query<InventaireQueryResult, QueryInventaireArgs>({
+      query: INVENTAIRE_QUERY,
+      variables: {
+        id: newInventaire.id
+      },
+      fetchPolicy: "no-cache"
+    }).pipe(
+      map(({ data }) => {
         return InventaireHelper.isInventaireUpdated(
-          oldInventaire,
+          data?.inventaire,
           newInventaire
         );
       })
-    );
+    )
   };
 
   private saveInventaire = (
-    inventaire: Inventaire,
+    inventaire: InputInventaire & { id?: number },
     isUpdateMode?: boolean
   ): Observable<number> => {
-    return this.backendApiService.saveInventaire(inventaire).pipe(
-      tap((response: PostResponse) => {
-        if (response.isSuccess) {
+
+    const { id, ...inputInventaire } = inventaire;
+
+    return this.apollo.mutate<UpsertInventaireMutationResult, MutationUpsertInventaireArgs>({
+      mutation: INVENTAIRE_UPSERT,
+      variables: {
+        id,
+        data: inputInventaire,
+        migrateDonneesIfMatchesExistingInventaire: false // TODO activate this someday
+      }
+    }).pipe(
+      tap(({ data }) => {
+        if (data?.upsertInventaire?.inventaire) {
           !isUpdateMode ??
             this.statusMessageService.showSuccessMessage(
               "La fiche inventaire a été sauvegardée avec succès."
             );
         } else {
           this.statusMessageService.showErrorMessage(
-            "Une erreur est survenue pendant la sauvegarde de la fiche inventaire. " +
-            response.message
-          );
+            `Une erreur est survenue pendant la sauvegarde de la fiche inventaire.${data?.upsertInventaire?.failureReason ? (" " + JSON.stringify(data.upsertInventaire.failureReason)) : ""}`);
         }
       }),
-      filter((response) => {
-        return response?.isSuccess;
+      filter(({ data }) => {
+        return !!data?.upsertInventaire?.inventaire;
       }),
-      map((response) => {
-        return response.insertId ? response.insertId : inventaire.id;
+      map(({ data }) => {
+        return data.upsertInventaire.inventaire.id;
       })
-    );
+    )
   };
 
   private saveDonnee = (
-    donnee: Donnee,
+    donnee: InputDonnee & { id?: number },
     isUpdateMode?: boolean
   ): Observable<number> => {
-    return this.backendApiService.saveDonnee(donnee).pipe(
-      tap((response) => {
-        if (response.isSuccess) {
+
+    const { id, ...inputDonnee } = donnee;
+
+    return this.apollo.mutate<UpsertDonneeMutationResult, MutationUpsertDonneeArgs>({
+      mutation: DONNEE_UPSERT,
+      variables: {
+        id,
+        data: inputDonnee
+      }
+    }).pipe(
+      tap(({ data }) => {
+        if (data?.upsertDonnee?.donnee) {
           this.statusMessageService.showSuccessMessage(
             isUpdateMode
               ? "La fiche espèce et sa fiche inventaire ont été mises à jour avec succès."
@@ -167,20 +405,19 @@ export class CreationPageService {
           );
 
           if (!isUpdateMode) {
-            this.donneeService.setPreviousDonneeId(response.insertId);
+            this.donneeService.setPreviousDonneeId(data.upsertDonnee.donnee.id);
           }
         } else {
           this.statusMessageService.showErrorMessage(
-            "Une erreur est survenue pendant la sauvegarde de la fiche espèce. " +
-            response.message
+            `Une erreur est survenue pendant la sauvegarde de la fiche espèce.${data?.upsertDonnee?.failureReason ? (" " + data.upsertDonnee.failureReason) : ""}`
           );
         }
       }),
-      filter((response) => {
-        return response?.isSuccess;
+      filter(({ data }) => {
+        return !!data?.upsertDonnee?.donnee;
       }),
-      map((response) => {
-        return response.insertId ? response.insertId : donnee.id;
+      map(({ data }) => {
+        return data.upsertDonnee.donnee?.id;
       })
     );
   };

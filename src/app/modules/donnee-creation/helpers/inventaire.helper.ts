@@ -1,7 +1,7 @@
 import { isSameDay } from "date-fns";
 import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-helper';
+import { CoordinatesSystemType, InputInventaire, Inventaire } from "src/app/model/graphql";
 import { Coordinates } from 'src/app/model/types/coordinates.object';
-import { Inventaire } from 'src/app/model/types/inventaire.object';
 import { interpretBrowserDateAsTimestampDate } from "../../shared/helpers/time.helper";
 import { areArraysWithoutDuplicatesContainingSameValues } from '../../shared/helpers/utils';
 
@@ -68,32 +68,36 @@ export class InventaireHelper {
 
   public static isInventaireUpdated(
     inventaireFromDB: Inventaire,
-    inventaireFromForm: Inventaire
+    inventaireFromForm: InputInventaire
   ): boolean {
     if (
-      inventaireFromDB.observateurId !== inventaireFromForm.observateurId ||
+      inventaireFromDB.observateur?.id !== inventaireFromForm.observateurId ||
       !isSameDay(
         interpretBrowserDateAsTimestampDate(new Date(inventaireFromForm.date)),
         interpretBrowserDateAsTimestampDate(new Date(inventaireFromDB.date))
       ) ||
       inventaireFromDB.heure !== inventaireFromForm.heure ||
       inventaireFromDB.duree !== inventaireFromForm.duree ||
-      inventaireFromDB.lieuditId !== inventaireFromForm.lieuditId ||
+      inventaireFromDB.lieuDit?.id !== inventaireFromForm.lieuDitId ||
       this.areDifferentNumbers(
-        inventaireFromDB.customizedAltitude,
-        inventaireFromForm.customizedAltitude
+        inventaireFromDB.customizedCoordinates?.altitude,
+        inventaireFromForm.altitude
       ) ||
       this.areDifferentCoordinates(
-        inventaireFromDB.coordinates,
-        inventaireFromForm.coordinates
+        inventaireFromDB?.customizedCoordinates,
+        {
+          latitude: inventaireFromForm?.latitude,
+          longitude: inventaireFromForm?.longitude,
+          system: CoordinatesSystemType.Gps
+        }
       ) ||
       inventaireFromDB.temperature !== inventaireFromForm.temperature ||
       !areArraysWithoutDuplicatesContainingSameValues(
-        inventaireFromDB.associesIds,
+        inventaireFromDB.associes?.map(associe => associe?.id) ?? [],
         inventaireFromForm.associesIds
       ) ||
       !areArraysWithoutDuplicatesContainingSameValues(
-        inventaireFromDB.meteosIds,
+        inventaireFromDB.meteos?.map(meteo => meteo?.id) ?? [],
         inventaireFromForm.meteosIds
       )
     ) {

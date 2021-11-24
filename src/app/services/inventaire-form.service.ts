@@ -6,18 +6,16 @@ import {
   Validators
 } from "@angular/forms";
 import { Apollo, gql } from "apollo-angular";
-import { set } from "date-fns";
+import { format, set } from "date-fns";
 import { map } from "rxjs/operators";
 import { areCoordinatesCustomized, getCoordinates } from '../model/coordinates-system/coordinates-helper';
 import { CoordinatesSystemType } from '../model/coordinates-system/coordinates-system.object';
-import { Commune, Inventaire, LieuDit, Settings } from "../model/graphql";
+import { Commune, InputInventaire, Inventaire, LieuDit, Settings } from "../model/graphql";
 import { Coordinates } from '../model/types/coordinates.object';
-import { Inventaire as InventaireOld } from '../model/types/inventaire.object';
 import { InventaireCachedObject } from "../modules/donnee-creation/models/cached-object";
 import { DefaultInventaireOptions } from "../modules/donnee-creation/models/default-inventaire-options.model";
 import { InventaireFormValue } from "../modules/donnee-creation/models/inventaire-form-value.model";
 import { FormValidatorHelper } from "../modules/shared/helpers/form-validator.helper";
-import { ListHelper } from "../modules/shared/helpers/list-helper";
 import {
   interpretBrowserDateAsTimestampDate,
   interpretDateTimestampAsBrowserDate,
@@ -225,73 +223,51 @@ export class InventaireFormService {
     };
   };
 
-  public getInventaireFromForm = (inventaireFormValue: InventaireFormValue): InventaireOld => {
+  public buildInputInventaireFromForm = (inventaireFormValue: InventaireFormValue): InputInventaire & { id?: number } => {
 
-    const associesIds: number[] = ListHelper.getIDsFromEntities(
-      inventaireFormValue.observateursAssocies
-    );
+    const {
+      id,
+      observateur,
+      observateursAssocies: associes,
+      date: dateForm,
+      heure: heureForm,
+      duree: dureeForm,
+      lieu,
+      temperature,
+      meteos,
+    } = inventaireFormValue;
 
-    const date: Date = interpretBrowserDateAsTimestampDate(
-      inventaireFormValue.date
-    );
+    const date: Date = interpretBrowserDateAsTimestampDate(dateForm);
+    const heure = TimeHelper.getFormattedTime(heureForm);
+    const duree = TimeHelper.getFormattedDuration(dureeForm);
 
-    const heure: string = TimeHelper.getFormattedTime(
-      inventaireFormValue.heure
-    );
+    const coordinatesSystem = this.coordinatesService.getCoordinatesSystemType();
 
-    const duree: string = TimeHelper.getFormattedDuration(
-      inventaireFormValue.duree
-    );
-
-    const lieudit = inventaireFormValue.lieu.lieudit;
-
-    const meteosIds: number[] = ListHelper.getIDsFromEntities(
-      inventaireFormValue.meteos
-    );
-
-    const inventaire: InventaireOld = {
-      id: inventaireFormValue.id,
-      observateurId: inventaireFormValue.observateur?.id
-        ? inventaireFormValue.observateur.id
-        : null,
-      associesIds,
-      date: date.toJSON(),
+    return {
+      id,
+      observateurId: observateur?.id,
+      ...(
+        has(lieu, "altitude") &&
+          areCoordinatesCustomized(
+            lieu?.lieudit,
+            lieu?.altitude,
+            lieu?.longitude,
+            lieu?.latitude,
+            coordinatesSystem
+          ) ? {
+          altitude: lieu?.altitude,
+          longitude: lieu?.longitude,
+          latitude: lieu?.latitude
+        } : {}
+      ),
+      associesIds: associes?.map(associe => associe?.id),
+      date: format(date, 'yyyy-MM-dd'),
       heure,
       duree,
-      lieuditId: lieudit?.id ?? null,
-      temperature: inventaireFormValue.temperature,
-      meteosIds
-    };
-
-    if (has(inventaireFormValue?.lieu, "altitude")) {
-      const coordinatesSystem: CoordinatesSystemType = this.coordinatesService.getCoordinatesSystemType();
-
-      let inventaireAltitude: number = inventaireFormValue.lieu.altitude;
-      let inventaireCoordinates: Coordinates = {
-        longitude: inventaireFormValue.lieu.longitude,
-        latitude: inventaireFormValue.lieu.latitude,
-        system: coordinatesSystem
-      };
-
-      if (
-        !areCoordinatesCustomized(
-          lieudit,
-          inventaireAltitude,
-          inventaireCoordinates.longitude,
-          inventaireCoordinates.latitude,
-          coordinatesSystem
-        )
-      ) {
-        inventaireAltitude = null;
-        inventaireCoordinates = null;
-      }
-      inventaire.customizedAltitude = inventaireAltitude;
-      inventaire.coordinates = inventaireCoordinates;
+      lieuDitId: lieu?.lieudit.id,
+      temperature,
+      meteosIds: meteos?.map(meteo => meteo?.id),
     }
-
-    console.log("Inventaire généré depuis le formulaire:", inventaire);
-
-    return inventaire;
   };
 
   public buildCachedInventaireFromForm = (inventaireFormValue: InventaireFormValue): InventaireCachedObject => {
