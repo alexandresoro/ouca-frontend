@@ -2,20 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
-import { Donnee } from '../model/types/donnee.object';
-import { Inventaire } from '../model/types/inventaire.object';
-import { PostResponse } from '../model/types/post-response.object';
 
 @Injectable({
   providedIn: "root"
 })
 export class BackendApiService {
   private DATABASE: string = "database/";
-  private DONNEE: string = "donnee/";
-  private FIND: string = "find";
-  private INVENTAIRE: string = "inventaire/";
   private UPDATE: string = "update";
-  private SAVE: string = "save";
   private CLEAR: string = "clear";
 
   constructor(public http: HttpClient
@@ -39,33 +32,6 @@ export class BackendApiService {
         console.log("HTTP GET ", requestPath);
       })
     );
-  }
-
-  private httpPost<T>(
-    relativePath: string,
-    objectToPost: any
-  ): Observable<T> {
-    const requestPath: string = this.getApiUrl() + relativePath;
-    return this.http.post<T>(requestPath, objectToPost).pipe(
-      tap(() => {
-        console.log("HTTP POST", requestPath, objectToPost);
-      })
-    );
-  }
-
-  public saveDonnee(donneeToSave: Donnee): Observable<PostResponse> {
-    return this.httpPost(this.DONNEE + this.SAVE, donneeToSave);
-  }
-
-  public saveInventaire(
-    inventaireToSave: Inventaire
-  ): Observable<PostResponse> {
-    return this.httpPost(this.INVENTAIRE + this.SAVE, inventaireToSave);
-  }
-
-  public getInventaireById(id: number): Observable<Inventaire> {
-    // TODO This one is missing from GraphQL !
-    return this.httpGet(this.INVENTAIRE + this.FIND + "?id=" + id);
   }
 
   public updateDatabase(): Observable<void> {
