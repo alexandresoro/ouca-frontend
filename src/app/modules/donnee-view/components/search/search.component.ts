@@ -1,10 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { Apollo, gql } from "apollo-angular";
+import { Apollo, gql, QueryRef } from "apollo-angular";
 import deburr from 'lodash.deburr';
-import { BehaviorSubject, Observable, of, Subject } from "rxjs";
-import { map, startWith, switchMap } from "rxjs/operators";
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { map, startWith, takeUntil } from "rxjs/operators";
 import { isADate } from "src/app/date-adapter/date-fns-adapter";
 import { AgesPaginatedResult, AgeWithCounts, ClassesPaginatedResult, ClasseWithCounts, CommunesPaginatedResult, CommuneWithCounts, ComportementsPaginatedResult, ComportementWithCounts, DepartementsPaginatedResult, DepartementWithCounts, EspecesPaginatedResult, EspeceWithCounts, EstimationDistanceWithCounts, EstimationNombreWithCounts, EstimationsDistancePaginatedResult, EstimationsNombrePaginatedResult, LieuDitWithCounts, LieuxDitsPaginatedResult, MeteosPaginatedResult, MeteoWithCounts, MilieuWithCounts, MilieuxPaginatedResult, ObservateursPaginatedResult, ObservateurWithCounts, SearchParams, SexesPaginatedResult, SexeWithCounts } from "src/app/model/graphql";
 import { EntiteAvecLibelleEtCode } from 'src/app/model/types/entite-avec-libelle-et-code.object';
@@ -143,7 +143,7 @@ const SEARCH_WITH_CRITERIA_QUERY = gql`
   templateUrl: "./search.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchComponent implements OnDestroy, AfterViewInit {
+export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   public searchCtrl: FormControl = new FormControl();
   @ViewChild("searchInput") searchInput: ElementRef<HTMLInputElement>;
   @ViewChild("auto") matAutocomplete: MatAutocomplete;
@@ -173,9 +173,6 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
   private CHARACTERS_TO_IGNORE = /(\s|\'|\-|\,)/g;
 
   private DEFAULT_NUMBER_OF_RESULTS_PER_TYPE = 10;
-  private numberOfResultsPerType$ = new BehaviorSubject(
-    this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
-  );
 
   private readonly destroy$ = new Subject();
 
@@ -183,49 +180,55 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
 
   private pageNumber$: BehaviorSubject<number> = new BehaviorSubject(0);
 
+  private queryRef: QueryRef<SearchWithCriteriaQueryResult, { searchParams: SearchParams }>;
+
   constructor(
     private apollo: Apollo,
     private searchCriteriaService: SearchCriteriaService
   ) {
-    this.init();
   }
 
-  public ngAfterViewInit(): void {
-    this.matAutocomplete.closed.subscribe(() => {
-      this.numberOfResultsPerType$.next(
-        this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
-      );
-      this.pageNumber$.next(0);
-    });
-  }
+  ngOnInit(): void {
 
-  public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  private init = (): void => {
-
-    this.searchResult$ = this.searchCtrl.valueChanges.pipe(
-      startWith<string>(null as string),
-      switchMap((searchValue) => {
-        if (!searchValue?.length) { // If the requested value is an empty string, do not display any result
-          return of<null>(null);
+    this.queryRef = this.apollo.watchQuery<SearchWithCriteriaQueryResult, { searchParams: SearchParams }>({
+      query: SEARCH_WITH_CRITERIA_QUERY,
+      variables: {
+        searchParams: {
+          q: undefined,
+          pageNumber: 0,
+          pageSize: this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
         }
-        return this.apollo.query<SearchWithCriteriaQueryResult, { searchParams: SearchParams }>({
-          query: SEARCH_WITH_CRITERIA_QUERY, // TODO fetch policy ?
-          variables: {
-            searchParams: {
-              q: searchValue,
-              pageNumber: 0,
-              pageSize: this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
-            }
+      },
+      fetchPolicy: 'cache-and-network'
+    });
+
+    // When the input changes, we reset the page to 0 and refetch the query
+    this.searchCtrl.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((searchValue: string) => {
+      this.pageNumber$.next(0);
+      if (searchValue?.length) {
+        void this.queryRef?.refetch({
+          searchParams: {
+            q: searchValue,
+            pageNumber: 0,
+            pageSize: this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
           }
-        }).pipe(
-          map(({ data }) => data)
-        );
+        })
+      }
+    });
+
+    this.searchResult$ = combineLatest([
+      this.searchCtrl.valueChanges as Observable<string>,
+      this.queryRef.valueChanges
+    ]).pipe(
+      map(([searchValue, result]) => {
+        if (!searchValue?.length) {
+          return null;
+        }
+        return result?.data;
       })
-    );
+    )
 
     this.searchCriteria$ = this.searchCriteriaService.getCurrentSearchCriteria$();
 
@@ -292,7 +295,18 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
       startWith(null),
       map((filterValue) => this.filterOthers(filterValue))
     );
-  };
+  }
+
+  public ngAfterViewInit(): void {
+    this.matAutocomplete.closed.subscribe(() => {
+      this.pageNumber$.next(0);
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   public selectChip(event: MatAutocompleteSelectedEvent): void {
     this.searchCriteriaService.addCriterion(event.option.value);
@@ -521,13 +535,75 @@ export class SearchComponent implements OnDestroy, AfterViewInit {
     }
   };
 
-  public onMoreResultsClicked = (): void => { // TODO fix this somehow
+  public onMoreResultsClicked = (): void => {
     const newPage = this.pageNumber$.value + 1;
     this.pageNumber$.next(newPage);
-    this.numberOfResultsPerType$.next(
-      this.numberOfResultsPerType$.value +
-      this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE
-    );
+    void this.queryRef?.fetchMore({
+      variables: {
+        searchParams: {
+          q: this.searchCtrl.value,
+          pageNumber: newPage,
+          pageSize: this.DEFAULT_NUMBER_OF_RESULTS_PER_TYPE,
+        }
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) { return prev; }
+        return Object.assign({}, prev, {
+          paginatedDepartements: {
+            ...prev.paginatedDepartements,
+            result: [...prev.paginatedDepartements.result, ...fetchMoreResult.paginatedDepartements?.result ?? []]
+          },
+          paginatedCommunes: {
+            ...prev.paginatedCommunes,
+            result: [...prev.paginatedCommunes.result, ...fetchMoreResult.paginatedCommunes?.result ?? []]
+          },
+          paginatedLieuxdits: {
+            ...prev.paginatedLieuxdits,
+            result: [...prev.paginatedLieuxdits.result, ...fetchMoreResult.paginatedLieuxdits?.result ?? []]
+          },
+          paginatedEspeces: {
+            ...prev.paginatedEspeces,
+            result: [...prev.paginatedEspeces.result, ...fetchMoreResult.paginatedEspeces?.result ?? []]
+          },
+          paginatedClasses: {
+            ...prev.paginatedClasses,
+            result: [...prev.paginatedClasses.result, ...fetchMoreResult.paginatedClasses?.result ?? []]
+          },
+          paginatedSexes: {
+            ...prev.paginatedSexes,
+            result: [...prev.paginatedSexes.result, ...fetchMoreResult.paginatedSexes?.result ?? []]
+          },
+          paginatedAges: {
+            ...prev.paginatedAges,
+            result: [...prev.paginatedAges.result, ...fetchMoreResult.paginatedAges?.result ?? []]
+          },
+          paginatedComportements: {
+            ...prev.paginatedComportements,
+            result: [...prev.paginatedComportements.result, ...fetchMoreResult.paginatedComportements?.result ?? []]
+          },
+          paginatedMilieux: {
+            ...prev.paginatedMilieux,
+            result: [...prev.paginatedMilieux.result, ...fetchMoreResult.paginatedMilieux?.result ?? []]
+          },
+          paginatedMeteos: {
+            ...prev.paginatedMeteos,
+            result: [...prev.paginatedMeteos.result, ...fetchMoreResult.paginatedMeteos?.result ?? []]
+          },
+          paginatedEstimationsNombre: {
+            ...prev.paginatedEstimationsNombre,
+            result: [...prev.paginatedEstimationsNombre.result, ...fetchMoreResult.paginatedEstimationsNombre?.result ?? []]
+          },
+          paginatedEstimationsDistance: {
+            ...prev.paginatedEstimationsDistance,
+            result: [...prev.paginatedEstimationsDistance.result, ...fetchMoreResult.paginatedEstimationsDistance?.result ?? []]
+          },
+          paginatedObservateurs: {
+            ...prev.paginatedObservateurs,
+            result: [...prev.paginatedObservateurs.result, ...fetchMoreResult.paginatedObservateurs?.result ?? []]
+          }
+        });
+      }
+    })
   };
 
   private transformValue = (initialValue: string): string => {

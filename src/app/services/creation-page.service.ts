@@ -309,7 +309,6 @@ export class CreationPageService {
       inventaireForm.value
     );
 
-    // TODO rework this as the use case where we do not change the inventaire is broken
     if (shouldCreateNewInventaire) {
       inventaire.id = null;
     }
