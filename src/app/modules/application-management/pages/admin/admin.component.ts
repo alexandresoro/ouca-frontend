@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { BackendApiService } from "src/app/services/backend-api.service";
+import { DatabaseUpdateService } from "src/app/services/database-update.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 
 @Component({
@@ -15,16 +16,19 @@ export class AdminComponent {
 
   constructor(
     private backendApiService: BackendApiService,
+    private databaseUpdateService: DatabaseUpdateService,
     private statusMessageService: StatusMessageService
   ) { }
 
   public onUpdateDatabaseButtonClicked = (): void => {
     this.displayWaitPanel();
-    this.backendApiService.updateDatabase().subscribe(() => {
+    this.databaseUpdateService.mutate().subscribe(({ data }) => {
       this.hideWaitPanel();
-      this.statusMessageService.showSuccessMessage(
-        "La base de données a été mise à jour."
-      );
+      if (data?.updateDatabase) {
+        this.statusMessageService.showSuccessMessage(
+          "La base de données a été mise à jour."
+        );
+      }
     });
   };
 

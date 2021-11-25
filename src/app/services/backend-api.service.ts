@@ -8,7 +8,6 @@ import { tap } from "rxjs/operators";
 })
 export class BackendApiService {
   private DATABASE: string = "database/";
-  private UPDATE: string = "update";
   private CLEAR: string = "clear";
 
   constructor(public http: HttpClient
@@ -32,10 +31,6 @@ export class BackendApiService {
         console.log("HTTP GET ", requestPath);
       })
     );
-  }
-
-  public updateDatabase(): Observable<void> {
-    return this.httpGet(this.DATABASE + this.UPDATE);
   }
 
   public clearDatabase(): Observable<void> {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Version } from "src/app/model/graphql";
-import { BackendApiService } from 'src/app/services/backend-api.service';
+import { DatabaseUpdateService } from "src/app/services/database-update.service";
 import { StatusMessageService } from 'src/app/services/status-message.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class ApplicationUpgradeDialog {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Version,
-    private backendApiService: BackendApiService,
+    private databaseUpdateService: DatabaseUpdateService,
     private dialogRef: MatDialogRef<ApplicationUpgradeDialog>,
     private statusMessageService: StatusMessageService
   ) {
@@ -22,9 +22,13 @@ export class ApplicationUpgradeDialog {
   }
 
   updateDatabaseClicked = (): void => {
-    this.backendApiService.updateDatabase().subscribe(() => {
-      this.statusMessageService.showSuccessMessage("La base de données a été mise à jour avec succès");
+    this.databaseUpdateService.mutate().subscribe(({ data }) => {
       this.dialogRef.close();
+      if (data?.updateDatabase) {
+        this.statusMessageService.showSuccessMessage(
+          "La base de données a été mise à jour avec succès"
+        );
+      }
     });
   };
 
