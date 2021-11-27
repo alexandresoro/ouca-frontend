@@ -133,11 +133,11 @@ export class ConfigurationFormComponent implements OnInit, OnDestroy {
 
       this.form.reset({
         ...data?.settings,
-        defaultObservateur: defaultObservateur.id,
-        defaultDepartement: defaultDepartement.id,
-        defaultEstimationNombre: defaultEstimationNombre.id,
-        defaultAge: defaultAge.id,
-        defaultSexe: defaultSexe.id
+        defaultObservateur: defaultObservateur?.id,
+        defaultDepartement: defaultDepartement?.id,
+        defaultEstimationNombre: defaultEstimationNombre?.id,
+        defaultAge: defaultAge?.id,
+        defaultSexe: defaultSexe?.id
       })
     })
   }
