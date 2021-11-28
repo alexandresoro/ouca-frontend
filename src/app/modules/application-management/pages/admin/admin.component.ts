@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { BackendApiService } from "src/app/services/backend-api.service";
+import { DatabaseInitializationService } from "src/app/services/database-initializaion-service";
 import { DatabaseResetService } from "src/app/services/database-reset.service";
 import { DatabaseUpdateService } from "src/app/services/database-update.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
@@ -16,9 +16,9 @@ export class AdminComponent {
   >(false);
 
   constructor(
-    private backendApiService: BackendApiService,
     private databaseResetService: DatabaseResetService,
     private databaseUpdateService: DatabaseUpdateService,
+    private databaseInitializationService: DatabaseInitializationService,
     private statusMessageService: StatusMessageService
   ) { }
 
@@ -36,11 +36,17 @@ export class AdminComponent {
 
   public onClearDatabaseButtonClicked = (): void => {
     this.displayWaitPanel();
-    this.backendApiService.clearDatabase().subscribe(() => {
+    this.databaseResetService.mutate().subscribe(({ data }) => {
       this.hideWaitPanel();
-      this.statusMessageService.showSuccessMessage(
-        "La base de données a été réinitialisée."
-      );
+      if (data?.resetDatabase) {
+        this.databaseInitializationService.mutate().subscribe(({ data }) => {
+          if (data?.initializeDatabase) {
+            this.statusMessageService.showSuccessMessage(
+              "La base de données a été reinitialisée avec succès"
+            );
+          }
+        });
+      }
     });
   }
 
