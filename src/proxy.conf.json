@@ -1,8 +1,4 @@
 {
-  "/api": {
-    "target": "http://localhost:4000",
-    "secure": false
-  },
   "/download": {
     "target": "http://localhost:4000",
     "secure": false
