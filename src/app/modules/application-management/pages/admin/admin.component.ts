@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { BackendApiService } from "src/app/services/backend-api.service";
+import { DatabaseResetService } from "src/app/services/database-reset.service";
 import { DatabaseUpdateService } from "src/app/services/database-update.service";
 import { StatusMessageService } from "../../../../services/status-message.service";
 
@@ -16,6 +17,7 @@ export class AdminComponent {
 
   constructor(
     private backendApiService: BackendApiService,
+    private databaseResetService: DatabaseResetService,
     private databaseUpdateService: DatabaseUpdateService,
     private statusMessageService: StatusMessageService
   ) { }
