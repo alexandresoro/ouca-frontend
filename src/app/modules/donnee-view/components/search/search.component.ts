@@ -7,7 +7,6 @@ import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import { map, startWith, takeUntil } from "rxjs/operators";
 import { isADate } from "src/app/date-adapter/date-fns-adapter";
 import { AgesPaginatedResult, AgeWithCounts, ClassesPaginatedResult, ClasseWithCounts, CommunesPaginatedResult, CommuneWithCounts, ComportementsPaginatedResult, ComportementWithCounts, DepartementsPaginatedResult, DepartementWithCounts, EspecesPaginatedResult, EspeceWithCounts, EstimationDistanceWithCounts, EstimationNombreWithCounts, EstimationsDistancePaginatedResult, EstimationsNombrePaginatedResult, LieuDitWithCounts, LieuxDitsPaginatedResult, MeteosPaginatedResult, MeteoWithCounts, MilieuWithCounts, MilieuxPaginatedResult, ObservateursPaginatedResult, ObservateurWithCounts, SearchParams, SexesPaginatedResult, SexeWithCounts } from "src/app/model/graphql";
-import { EntiteAvecLibelleEtCode } from 'src/app/model/types/entite-avec-libelle-et-code.object';
 import { Nicheur, NICHEUR_VALUES } from 'src/app/model/types/nicheur.model';
 import { TimeHelper } from "src/app/modules/shared/helpers/time.helper";
 import { SearchCriterion } from "../../models/search-criterion.model";
@@ -467,7 +466,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public getDisplayEntityWithCodeAndLabel = (
     entityName: string,
-    entity: EntiteAvecLibelleEtCode
+    entity: ComportementWithCounts | MilieuWithCounts
   ): string => {
     return entityName + " : " + entity.libelle + " (" + entity.code + ")";
   };

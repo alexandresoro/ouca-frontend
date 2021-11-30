@@ -5,7 +5,7 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { EntiteAvecLibelleEtCode } from 'src/app/model/types/entite-avec-libelle-et-code.object';
+import { EntiteAvecLibelle } from "src/app/model/types/entite-avec-libelle.object";
 import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
 import { EntiteAvecLibelleEtCodeFormComponent } from "../../components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
@@ -13,7 +13,7 @@ import { ENTITIES_PROPERTIES } from "../../models/entities-properties.model";
 import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
 
 export abstract class EntiteAvecLibelleEtCodeEditAbstractComponent<
-  T extends EntiteAvecLibelleEtCode
+  T extends EntiteAvecLibelle
   > extends EntiteAvecLibelleEditAbstractComponent<T> {
   protected initialize(): void {
     super.initialize();

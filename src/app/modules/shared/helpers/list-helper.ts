@@ -1,5 +1,4 @@
 import deburr from 'lodash.deburr';
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 
 export class ListHelper {
   private static findEntityInListByAttribute<T extends { [key: string]: unknown }>(
@@ -41,11 +40,5 @@ export class ListHelper {
       );
     });
   }
-
-  public static getIDsFromEntities = (entities: EntiteSimple[]): number[] => {
-    return entities?.map((entity: EntiteSimple) => {
-      return entity.id;
-    }) ?? [];
-  };
 
 }
