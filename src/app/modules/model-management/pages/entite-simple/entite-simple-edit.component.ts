@@ -83,10 +83,6 @@ export abstract class EntiteSimpleEditAbstractComponent<
     );
   };
 
-  protected getEntityFromFormValue(formValue: unknown): EntiteSimple {
-    return formValue as EntiteSimple;
-  }
-
   abstract getFormType(): unknown;
 
   abstract createForm(): FormGroup;

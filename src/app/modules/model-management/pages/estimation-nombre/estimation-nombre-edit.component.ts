@@ -97,18 +97,6 @@ export class EstimationNombreEditComponent
     });
   }
 
-  getEntityFromFormValue(formValue: {
-    id: number;
-    libelle: string;
-    nonCompte: boolean;
-  }): EstimationNombre {
-    const { nonCompte, ...estimationAttributes } = formValue;
-    return {
-      ...estimationAttributes,
-      nonCompte: !!nonCompte
-    };
-  }
-
   public getEntityName = (): string => {
     return "estimation-nombre";
   };

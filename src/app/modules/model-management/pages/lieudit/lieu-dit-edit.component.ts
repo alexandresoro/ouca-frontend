@@ -27,7 +27,6 @@ import { getCoordinates } from 'src/app/model/coordinates-system/coordinates-hel
 import { COORDINATES_SYSTEMS_CONFIG } from "src/app/model/coordinates-system/coordinates-system-list.object";
 import { CoordinatesSystem, CoordinatesSystemType } from 'src/app/model/coordinates-system/coordinates-system.object';
 import { Commune, Departement, InputLieuDit, LieuDit, MutationUpsertLieuDitArgs } from "src/app/model/graphql";
-import { Lieudit } from "src/app/model/types/lieudit.model";
 import { FormValidatorHelper } from "src/app/modules/shared/helpers/form-validator.helper";
 import { has } from 'src/app/modules/shared/helpers/utils';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
@@ -360,34 +359,6 @@ export class LieuDitEditComponent
       longitude: lieuDit.longitude,
       latitude: lieuDit.latitude
     };
-  }
-
-  getEntityFromFormValue(formValue: {
-    id: number;
-    nomCommune: number;
-    communeId: number;
-    nom: string;
-    altitude: number;
-    longitude?: number;
-    latitude?: number;
-    coordinatesSystem: CoordinatesSystemType;
-  }): Lieudit {
-    const lieuDit: Lieudit = {
-      id: formValue?.id ?? null,
-      communeId: formValue.communeId,
-      nom: formValue.nom,
-      altitude: formValue.altitude
-    };
-
-    if (has(formValue, "longitude")) {
-      lieuDit.coordinates = {
-        longitude: formValue.longitude,
-        latitude: formValue.latitude,
-        system: this.coordinatesSystemSubj$.value?.code
-      };
-    }
-
-    return lieuDit;
   }
 
   public getFormType(): null {
