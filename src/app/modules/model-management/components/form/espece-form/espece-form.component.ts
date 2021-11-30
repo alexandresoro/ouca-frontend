@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
-import { Classe } from "src/app/model/graphql";
-import { Espece } from 'src/app/model/types/espece.model';
+import { Classe, InputEspece } from "src/app/model/graphql";
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
@@ -25,7 +24,7 @@ const ESPECE_FORM_QUERY = gql`
   templateUrl: "./espece-form.tpl.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EspeceFormComponent extends EntitySubFormComponent<Espece> implements OnDestroy {
+export class EspeceFormComponent extends EntitySubFormComponent<InputEspece & { id: number | null }> implements OnDestroy {
 
   private readonly destroy$ = new Subject();
 

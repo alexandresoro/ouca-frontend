@@ -4,7 +4,6 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 import { InputDonnee, InputInventaire, Inventaire as InventaireQR, MutationUpsertDonneeArgs, MutationUpsertInventaireArgs, QueryInventaireArgs, UpsertDonneeResult, UpsertInventaireResult } from "../model/graphql";
-import { Donnee } from '../model/types/donnee.object';
 import { InventaireHelper } from "../modules/donnee-creation/helpers/inventaire.helper";
 import { DonneeFormValue } from "../modules/donnee-creation/models/donnee-form-value.model";
 import { DonneeInCache } from "../modules/donnee-creation/models/donnee-in-cache.model";
@@ -240,7 +239,7 @@ export class CreationPageService {
   public createDonnee = (
     inventaireForm: FormGroup,
     donneeForm: FormGroup,
-    clearDonnee$: Subject<Donnee>
+    clearDonnee$: Subject<unknown>
   ): void => {
     const inventaire = this.inventaireFormService.buildInputInventaireFromForm(
       inventaireForm.value

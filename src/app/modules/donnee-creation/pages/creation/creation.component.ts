@@ -28,7 +28,6 @@ import {
   withLatestFrom
 } from "rxjs/operators";
 import { Settings } from "src/app/model/graphql";
-import { Donnee } from 'src/app/model/types/donnee.object';
 import { CoordinatesBuilderService } from "src/app/services/coordinates-builder.service";
 import { CreationCacheService } from "src/app/services/creation-cache.service";
 import { CreationModeService } from "src/app/services/creation-mode.service";
@@ -81,7 +80,7 @@ export class CreationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public donneeForm: FormGroup;
 
-  private clearDonnee$: Subject<Donnee> = new Subject<Donnee>();
+  private clearDonnee$: Subject<unknown> = new Subject<unknown>();
 
   public isPreviousDonneeBtnDisplayed$: Observable<boolean>;
 
