@@ -5,12 +5,15 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { EntiteAvecLibelle } from 'src/app/model/types/entite-avec-libelle.object';
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
-import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
+import { findEntityInListByStringAttribute } from "src/app/modules/shared/helpers/list-helper";
 import { EntiteAvecLibelleFormComponent } from "../../components/form/entite-avec-libelle-form/entite-avec-libelle-form.component";
 import { ENTITIES_PROPERTIES } from "../../models/entities-properties.model";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
+import { EntiteSimple } from "../entite-simple/entite-simple.component";
+
+export type EntiteAvecLibelle = EntiteSimple & {
+  libelle: string;
+}
 
 export abstract class EntiteAvecLibelleEditAbstractComponent<
   T extends EntiteAvecLibelle
@@ -44,7 +47,7 @@ export abstract class EntiteAvecLibelleEditAbstractComponent<
     form.updateValueAndValidity();
   };
 
-  protected libelleValidator = <T extends EntiteSimple>(
+  protected libelleValidator = <T extends EntiteAvecLibelle>(
     entities: T[],
     anEntityLabel: string
   ): ValidatorFn => {
@@ -52,7 +55,7 @@ export abstract class EntiteAvecLibelleEditAbstractComponent<
       const libelle: string = form.controls.libelle.value;
       const currentEntityId: number = form.controls.id.value;
 
-      const matchingEntity: T = ListHelper.findEntityInListByStringAttribute(
+      const matchingEntity = findEntityInListByStringAttribute(
         entities,
         "libelle",
         libelle

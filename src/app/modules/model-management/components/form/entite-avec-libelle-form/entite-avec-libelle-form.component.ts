@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { EntiteAvecLibelle } from 'src/app/model/types/entite-avec-libelle.object';
 import { CrossFieldErrorMatcher } from "src/app/modules/shared/matchers/cross-field-error.matcher";
+import { EntiteAvecLibelle } from "../../../pages/entite-avec-libelle/entite-avec-libelle-edit.component";
 import { EntitySubFormComponent } from "../entite-simple-form/entity-sub-form.component";
 
 @Component({

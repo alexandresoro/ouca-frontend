@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 
 @Component({
   selector: "multiple-select",
@@ -11,7 +10,7 @@ export class MultipleSelectComponent {
   @Input() public attributesToDisplay: string[];
   @Input() public control: FormControl;
   @Input() public id: string;
-  @Input() public options: EntiteSimple[];
+  @Input() public options: { id: number }[];
   @Input() public placeholder: string;
 
   public getDisplayedValue = (object: { [key: string]: unknown }): string => {

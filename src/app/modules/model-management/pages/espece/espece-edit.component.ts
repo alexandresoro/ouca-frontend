@@ -17,7 +17,7 @@ import { Apollo, gql } from "apollo-angular";
 import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
 import { Espece, InputEspece, MutationUpsertEspeceArgs } from "src/app/model/graphql";
-import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
+import { findEntityInListByStringAttribute } from "src/app/modules/shared/helpers/list-helper";
 import { StatusMessageService } from "src/app/services/status-message.service";
 import { EspeceFormComponent } from "../../components/form/espece-form/espece-form.component";
 import { EntiteSimpleEditAbstractComponent } from "../entite-simple/entite-simple-edit.component";
@@ -168,7 +168,7 @@ export class EspeceEditComponent
       const code: string = form.controls.code.value;
       const currentEspeceId: number = form.controls.id.value;
 
-      const matchingEspece = ListHelper.findEntityInListByStringAttribute(
+      const matchingEspece = findEntityInListByStringAttribute(
         especes,
         "code",
         code
@@ -192,7 +192,7 @@ export class EspeceEditComponent
       const nomFrancais = form.controls.nomFrancais.value;
       const id = form.controls.id.value;
 
-      const matchingEspece = ListHelper.findEntityInListByStringAttribute(
+      const matchingEspece = findEntityInListByStringAttribute(
         especes,
         "nomFrancais",
         nomFrancais
@@ -216,7 +216,7 @@ export class EspeceEditComponent
       const nomLatin: string = form.controls.nomLatin.value;
       const currentEspeceId: number = form.controls.id.value;
 
-      const matchingEspece = ListHelper.findEntityInListByStringAttribute(
+      const matchingEspece = findEntityInListByStringAttribute(
         especes,
         "nomLatin",
         nomLatin

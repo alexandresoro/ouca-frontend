@@ -1,9 +1,12 @@
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
 import { ConfirmationDialogData } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog-data.object";
 import { ConfirmationDialogComponent } from "src/app/modules/shared/components/confirmation-dialog/confirmation-dialog.component";
+
+export type EntiteSimple = {
+  id: number;
+}
 
 export abstract class EntiteSimpleComponent<T extends EntiteSimple> {
   constructor(

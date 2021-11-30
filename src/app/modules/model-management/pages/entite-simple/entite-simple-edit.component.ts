@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { combineLatest, Observable, ReplaySubject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
+import { EntiteSimple } from "./entite-simple.component";
 
 export abstract class EntiteSimpleEditAbstractComponent<
   T extends EntiteSimple

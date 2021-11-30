@@ -5,15 +5,17 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import { EntiteAvecLibelle } from "src/app/model/types/entite-avec-libelle.object";
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
-import { ListHelper } from "src/app/modules/shared/helpers/list-helper";
+import { findEntityInListByStringAttribute } from "src/app/modules/shared/helpers/list-helper";
 import { EntiteAvecLibelleEtCodeFormComponent } from "../../components/form/entite-avec-libelle-et-code-form/entite-avec-libelle-et-code-form.component";
 import { ENTITIES_PROPERTIES } from "../../models/entities-properties.model";
-import { EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
+import { EntiteAvecLibelle, EntiteAvecLibelleEditAbstractComponent } from "../entite-avec-libelle/entite-avec-libelle-edit.component";
+
+export type EntiteAvecLibelleEtCode = EntiteAvecLibelle & {
+  code: string;
+}
 
 export abstract class EntiteAvecLibelleEtCodeEditAbstractComponent<
-  T extends EntiteAvecLibelle
+  T extends EntiteAvecLibelleEtCode
   > extends EntiteAvecLibelleEditAbstractComponent<T> {
   protected initialize(): void {
     super.initialize();
@@ -52,7 +54,7 @@ export abstract class EntiteAvecLibelleEtCodeEditAbstractComponent<
     form.updateValueAndValidity();
   };
 
-  private codeValidator = <T extends EntiteSimple>(
+  private codeValidator = (
     entities: T[],
     anEntityLabel: string
   ): ValidatorFn => {
@@ -60,7 +62,7 @@ export abstract class EntiteAvecLibelleEtCodeEditAbstractComponent<
       const code: string = form.controls.code.value;
       const currentEntityId: number = form.controls.id.value;
 
-      const matchingEntity: T = ListHelper.findEntityInListByStringAttribute(
+      const matchingEntity = findEntityInListByStringAttribute(
         entities,
         "code",
         code

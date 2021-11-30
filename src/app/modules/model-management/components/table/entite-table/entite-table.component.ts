@@ -7,7 +7,7 @@ import { DocumentNode } from "graphql";
 import { fromEvent, merge, Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, takeUntil, tap } from "rxjs/operators";
 import { SortOrder } from "src/app/model/graphql";
-import { EntiteSimple } from 'src/app/model/types/entite-simple.object';
+import { EntiteSimple } from "../../../pages/entite-simple/entite-simple.component";
 import { TableFilterFieldComponent } from "../../table-filter-field/table-filter-field.component";
 import { EntitesTableDataSource } from "./EntitesTableDataSource";
 
