@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApplicationUpgradeDialog } from './modules/application-management/components/application-upgrade-dialog/application-upgrade-dialog';
 import { DatabaseInitializationDialog } from "./modules/application-management/components/database-initialization-dialog/database-initialization-dialog";
 import { AppVersionGetService } from "./services/app-version-get.service";
+import { ServerHealthCheckService } from "./services/server-healthcheck-service";
 
 @Component({
   selector: "base-naturaliste",
@@ -12,10 +13,14 @@ import { AppVersionGetService } from "./services/app-version-get.service";
 export class AppComponent implements OnInit {
   constructor(
     private appVersionGetService: AppVersionGetService,
+    private serverHealthCheckService: ServerHealthCheckService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
+
+    this.serverHealthCheckService.startHealthMonitoring();
+
     this.appVersionGetService.fetch().subscribe(({ data }) => {
       // Check if the database version is returned (i.e >=0)
       // If not it means that the database is not even initialized
