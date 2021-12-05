@@ -12,9 +12,8 @@
       <div fxFlex="1 1 500px" fxLayout="row" fxLayoutAlign="center center">
         <ul fxFlex="1 1 500px">
           <li><b>Étape courante :</b> {{currentStepText$ | async}}</li>
-          <li><b>Données à importer :</b> {{(importProgressStatus$ | async)?.entriesToBeValidated}}</li>
-          <li><b>Données valides :</b> {{(importProgressStatus$ | async)?.validatedEntries}}</li>
-          <li><b>Données érronées :</b> {{(importProgressStatus$ | async)?.errors}}</li>
+          <li *ngIf="(importProgressStatus$ | async)?.totalEntries"><b>Progression de l'analyse :</b> {{(importProgressStatus$ | async)?.nbEntriesChecked}} / {{(importProgressStatus$ | async)?.totalEntries}}</li>
+          <li *ngIf="(importProgressStatus$ | async)?.totalEntries"><b>Données comportant des erreurs :</b> {{(importProgressStatus$ | async)?.nbEntriesWithErrors}}</li>
         </ul>
       </div>
 
@@ -29,20 +28,19 @@
     <div class="center">
       L'import est terminé avec succès. Aucune erreur n'a été détectée.
     </div>
-
-    <ng-container *ngIf="(fileInputError$ | async) as fileError">
-      <div class="center">
-        Une erreur sur le fichier a été détectée et aucune donnée n'a été importée.
-        <br/>
-        Le message d'erreur est : "{{fileError}}"
-      </div>
-    </ng-container>
   </ng-container>
 
-
-  <ng-container *ngIf="(lineErrors$| async) as errorLines">
+  <ng-container *ngIf="(inputFileImportError$ | async) as fileError">
     <div class="center">
-      L'import est terminé mais comporte des erreurs sur {{errorLines.length}} ligne(s).
+      Une erreur sur le fichier a été détectée et aucune donnée n'a été importée.
+      <br/>
+      Le message d'erreur est : "{{fileError}}"
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="(lineErrorsAfterCompletion$| async) as lineErrorsAfterCompletion">
+    <div class="center">
+      L'import est terminé mais comporte des erreurs sur {{lineErrorsAfterCompletion}} ligne(s).
 
       <div class="errorFileContent">
         <div class="textDescription">

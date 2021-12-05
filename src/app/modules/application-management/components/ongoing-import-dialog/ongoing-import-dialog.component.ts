@@ -1,10 +1,32 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Apollo, gql, QueryRef } from "apollo-angular";
 import { Observable, Subject } from 'rxjs';
-import { filter, map, shareReplay } from 'rxjs/operators';
-import { DATA_VALIDATION_START, ImportErrorMessage, ImportNotifyProgressMessage, ImportNotifyProgressMessageContent, ImportNotifyStatusUpdateMessage, ImportPostCompleteMessage, ImportUpdateMessage, IMPORT_COMPLETE, IMPORT_ERROR, IMPORT_PROCESS_STARTED, INSERT_DB_START, RETRIEVE_DB_INFO_START, StatusUpdate, VALIDATION_PROGRESS } from 'src/app/model/import/import-update-message';
-import { exportAsCsv } from 'src/app/modules/shared/helpers/csv-utils.helper';
-import { BackendWsService } from 'src/app/services/backend-ws.service';
+import { filter, map, shareReplay, take, takeUntil } from 'rxjs/operators';
+import { ImportErrorType, ImportStatus, ImportStatusEnum, OngoingSubStatus, OngoingValidationStats, QueryImportStatusArgs } from "src/app/model/graphql";
+
+type ImportStatusQueryResult = {
+  importStatus: ImportStatus
+}
+
+const IMPORT_STATUS_QUERY = gql`
+  query ImportStatus($importId: String!) {
+    importStatus(importId: $importId) {
+      status
+      subStatus
+      errorType
+      errorDescription
+      importErrorsReportFile
+      ongoingValidationStats {
+        totalLines
+        totalEntries
+        nbEntriesChecked
+        nbEntriesWithErrors
+      }
+    }
+  }
+`
 
 @Component({
   selector: "ongoing-import-dialog",
@@ -14,109 +36,120 @@ import { BackendWsService } from 'src/app/services/backend-ws.service';
 })
 export class OngoingImportDialog implements OnInit, OnDestroy {
 
-  importMessage$: Observable<ImportUpdateMessage | ImportErrorMessage>;
+  private readonly destroy$ = new Subject();
 
   isImportFinished$: Observable<boolean>;
 
-  importCompleteInformation$: Observable<ImportPostCompleteMessage>;
+  importCompleteInformation$: Observable<ImportStatus>;
 
   isImportSuccessful$: Observable<boolean>;
 
-  fileInputError$: Observable<string>;
+  inputFileImportError$: Observable<string>;
 
-  lineErrors$: Observable<string[][]>;
+  lineErrorsAfterCompletion$: Observable<number>;
 
-  importProgressStatus$: Observable<ImportNotifyProgressMessageContent>;
+  importProgressStatus$: Observable<OngoingValidationStats>;
 
   importProgressPercentage$: Observable<number>;
 
   currentStepText$: Observable<string>;
 
-  private saveErrorFileClick$ = new Subject<Event>();
-
-
-  errorFileUrl: string;
-
   errorFileUrlSafe: SafeUrl;
 
-  private STATUS_MESSAGE_MAPPING: Record<StatusUpdate, string> = {
-    IMPORT_PROCESS_STARTED: "Début de la procédure d'import",
-    RETRIEVE_DB_INFO_START: "Préparation des données nécessaires pour l'import",
-    DATA_VALIDATION_START: "Validation des données à importer",
-    INSERT_DB_START: "Insertion des données valides dans la base de données"
+  private queryRef: QueryRef<ImportStatusQueryResult, QueryImportStatusArgs>;
+
+
+  private STATUS_MESSAGE_MAPPING: Record<OngoingSubStatus, string> = {
+    PROCESS_STARTED: "Début de la procédure d'import",
+    RETRIEVING_REQUIRED_DATA: "Préparation des données nécessaires pour l'import",
+    VALIDATING_INPUT_FILE: "Validation des données à importer",
+    INSERTING_IMPORTED_DATA: "Insertion des données valides dans la base de données"
   }
 
   constructor(
+    private apollo: Apollo,
     private sanitizer: DomSanitizer,
-    private backendWsService: BackendWsService
+    @Inject(MAT_DIALOG_DATA) public data: { importId: string },
   ) {
 
-  }
-  ngOnDestroy(): void {
-    if (this.errorFileUrl) {
-      URL.revokeObjectURL(this.errorFileUrl);
-    }
   }
 
   ngOnInit(): void {
 
-    this.importMessage$ = this.backendWsService.getImportMessageContent$();
+    this.queryRef = this.apollo.watchQuery<ImportStatusQueryResult, QueryImportStatusArgs>({
+      query: IMPORT_STATUS_QUERY,
+      variables: {
+        importId: this.data.importId
+      },
+      fetchPolicy: "no-cache",
+      pollInterval: 500
+    });
 
-    this.importProgressStatus$ = this.importMessage$.pipe(
-      filter<ImportNotifyProgressMessage>(message => (message?.type === VALIDATION_PROGRESS)),
-      map(progressMessage => progressMessage.progress),
+    const importStatus$ = this.queryRef.valueChanges.pipe(
+      map(({ data }) => {
+        return data?.importStatus;
+      })
+    );
+
+    this.importProgressStatus$ = importStatus$.pipe(
+      filter(importStatus => importStatus?.status === ImportStatusEnum.Ongoing && importStatus?.subStatus === OngoingSubStatus.ValidatingInputFile),
+      map(progressMessage => progressMessage.ongoingValidationStats),
       shareReplay(1)
     );
 
     this.importProgressPercentage$ = this.importProgressStatus$.pipe(
       map((importProgressStatus) => {
-        return (100 * importProgressStatus.validatedEntries / importProgressStatus.entriesToBeValidated);
+        return (100 * importProgressStatus.nbEntriesChecked / importProgressStatus.totalEntries);
       }),
       shareReplay(1)
     );
 
-    this.currentStepText$ = this.importMessage$.pipe(
-      filter(message => [IMPORT_PROCESS_STARTED, RETRIEVE_DB_INFO_START, DATA_VALIDATION_START, INSERT_DB_START].includes(message?.type)),
-      map<ImportNotifyStatusUpdateMessage, string>((message) => this.STATUS_MESSAGE_MAPPING[message.type]),
+    this.currentStepText$ = importStatus$.pipe(
+      filter(importStatus => importStatus?.status === ImportStatusEnum.Ongoing),
+      map((importStatus) => this.STATUS_MESSAGE_MAPPING[importStatus?.subStatus]),
       shareReplay(1)
     )
 
-    this.isImportFinished$ = this.importMessage$.pipe(map(message => [IMPORT_ERROR, IMPORT_COMPLETE].includes(message?.type)));
-    this.importCompleteInformation$ = this.importMessage$.pipe(
-      filter<ImportPostCompleteMessage>(message => (message?.type === IMPORT_COMPLETE)),
+    this.isImportFinished$ = importStatus$.pipe(map(importStatus => importStatus?.status === ImportStatusEnum.Complete || importStatus?.status === ImportStatusEnum.Failed));
+    this.importCompleteInformation$ = importStatus$.pipe(
+      filter(importStatus => (importStatus?.status === ImportStatusEnum.Complete)),
     );
 
-    this.lineErrors$ = this.importCompleteInformation$.pipe(
-      filter(message => !!message.lineErrors?.length),
-      map(message => message.lineErrors),
-    );
+    importStatus$.pipe(
+      filter(importStatus => importStatus?.status === ImportStatusEnum.Complete || importStatus?.status === ImportStatusEnum.Failed),
+      take(1)
+    ).subscribe(() => {
+      this.queryRef.stopPolling();
+    })
 
-    this.lineErrors$.subscribe((lineErrors) => {
-      if (!lineErrors) {
-        return;
-      }
+    this.lineErrorsAfterCompletion$ = this.importCompleteInformation$.pipe(
+      map(importStatus => importStatus?.ongoingValidationStats?.nbEntriesWithErrors)
+    )
 
-      const errorsCsv = exportAsCsv(lineErrors, { delimiter: ";", isCrLf: true });
-      const errorsBlob = new Blob([errorsCsv], { type: "text/csv;charset=utf-8" });
-      this.errorFileUrl = URL.createObjectURL(errorsBlob);
-      this.errorFileUrlSafe = this.sanitizer.bypassSecurityTrustUrl(this.errorFileUrl);
-
-    });
+    this.importCompleteInformation$.pipe(
+      takeUntil(this.destroy$)
+    )
+      .subscribe((importStatus) => {
+        if (importStatus?.importErrorsReportFile) {
+          this.errorFileUrlSafe = this.sanitizer.bypassSecurityTrustUrl(importStatus.importErrorsReportFile);
+        }
+      });
 
     this.isImportSuccessful$ = this.importCompleteInformation$.pipe(
-      map(message => !message.fileInputError && !message.lineErrors)
+      map(importStatus => !importStatus.importErrorsReportFile)
     );
 
-    this.fileInputError$ = this.importCompleteInformation$.pipe(
-      filter(message => !!message.fileInputError),
-      map(message => message.fileInputError)
+    this.inputFileImportError$ = this.importCompleteInformation$.pipe(
+      filter(importStatus => importStatus?.status === ImportStatusEnum.Failed && importStatus?.errorType === ImportErrorType.ImportFailure),
+      map(importStatus => importStatus.errorDescription)
     );
 
   }
 
-  onSaveErrorFileClicked = (event: Event): void => {
-    this.saveErrorFileClick$.next(event);
-  };
-
+  ngOnDestroy(): void {
+    this.queryRef.stopPolling();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 }

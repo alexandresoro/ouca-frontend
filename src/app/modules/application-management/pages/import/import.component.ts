@@ -1,8 +1,9 @@
+import { HttpClient } from "@angular/common/http";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialog } from '@angular/material/dialog';
-import { IMPORT } from 'src/app/model/websocket/websocket-message-type.model';
-import { BackendWsService } from 'src/app/services/backend-ws.service';
+import { StatusMessageService } from "src/app/services/status-message.service";
 import { OngoingImportDialog } from '../../components/ongoing-import-dialog/ongoing-import-dialog.component';
+
 @Component({
   templateUrl: "./import.component.html",
   styleUrls: ["./import.component.scss"],
@@ -12,9 +13,9 @@ export class ImportComponent {
   private file: File;
 
   constructor(
-    private backendWsService: BackendWsService,
-
+    private http: HttpClient,
     private dialog: MatDialog,
+    private statusMessageService: StatusMessageService
   ) { }
 
   public setFile = (event: Event): void => {
@@ -22,26 +23,24 @@ export class ImportComponent {
   };
 
   public onImportClicked = (entityName: string): void => {
-    this.displayWaitPanel();
+    const data = new FormData();
+    data.append('file', this.file);
 
-    const fileReader = new FileReader();
+    this.http.post<{ uploadId: string }>(`/uploads/${entityName}`, data).subscribe((data) => {
+      if (data?.uploadId) {
+        // The file has been uploaded, import will be treated on server side
+        this.displayWaitPanel(data.uploadId);
 
-    fileReader.onload = (event) => {
-      this.backendWsService.sendMessage({
-        type: IMPORT,
-        content: {
-          dataType: entityName,
-          data: event.target.result
-        }
-      });
-    }
-
-    fileReader.readAsText(this.file);
+      } else {
+        this.statusMessageService.showErrorMessage(`Une erreur est survenue lors de l'envoi du fichier d'import`);
+      }
+    });
 
   };
 
-  private displayWaitPanel = (): void => {
+  private displayWaitPanel = (importId: string): void => {
     this.dialog.open(OngoingImportDialog, {
+      data: { importId },
       width: "800px",
       hasBackdrop: true,
       disableClose: true
