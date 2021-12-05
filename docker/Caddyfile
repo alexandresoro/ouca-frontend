@@ -2,19 +2,15 @@
 
 root * /srv
 
-handle /api/* {
-  reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
-}
-
 handle /download/* {
   reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 }
 
-handle /graphql {
+handle /uploads/* {
   reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 }
 
-handle /ws/* {
+handle /graphql {
   reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 }
 
